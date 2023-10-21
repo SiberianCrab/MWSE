@@ -123,14 +123,10 @@ function KeyBinder:keySelected(e)
 		variable.mouseButton = e.button or false
 	end
 
-	-- TODO: here, check for modifer key state using tes3inputController
-	-- That is needed since mouseButtonUp/mouseButtonDown events never return isAltDown, isShiftDown, isControlDown
-	-- Once that is fixed, can change to e.isAltDown ...
 	if self.allowCombinations then
-		local IC = tes3.worldController.inputController
-		variable.isAltDown = IC:isAltDown()
-		variable.isShiftDown = IC:isShiftDown()
-		variable.isControlDown = IC:isControlDown()
+		variable.isAltDown = e.isAltDown
+		variable.isShiftDown = e.isShiftDown
+		variable.isControlDown = e.isControlDown
 	end
 
 	self:setText(self:getText())

@@ -4,27 +4,27 @@ return {
 	related = { "mouseButtonDown" },
 	eventData = {
 		["button"] = {
-			type = "number",
+			type = "integer",
 			readOnly = true,
 			description = "The button index that was released.",
 		},
 		["isControlDown"] = {
-			type = "number",
+			type = "boolean",
 			readOnly = true,
 			description = "True if control is held.",
 		},
 		["isShiftDown"] = {
-			type = "number",
+			type = "boolean",
 			readOnly = true,
 			description = "True if either shift key is held.",
 		},
 		["isAltDown"] = {
-			type = "number",
+			type = "boolean",
 			readOnly = true,
 			description = "True if alt is held.",
 		},
 		["isSuperDown"] = {
-			type = "number",
+			type = "boolean",
 			readOnly = true,
 			description = "True if super (Windows key) is held.",
 		},

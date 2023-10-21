@@ -78,7 +78,7 @@ local result = myObject:copy()
 ### `fromEulerXYZ`
 <div class="search_terms" style="display: none">fromeulerxyz</div>
 
-Fills the matrix with values from euler coordinates.
+Fills the matrix with values from euler angles in radians.
 
 ```lua
 myObject:fromEulerXYZ(x, y, z)
@@ -95,7 +95,7 @@ myObject:fromEulerXYZ(x, y, z)
 ### `fromEulerZYX`
 <div class="search_terms" style="display: none">fromeulerzyx</div>
 
-Fills the matrix with values from euler coordinates.
+Fills the matrix with values from euler angles in radians.
 
 ```lua
 myObject:fromEulerZYX(z, y, x)
@@ -276,7 +276,7 @@ local result = myObject:reorthogonalize()
 ### `toEulerXYZ`
 <div class="search_terms" style="display: none">toeulerxyz</div>
 
-Converts the matrix to series of rotations along each axis.
+Converts the matrix to series of rotations along each axis in radians.
 
 ```lua
 local vector3, isUnique = myObject:toEulerXYZ()
@@ -292,7 +292,7 @@ local vector3, isUnique = myObject:toEulerXYZ()
 ### `toEulerZYX`
 <div class="search_terms" style="display: none">toeulerzyx</div>
 
-Converts the matrix to series of rotations along each axis.
+Converts the matrix to series of rotations along each axis in radians.
 
 ```lua
 local vector3, isUnique = myObject:toEulerZYX()
