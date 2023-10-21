@@ -868,7 +868,7 @@ namespace se::cs::dialog::dialogue_window {
 
 				// Function/Variable static
 				auto hDlgFunctionVariableStatic = GetDlgItem(hWnd, CONTROL_ID_CONDITION_FUNCTION_VARIABLE_STATIC);
-				MoveWindow(hDlgFunctionVariableStatic, currentX, currentY, 150, STATIC_HEIGHT, FALSE);
+				MoveWindow(hDlgFunctionVariableStatic, currentX, currentY - STATIC_COMBO_OFFSET, 150, STATIC_HEIGHT, FALSE);
 				currentY += STATIC_HEIGHT + BASIC_PADDING;
 
 				// Functions
@@ -882,11 +882,11 @@ namespace se::cs::dialog::dialogue_window {
 				ResizeFunctionConditionHelper(hWnd, 6, currentX, currentY);
 
 				// Disposition static
-				constexpr auto DISPOSITION_JOURNAL_STATIC_WIDTH = 40;
+				constexpr auto DISPOSITION_JOURNAL_STATIC_WIDTH = DISPOSITION_INDEX_WIDTH;
 				currentX = leftOfFunctions + FUNCTION_TYPE_WIDTH + FUNCTION_CONDITION_WIDTH + FUNCTION_COMPARISON_WIDTH + BASIC_PADDING * 2 - DISPOSITION_JOURNAL_STATIC_WIDTH;
 				currentY = topOfFunctions - COMBO_HEIGHT - BASIC_PADDING;
 				auto hDlgDispositionJournalStatic = GetDlgItem(hWnd, CONTROL_ID_CONDITION_DISPOSITION_OR_JOURNAL_STATIC);
-				MoveWindow(hDlgDispositionJournalStatic, currentX, currentY + STATIC_COMBO_OFFSET, DISPOSITION_JOURNAL_STATIC_WIDTH, STATIC_HEIGHT, FALSE);
+				MoveWindow(hDlgDispositionJournalStatic, currentX - BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, DISPOSITION_JOURNAL_STATIC_WIDTH, STATIC_HEIGHT, FALSE);
 				currentX += DISPOSITION_JOURNAL_STATIC_WIDTH + BASIC_PADDING;
 
 				// Disposition edit
@@ -897,17 +897,17 @@ namespace se::cs::dialog::dialogue_window {
 				currentX = leftOfConditions + BIG_PADDING + CONDITION_STATIC_WIDTH + BASIC_PADDING + CONDITION_COMBO_WIDTH + BIG_PADDING;
 				currentY = topOfConditions + SPEAKER_CONDITION_PADDING_TOP;
 				auto hDlgJournalQuestNameCheckButton = GetDlgItem(hWnd, CONTROL_ID_CONDITION_JOURNAL_QUEST_NAME_CHECKBOX);
-				MoveWindow(hDlgJournalQuestNameCheckButton, currentX, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
+				MoveWindow(hDlgJournalQuestNameCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
 				currentY += JOURNAL_CHECKBUTTON_HEIGHT + BASIC_PADDING;
 
 				// Quest Finished check button
 				auto hDlgJournalQuestFinishedCheckButton = GetDlgItem(hWnd, CONTROL_ID_CONDITION_JOURNAL_FINISHED_CHECKBOX);
-				MoveWindow(hDlgJournalQuestFinishedCheckButton, currentX, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
+				MoveWindow(hDlgJournalQuestFinishedCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
 				currentY += JOURNAL_CHECKBUTTON_HEIGHT + BASIC_PADDING;
 
 				// Quest Restart check button
 				auto hDlgJournalQuestRestartCheckButton = GetDlgItem(hWnd, CONTROL_ID_CONDITION_JOURNAL_RESTART_CHECKBOX);
-				MoveWindow(hDlgJournalQuestRestartCheckButton, currentX, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
+				MoveWindow(hDlgJournalQuestRestartCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
 			}
 			currentX = leftOfConditions;
 			currentY = topOfConditions + SPEAKER_CONDITION_HEIGHT + BASIC_PADDING;
@@ -930,7 +930,7 @@ namespace se::cs::dialog::dialogue_window {
 
 			// Shared By static
 			auto hDlgSharedByStatic = GetDlgItem(hWnd, CONTROL_ID_SHARED_BY_STATIC);
-			MoveWindow(hDlgSharedByStatic, currentX, currentY, BOTTOM_RIGHT_SECTION_WIDTH - 2, STATIC_HEIGHT, FALSE);
+			MoveWindow(hDlgSharedByStatic, currentX, currentY, BOTTOM_RIGHT_SECTION_WIDTH - BASIC_PADDING, STATIC_HEIGHT, FALSE);
 			currentY += STATIC_HEIGHT + BASIC_PADDING;
 
 			// Shared By list
@@ -951,7 +951,7 @@ namespace se::cs::dialog::dialogue_window {
 
 			// Update Hyperlink button
 			constexpr auto UPDATE_ALL_HYPERLINKS_BUTTON_WIDTH = 30;
-			constexpr auto UPDATE_HYPERLINK_BUTTON_WIDTH = BOTTOM_RIGHT_SECTION_WIDTH - UPDATE_ALL_HYPERLINKS_BUTTON_WIDTH - 2;
+			constexpr auto UPDATE_HYPERLINK_BUTTON_WIDTH = BOTTOM_RIGHT_SECTION_WIDTH - UPDATE_ALL_HYPERLINKS_BUTTON_WIDTH - BASIC_PADDING;
 			auto hDlgUpdateHyperlinkButton = GetDlgItem(hWnd, CONTROL_ID_UPDATE_HYPERLINKS_BUTTON);
 			MoveWindow(hDlgUpdateHyperlinkButton, currentX, currentY, UPDATE_HYPERLINK_BUTTON_WIDTH, BIG_BUTTON_HEIGHT, FALSE);
 
