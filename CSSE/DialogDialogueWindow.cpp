@@ -498,8 +498,12 @@ namespace se::cs::dialog::dialogue_window {
 		saveInfoColumnWidths(hWnd);
 	}
 
-	constexpr auto MIN_WIDTH = 1113u;
-	constexpr auto MIN_HEIGHT = 700u;
+	//Font 8
+  //constexpr auto MIN_WIDTH = 1130u;//CSSE = 1113u
+  //constexpr auto MIN_HEIGHT = 640u;//CSSE = 700u
+	//Font10
+	constexpr auto MIN_WIDTH = 1240u;
+	constexpr auto MIN_HEIGHT = 820u;
 
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		const auto info = (LPMINMAXINFO)lParam;
@@ -583,7 +587,7 @@ namespace se::cs::dialog::dialogue_window {
 		SendMessageA(hDlgCurrentTextCharCount, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 		OnCurrentTextEditChanged(hWnd);
 
-		auto hDlgCurrentTextMaxCharCount = CreateWindowExA(NULL, WC_STATIC, "/512", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_CURRENT_TEXT_MAX_CHAR_COUNT, hInstance, NULL);
+		auto hDlgCurrentTextMaxCharCount = CreateWindowExA(NULL, WC_STATIC, "/ 512", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_CURRENT_TEXT_MAX_CHAR_COUNT, hInstance, NULL);
 		SendMessageA(hDlgCurrentTextMaxCharCount, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 
 		// Make it so the window can be maximized and generally resized.
@@ -670,17 +674,29 @@ namespace se::cs::dialog::dialogue_window {
 	}
 
 	namespace ResizeConstants {
+		//Font 08
+	  //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах + высота статичного пол€ описани€ с текстом; CSSE = 13
+	  //constexpr auto LEFT_SECTION_WIDTH = 250;//Ўирина секции с топиками и фильтрами; CSSE = 250
+	  //constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 150;//ширина нижней правой секции Shared By и ниже; CSSE = 150
+	  //constexpr auto CONDITION_STATIC_WIDTH = 66;//CSSE = 55
+	  //constexpr auto BOTTOM_SECTION_HEIGHT = 400;//CSSE = 500
+	  //constexpr auto TEXT_COUNTER_WIDTH = 30;
+		//Font 10
+		constexpr auto STATIC_HEIGHT = 16;
+		constexpr auto LEFT_SECTION_WIDTH = 298;
+		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 200;
+		constexpr auto CONDITION_STATIC_WIDTH = 80;
+		constexpr auto BOTTOM_SECTION_HEIGHT = 500;
+		constexpr auto TEXT_COUNTER_WIDTH = 32;
+		//Font 12
+
+		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от пол€, которые всегда = 4 пиксел€; CSSE = 21
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto BIG_PADDING = 6;
 		constexpr auto WINDOW_EDGE_PADDING = 10;
-		constexpr auto LEFT_SECTION_WIDTH = 250;
-		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 150;
-		constexpr auto BOTTOM_SECTION_HEIGHT = 500;
 		constexpr auto BIG_BUTTON_HEIGHT = 26;
-		constexpr auto STATIC_HEIGHT = 13;
 		constexpr auto JOURNAL_CHECKBUTTON_WIDTH = 100;
 		constexpr auto JOURNAL_CHECKBUTTON_HEIGHT = STATIC_HEIGHT;
-		constexpr auto COMBO_HEIGHT = 21;
 		constexpr auto EDIT_HEIGHT = 17;
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
@@ -690,7 +706,6 @@ namespace se::cs::dialog::dialogue_window {
 		constexpr auto TOP_INFO_TEXT_HEIGHT = (BOTTOM_SECTION_HEIGHT - SPEAKER_CONDITION_HEIGHT) / 2 - BASIC_PADDING;
 		constexpr auto BOTTOM_RESULT_HEIGHT = BOTTOM_SECTION_HEIGHT - TOP_INFO_TEXT_HEIGHT - SPEAKER_CONDITION_HEIGHT - BASIC_PADDING * 2;
 
-		constexpr auto CONDITION_STATIC_WIDTH = 55;
 		constexpr auto CONDITION_COMBO_WIDTH = 200;
 
 		constexpr auto FUNCTION_TYPE_WIDTH = 100;
@@ -703,7 +718,7 @@ namespace se::cs::dialog::dialogue_window {
 
 		constexpr auto BOTTOM_SECTION_MIN_WIDTH = CONDITION_STATIC_WIDTH + CONDITION_COMBO_WIDTH + BIG_PADDING + FUNCTION_TOTAL_WIDTH + BASIC_PADDING * 4;
 		constexpr auto TOTAL_MIN_WIDTH = LEFT_SECTION_WIDTH + BOTTOM_SECTION_MIN_WIDTH + BOTTOM_RIGHT_SECTION_WIDTH + BIG_PADDING * 2 + WINDOW_EDGE_PADDING * 2;
-		constexpr auto TOTAL_MIN_HEIGHT = 720;
+		constexpr auto TOTAL_MIN_HEIGHT = MIN_HEIGHT;
 	}
 
 	void ResizeLabeledStatic(HWND hParent, int iDlgStatic, int iDlgCombo, int x, int& y) {
@@ -757,7 +772,7 @@ namespace se::cs::dialog::dialogue_window {
 			const auto currentX = WINDOW_EDGE_PADDING;
 			auto currentY = WINDOW_EDGE_PADDING;
 
-			constexpr auto FILTER_FOR_AREA_SIZE = STATIC_HEIGHT + COMBO_HEIGHT * 2 + BASIC_PADDING * 2;
+			constexpr auto FILTER_FOR_AREA_SIZE = STATIC_HEIGHT + COMBO_HEIGHT + BIG_BUTTON_HEIGHT + BASIC_PADDING + WINDOW_EDGE_PADDING;
 
 			// Dialogue type tabs
 			const auto topicsAreaSize = clientHeight - FILTER_FOR_AREA_SIZE - BASIC_PADDING * 2 - WINDOW_EDGE_PADDING * 2;
@@ -768,8 +783,8 @@ namespace se::cs::dialog::dialogue_window {
 			auto hDlgTopicList = GetDlgItem(hWnd, CONTROL_ID_TOPIC_LIST);
 			TabCtrl_GetInteriorRect(hDlgTopicTabs, &tempRect);
 			MoveWindow(hDlgTopicList, tempRect.left, tempRect.top, GetRectWidth(&tempRect), GetRectHeight(&tempRect), FALSE);
-			ListView_SetColumnWidth(hDlgTopicList, 0, GetRectWidth(&tempRect) - GetSystemMetrics(SM_CXVSCROLL) - BASIC_PADDING*2);
-			currentY += topicsAreaSize + BASIC_PADDING * 2;
+			ListView_SetColumnWidth(hDlgTopicList, 0, GetRectWidth(&tempRect) - GetSystemMetrics(SM_CXVSCROLL) - BASIC_PADDING * 2);
+			currentY += topicsAreaSize + BASIC_PADDING + BIG_PADDING;
 
 			// Filter For static
 			auto hDlgFilterForStatic = GetDlgItem(hWnd, CONTROL_ID_FILTER_FOR_STATIC);
@@ -779,11 +794,11 @@ namespace se::cs::dialog::dialogue_window {
 			// Filter For combo
 			auto hDlgFilterForCombo = GetDlgItem(hWnd, CONTROL_ID_FILTER_FOR_COMBO);
 			MoveWindow(hDlgFilterForCombo, currentX, currentY, LEFT_SECTION_WIDTH, COMBO_HEIGHT, FALSE);
-			currentY += COMBO_HEIGHT + BASIC_PADDING;
+			currentY += COMBO_HEIGHT + BIG_PADDING;
 
 			// Show modified only button
 			auto hShowModifiedButton = GetDlgItem(hWnd, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
-			MoveWindow(hShowModifiedButton, currentX, currentY, LEFT_SECTION_WIDTH, COMBO_HEIGHT, FALSE);
+			MoveWindow(hShowModifiedButton, currentX, currentY, LEFT_SECTION_WIDTH, BIG_BUTTON_HEIGHT, FALSE);
 		}
 
 		// INFO list section
@@ -815,11 +830,12 @@ namespace se::cs::dialog::dialogue_window {
 			MoveWindow(hDlgCurrentTextEdit, currentX, currentY, BOTTOM_MIDDLE_WIDTH, TOP_INFO_TEXT_HEIGHT, FALSE);
 			currentY += TOP_INFO_TEXT_HEIGHT + BASIC_PADDING;
 
-			auto hDlgCurrentTextCharCount = GetDlgItem(hWnd, CONTROL_ID_CURRENT_TEXT_CHAR_COUNT);
-			MoveWindow(hDlgCurrentTextCharCount, currentX + BOTTOM_MIDDLE_WIDTH - 48, currentY + 10, 18, 20, FALSE);
+			// XXX/512 Counter
+			auto hDlgCurrentTextCharCount = GetDlgItem(hWnd, CONTROL_ID_CURRENT_TEXT_CHAR_COUNT);// XXX
+			MoveWindow(hDlgCurrentTextCharCount, currentX + BOTTOM_MIDDLE_WIDTH - BIG_PADDING - TEXT_COUNTER_WIDTH * 2, currentY + BIG_PADDING * 2, TEXT_COUNTER_WIDTH, COMBO_HEIGHT, FALSE);
 
-			auto hDlgCurrentTextMaxCharCount = GetDlgItem(hWnd, CONTROL_ID_CURRENT_TEXT_MAX_CHAR_COUNT);
-			MoveWindow(hDlgCurrentTextMaxCharCount, currentX + BOTTOM_MIDDLE_WIDTH - 30, currentY +10 , 23, 20, FALSE);
+			auto hDlgCurrentTextMaxCharCount = GetDlgItem(hWnd, CONTROL_ID_CURRENT_TEXT_MAX_CHAR_COUNT);// 512
+			MoveWindow(hDlgCurrentTextMaxCharCount, currentX + BOTTOM_MIDDLE_WIDTH - BIG_PADDING - TEXT_COUNTER_WIDTH, currentY + BIG_PADDING * 2, TEXT_COUNTER_WIDTH, COMBO_HEIGHT, FALSE);
 
 			// Speaker Condition button (area)
 			auto hDlgSpeakerConditionButton = GetDlgItem(hWnd, CONTROL_ID_SPEAKER_CONDITION_BUTTON);
@@ -852,7 +868,7 @@ namespace se::cs::dialog::dialogue_window {
 
 				// Function/Variable static
 				auto hDlgFunctionVariableStatic = GetDlgItem(hWnd, CONTROL_ID_CONDITION_FUNCTION_VARIABLE_STATIC);
-				MoveWindow(hDlgFunctionVariableStatic, currentX, currentY, 100, STATIC_HEIGHT, FALSE);
+				MoveWindow(hDlgFunctionVariableStatic, currentX, currentY, 150, STATIC_HEIGHT, FALSE);
 				currentY += STATIC_HEIGHT + BASIC_PADDING;
 
 				// Functions
@@ -866,7 +882,7 @@ namespace se::cs::dialog::dialogue_window {
 				ResizeFunctionConditionHelper(hWnd, 6, currentX, currentY);
 
 				// Disposition static
-				constexpr auto DISPOSITION_JOURNAL_STATIC_WIDTH = 26;
+				constexpr auto DISPOSITION_JOURNAL_STATIC_WIDTH = 40;
 				currentX = leftOfFunctions + FUNCTION_TYPE_WIDTH + FUNCTION_CONDITION_WIDTH + FUNCTION_COMPARISON_WIDTH + BASIC_PADDING * 2 - DISPOSITION_JOURNAL_STATIC_WIDTH;
 				currentY = topOfFunctions - COMBO_HEIGHT - BASIC_PADDING;
 				auto hDlgDispositionJournalStatic = GetDlgItem(hWnd, CONTROL_ID_CONDITION_DISPOSITION_OR_JOURNAL_STATIC);

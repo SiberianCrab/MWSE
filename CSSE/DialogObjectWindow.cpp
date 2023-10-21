@@ -297,13 +297,20 @@ namespace se::cs::dialog::object_window {
 		const auto mainWidth = LOWORD(lParam);
 		const auto mainHeight = HIWORD(lParam);
 
+		//Font 08
+	  //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах CSSE = 13
+		//Font 10
+	  //constexpr auto STATIC_HEIGHT = 16;
+		//Font 12
+		constexpr auto STATIC_HEIGHT = 20;
+
+		constexpr auto EDIT_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от пол€, которые всегда = 4 пиксел€; CSSE = 21
 		constexpr auto BASIC_PADDING = 2;
-		constexpr auto STATIC_HEIGHT = 13;
-		constexpr auto EDIT_HEIGHT = 21;
+		constexpr auto STATIC_WIDTH = 54;
 		constexpr auto STATIC_COMBO_OFFSET = (EDIT_HEIGHT - STATIC_HEIGHT) / 2;
 
 		// Make room for our new search bar.
-		MoveWindow(tabControl, 0, 0, mainWidth, mainHeight - EDIT_HEIGHT - BASIC_PADDING * 2, TRUE);
+		MoveWindow(tabControl, 0, 0, mainWidth, mainHeight - EDIT_HEIGHT, TRUE);
 
 		// Update list view area.
 		RECT tabContentRect = {};
@@ -314,7 +321,7 @@ namespace se::cs::dialog::object_window {
 		int currentY = mainHeight - EDIT_HEIGHT - BASIC_PADDING;
 		auto searchEditWidth = std::min<int>(mainWidth - BASIC_PADDING * 2, 300);
 		MoveWindow(showModifiedButton, BASIC_PADDING, currentY, 160, EDIT_HEIGHT, TRUE);
-		MoveWindow(searchLabel, mainWidth - BASIC_PADDING - searchEditWidth - 54 - BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, 54, STATIC_HEIGHT, TRUE);
+		MoveWindow(searchLabel, mainWidth - BASIC_PADDING - searchEditWidth - STATIC_WIDTH - BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);//Filter
 		MoveWindow(objectWindowSearchControl, mainWidth - BASIC_PADDING - searchEditWidth, currentY, searchEditWidth, EDIT_HEIGHT, FALSE);
 
 		RedrawWindow(hDlg, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
