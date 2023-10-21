@@ -18,11 +18,11 @@ namespace se::cs::dialog::script_editor_window {
 		format.cbSize = sizeof(CHARFORMATA);
 		format.dwMask = CFM_EFFECTS | CFM_FACE | CFM_SIZE;
 		format.dwEffects = 0;
-		//Font 08
-	  //format.yHeight = 20 * settings.script_editor.font_size;//CSSE = 20
-		//Font 10
+	//Font 08
+	    //format.yHeight = 20 * settings.script_editor.font_size;//CSSE = 20
+	//Font 10
 		format.yHeight = 22 * settings.script_editor.font_size;
-		//Font 12
+	//Font 12
 
 		SendMessageA(hWnd, EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&format);
 	}

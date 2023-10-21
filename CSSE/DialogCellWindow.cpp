@@ -183,15 +183,15 @@ namespace se::cs::dialog::cell_window {
 		const auto mainWidth = LOWORD(lParam);
 		const auto mainHeight = HIWORD(lParam);
 
-		//Font 08
-	  //constexpr auto STATIC_HEIGHT = 13;//CSSE = 13
-	  //constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 11;//CSSE = 9
-	  //constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 17;//CSSE = 21
-		//Font 10
-	  //constexpr auto STATIC_HEIGHT = 16;
-	  //constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 14;
-	  //constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 21;
-		//Font 12
+	//Font 08
+	    //constexpr auto STATIC_HEIGHT = 13;//CSSE = 13
+	    //constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 11;//CSSE = 9
+	    //constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 17;//CSSE = 21
+	//Font 10
+	    //constexpr auto STATIC_HEIGHT = 16;
+	    //constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 14;
+	    //constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 21;
+	//Font 12
 		constexpr auto STATIC_HEIGHT = 20;
 		constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 16;
 		constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 23;

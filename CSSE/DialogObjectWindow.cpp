@@ -297,11 +297,11 @@ namespace se::cs::dialog::object_window {
 		const auto mainWidth = LOWORD(lParam);
 		const auto mainHeight = HIWORD(lParam);
 
-		//Font 08
-	  //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах CSSE = 13
-		//Font 10
-	  //constexpr auto STATIC_HEIGHT = 16;
-		//Font 12
+	//Font 08
+	    //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах CSSE = 13
+	//Font 10
+	    //constexpr auto STATIC_HEIGHT = 16;
+	//Font 12
 		constexpr auto STATIC_HEIGHT = 20;
 
 		constexpr auto EDIT_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от пол€, которые всегда = 4 пиксел€; CSSE = 21

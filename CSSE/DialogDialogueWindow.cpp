@@ -674,21 +674,21 @@ namespace se::cs::dialog::dialogue_window {
 	}
 
 	namespace ResizeConstants {
-		//Font 08
-	  //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах + высота статичного пол€ описани€ с текстом; CSSE = 13
-	  //constexpr auto LEFT_SECTION_WIDTH = 250;//Ўирина секции с топиками и фильтрами; CSSE = 250
-	  //constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 150;//ширина нижней правой секции Shared By и ниже; CSSE = 150
-	  //constexpr auto CONDITION_STATIC_WIDTH = 66;//CSSE = 55
-	  //constexpr auto BOTTOM_SECTION_HEIGHT = 400;//CSSE = 500
-	  //constexpr auto TEXT_COUNTER_WIDTH = 30;
-		//Font 10
+	//Font 08
+	    //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах + высота статичного пол€ описани€ с текстом; CSSE = 13
+	    //constexpr auto LEFT_SECTION_WIDTH = 250;//Ўирина секции с топиками и фильтрами; CSSE = 250
+	    //constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 150;//ширина нижней правой секции Shared By и ниже; CSSE = 150
+	    //constexpr auto CONDITION_STATIC_WIDTH = 66;//CSSE = 55
+	    //constexpr auto BOTTOM_SECTION_HEIGHT = 400;//CSSE = 500
+	    //constexpr auto TEXT_COUNTER_WIDTH = 30;
+	//Font 10
 		constexpr auto STATIC_HEIGHT = 16;
 		constexpr auto LEFT_SECTION_WIDTH = 298;
 		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 200;
 		constexpr auto CONDITION_STATIC_WIDTH = 80;
 		constexpr auto BOTTOM_SECTION_HEIGHT = 500;
 		constexpr auto TEXT_COUNTER_WIDTH = 32;
-		//Font 12
+	//Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от пол€, которые всегда = 4 пиксел€; CSSE = 21
 		constexpr auto BASIC_PADDING = 2;
