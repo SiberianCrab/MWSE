@@ -605,17 +605,17 @@ function tes3uiElement:move(params) end
 --- ```
 --- 
 --- @param eventID tes3.uiEvent The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
---- @param callback fun(e: tes3uiEventData): boolean? The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus.
+--- @param callback integer|fun(e: tes3uiEventData): boolean? The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus.
 function tes3uiElement:register(eventID, callback) end
 
 --- Sets an `event` handler to run after any existing event handler on the element. Can be any event usable with `register`. The callback receives an argument with the event data. See `register` for details.
 --- @param eventID tes3.uiEvent The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
---- @param callback fun(e: tes3uiEventData): boolean? The callback function.
+--- @param callback integer|fun(e: tes3uiEventData): boolean? The callback function.
 function tes3uiElement:registerAfter(eventID, callback) end
 
 --- Sets an `event` handler to run before any existing event handler on the element. Can be any event usable with `register`. The callback receives an argument with the event data. See `register` for details.
 --- @param eventID tes3.uiEvent The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
---- @param callback fun(e: tes3uiEventData): boolean? The callback function.
+--- @param callback integer|fun(e: tes3uiEventData): boolean? The callback function.
 function tes3uiElement:registerBefore(eventID, callback) end
 
 --- Moves the layout order of the children of this element. `count` elements are taken from starting child `Element` or index (0-based) `moveFrom`, and moved before the child `Element` or index (0-based) `insertBefore`. If `count` is -1, all children after `moveFrom` are moved. If any index is a negative number, then the index represents a distance from the end of the child list.

@@ -74,6 +74,6 @@ button:register(tes3.uiEvent.mouseClick, onClick)
 ]],
 	arguments = {
 		{ name = "eventID", type = "tes3.uiEvent", description = "The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/)." },
-		{ name = "callback", type = "fun(e: tes3uiEventData): boolean?", description = "The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus." },
+		{ name = "callback", type = "integer|fun(e: tes3uiEventData): boolean?", description = "The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus." },
 	},
 }

@@ -1487,7 +1487,7 @@ myObject:register(eventID, callback)
 **Parameters**:
 
 * `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
-* `callback` (fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus.
+* `callback` (integer, fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus.
 
 ***
 
@@ -1503,7 +1503,7 @@ myObject:registerAfter(eventID, callback)
 **Parameters**:
 
 * `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
-* `callback` (fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
+* `callback` (integer, fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
 
 ***
 
@@ -1519,7 +1519,7 @@ myObject:registerBefore(eventID, callback)
 **Parameters**:
 
 * `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
-* `callback` (fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
+* `callback` (integer, fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
 
 ***
 
