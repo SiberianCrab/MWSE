@@ -17,4 +17,4 @@
 --- @field startGameHour number The in-game hour at which this AI package started.
 --- @field targetActor tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer The target actor for activate, follow and escort AI packages.
 --- @field targetPosition tes3vector3 The final position to be reached by the escort, follow, and travel AI packages.
---- @field type number *Read-only*. Maps to values in [`tes3.aiPackage`](https://mwse.github.io/MWSE/references/ai-packages/) namespace.
+--- @field type tes3.aiPackage *Read-only*. Maps to values in [`tes3.aiPackage`](https://mwse.github.io/MWSE/references/ai-packages/) namespace.

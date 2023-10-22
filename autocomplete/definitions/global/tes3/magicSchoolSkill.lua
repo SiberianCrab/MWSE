@@ -1,7 +1,7 @@
 return {
 	type = "value",
 	description = [[This table is used to convert numerical magic school IDs to their respective skill IDs. These constants will return their respective `tes3.skill` constants.]],
-	valuetype = "number",
+	valuetype = "table<tes3.magicSchool, tes3.skill>",
 	examples = {
 		["convertMagicSchoolToSkill"] = {
 			title = "Convert magic school from event data to a respective skill",

@@ -8,5 +8,5 @@ return {
 			{ name = "reference", type = "tes3mobileActor|tes3reference|string" },
 		},
 	}},
-	returns = { name = "packageID", type = "integer", description = "Maps to values in [`tes3.aiPackage`](https://mwse.github.io/MWSE/references/ai-packages/) table." }
+	returns = { name = "packageID", type = "tes3.aiPackage", description = "Maps to values in [`tes3.aiPackage`](https://mwse.github.io/MWSE/references/ai-packages/) table." }
 }

@@ -48,7 +48,7 @@ function niNode:detachChildAt(index) end
 function niNode:detachEffect(effect) end
 
 --- Gets the effect of the given type.
---- @param type integer Use the values from [`ni.dynamicEffectType`](https://mwse.github.io/MWSE/references/ni/dynamic-effect-types/) table.
+--- @param type ni.dynamicEffectType Use the values from [`ni.dynamicEffectType`](https://mwse.github.io/MWSE/references/ni/dynamic-effect-types/) table.
 --- @return niAmbientLight|niDirectionalLight|niPointLight|niSpotLight|niTextureEffect|nil effect No description yet available.
 function niNode:getEffect(type) end
 

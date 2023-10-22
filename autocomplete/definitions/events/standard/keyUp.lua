@@ -4,7 +4,7 @@ return {
 	related = { "keyDown" },
 	eventData = {
 		["keyCode"] = {
-			type = "integer",
+			type = "tes3.scanCode",
 			readOnly = true,
 			description = "The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.",
 		},

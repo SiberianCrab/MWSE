@@ -27,7 +27,7 @@ event.register(tes3.event.keyDown, keyDownCallback)
 * `isControlDown` (boolean): *Read-only*. True if either control key is held.
 * `isShiftDown` (boolean): *Read-only*. True if either shift key is held.
 * `isSuperDown` (boolean): *Read-only*. True if super (Windows key) is held.
-* `keyCode` (integer): *Read-only*. The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.
+* `keyCode` ([tes3.scanCode](../references/scan-codes.md)): *Read-only*. The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.
 
 ## Examples
 
@@ -69,20 +69,7 @@ event.register(tes3.event.keyDown, keyDownCallback)
 	
 	--- @param e keyDownEventData|mouseButtonDownEventData|mouseWheelEventData
 	local function sayHi(e)
-		local IC = tes3.worldController.inputController
-	
-		-- Let's construct the table with the currently pressed key combination.
-		-- This will handle event data from keyDown, mouseButtonDown and mouseWheel events.
-		--- @type mwseKeyMouseCombo
-		local actual = {
-			keyCode = e.keyCode,
-			isAltDown = IC:isAltDown(),
-			isControlDown = IC:isControlDown(),
-			isShiftDown = IC:isShiftDown(),
-			mouseButton = e.button,
-			delta = e.delta
-		}
-		if not tes3.isKeyEqual({ expected = config.combo, actual = actual }) then
+		if not tes3.isKeyEqual({ expected = config.combo, actual = e }) then
 			-- Nothing to do if the pressed combination isn't equal to our expected combination.
 			return
 		end

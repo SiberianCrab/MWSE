@@ -30,7 +30,7 @@
 --- @field hitSoundEffect tes3sound The sound effect that plays when the effect hits a target. Can be set to ``nil`` to use the default sound effect for the magic school.
 --- @field hitVisualEffect tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3probe|tes3repairTool|tes3static|tes3weapon The visual played when a spell with this effect hits something.
 --- @field icon string The path to the icon to use for the effect.
---- @field id number *Read-only*. The unique identifier for the magic effect. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/). Values not defined in `tes3.effect` are also possible for magic effects added by mods that don't use [`tes3.claimSpellEffectId()`](https://mwse.github.io/MWSE/apis/tes3/#tes3claimspelleffectid) to register their id.
+--- @field id tes3.effect *Read-only*. The unique identifier for the magic effect. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/). Values not defined in `tes3.effect` are also possible for magic effects added by mods that don't use [`tes3.claimSpellEffectId()`](https://mwse.github.io/MWSE/apis/tes3/#tes3claimspelleffectid) to register their id.
 --- @field illegalDaedra boolean Access to the base flag that determines if this effect summons an illegal daedra. This flag isn't used.
 --- @field isHarmful boolean Access to the base flag that determines if this effect is counted as a hostile action.
 --- @field lightingBlue number The amount of blue lighting to use when lighting projectiles.
@@ -39,10 +39,10 @@
 --- @field name string *Read-only*. Player-facing name of the effect.
 --- @field nonRecastable boolean Access to the base flag that determines if this effect can be refreshed by recasting.
 --- @field particleTexture boolean *Read-only*. The path to use for the particle effect texture.
---- @field school number The school that the effect is associated with. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
+--- @field school tes3.magicSchool The school that the effect is associated with. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
 --- @field size number Controls how much the visual effect scales with its magnitude.
 --- @field sizeCap number The maximum possible size of the spell projectile with this effect.
---- @field skill number *Read-only*. The skill for the associated school that the effect is associated with. This skill is used when calculating experience gain per skill after a spell with this effect is cast. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace.
+--- @field skill tes3.skill *Read-only*. The skill for the associated school that the effect is associated with. This skill is used when calculating experience gain per skill after a spell with this effect is cast. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace.
 --- @field speed number No description yet available.
 --- @field spellFailureSoundEffect tes3sound *Read-only*. The sound effect that plays when a spell fails to cast, and when magic is resisted. This is determined only by the spell school.
 --- @field targetsAttributes boolean Access to the base flag that determines if this effect makes use of attributes.

@@ -172,7 +172,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -260,7 +260,7 @@ The skill learned from the book (from [`tes3.skill`](https://mwse.github.io/MWSE
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.skill](../references/skills.md))
 
 ***
 
@@ -326,7 +326,7 @@ The book type. Maps to values in [`tes3.bookType`](https://mwse.github.io/MWSE/r
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.bookType](../references/book-types.md))
 
 ***
 

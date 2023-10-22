@@ -7,7 +7,7 @@ return {
 		-- the getWind here without the type checker complaining
 		type = "table|mgeWindTable",
 		tableParams = {
-			{ name = "weather", type = "integer", description = "Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table." },
+			{ name = "weather", type = "tes3.weather", description = "Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table." },
 			{ name = "speed", type = "number" },
 		},
 	}},

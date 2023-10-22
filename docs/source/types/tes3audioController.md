@@ -217,7 +217,7 @@ local volume = myObject:getMixVolume(mix)
 
 **Parameters**:
 
-* `mix` (number): The type of sound mix to perform a check for. Accepts values from [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) namespace.
+* `mix` ([tes3.soundMix](../references/sound-mix-types.md)): The type of sound mix to perform a check for. Accepts values from [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) namespace.
 
 **Returns**:
 

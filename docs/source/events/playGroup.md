@@ -27,9 +27,9 @@ event.register(tes3.event.playGroup, playGroupCallback)
 ## Event Data
 
 * `animationData` ([tes3animationData](../types/tes3animationData.md)): *Read-only*. The related animation data.
-* `flags` (number): Maps to values in [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) namespace.
-* `group` (number): The animation group about to be played. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
-* `index` (number): *Read-only*. The index of the body section the animation will be played on. Maps to values in [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.
+* `flags` ([tes3.animationStartFlag](../references/animation-start-flags.md)): Maps to values in [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) namespace.
+* `group` ([tes3.animationGroup](../references/animation-groups.md)): The animation group about to be played. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+* `index` ([tes3.animationBodySection](../references/animation-body-sections.md)): *Read-only*. The index of the body section the animation will be played on. Maps to values in [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.
 * `loopCount` (number): The number of times the animation is going to be played. Infinite looping is marked by `-1`, while `0` means the animation will be played only once (no looping).
 * `reference` ([tes3reference](../types/tes3reference.md)): *Read-only*. The actor that is about to play the animation.
 

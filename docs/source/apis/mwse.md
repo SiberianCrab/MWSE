@@ -171,7 +171,7 @@ local converted = mwse.iconv(languageCode, utf8string)
 
 **Parameters**:
 
-* `languageCode` (integer): Determines the language (and appropriate encoding) to use. Maps to values in [`tes3.languageCode`](https://mwse.github.io/MWSE/references/language-codes/) table.
+* `languageCode` ([tes3.languageCode](../references/language-codes.md)): Determines the language (and appropriate encoding) to use. Maps to values in [`tes3.languageCode`](https://mwse.github.io/MWSE/references/language-codes/) table.
 * `utf8string` (string): The string to convert
 
 **Returns**:
@@ -255,7 +255,7 @@ local result = mwse.longToString(type)
 
 **Parameters**:
 
-* `type` (number)
+* `type` ([tes3.objectType](../references/object-types.md), number)
 
 **Returns**:
 
@@ -290,37 +290,29 @@ local success = mwse.overrideScript(scriptId, callback)
 	-- with our own raceCheck() function that does the same thing.
 	
 	local raceCheckScriptID = "RaceCheck"
+	local raceMap = {
+		["argonian"] = 1,
+		["breton"] = 2,
+		["dark elf"] = 3,
+		["high elf"] = 4,
+		["imperial"] = 5,
+		["khajiit"] = 6,
+		["nord"] = 7,
+		["orc"] = 8,
+		["redguard"] = 9,
+		["wood elf"] = 10,
+	}
 	
 	local function raceCheck()
-		-- This is almost always the desired behavior,
-		-- since we are overriding the script.
+		-- It's almost always the desired behavior to stop the mwscript,
+		-- since we are overriding the it.
 		---@diagnostic disable-next-line: deprecated
 		mwscript.stopScript({ script = raceCheckScriptID })
 	
 		local pcRaceID = tes3.player.object.race.id:lower()
 		local PCRace = tes3.findGlobal("PCRace")
 	
-		if pcRaceID == "argonian" then
-			PCRace.value = 1
-		elseif pcRaceID == "breton" then
-			PCRace.value = 2
-		elseif pcRaceID == "dark elf" then
-			PCRace.value = 3
-		elseif pcRaceID == "high elf" then
-			PCRace.value = 4
-		elseif pcRaceID == "imperial" then
-			PCRace.value = 5
-		elseif pcRaceID == "khajiit" then
-			PCRace.value = 6
-		elseif pcRaceID == "nord" then
-			PCRace.value = 7
-		elseif pcRaceID == "orc" then
-			PCRace.value = 8
-		elseif pcRaceID == "redguard" then
-			PCRace.value = 9
-		elseif pcRaceID == "wood elf" then
-			PCRace.value = 10
-		end
+		PCRace.value = raceMap[pcRaceID]
 	end
 	
 	-- Script overrides can be queued when initialited event triggers.

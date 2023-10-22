@@ -283,7 +283,7 @@ The path to the icon to use for the effect.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.effect](../references/magic-effects.md))
 
 ***
 
@@ -382,7 +382,7 @@ The school that the effect is associated with. Maps to [`tes3.magicSchool`](http
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.magicSchool](../references/magic-schools.md))
 
 ***
 
@@ -415,7 +415,7 @@ The maximum possible size of the spell projectile with this effect.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.skill](../references/skills.md))
 
 ***
 

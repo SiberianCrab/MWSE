@@ -62,7 +62,7 @@ The spell's cast type. Maps to [`tes3.spellType`](https://mwse.github.io/MWSE/re
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.spellType](../references/spell-types.md))
 
 ***
 
@@ -226,7 +226,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -437,7 +437,7 @@ local result = myObject:getFirstIndexOfEffect(effectId)
 
 **Parameters**:
 
-* `effectId` (number): A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+* `effectId` ([tes3.effect](../references/magic-effects.md)): A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 
 **Returns**:
 
@@ -479,5 +479,5 @@ local schoolID = myObject:getLeastProficientSchool(actor)
 
 **Returns**:
 
-* `schoolID` (number, nil): The least proficient school ID (from [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) table), or `nil` if the spell has no valid effects.
+* `schoolID` ([tes3.magicSchool](../references/magic-schools.md), nil): The least proficient school ID (from [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) table), or `nil` if the spell has no valid effects.
 

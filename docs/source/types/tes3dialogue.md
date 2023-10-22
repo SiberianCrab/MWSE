@@ -106,7 +106,7 @@ The modification state of the object since the last save.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -161,7 +161,7 @@ If true, references of this object can store temporary or persistent lua data.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.dialogueType](../references/dialogue-types.md))
 
 ***
 
@@ -216,7 +216,7 @@ local result = myObject:getInfo({ actor = ..., context = ... })
 
 * `params` (table)
 	* `actor` ([tes3mobileActor](../types/tes3mobileActor.md), [tes3reference](../types/tes3reference.md), string)
-	* `context` (number): *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
+	* `context` ([tes3.dialogueFilterContext](../references/dialogue-filter-context.md)): *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
 
 **Returns**:
 

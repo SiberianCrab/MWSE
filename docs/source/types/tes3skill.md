@@ -29,7 +29,7 @@ This type inherits the following: [tes3baseObject](../types/tes3baseObject.md)
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.attribute](../references/attributes.md))
 
 ***
 
@@ -139,7 +139,7 @@ The modification state of the object since the last save.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -183,7 +183,7 @@ The specialization in which the skill belongs. Maps to values in the [`tes3.spec
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.specialization](../references/specializations.md))
 
 ***
 

@@ -14,7 +14,7 @@ return {
 				},
 				{
 					name = "objectType",
-					type = "number",
+					type = "tes3.objectType",
 					description = [[The type of object to create. Maps to values in the [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) table. Supported object types are:
 		- `tes3.objectType.activator`
 		- `tes3.objectType.alchemy`

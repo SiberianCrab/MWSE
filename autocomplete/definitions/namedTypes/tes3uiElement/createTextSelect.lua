@@ -10,7 +10,7 @@ Text select specific properties can be accessed through the `widget` property. T
 		tableParams = {
 			{ name = "id", type = "string|number", description = "An identifier to help find this element later.", optional = true },
 			{ name = "text", type = "string", description = "The text to display.", optional = true },
-			{ name = "state", type = "number", description = "The initial interaction state.", default = "tes3.uiState.normal", optional = true },
+			{ name = "state", type = "tes3.uiState", description = "The initial interaction state.", default = "tes3.uiState.normal", optional = true },
 		},
 	} },
 	valuetype = "tes3uiElement",

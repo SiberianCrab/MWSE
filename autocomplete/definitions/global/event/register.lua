@@ -2,7 +2,7 @@ return {
 	type = "function",
 	description = [[Registers a function to be called when an event is raised.]],
 	arguments = {
-		{ name = "eventId", type = "string" },
+		{ name = "eventId", type = "string|tes3.event" },
 		{ name = "callback", type = "function" },
 		{
 			name = "options",

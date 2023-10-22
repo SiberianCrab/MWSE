@@ -216,7 +216,7 @@ Access to the root mobile object movement flags, represented as an integer. Shou
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 

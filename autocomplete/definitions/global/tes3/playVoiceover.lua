@@ -6,7 +6,7 @@ return {
 		type = "table",
 		tableParams = {
 			{ name = "actor", type = "tes3mobileActor|tes3reference|string", description = "The actor to play a voiceover." },
-			{ name = "voiceover", type = "number|string", description = "Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants." },
+			{ name = "voiceover", type = "tes3.voiceover|string", description = "Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants." },
 		},
 	}},
 	returns = { name = "played", type = "boolean" },

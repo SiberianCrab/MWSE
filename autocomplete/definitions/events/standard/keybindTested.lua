@@ -3,12 +3,12 @@ return {
 	description = "This event fires whenever a keybind is tested by the game. A keybind test is often used to see if a button is pressed, but it can also be done to see if an input was toggled or released. Blocking this event is equivalent to setting the `result` event data to false.",
 	eventData = {
 		["keybind"] = {
-			type = "number",
+			type = "tes3.keybind",
 			readOnly = true,
 			description = "The keybind that was tested. This maps to the `tes3.keybind.*` constants.",
 		},
 		["transition"] = {
-			type = "number",
+			type = "tes3.keyTransition",
 			readOnly = true,
 			description = "The transition for the keybind that was tested. This is typically `tes3.keyTransition.isDown` but not guaranteed to be. Always be sure to check what transition is being used.",
 		},

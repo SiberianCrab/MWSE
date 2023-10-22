@@ -149,7 +149,7 @@ The state of this magic effect instance. Maps to [`tes3.spellState`](https://mws
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.spellState](../references/spell-states.md))
 
 ***
 

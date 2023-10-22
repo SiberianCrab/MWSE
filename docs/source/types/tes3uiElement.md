@@ -228,7 +228,7 @@ The file path to the image or model content of this element. Only used if `conte
 
 **Returns**:
 
-* `result` (string)
+* `result` ([tes3.contentType](../references/content-types.md))
 
 ***
 
@@ -246,11 +246,11 @@ Disables user actions on this element. Widgets may stop accepting mouse and keyb
 ### `flowDirection`
 <div class="search_terms" style="display: none">flowdirection</div>
 
-Can have values `"left_to_right"` or `"top_to_bottom"`. These values are available as [`tes3.flowDirection`](https://mwse.github.io/MWSE/references/flow-directions/) enumeration. Indicates which direction child elements are laid out.
+Indicates which direction child elements are laid out. These values are available as [`tes3.flowDirection`](https://mwse.github.io/MWSE/references/flow-directions/) enumeration.
 
 **Returns**:
 
-* `result` (string)
+* `result` ([tes3.flowDirection](../references/flow-directions.md))
 
 ***
 
@@ -357,11 +357,11 @@ Image scaling multipliers. Only applies to image elements. `0` disables scaling 
 ### `justifyText`
 <div class="search_terms" style="display: none">justifytext</div>
 
-Can have values `"left"`, `"center"`, or `"right"`. Controls text justification. Maps to values in the [`tes3.justifyText`](https://mwse.github.io/MWSE/references/justify-text/) table. To work correctly for center/right justification, `wrapText` must be `true`.
+Controls text justification. To work correctly for center/right justification, `wrapText` must be `true`. Maps to values in the [`tes3.justifyText`](https://mwse.github.io/MWSE/references/justify-text/) table.
 
 **Returns**:
 
-* `result` (string)
+* `result` ([tes3.justifyText](../references/justify-text.md))
 
 ***
 
@@ -584,7 +584,7 @@ The underlying texture for the element. This assumes that the element is of an e
 
 **Returns**:
 
-* `result` (string)
+* `result` ([tes3.uiElementType](../references/tes3uiElement-types.md))
 
 ***
 
@@ -1076,7 +1076,7 @@ local result = myObject:createTextSelect({ id = ..., text = ..., state = ... })
 * `params` (table): *Optional*.
 	* `id` (string, number): *Optional*. An identifier to help find this element later.
 	* `text` (string): *Optional*. The text to display.
-	* `state` (number): *Default*: `tes3.uiState.normal`. The initial interaction state.
+	* `state` ([tes3.uiState](../references/ui-states.md)): *Default*: `tes3.uiState.normal`. The initial interaction state.
 
 **Returns**:
 
@@ -1486,7 +1486,7 @@ myObject:register(eventID, callback)
 
 **Parameters**:
 
-* `eventID` (string): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
+* `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 * `callback` (fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus.
 
 ***
@@ -1502,7 +1502,7 @@ myObject:registerAfter(eventID, callback)
 
 **Parameters**:
 
-* `eventID` (string): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
+* `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 * `callback` (fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
 
 ***
@@ -1518,7 +1518,7 @@ myObject:registerBefore(eventID, callback)
 
 **Parameters**:
 
-* `eventID` (string): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
+* `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 * `callback` (fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
 
 ***

@@ -9,7 +9,7 @@ return {
 			description = "The item for which the sound is about to be played.",
 		},
 		["state"] = {
-			type = "number",
+			type = "tes3.itemSoundState",
 			readOnly = true,
 			description = "Maps to values in [tes3.itemSoundState](https://mwse.github.io/MWSE/references/item-sound-states/) namespace.",
 		},

@@ -8,7 +8,7 @@
 --- @field dataHandler tes3dataHandler One of the core game objects.
 --- @field game tes3game One of the core game objects.
 --- @field installDirectory string The currently executed root Morrowind installation path.
---- @field magicSchoolSkill number This table is used to convert numerical magic school IDs to their respective skill IDs. These constants will return their respective `tes3.skill` constants.
+--- @field magicSchoolSkill table<tes3.magicSchool, tes3.skill> This table is used to convert numerical magic school IDs to their respective skill IDs. These constants will return their respective `tes3.skill` constants.
 --- @field mobilePlayer tes3mobilePlayer The player's mobile actor.
 --- @field player tes3reference A reference to the player.
 --- @field player1stPerson tes3reference A reference used for the player's first person hands.
@@ -130,13 +130,13 @@ function tes3.addJournalEntry(params) end
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/apis/tes3/#tes3addmagiceffect).
 --- @param params tes3.addMagicEffect.params This table accepts the following values:
 --- 
---- `id`: number — Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
+--- `id`: tes3.effect — Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
 --- 
 --- `name`: string? — *Default*: `Unnamed Effect`. Name of the effect.
 --- 
 --- `baseCost`: number? — *Default*: `1`. Base magicka cost for the effect.
 --- 
---- `school`: integer? — *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
+--- `school`: tes3.magicSchool? — *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
 --- 
 --- `size`: number? — *Default*: `1`. Controls how much the visual effect scales with its magnitude.
 --- 
@@ -217,8 +217,8 @@ function tes3.addJournalEntry(params) end
 --- --- 			- `triggerParams` (table)
 --- --- 				- `negateOnExpiry` (boolean): *Optional. Default:* `true` If this flag is `true`, the effect will be negated on expiry.
 --- --- 				- `isUncapped` (boolean): *Optional.*
---- --- 				- `attribute` (number): *Optional. Default:* `tes3.effectAttribute.nonResistable` The attribute used in resistance calculations agains this effect. Maps to values in [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
---- --- 				- `type` (number): *Optional. Default:* `tes3.effectEventType.boolean`. This flag controls how the effect behaves. For example, `tes3.effectEventType.modStatistic` will make the effect work as calling `tes3.modStatistic`. Maps to values in [`tes3.effectEventType`](https://mwse.github.io/MWSE/references/effect-event-types/) namespace.
+--- --- 				- `attribute` ([tes3.effectAttribute](https://mwse.github.io/MWSE/references/effect-attributes/)): *Optional. Default:* `tes3.effectAttribute.nonResistable` The attribute used in resistance calculations agains this effect. Maps to values in [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
+--- --- 				- `type` ([tes3.effectEventType](https://mwse.github.io/MWSE/references/effect-event-types/)): *Optional. Default:* `tes3.effectEventType.boolean`. This flag controls how the effect behaves. For example, `tes3.effectEventType.modStatistic` will make the effect work as calling `tes3.modStatistic`. Maps to values in [`tes3.effectEventType`](https://mwse.github.io/MWSE/references/effect-event-types/) namespace.
 --- --- 				- `value` (number): *Optional. Default:* `0`. The variable this effect changes.
 --- --- 				- `resistanceCheck(resistParams)` (function): *Optional.* The function passed as `resistanceCheck` will be used on any of the game's spell resistance checks. For example, the only effect in vanilla Morrowind that implements this function is Water Walking. It disallows using a spell with Water Walking when the player is deep underwater, by setting it as expired. So, returning `true` from this function will set your effect to expired, and depending on your trigger code may stop processing. The function passed here must return boolean values.
 --- --- 					**Parameters**
@@ -247,10 +247,10 @@ function tes3.addMagicEffect(params) end
 
 ---Table parameter definitions for `tes3.addMagicEffect`.
 --- @class tes3.addMagicEffect.params
---- @field id number Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
+--- @field id tes3.effect Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
 --- @field name string? *Default*: `Unnamed Effect`. Name of the effect.
 --- @field baseCost number? *Default*: `1`. Base magicka cost for the effect.
---- @field school integer? *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
+--- @field school tes3.magicSchool? *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
 --- @field size number? *Default*: `1`. Controls how much the visual effect scales with its magnitude.
 --- @field sizeCap number? *Default*: `1`. The maximum possible size of the projectile.
 --- @field speed number? *Default*: `1`. No description yet available.
@@ -298,8 +298,8 @@ function tes3.addMagicEffect(params) end
 --- 			- `triggerParams` (table)
 --- 				- `negateOnExpiry` (boolean): *Optional. Default:* `true` If this flag is `true`, the effect will be negated on expiry.
 --- 				- `isUncapped` (boolean): *Optional.*
---- 				- `attribute` (number): *Optional. Default:* `tes3.effectAttribute.nonResistable` The attribute used in resistance calculations agains this effect. Maps to values in [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
---- 				- `type` (number): *Optional. Default:* `tes3.effectEventType.boolean`. This flag controls how the effect behaves. For example, `tes3.effectEventType.modStatistic` will make the effect work as calling `tes3.modStatistic`. Maps to values in [`tes3.effectEventType`](https://mwse.github.io/MWSE/references/effect-event-types/) namespace.
+--- 				- `attribute` ([tes3.effectAttribute](https://mwse.github.io/MWSE/references/effect-attributes/)): *Optional. Default:* `tes3.effectAttribute.nonResistable` The attribute used in resistance calculations agains this effect. Maps to values in [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
+--- 				- `type` ([tes3.effectEventType](https://mwse.github.io/MWSE/references/effect-event-types/)): *Optional. Default:* `tes3.effectEventType.boolean`. This flag controls how the effect behaves. For example, `tes3.effectEventType.modStatistic` will make the effect work as calling `tes3.modStatistic`. Maps to values in [`tes3.effectEventType`](https://mwse.github.io/MWSE/references/effect-event-types/) namespace.
 --- 				- `value` (number): *Optional. Default:* `0`. The variable this effect changes.
 --- 				- `resistanceCheck(resistParams)` (function): *Optional.* The function passed as `resistanceCheck` will be used on any of the game's spell resistance checks. For example, the only effect in vanilla Morrowind that implements this function is Water Walking. It disallows using a spell with Water Walking when the player is deep underwater, by setting it as expired. So, returning `true` from this function will set your effect to expired, and depending on your trigger code may stop processing. The function passed here must return boolean values.
 --- 					**Parameters**
@@ -383,7 +383,7 @@ function tes3.addTopic(params) end
 --- 
 --- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — The reference to attach the sound to.
 --- 
---- `mixChannel`: integer? — *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
+--- `mixChannel`: tes3.soundMix? — *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
 --- 
 --- `volume`: number? — *Default*: `1.0`. A value between 0.0 and 1.0 to scale the volume off of.
 function tes3.adjustSoundVolume(params) end
@@ -392,7 +392,7 @@ function tes3.adjustSoundVolume(params) end
 --- @class tes3.adjustSoundVolume.params
 --- @field sound tes3sound|string The sound object, or id of the sound to look for.
 --- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string The reference to attach the sound to.
---- @field mixChannel integer? *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
+--- @field mixChannel tes3.soundMix? *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
 --- @field volume number? *Default*: `1.0`. A value between 0.0 and 1.0 to scale the volume off of.
 
 --- Advances the game time. Can be used to simulate player resting.
@@ -503,7 +503,7 @@ function tes3.calculateChargeUse(params) end
 --- 
 --- `itemData`: tes3itemData? — *Optional*. If `bartering` or `repairing`, the item data passed to the [calcBarterPrice](https://mwse.github.io/MWSE/events/calcBarterPrice) or [calcRepairPrice](https://mwse.github.io/MWSE/events/calcRepairPrice) event.
 --- 
---- `skill`: number — If `training`, the skill ID passed to the [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event. Maps to value in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+--- `skill`: tes3.skill — If `training`, the skill ID passed to the [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 --- @return number price The calculated price, filtered by events.
 function tes3.calculatePrice(params) end
 
@@ -519,7 +519,7 @@ function tes3.calculatePrice(params) end
 --- @field training boolean? *Default*: `false`. If `true`, a [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event will be triggered, passing the given `skill` ID.
 --- @field count number? *Default*: `1`. If `bartering`, the count passed to the [calcBarterPrice](https://mwse.github.io/MWSE/events/calcBarterPrice) event.
 --- @field itemData tes3itemData? *Optional*. If `bartering` or `repairing`, the item data passed to the [calcBarterPrice](https://mwse.github.io/MWSE/events/calcBarterPrice) or [calcRepairPrice](https://mwse.github.io/MWSE/events/calcRepairPrice) event.
---- @field skill number If `training`, the skill ID passed to the [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event. Maps to value in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+--- @field skill tes3.skill If `training`, the skill ID passed to the [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 
 --- Returns `true` if the `target` actor can cast spells, otherwise returns `false`.
 --- @param params tes3.canCastSpells.params This table accepts the following values:
@@ -594,9 +594,9 @@ function tes3.cast(params) end
 --- 
 --- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — No description yet available.
 --- 
---- `service`: number? — *Optional*. The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table.
+--- `service`: tes3.merchantService? — *Optional*. The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table.
 --- 
---- `context`: number? — *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
+--- `context`: tes3.dialogueFilterContext? — *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
 --- @return boolean offersService No description yet available.
 --- @return tes3dialogueInfo refusalReply No description yet available.
 function tes3.checkMerchantOffersService(params) end
@@ -604,8 +604,8 @@ function tes3.checkMerchantOffersService(params) end
 ---Table parameter definitions for `tes3.checkMerchantOffersService`.
 --- @class tes3.checkMerchantOffersService.params
 --- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string No description yet available.
---- @field service number? *Optional*. The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table.
---- @field context number? *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
+--- @field service tes3.merchantService? *Optional*. The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table.
+--- @field context tes3.dialogueFilterContext? *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
 
 --- Determines if a merchant trades in a given item.
 --- @param params tes3.checkMerchantTradesItem.params This table accepts the following values:
@@ -665,7 +665,7 @@ function tes3.closeSpellmakingMenu() end
 --- 
 --- `id`: string? — *Optional*. The id of the new object.
 --- 
---- `objectType`: number — The type of object to create. Maps to values in the [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) table. Supported object types are:
+--- `objectType`: tes3.objectType — The type of object to create. Maps to values in the [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) table. Supported object types are:
 --- --- 		- `tes3.objectType.activator`
 --- --- 		- `tes3.objectType.alchemy`
 --- --- 		- `tes3.objectType.armor`
@@ -687,7 +687,7 @@ function tes3.createObject(params) end
 ---Table parameter definitions for `tes3.createObject`.
 --- @class tes3.createObject.params
 --- @field id string? *Optional*. The id of the new object.
---- @field objectType number The type of object to create. Maps to values in the [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) table. Supported object types are:
+--- @field objectType tes3.objectType The type of object to create. Maps to values in the [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) table. Supported object types are:
 --- 		- `tes3.objectType.activator`
 --- 		- `tes3.objectType.alchemy`
 --- 		- `tes3.objectType.armor`
@@ -776,7 +776,7 @@ function tes3.decrementKillCount(params) end
 function tes3.deleteObject(object) end
 
 --- Disables the use of a keyboard key.
---- @param keyCode number Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+--- @param keyCode tes3.scanCode Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 function tes3.disableKey(keyCode) end
 
 --- Drops one or more items from a reference's inventory onto the ground at their feet. It will unequip the item if it is equipped. The return value will be nil if no matching item was found.
@@ -806,7 +806,7 @@ function tes3.dropItem(params) end
 --- @field updateGUI boolean? *Default*: `true`. If false, the player or contents menu won't be updated.
 
 --- Enables the use of a keyboard key.
---- @param keyCode number Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+--- @param keyCode tes3.scanCode Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 function tes3.enableKey(keyCode) end
 
 --- Similar to the vanilla FadeIn mwscript command.
@@ -899,17 +899,17 @@ function tes3.findClosestExteriorReferenceOfObject(params) end
 --- 
 --- `topic`: string? — *Optional*. The dialogue topic to look for.
 --- 
---- `type`: number? — *Optional*. The type of dialogue to look for. Uses [`tes3.dialogueType`](https://mwse.github.io/MWSE/references/dialogue-types/) constants.
+--- `type`: tes3.dialogueType? — *Optional*. The type of dialogue to look for. Uses [`tes3.dialogueType`](https://mwse.github.io/MWSE/references/dialogue-types/) constants.
 --- 
---- `page`: number? — *Optional*. The page of dialogue to fetch. Uses [`tes3.dialoguePage`](https://mwse.github.io/MWSE/references/dialogue-pages/) constants.
+--- `page`: tes3.dialoguePage.voice|tes3.dialoguePage.greeting|tes3.dialoguePage.service|nil — *Optional*. The page of dialogue to fetch. Uses [`tes3.dialoguePage`](https://mwse.github.io/MWSE/references/dialogue-pages/) constants.
 --- @return tes3dialogue dialogue No description yet available.
 function tes3.findDialogue(params) end
 
 ---Table parameter definitions for `tes3.findDialogue`.
 --- @class tes3.findDialogue.params
 --- @field topic string? *Optional*. The dialogue topic to look for.
---- @field type number? *Optional*. The type of dialogue to look for. Uses [`tes3.dialogueType`](https://mwse.github.io/MWSE/references/dialogue-types/) constants.
---- @field page number? *Optional*. The page of dialogue to fetch. Uses [`tes3.dialoguePage`](https://mwse.github.io/MWSE/references/dialogue-pages/) constants.
+--- @field type tes3.dialogueType? *Optional*. The type of dialogue to look for. Uses [`tes3.dialogueType`](https://mwse.github.io/MWSE/references/dialogue-types/) constants.
+--- @field page tes3.dialoguePage.voice|tes3.dialoguePage.greeting|tes3.dialoguePage.service|nil *Optional*. The page of dialogue to fetch. Uses [`tes3.dialoguePage`](https://mwse.github.io/MWSE/references/dialogue-pages/) constants.
 
 --- Fetches the core game object that represents a global variable.
 --- @param id string No description yet available.
@@ -919,7 +919,7 @@ function tes3.findGlobal(id) end
 --- Fetches the core game object that represents a game setting. While this function accepts a name, it is recommended to use the [`tes3.GMST`](https://mwse.github.io/MWSE/references/gmst/) constants.
 ---
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/apis/tes3/#tes3findgmst).
---- @param id number|string No description yet available.
+--- @param id tes3.gmst|string No description yet available.
 --- @return tes3gameSetting gameSetting No description yet available.
 function tes3.findGMST(id) end
 
@@ -958,14 +958,14 @@ function tes3.getActiveCells() end
 --- 
 --- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — A reference to the which actor whose animations will be checked.
 --- 
---- `group`: number? — *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- `group`: tes3.animationGroup? — *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 --- @return table<string, number>|nil result No description yet available.
 function tes3.getAnimationActionTiming(params) end
 
 ---Table parameter definitions for `tes3.getAnimationActionTiming`.
 --- @class tes3.getAnimationActionTiming.params
 --- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string A reference to the which actor whose animations will be checked.
---- @field group number? *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- @field group tes3.animationGroup? *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 
 --- This function fetches a reference's attached animation groups. The animation groups match the values from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) table.
 ---
@@ -973,9 +973,9 @@ function tes3.getAnimationActionTiming(params) end
 --- @param params tes3.getAnimationGroups.params This table accepts the following values:
 --- 
 --- `reference`: tes3reference — A reference whose animation groups to fetch.
---- @return integer lowerBodyGroup No description yet available.
---- @return integer upperBodyGroup No description yet available.
---- @return integer leftArmGroup No description yet available.
+--- @return tes3.animationGroup lowerBodyGroup No description yet available.
+--- @return tes3.animationGroup upperBodyGroup No description yet available.
+--- @return tes3.animationGroup leftArmGroup No description yet available.
 function tes3.getAnimationGroups(params) end
 
 ---Table parameter definitions for `tes3.getAnimationGroups`.
@@ -1015,7 +1015,7 @@ function tes3.getArchiveList() end
 function tes3.getAttachment(reference, attachment) end
 
 --- Returns the lowercase identifying name of an attribute for a given numerical, 0-based index. E.g. "strength", by using GMSTs. Uses `tes3.attributeName` enumeration as a fallback.
---- @param attributeId number The attribute id to get the name of. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) namespace.
+--- @param attributeId tes3.attribute The attribute id to get the name of. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) namespace.
 --- @return string name No description yet available.
 function tes3.getAttributeName(attributeId) end
 
@@ -1056,7 +1056,7 @@ function tes3.getCumulativeDaysForMonth(month) end
 --- @param params tes3.getCurrentAIPackageId.params This table accepts the following values:
 --- 
 --- `reference`: tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string — No description yet available.
---- @return integer packageID Maps to values in [`tes3.aiPackage`](https://mwse.github.io/MWSE/references/ai-packages/) table.
+--- @return tes3.aiPackage packageID Maps to values in [`tes3.aiPackage`](https://mwse.github.io/MWSE/references/ai-packages/) table.
 function tes3.getCurrentAIPackageId(params) end
 
 ---Table parameter definitions for `tes3.getCurrentAIPackageId`.
@@ -1097,11 +1097,11 @@ function tes3.getDialogueInfo(params) end
 --- 
 --- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — An associated mobile should exist for this function to be able to work.
 --- 
---- `effect`: number — Effect ID. Can be any of the predefined spell effects, or one added by `tes3.claimSpellEffectId()`. Maps to values of [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants
+--- `effect`: tes3.effect — Effect ID. Can be any of the predefined spell effects, or one added by `tes3.claimSpellEffectId()`. Maps to values of [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants
 --- 
---- `skill`: number? — *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
+--- `skill`: tes3.skill? — *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
 --- 
---- `attribute`: number? — *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
+--- `attribute`: tes3.attribute? — *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
 --- @return number effectiveMagnitude The effective magnitude after all the actor's resistances are applied.
 --- @return integer magnitude The magnitude before any of the actor's resistances are applied.
 function tes3.getEffectMagnitude(params) end
@@ -1109,9 +1109,9 @@ function tes3.getEffectMagnitude(params) end
 ---Table parameter definitions for `tes3.getEffectMagnitude`.
 --- @class tes3.getEffectMagnitude.params
 --- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string An associated mobile should exist for this function to be able to work.
---- @field effect number Effect ID. Can be any of the predefined spell effects, or one added by `tes3.claimSpellEffectId()`. Maps to values of [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants
---- @field skill number? *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
---- @field attribute number? *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
+--- @field effect tes3.effect Effect ID. Can be any of the predefined spell effects, or one added by `tes3.claimSpellEffectId()`. Maps to values of [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants
+--- @field skill tes3.skill? *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
+--- @field attribute tes3.attribute? *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
 
 --- Returns an actor's equipped item stack, provided a given filter
 ---
@@ -1122,11 +1122,11 @@ function tes3.getEffectMagnitude(params) end
 --- 
 --- `enchanted`: boolean? — *Optional*. If true, filters only enchanted items.
 --- 
---- `objectType`: number? — *Optional*. Maps to [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) constants. Used to filter equipment by type.
+--- `objectType`: tes3.objectType? — *Optional*. Maps to [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) constants. Used to filter equipment by type.
 --- 
---- `slot`: number? — *Optional*. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) or [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/). Used to filter equipment by slot.
+--- `slot`: tes3.armorSlot|tes3.clothingSlot|nil — *Optional*. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) or [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/). Used to filter equipment by slot.
 --- 
---- `type`: number? — *Optional*. Maps to [`tes3.weaponType`](https://mwse.github.io/MWSE/references/weapon-types/). Used to filter equipment by type.
+--- `type`: tes3.weaponType? — *Optional*. Maps to [`tes3.weaponType`](https://mwse.github.io/MWSE/references/weapon-types/). Used to filter equipment by type.
 --- @return tes3equipmentStack|nil stack The equipped stack, or `nil` if the queried stack was not found.
 function tes3.getEquippedItem(params) end
 
@@ -1134,9 +1134,9 @@ function tes3.getEquippedItem(params) end
 --- @class tes3.getEquippedItem.params
 --- @field actor tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3npc|tes3npcInstance No description yet available.
 --- @field enchanted boolean? *Optional*. If true, filters only enchanted items.
---- @field objectType number? *Optional*. Maps to [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) constants. Used to filter equipment by type.
---- @field slot number? *Optional*. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) or [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/). Used to filter equipment by slot.
---- @field type number? *Optional*. Maps to [`tes3.weaponType`](https://mwse.github.io/MWSE/references/weapon-types/). Used to filter equipment by type.
+--- @field objectType tes3.objectType? *Optional*. Maps to [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) constants. Used to filter equipment by type.
+--- @field slot tes3.armorSlot|tes3.clothingSlot|nil *Optional*. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) or [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/). Used to filter equipment by slot.
+--- @field type tes3.weaponType? *Optional*. Maps to [`tes3.weaponType`](https://mwse.github.io/MWSE/references/weapon-types/). Used to filter equipment by type.
 
 --- Fetches the core game faction object for a given faction ID.
 --- @param id string No description yet available.
@@ -1161,12 +1161,12 @@ function tes3.getGlobal(id) end
 
 --- Fetches the core game object that represents a game setting. While this function accepts a name, it is recommended to use the [`tes3.GMST`](https://mwse.github.io/MWSE/references/gmst/) constants.
 --- @deprecated
---- @param id number|string No description yet available.
+--- @param id tes3.gmst|string No description yet available.
 --- @return tes3gameSetting gameSetting No description yet available.
 function tes3.getGMST(id) end
 
 --- Gets the input configuration for a given keybind.
---- @param keybind number Maps to [`tes3.keybind`](https://mwse.github.io/MWSE/references/keybinds/) constants.
+--- @param keybind tes3.keybind Maps to [`tes3.keybind`](https://mwse.github.io/MWSE/references/keybinds/) constants.
 --- @return tes3inputConfig inputConfig No description yet available.
 function tes3.getInputBinding(keybind) end
 
@@ -1230,7 +1230,7 @@ function tes3.getKillCounts() end
 function tes3.getLanguage() end
 
 --- Gets the language code, determined by the language entry in Morrowind.ini and the detected executable. Maps to values in the [`tes3.languageCode`](https://mwse.github.io/MWSE/references/language-codes/) table.
---- @return number result No description yet available.
+--- @return tes3.languageCode result No description yet available.
 function tes3.getLanguageCode() end
 
 --- Returns the last exterior position of the player.
@@ -1265,26 +1265,26 @@ function tes3.getLockLevel(params) end
 function tes3.getLuaModMetadata(modKey) end
 
 --- Fetches the core game Magic Effect object for a given ID. Can return custom magic effects added with `tes3.addMagicEffect`.
---- @param id integer Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @param id tes3.effect Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 --- @return tes3magicEffect|nil magicEffect No description yet available.
 function tes3.getMagicEffect(id) end
 
 --- Returns the complex name of a magic effect, taking into account attribute or skill values.
 --- @param params tes3.getMagicEffectName.params This table accepts the following values:
 --- 
---- `effect`: integer — The effect ID to get the name of. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- `effect`: tes3.effect — The effect ID to get the name of. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 --- 
---- `attribute`: integer? — *Optional*. The attribute ID to use, if applicable. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) table.
+--- `attribute`: tes3.attribute? — *Optional*. The attribute ID to use, if applicable. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) table.
 --- 
---- `skill`: integer? — *Optional*. The skill ID to use, if applicable. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+--- `skill`: tes3.skill? — *Optional*. The skill ID to use, if applicable. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 --- @return string complexName No description yet available.
 function tes3.getMagicEffectName(params) end
 
 ---Table parameter definitions for `tes3.getMagicEffectName`.
 --- @class tes3.getMagicEffectName.params
---- @field effect integer The effect ID to get the name of. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
---- @field attribute integer? *Optional*. The attribute ID to use, if applicable. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) table.
---- @field skill integer? *Optional*. The skill ID to use, if applicable. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+--- @field effect tes3.effect The effect ID to get the name of. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @field attribute tes3.attribute? *Optional*. The attribute ID to use, if applicable. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) table.
+--- @field skill tes3.skill? *Optional*. The skill ID to use, if applicable. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 
 --- Fetches an instance of the magic source of a given serial number.
 --- @param params tes3.getMagicSourceInstanceBySerial.params This table accepts the following values:
@@ -1387,12 +1387,12 @@ function tes3.getScript(id) end
 function tes3.getSimulationTimestamp(highPrecision) end
 
 --- Fetches the core game object for a given skill ID.
---- @param id number Maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) enumeration.
+--- @param id tes3.skill Maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) enumeration.
 --- @return tes3skill skill No description yet available.
 function tes3.getSkill(id) end
 
 --- Returns the identifying name of a skill for a given numerical, 0-based index. E.g. "Enchant".
---- @param skillId number Maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) enumeration.
+--- @param skillId tes3.skill Maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) enumeration.
 --- @return string name No description yet available.
 function tes3.getSkillName(skillId) end
 
@@ -1403,7 +1403,7 @@ function tes3.getSound(id) end
 
 --- Returns a sound generator by a given creature id and type.
 --- @param creatureId string No description yet available.
---- @param soundType number Maps to [`tes3.soundGenType`](https://mwse.github.io/MWSE/references/sound-generator-types/) constants.
+--- @param soundType tes3.soundGenType Maps to [`tes3.soundGenType`](https://mwse.github.io/MWSE/references/sound-generator-types/) constants.
 --- @return tes3soundGenerator soundGenerator No description yet available.
 function tes3.getSoundGenerator(creatureId, soundType) end
 
@@ -1422,7 +1422,7 @@ function tes3.getSoundPlaying(params) end
 --- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string|nil *Optional*. No description yet available.
 
 --- Returns the lowercase identifying name of a specialization type for a given numerical, 0-based index. E.g. "magic", by using GMSTs. Uses `tes3.specializationName` enumeration as a fallback.
---- @param specializationId number Maps to [`tes3.specialization`](https://mwse.github.io/MWSE/references/specializations/) enumeration.
+--- @param specializationId tes3.specialization Maps to [`tes3.specialization`](https://mwse.github.io/MWSE/references/specializations/) enumeration.
 --- @return string name No description yet available.
 function tes3.getSpecializationName(specializationId) end
 
@@ -1431,7 +1431,7 @@ function tes3.getSpecializationName(specializationId) end
 --- 
 --- `target`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3npc|tes3npcInstance — The actor to get the spells of. Must be able to cast spells.
 --- 
---- `spellType`: number? — *Default*: `-1`. The spell type to filter for. Only spells with this spell type will be returned. A value of `-1` will return spells of all types. Maps to values in the [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) table.
+--- `spellType`: tes3.spellType? — *Default*: `-1`. The spell type to filter for. Only spells with this spell type will be returned. A value of `-1` will return spells of all types. Maps to values in the [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) table.
 --- 
 --- `getActorSpells`: boolean? — *Default*: `true`. If `true`, the spells of the actor itself will be included in the result. This includes every spell except racial and birthsign spells.
 --- 
@@ -1444,7 +1444,7 @@ function tes3.getSpells(params) end
 ---Table parameter definitions for `tes3.getSpells`.
 --- @class tes3.getSpells.params
 --- @field target tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3npc|tes3npcInstance The actor to get the spells of. Must be able to cast spells.
---- @field spellType number? *Default*: `-1`. The spell type to filter for. Only spells with this spell type will be returned. A value of `-1` will return spells of all types. Maps to values in the [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) table.
+--- @field spellType tes3.spellType? *Default*: `-1`. The spell type to filter for. Only spells with this spell type will be returned. A value of `-1` will return spells of all types. Maps to values in the [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) table.
 --- @field getActorSpells boolean? *Default*: `true`. If `true`, the spells of the actor itself will be included in the result. This includes every spell except racial and birthsign spells.
 --- @field getRaceSpells boolean? *Default*: `true`. If `true`, the spells of the actor's race will be included in the result.
 --- @field getBirthsignSpells boolean? *Default*: `true`. If `true`, the spells of the actor's birthsign will be included in the result.
@@ -1505,11 +1505,11 @@ function tes3.getWerewolfKillCount() end
 function tes3.getWorldController() end
 
 --- Simulates hammering a key.
---- @param keyCode number No description yet available.
+--- @param keyCode tes3.scanCode No description yet available.
 function tes3.hammerKey(keyCode) end
 
 --- Attempts to determine if a given Morrowind Code Patch feature is enabled. This may not be possible, in which case nil will be returned.
---- @param id number The id of the feature. Maps to values in [`tes3.codePatchFeature`](https://mwse.github.io/MWSE/references/code-patch-features/) constants.
+--- @param id tes3.codePatchFeature The id of the feature. Maps to values in [`tes3.codePatchFeature`](https://mwse.github.io/MWSE/references/code-patch-features/) constants.
 --- @return boolean|nil state No description yet available.
 function tes3.hasCodePatchFeature(id) end
 
@@ -1568,7 +1568,7 @@ function tes3.is3rdPerson() end
 --- 
 --- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — No description yet available.
 --- 
---- `effect`: number? — *Optional*. A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`.
+--- `effect`: tes3.effect? — *Optional*. A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`.
 --- 
 --- `object`: tes3alchemy|tes3enchantment|tes3spell|tes3magicEffect|string|nil — *Optional*. An object to perform a check for.
 --- @return boolean isAffectedBy No description yet available.
@@ -1577,7 +1577,7 @@ function tes3.isAffectedBy(params) end
 ---Table parameter definitions for `tes3.isAffectedBy`.
 --- @class tes3.isAffectedBy.params
 --- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string No description yet available.
---- @field effect number? *Optional*. A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`.
+--- @field effect tes3.effect? *Optional*. A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`.
 --- @field object tes3alchemy|tes3enchantment|tes3spell|tes3magicEffect|string|nil *Optional*. An object to perform a check for.
 
 --- Returns `true` if the character generation process has been finished for the current player character.
@@ -1728,9 +1728,9 @@ function tes3.messageBox(messageOrParams, ...) end
 --- 
 --- `reference`: tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string — No description yet available.
 --- 
---- `attribute`: number? — *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
+--- `attribute`: tes3.attribute? — *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
 --- 
---- `skill`: number? — *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
+--- `skill`: tes3.skill? — *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
 --- 
 --- `name`: string? — *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
 --- 
@@ -1748,8 +1748,8 @@ function tes3.modStatistic(params) end
 ---Table parameter definitions for `tes3.modStatistic`.
 --- @class tes3.modStatistic.params
 --- @field reference tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string No description yet available.
---- @field attribute number? *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
---- @field skill number? *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
+--- @field attribute tes3.attribute? *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
+--- @field skill tes3.skill? *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
 --- @field name string? *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
 --- @field base number? *Optional*. If set, the base value will be modified.
 --- @field current number? *Optional*. If set, the current value will be modified.
@@ -1790,15 +1790,15 @@ function tes3.persuade(params) end
 --- 
 --- `reference`: tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string — The reference that will play the animation.
 --- 
---- `group`: number? — *Optional*. The animation group id to start playing -- a value from 0 to 149. Applies the animation to the whole body. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- `group`: tes3.animationGroup? — *Optional*. The animation group id to start playing -- a value from 0 to 149. Applies the animation to the whole body. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 --- 
---- `lower`: number? — *Optional*. Sets the animation group id for the lower body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- `lower`: tes3.animationGroup? — *Optional*. Sets the animation group id for the lower body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 --- 
---- `upper`: number? — *Optional*. Sets the animation group id for the upper body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- `upper`: tes3.animationGroup? — *Optional*. Sets the animation group id for the upper body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 --- 
---- `shield`: number? — *Optional*. Sets the animation group id for the shield arm. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- `shield`: tes3.animationGroup? — *Optional*. Sets the animation group id for the shield arm. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 --- 
---- `startFlag`: number? — *Default*: `tes3.animationStartFlag.immediate`. A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
+--- `startFlag`: tes3.animationStartFlag? — *Default*: `tes3.animationStartFlag.immediate`. A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
 --- 
 --- `loopCount`: number? — *Default*: `-1`. If provided, the animation will repeat its loop section a given number of times. To make an animation play through once, set loopCount = 0. Defaults to infinite looping.
 --- 
@@ -1808,11 +1808,11 @@ function tes3.playAnimation(params) end
 ---Table parameter definitions for `tes3.playAnimation`.
 --- @class tes3.playAnimation.params
 --- @field reference tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string The reference that will play the animation.
---- @field group number? *Optional*. The animation group id to start playing -- a value from 0 to 149. Applies the animation to the whole body. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
---- @field lower number? *Optional*. Sets the animation group id for the lower body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
---- @field upper number? *Optional*. Sets the animation group id for the upper body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
---- @field shield number? *Optional*. Sets the animation group id for the shield arm. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
---- @field startFlag number? *Default*: `tes3.animationStartFlag.immediate`. A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
+--- @field group tes3.animationGroup? *Optional*. The animation group id to start playing -- a value from 0 to 149. Applies the animation to the whole body. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- @field lower tes3.animationGroup? *Optional*. Sets the animation group id for the lower body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- @field upper tes3.animationGroup? *Optional*. Sets the animation group id for the upper body. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- @field shield tes3.animationGroup? *Optional*. Sets the animation group id for the shield arm. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- @field startFlag tes3.animationStartFlag? *Default*: `tes3.animationStartFlag.immediate`. A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
 --- @field loopCount number? *Default*: `-1`. If provided, the animation will repeat its loop section a given number of times. To make an animation play through once, set loopCount = 0. Defaults to infinite looping.
 --- @field mesh string? *Optional*. Deprecated. Please use [`tes3.loadAnimation`](https://mwse.github.io/MWSE/apis/tes3/#tes3loadanimation) (check its documentation) before calling `playAnimation`. You can also use `loadAnimation` to reset loaded animations to default.
 
@@ -1844,7 +1844,7 @@ function tes3.playItemPickupSound(params) end
 --- 
 --- `loop`: boolean? — *Default*: `false`. If true, the sound will loop.
 --- 
---- `mixChannel`: number? — *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
+--- `mixChannel`: tes3.soundMix? — *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
 --- 
 --- `volume`: number? — *Default*: `1.0`. A value between 0.0 and 1.0 to scale the volume off of.
 --- 
@@ -1859,7 +1859,7 @@ function tes3.playSound(params) end
 --- @field sound tes3sound|string|nil *Optional*. The sound object, or id of the sound to look for.
 --- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string|nil *Optional*. The reference to attach the sound to. If no reference is provided, the sound will be played directly and `soundObjectPlay` will be triggered instead of `playSound`.
 --- @field loop boolean? *Default*: `false`. If true, the sound will loop.
---- @field mixChannel number? *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
+--- @field mixChannel tes3.soundMix? *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
 --- @field volume number? *Default*: `1.0`. A value between 0.0 and 1.0 to scale the volume off of.
 --- @field pitch number? *Default*: `1.0`. The pitch-shift multiplier. For 22kHz audio (most typical) it can have the range [0.005, 4.5]; for 44kHz audio it can have the range [0.0025, 2.25].
 --- @field soundPath string? *Optional*. The path to a custom soundfile (useful for playing sounds that are not registered in the Construction Set). Starts in Data Files\Sound\.
@@ -1869,14 +1869,14 @@ function tes3.playSound(params) end
 --- 
 --- `actor`: tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string — The actor to play a voiceover.
 --- 
---- `voiceover`: number|string — Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants.
+--- `voiceover`: tes3.voiceover|string — Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants.
 --- @return boolean played No description yet available.
 function tes3.playVoiceover(params) end
 
 ---Table parameter definitions for `tes3.playVoiceover`.
 --- @class tes3.playVoiceover.params
 --- @field actor tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string The actor to play a voiceover.
---- @field voiceover number|string Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants.
+--- @field voiceover tes3.voiceover|string Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants.
 
 --- Positions a reference to another place.
 --- @param params tes3.positionCell.params This table accepts the following values:
@@ -1908,7 +1908,7 @@ function tes3.positionCell(params) end
 --- @field teleportCompanions boolean? *Default*: `true`. If used on the player, determines if companions should also be teleported.
 
 --- Simulates pushing a keyboard key.
---- @param keyCode number Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+--- @param keyCode tes3.scanCode Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 function tes3.pushKey(keyCode) end
 
 --- Returns a value from Morrowind's random number generator. This is not preferrable to lua's math.random function, but may be necessary for reproducing Morrowind's generation.
@@ -1982,7 +1982,7 @@ function tes3.rayTest(params) end
 --- @field ignore table<integer?, niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|tes3reference|nil>|nil *Optional*. An array of references and/or scene graph nodes to cull from the result(s).
 
 --- Simulates releasing a keyboard key.
---- @param keyCode number Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+--- @param keyCode tes3.scanCode Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 function tes3.releaseKey(keyCode) end
 
 --- Removes magic effects from a given reference. Requires that either the `effect` or `castType` parameter be provided.
@@ -1992,9 +1992,9 @@ function tes3.releaseKey(keyCode) end
 --- 
 --- `reference`: tes3reference — Target reference to remove effects from.
 --- 
---- `effect`: integer? — *Optional*. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
+--- `effect`: tes3.effect? — *Optional*. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
 --- 
---- `castType`: integer? — *Optional*. Maps to [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) constants.
+--- `castType`: tes3.spellType? — *Optional*. Maps to [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) constants.
 --- 
 --- `chance`: number? — *Default*: `100`. The chance for the effect to be removed.
 --- 
@@ -2004,8 +2004,8 @@ function tes3.removeEffects(params) end
 ---Table parameter definitions for `tes3.removeEffects`.
 --- @class tes3.removeEffects.params
 --- @field reference tes3reference Target reference to remove effects from.
---- @field effect integer? *Optional*. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
---- @field castType integer? *Optional*. Maps to [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) constants.
+--- @field effect tes3.effect? *Optional*. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
+--- @field castType tes3.spellType? *Optional*. Maps to [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) constants.
 --- @field chance number? *Default*: `100`. The chance for the effect to be removed.
 --- @field removeSpell boolean? *Optional*. If removing by cast type, determines if the spell should be removed from the target's spell list. Defaults to true if `castType` is not `tes3.spellType.spell.` This causes diseases and curses to be removed when dispelled.
 
@@ -2502,9 +2502,9 @@ function tes3.setSourceless(object, sourceless) end
 --- 
 --- `reference`: tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string — No description yet available.
 --- 
---- `attribute`: number? — *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
+--- `attribute`: tes3.attribute? — *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
 --- 
---- `skill`: number? — *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
+--- `skill`: tes3.skill? — *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
 --- 
 --- `name`: string? — *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
 --- 
@@ -2520,8 +2520,8 @@ function tes3.setStatistic(params) end
 ---Table parameter definitions for `tes3.setStatistic`.
 --- @class tes3.setStatistic.params
 --- @field reference tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string No description yet available.
---- @field attribute number? *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
---- @field skill number? *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
+--- @field attribute tes3.attribute? *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
+--- @field skill tes3.skill? *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
 --- @field name string? *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
 --- @field base number? *Optional*. If set, the base value will be set.
 --- @field current number? *Optional*. If set, the current value will be set.
@@ -2674,7 +2674,7 @@ function tes3.skipAnimationFrame(params) end
 --- 
 --- `path`: string — Path to the music file, relative to Data Files/music/.
 --- 
---- `situation`: number? — *Default*: `tes3.musicSituation.uninterruptible`. Determines what kind of gameplay situation the music should stay active for. Explore music plays during non-combat, and ends when combat starts. Combat music starts during combat, and ends when combat ends. Uninterruptible music always plays, ending only when the track does. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
+--- `situation`: tes3.musicSituation? — *Default*: `tes3.musicSituation.uninterruptible`. Determines what kind of gameplay situation the music should stay active for. Explore music plays during non-combat, and ends when combat starts. Combat music starts during combat, and ends when combat ends. Uninterruptible music always plays, ending only when the track does. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- 
 --- `crossfade`: number? — *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
 --- @return boolean executed No description yet available.
@@ -2683,11 +2683,11 @@ function tes3.streamMusic(params) end
 ---Table parameter definitions for `tes3.streamMusic`.
 --- @class tes3.streamMusic.params
 --- @field path string Path to the music file, relative to Data Files/music/.
---- @field situation number? *Default*: `tes3.musicSituation.uninterruptible`. Determines what kind of gameplay situation the music should stay active for. Explore music plays during non-combat, and ends when combat starts. Combat music starts during combat, and ends when combat ends. Uninterruptible music always plays, ending only when the track does. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
+--- @field situation tes3.musicSituation? *Default*: `tes3.musicSituation.uninterruptible`. Determines what kind of gameplay situation the music should stay active for. Explore music plays during non-combat, and ends when combat starts. Combat music starts during combat, and ends when combat ends. Uninterruptible music always plays, ending only when the track does. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- @field crossfade number? *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
 
 --- Simulates tapping a keyboard key.
---- @param keyCode number Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+--- @param keyCode tes3.scanCode Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 function tes3.tapKey(keyCode) end
 
 --- Checks if there is a clear line of sight between two references, or two points in space, in the same method that the game uses for actor vision. You should pass two references, or two positions and heights.
@@ -2766,7 +2766,7 @@ function tes3.transferItem(params) end
 --- Emulates the player committing a crime. Returns `true` if the crime was witnessed by an actor.
 --- @param params tes3.triggerCrime.params This table accepts the following values:
 --- 
---- `type`: number? — *Default*: `tes3.crimeType.theft`. The type of crime to be committed. Maps to values in the [`tes3.crimeType`](https://mwse.github.io/MWSE/references/crime-types/) table.
+--- `type`: tes3.crimeType? — *Default*: `tes3.crimeType.theft`. The type of crime to be committed. Maps to values in the [`tes3.crimeType`](https://mwse.github.io/MWSE/references/crime-types/) table.
 --- 
 --- `victim`: tes3mobileNPC|tes3mobilePlayer|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3npc|tes3npcInstance|tes3faction|nil — *Default*: `tes3.mobilePlayer`. The victim of the crime. This can be an individual actor or a entire faction. Has no effect on crimes with a `type` of `tes3.crimeType.trespass` or `tes3.crimeType.werewolf`.
 --- 
@@ -2778,7 +2778,7 @@ function tes3.triggerCrime(params) end
 
 ---Table parameter definitions for `tes3.triggerCrime`.
 --- @class tes3.triggerCrime.params
---- @field type number? *Default*: `tes3.crimeType.theft`. The type of crime to be committed. Maps to values in the [`tes3.crimeType`](https://mwse.github.io/MWSE/references/crime-types/) table.
+--- @field type tes3.crimeType? *Default*: `tes3.crimeType.theft`. The type of crime to be committed. Maps to values in the [`tes3.crimeType`](https://mwse.github.io/MWSE/references/crime-types/) table.
 --- @field victim tes3mobileNPC|tes3mobilePlayer|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3npc|tes3npcInstance|tes3faction|nil *Default*: `tes3.mobilePlayer`. The victim of the crime. This can be an individual actor or a entire faction. Has no effect on crimes with a `type` of `tes3.crimeType.trespass` or `tes3.crimeType.werewolf`.
 --- @field value number? *Default*: `0`. Only valid if `type` is `tes3.crimeType.theft`. The value of the stolen objects. There in **no** need to multiply the value by `fCrimeStealing` GMST - the engine will handle that.
 --- @field forceDetection boolean? *Default*: `false`. If `true`, bypasses regular detection logic and forces all nearby actors to detect the crime.
@@ -2795,7 +2795,7 @@ function tes3.undoTransform(params) end
 --- @field reference tes3reference A reference to change back to human.
 
 --- Stops simulating hammering a keyboard key.
---- @param keyCode number Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+--- @param keyCode tes3.scanCode Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 function tes3.unhammerKey(keyCode) end
 
 --- Unlocks an object. Returns true if the object can be and wasn't already unlocked.

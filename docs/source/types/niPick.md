@@ -17,7 +17,7 @@ The coordinate type for the object. Maps to values in [`ni.pickCoordinateType`](
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.pickCoordinateType](../references/ni/pick-coordinate-types.md))
 
 ***
 
@@ -40,7 +40,7 @@ The intersect type for the object. Maps to values in [`ni.pickIntersectType`](ht
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.pickIntersectType](../references/ni/pick-intersection-types.md))
 
 ***
 
@@ -74,7 +74,7 @@ The pick type for the object. Maps to values in [`ni.pickType`](https://mwse.git
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.pickType](../references/ni/pick-types.md))
 
 ***
 
@@ -151,7 +151,7 @@ The sort type for the object. Maps to values in [`ni.pickSortType`](https://mwse
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.pickSortType](../references/ni/pick-sort-types.md))
 
 ***
 

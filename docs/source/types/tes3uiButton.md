@@ -128,5 +128,5 @@ The state of the button. Controls which color set to use for its text. Maps to v
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.uiState](../references/ui-states.md))
 

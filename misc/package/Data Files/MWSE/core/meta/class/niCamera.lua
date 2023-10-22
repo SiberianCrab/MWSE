@@ -17,7 +17,7 @@
 niCamera = {}
 
 --- This method clears the current render target of the camera's renderer. Uses flag values from [`ni.cameraClearFlags`](https://mwse.github.io/MWSE/references/ni/camera-clear-flags/).
---- @param flags number? *Default*: `ni.cameraClearFlags.all`. No description yet available.
+--- @param flags ni.cameraClearFlags? *Default*: `ni.cameraClearFlags.all`. No description yet available.
 function niCamera:clear(flags) end
 
 --- This method renders the currently-attached scene graph to the active renderer.

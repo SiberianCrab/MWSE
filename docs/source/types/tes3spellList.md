@@ -74,7 +74,7 @@ local result = myObject:containsType(spellType)
 
 **Parameters**:
 
-* `spellType` (number): A value from [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) enumeration.
+* `spellType` ([tes3.spellType](../references/spell-types.md)): A value from [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) enumeration.
 
 **Returns**:
 

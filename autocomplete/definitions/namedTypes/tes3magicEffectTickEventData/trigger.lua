@@ -20,14 +20,14 @@ return {
 			},
 			{
 				name = "attribute",
-				type = "integer",
+				type = "tes3.effectAttribute",
 				optional = true,
 				default = "tes3.effectAttribute.nonResistable",
 				description = "The attribute used in resistance calculations agains this effect. Maps to values in [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) table."
 			},
 			{
 				name = "type",
-				type = "integer",
+				type = "tes3.effectEventType",
 				optional = true,
 				default = "tes3.effectEventType.boolean",
 				description = "This flag controls how the effect behaves. For example, `tes3.effectEventType.modStatistic` will make the effect work as calling `tes3.modStatistic`. Maps to values in [`tes3.effectEventType`](https://mwse.github.io/MWSE/references/effect-event-types/) table."

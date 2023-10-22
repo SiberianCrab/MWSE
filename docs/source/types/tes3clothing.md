@@ -183,7 +183,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -282,7 +282,7 @@ The slot used by the clothing object. Maps to values in [`tes3.clothingSlot`](ht
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.clothingSlot](../references/clothing-slots.md))
 
 ***
 

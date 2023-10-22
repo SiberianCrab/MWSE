@@ -73,7 +73,7 @@ Friendly access to the actor's flag that controls if AI is active.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.actorType](../references/actor-types.md))
 
 ***
 
@@ -1696,7 +1696,7 @@ Access to the root mobile object movement flags, represented as an integer. Shou
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -2401,7 +2401,7 @@ local result = myObject:applyDamage({ damage = ..., applyArmor = ..., resistAttr
 * `params` (table)
 	* `damage` (number): The amount of damage to apply.
 	* `applyArmor` (boolean): *Default*: `false`. If armor should mitigate the incoming damage. If the player is the target, armor experience will be gained.
-	* `resistAttribute` (number): *Optional*. The resistance attribute that is applied to the damage. It can reduce damage or exploit weakness. Uses values from [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
+	* `resistAttribute` ([tes3.effectAttribute](../references/effect-attributes.md)): *Optional*. The resistance attribute that is applied to the damage. It can reduce damage or exploit weakness. Uses values from [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
 	* `applyDifficulty` (boolean): *Default*: `false`. If the game difficulty modifier should be applied. Must be used with the `playerAttack` argument to apply the correct modifier.
 	* `playerAttack` (boolean): *Optional*. If the attack came from the player. Used for difficulty calculation.
 	* `doNotChangeHealth` (boolean): *Default*: `false`. If all armor effects except the health change should be applied. These include hit sounds, armor condition damage, and player experience gain from being hit.
@@ -2458,7 +2458,7 @@ local result = myObject:calcEffectiveDamage({ damage = ..., applyArmor = ..., re
 * `params` (table)
 	* `damage` (number): The amount of damage to apply.
 	* `applyArmor` (boolean): *Default*: `false`. If armor should mitigate the incoming damage.
-	* `resistAttribute` (number): *Optional*. The resistance attribute that is applied to the damage. It can reduce damage or exploit weakness. Uses values from [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
+	* `resistAttribute` ([tes3.effectAttribute](../references/effect-attributes.md)): *Optional*. The resistance attribute that is applied to the damage. It can reduce damage or exploit weakness. Uses values from [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) namespace.
 
 **Returns**:
 
@@ -2571,7 +2571,7 @@ myObject:exerciseSkill(skill, progress)
 
 **Parameters**:
 
-* `skill` (integer): The skill index to give experience to. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+* `skill` ([tes3.skill](../references/skills.md)): The skill index to give experience to. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 * `progress` (number): The amount of experience to grant.
 
 ***
@@ -2590,7 +2590,7 @@ local result = myObject:forceWeaponAttack({ attackType = ..., swing = ... })
 **Parameters**:
 
 * `params` (table)
-	* `attackType` (number): *Optional*. The physical attack type to use for melee weapons (slash, chop, thrust). Maps to values in [`tes3.physicalAttackType`](https://mwse.github.io/MWSE/references/physical-attack-types/) namespace. When not specified, it uses a weighted random attack type for NPCs and creatures.
+	* `attackType` ([tes3.physicalAttackType](../references/physical-attack-types.md)): *Optional*. The physical attack type to use for melee weapons (slash, chop, thrust). Maps to values in [`tes3.physicalAttackType`](https://mwse.github.io/MWSE/references/physical-attack-types/) namespace. When not specified, it uses a weighted random attack type for NPCs and creatures.
 	* `swing` (number): *Optional*. The strength of the attack swing, in the range [0 to 1]. When not specified, the attack swing is randomized. This value cannot affect the player swing, as player attacks are driven by input.
 
 **Returns**:
@@ -2611,7 +2611,7 @@ local result = myObject:getActiveMagicEffects({ effect = ..., serial = ... })
 **Parameters**:
 
 * `params` (table): *Optional*.
-	* `effect` (integer): *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+	* `effect` ([tes3.effect](../references/magic-effects.md)): *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 	* `serial` (integer): *Optional*. The magic instance serial to search for.
 
 **Returns**:
@@ -2680,7 +2680,7 @@ local progressNeeded = myObject:getSkillProgressRequirement(skill)
 
 **Parameters**:
 
-* `skill` (integer): The skill index to check. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+* `skill` ([tes3.skill](../references/skills.md)): The skill index to check. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 
 **Returns**:
 
@@ -2699,7 +2699,7 @@ local result = myObject:getSkillStatistic(skillId)
 
 **Parameters**:
 
-* `skillId` (number): The index of the skill statistic to fetch. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace.
+* `skillId` ([tes3.skill](../references/skills.md)): The index of the skill statistic to fetch. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace.
 
 **Returns**:
 
@@ -2718,7 +2718,7 @@ local result = myObject:getSkillValue(skillId)
 
 **Parameters**:
 
-* `skillId` (number): The index of the skill statistic's value to fetch. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace.
+* `skillId` ([tes3.skill](../references/skills.md)): The index of the skill statistic's value to fetch. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace.
 
 **Returns**:
 
@@ -2908,7 +2908,7 @@ myObject:progressSkillLevelIfRequirementsMet(skill)
 
 **Parameters**:
 
-* `skill` (integer): The skill index to check for leveling. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+* `skill` ([tes3.skill](../references/skills.md)): The skill index to check for leveling. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 
 ***
 
@@ -2923,7 +2923,7 @@ local newLevel = myObject:progressSkillToNextLevel(skill)
 
 **Parameters**:
 
-* `skill` (integer): The skill index to increase. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+* `skill` ([tes3.skill](../references/skills.md)): The skill index to increase. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 
 **Returns**:
 
@@ -3038,9 +3038,9 @@ local itemUnequipped = myObject:unequip({ item = ..., itemData = ..., type = ...
 * `params` (table)
 	* `item` ([tes3item](../types/tes3item.md), string): *Optional*. The item to unequip.
 	* `itemData` ([tes3itemData](../types/tes3itemData.md)): *Optional*. The item data of the specific item to unequip, if a specific item is required.
-	* `type` (number): *Optional*. The item type to unequip. Only used if no other parameter is provided. Only values pertaining to equipment from [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) can be passed here.
-	* `armorSlot` (number): *Optional*. The armor slot to unequip. Maps to values in [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) namespace.
-	* `clothingSlot` (number): *Optional*. The clothing slot to unequip. Maps to values in [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/) namespace
+	* `type` ([tes3.objectType](../references/object-types.md)): *Optional*. The item type to unequip. Only used if no other parameter is provided. Only values pertaining to equipment from [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) can be passed here.
+	* `armorSlot` ([tes3.armorSlot](../references/armor-slots.md)): *Optional*. The armor slot to unequip. Maps to values in [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) namespace.
+	* `clothingSlot` ([tes3.clothingSlot](../references/clothing-slots.md)): *Optional*. The clothing slot to unequip. Maps to values in [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/) namespace
 
 **Returns**:
 

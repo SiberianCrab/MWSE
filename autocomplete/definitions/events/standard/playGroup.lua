@@ -13,16 +13,16 @@ return {
 			description = "The actor that is about to play the animation.",
 		},
 		["group"] = {
-			type = "number",
+			type = "tes3.animationGroup",
 			description = "The animation group about to be played. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.",
 		},
 		["index"] = {
-			type = "number",
+			type = "tes3.animationBodySection",
 			readOnly = true,
 			description = "The index of the body section the animation will be played on. Maps to values in [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.",
 		},
 		["flags"] = {
-			type = "number",
+			type = "tes3.animationStartFlag",
 			description = "Maps to values in [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) namespace.",
 		},
 		["loopCount"] = {

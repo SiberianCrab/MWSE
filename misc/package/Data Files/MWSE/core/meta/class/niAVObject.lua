@@ -40,7 +40,7 @@ function niAVObject:copyTransforms(source) end
 function niAVObject:detachAllProperties() end
 
 --- Detaches and returns a property from the object which matches the given property type.
---- @param type integer The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
+--- @param type ni.propertyType The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
 --- @return niAlphaProperty|niFogProperty|niMaterialProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty result No description yet available.
 function niAVObject:detachProperty(type) end
 
@@ -50,7 +50,7 @@ function niAVObject:detachProperty(type) end
 function niAVObject:getObjectByName(name) end
 
 --- Gets an attached property by property type.
---- @param type integer The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
+--- @param type ni.propertyType The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
 --- @return niAlphaProperty|niFogProperty|niMaterialProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty result No description yet available.
 function niAVObject:getProperty(type) end
 

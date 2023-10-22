@@ -5,7 +5,7 @@ return {
 	related = { "musicChangeTrack" },
 	eventData = {
 		["situation"] = {
-			type = "number",
+			type = "tes3.musicSituation",
 			readOnly = true,
 			description = "Maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/), indicating combat or non-combat music.",
 		},

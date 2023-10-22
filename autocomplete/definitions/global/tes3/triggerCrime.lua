@@ -8,7 +8,7 @@ return {
 			tableParams = {
 				{
 					name = "type",
-					type = "number",
+					type = "tes3.crimeType",
 					optional = true,
 					default = "tes3.crimeType.theft",
 					description = "The type of crime to be committed. Maps to values in the [`tes3.crimeType`](https://mwse.github.io/MWSE/references/crime-types/) table."

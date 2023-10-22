@@ -204,7 +204,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -416,7 +416,7 @@ local index = myObject:getFirstIndexOfEffect(effectId)
 
 **Parameters**:
 
-* `effectId` (number): The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
+* `effectId` ([tes3.effect](../references/magic-effects.md)): The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
 
 **Returns**:
 

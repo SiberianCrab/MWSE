@@ -17,7 +17,7 @@ Data about a magic effect currently active on a particular mobile actor. It is a
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.attribute](../references/attributes.md))
 
 ***
 
@@ -39,7 +39,7 @@ Data about a magic effect currently active on a particular mobile actor. It is a
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.effect](../references/magic-effects.md))
 
 ***
 
@@ -193,5 +193,5 @@ Data about a magic effect currently active on a particular mobile actor. It is a
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.skill](../references/skills.md))
 

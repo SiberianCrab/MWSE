@@ -150,7 +150,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -293,7 +293,7 @@ The type of the apparatus. Maps to values in [`tes3.apparatusType`](https://mwse
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.apparatusType](../references/apparatus-types.md))
 
 ***
 

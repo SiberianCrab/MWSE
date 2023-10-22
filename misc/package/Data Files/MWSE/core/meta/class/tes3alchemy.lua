@@ -76,7 +76,7 @@ function tes3alchemy:createCopy(params) end
 function tes3alchemy:getActiveEffectCount() end
 
 --- Returns the index of a first effect of a given effectId in the parent tes3alchemy object.
---- @param effectId number The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
+--- @param effectId tes3.effect The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
 --- @return number index No description yet available.
 function tes3alchemy:getFirstIndexOfEffect(effectId) end
 

@@ -353,7 +353,7 @@ local palette = tes3ui.getPalette(name)
 
 **Parameters**:
 
-* `name` (string): The name of the palette color. Maps to values in [`tes3.palette`](https://mwse.github.io/MWSE/references/palettes/) enumeration.
+* `name` ([tes3.palette](../references/palettes.md)): The name of the palette color. Maps to values in [`tes3.palette`](https://mwse.github.io/MWSE/references/palettes/) enumeration.
 
 **Returns**:
 

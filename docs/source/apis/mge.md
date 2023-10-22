@@ -93,7 +93,7 @@ local mode = mge.getLightingMode()
 
 **Returns**:
 
-* `mode` (integer): Maps to the `mge.lightingMode` constants.
+* `mode` ([mge.lightingMode](../references/mge/lighting-modes.md))
 
 ***
 
@@ -188,7 +188,7 @@ mge.setLightingMode(mode)
 
 **Parameters**:
 
-* `mode` (integer): Maps to the `mge.lightingMode` constants.
+* `mode` ([mge.lightingMode](../references/mge/lighting-modes.md))
 
 ***
 

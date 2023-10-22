@@ -57,12 +57,13 @@
 --- @field monthsToRespawn tes3globalVariable *Read-only*. The `monthsToRespawn` global variable, used by the game to count the time left until containers are respawned. This is decremented at the end of a month (or end of a day with the appropriate MCP option). When it reaches `0`, containers are respawned.
 --- @field mouseSensitivityX number The horizontal camera rotation sensitivity. Corresponds to the "Horizontal sensitivity" option in the Options menu.
 --- @field mouseSensitivityY number The vertical camera rotation sensitivity. Corresponds to the "Vertical sensitivity" option in the Options menu.
---- @field musicSituation number The kind of music being played. Only updates when music is not muted.
---- `0` Explore music
---- `1` Combat music
---- `2` Main menu music
+--- @field musicSituation tes3.musicSituation The kind of music being played. Only updates when music is not muted.
 --- 
---- Note: These values are available as [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants
+--- - `0` Explore music
+--- - `1` Combat music
+--- - `2` Main menu music
+--- 
+--- Note: These values are available as [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- @field nodeCursor niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode *Read-only*. The scenegraph node for the target crosshair.
 --- @field parentWindowHandle HWND *Read-only*. Handle to the parent window.
 --- @field projectionDistance number 

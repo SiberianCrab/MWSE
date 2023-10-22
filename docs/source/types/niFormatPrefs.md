@@ -17,7 +17,7 @@ The Alpha format. Maps to values in [`ni.textureFormatPrefsAlphaFormat`](https:/
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.textureFormatPrefsAlphaFormat](../references/ni/texture-format-preference-alpha-formats.md))
 
 ***
 
@@ -28,7 +28,7 @@ The MIP format. Maps to values in [`ni.textureFormatPrefsMipFlag`](https://mwse.
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.textureFormatPrefsMipFlag](../references/ni/texture-format-preference-mip-flags.md))
 
 ***
 
@@ -39,5 +39,5 @@ The pixel layout. Maps to values in [`ni.textureFormatPrefsPixelLayout`](https:/
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.textureFormatPrefsPixelLayout](../references/ni/texture-format-preference-pixel-layouts.md))
 

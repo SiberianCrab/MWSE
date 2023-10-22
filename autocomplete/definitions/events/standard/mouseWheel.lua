@@ -5,7 +5,7 @@ return {
 		["delta"] = {
 			type = "number",
 			readOnly = true,
-			description = "The direction and strength of the mouse wheel movement. This value is hardware dependent.",
+			description = "The direction and strength of the mouse wheel movement. The value is positive for scrolling up, negative otherwise. This magnitude is hardware dependent.",
 		},
 		["isControlDown"] = {
 			type = "number",

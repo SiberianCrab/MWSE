@@ -105,5 +105,5 @@ If `true`, the tile represents an item that is equipped.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.inventoryTileType](../references/inventory-tile-types.md))
 

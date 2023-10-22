@@ -18,7 +18,7 @@ return {
 			description = "The individual effect structure on source.",
 		},
 		["effectId"] = {
-			type = "number",
+			type = "tes3.effect",
 			readOnly = true,
 			description = "The magic effect ID that is being ticked. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) namespace.",
 		},

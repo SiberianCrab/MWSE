@@ -139,7 +139,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -161,7 +161,7 @@ The part of the body occupied. Maps to values in [`tes3.partIndex`](https://mwse
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.partIndex](../references/part-indices.md))
 
 ***
 
@@ -172,7 +172,7 @@ The layer the body part occupies. Maps to values in [`tes3.activeBodyPartLayer`]
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.activeBodyPartLayer](../references/active-body-part-layers.md))
 
 ***
 

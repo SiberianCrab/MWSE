@@ -11,4 +11,4 @@
 --- @field isControlDown boolean *Read-only*. True if either control key is held.
 --- @field isShiftDown boolean *Read-only*. True if either shift key is held.
 --- @field isSuperDown boolean *Read-only*. True if super (Windows key) is held.
---- @field keyCode integer *Read-only*. The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.
+--- @field keyCode tes3.scanCode *Read-only*. The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.

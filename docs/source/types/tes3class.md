@@ -18,7 +18,7 @@ This type inherits the following: [tes3baseObject](../types/tes3baseObject.md)
 
 **Returns**:
 
-* `result` (number[])
+* `result` ([tes3.attribute](../references/attributes.md)[])
 
 ***
 
@@ -238,7 +238,7 @@ The path used for the class selection/level up menus, where appropriate. Custom 
 
 **Returns**:
 
-* `result` (number[])
+* `result` ([tes3.skill](../references/skills.md)[])
 
 ***
 
@@ -249,7 +249,7 @@ The path used for the class selection/level up menus, where appropriate. Custom 
 
 **Returns**:
 
-* `result` (number[])
+* `result` ([tes3.skill](../references/skills.md)[])
 
 ***
 
@@ -293,7 +293,7 @@ The player-facing name for the object.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -392,7 +392,7 @@ The services offered by the class. This is a bit field, and its values should ty
 
 **Returns**:
 
-* `result` (number[])
+* `result` ([tes3.skill](../references/skills.md)[])
 
 ***
 
@@ -425,7 +425,7 @@ The specialization for the class. Maps to values in the [`tes3.specialization`](
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.specialization](../references/specializations.md))
 
 ***
 

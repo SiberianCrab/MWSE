@@ -20,7 +20,7 @@ function tes3spellList:add(spell) end
 function tes3spellList:contains(spell) end
 
 --- Finds the first spell with the type provided.
---- @param spellType number A value from [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) enumeration.
+--- @param spellType tes3.spellType A value from [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) enumeration.
 --- @return tes3spell result No description yet available.
 function tes3spellList:containsType(spellType) end
 

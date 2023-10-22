@@ -643,15 +643,16 @@ The vertical camera rotation sensitivity. Corresponds to the "Vertical sensitivi
 <div class="search_terms" style="display: none">musicsituation</div>
 
 The kind of music being played. Only updates when music is not muted.
-`0` Explore music
-`1` Combat music
-`2` Main menu music
 
-Note: These values are available as [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants
+- `0` Explore music
+- `1` Combat music
+- `2` Main menu music
+
+Note: These values are available as [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.musicSituation](../references/music-situations.md))
 
 ***
 

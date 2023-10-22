@@ -17,7 +17,7 @@ The clamp mode for the Map. Maps to values in [`ni.texturingPropertyClampMode`](
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.texturingPropertyClampMode](../references/ni/texturing-property-clamp-modes.md))
 
 ***
 
@@ -28,7 +28,7 @@ The filter mode for the Map. Maps to values in [`ni.texturingPropertyFilterMode`
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.texturingPropertyFilterMode](../references/ni/texturing-property-filter-modes.md))
 
 ***
 
@@ -69,8 +69,8 @@ local map = niTexturingPropertyMap.new({ texture = ..., clampMode = ..., filterM
 
 * `params` (table): *Optional*.
 	* `texture` ([niTexture](../types/niTexture.md)): *Optional*. If provided, sets the map texture to the given value.
-	* `clampMode` (integer): *Default*: `ni.texturingPropertyClampMode.wrapSwrapT`. The clamp mode to set the map to use.
-	* `filterMode` (integer): *Default*: `ni.texturingPropertyFilterMode.trilerp`. The filter mode to set the map to use.
+	* `clampMode` ([ni.texturingPropertyClampMode](../references/ni/texturing-property-clamp-modes.md)): *Default*: `ni.texturingPropertyClampMode.wrapSwrapT`. The clamp mode to set the map to use.
+	* `filterMode` ([ni.texturingPropertyFilterMode](../references/ni/texturing-property-filter-modes.md)): *Default*: `ni.texturingPropertyFilterMode.trilerp`. The filter mode to set the map to use.
 	* `textCoords` (integer): *Default*: `0`. The texture coordinates to set the map to use.
 	* `isBumpMap` (boolean): *Default*: `false`. If true, a bump map will be created instead.
 

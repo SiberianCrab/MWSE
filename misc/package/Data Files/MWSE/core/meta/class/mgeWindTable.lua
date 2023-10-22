@@ -5,4 +5,4 @@
 --- The table returned by [`mgeWeatherConfig:getWind`](https://mwse.github.io/MWSE/types/mgeWeatherConfig/).
 --- @class mgeWindTable
 --- @field speed number The speed controls how fast the grass moves in each weather due to wind speed.
---- @field weather integer The weather type passed to the `getWind` method. Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+--- @field weather tes3.weather The weather type passed to the `getWind` method. Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.

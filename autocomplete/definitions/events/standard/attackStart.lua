@@ -16,7 +16,7 @@ Lockpicks and probes do not invoke this event.]],
 			description = "A shortcut to the reference that is attacking.",
 		},
 		["attackType"] = {
-			type = "integer",
+			type = "tes3.physicalAttackType",
 			description = "A number from the [`tes3.physicalAttackType`](https://mwse.github.io/MWSE/references/physical-attack-types/) enumeration identifying the physical attack type. Can be `tes3.physicalAttackType.slash`, `.chop`, `.thrust`, `.projectile`, `.creature1`, `.creature2`, or `.creature3`. May be changed to change the attack's type if the original attack was slash, chop, or thrust.",
 		},
 		["attackSpeed"] = {

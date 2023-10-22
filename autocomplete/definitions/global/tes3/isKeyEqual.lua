@@ -12,7 +12,7 @@ return {
 				tableParams = {
 					{
 						name = "keyCode",
-						type = "number",
+						type = "tes3.scanCode",
 						default = false,
 						description = "Value of the actual key scan code, such as the letter `p`. Maps to [`tes3.scanCode.*`](https://mwse.github.io/MWSE/references/scan-codes/)."
 					},
@@ -63,7 +63,7 @@ return {
 				tableParams = {
 					{
 						name = "keyCode",
-						type = "number",
+						type = "tes3.scanCode",
 						default = false,
 						description = "Value of the expected key scan code, such as the letter `p`. Maps to [`tes3.scanCode.*`](https://mwse.github.io/MWSE/references/scan-codes/)."
 					},

@@ -23,11 +23,11 @@ event.register(tes3.event.mouseButtonDown, mouseButtonDownCallback)
 
 ## Event Data
 
-* `button` (number): *Read-only*. The button index that was pressed.
-* `isAltDown` (number): *Read-only*. True if alt is held.
-* `isControlDown` (number): *Read-only*. True if control is held.
-* `isShiftDown` (number): *Read-only*. True if either shift key is held.
-* `isSuperDown` (number): *Read-only*. True if super (Windows key) is held.
+* `button` (integer): *Read-only*. The button index that was pressed.
+* `isAltDown` (boolean): *Read-only*. True if alt is held.
+* `isControlDown` (boolean): *Read-only*. True if control is held.
+* `isShiftDown` (boolean): *Read-only*. True if either shift key is held.
+* `isSuperDown` (boolean): *Read-only*. True if super (Windows key) is held.
 
 ## Examples
 
@@ -69,20 +69,7 @@ event.register(tes3.event.mouseButtonDown, mouseButtonDownCallback)
 	
 	--- @param e keyDownEventData|mouseButtonDownEventData|mouseWheelEventData
 	local function sayHi(e)
-		local IC = tes3.worldController.inputController
-	
-		-- Let's construct the table with the currently pressed key combination.
-		-- This will handle event data from keyDown, mouseButtonDown and mouseWheel events.
-		--- @type mwseKeyMouseCombo
-		local actual = {
-			keyCode = e.keyCode,
-			isAltDown = IC:isAltDown(),
-			isControlDown = IC:isControlDown(),
-			isShiftDown = IC:isShiftDown(),
-			mouseButton = e.button,
-			delta = e.delta
-		}
-		if not tes3.isKeyEqual({ expected = config.combo, actual = actual }) then
+		if not tes3.isKeyEqual({ expected = config.combo, actual = e }) then
 			-- Nothing to do if the pressed combination isn't equal to our expected combination.
 			return
 		end

@@ -6,9 +6,9 @@
 --- @class tes3actorAnimationController
 --- @field alphaProperty niAlphaProperty The alpha property applied to the actor. Controls the opacity/opaqueness of the actor.
 --- @field animationData tes3animationData Access to the actor's animation data.
---- @field animGroupIdle integer The actor's idle animation. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) table.
+--- @field animGroupIdle tes3.animationGroup The actor's idle animation. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) table.
 --- @field animGroupIdle2 integer 
---- @field animGroupMovement integer The actor's movement animations group. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) table.
+--- @field animGroupMovement tes3.animationGroup The actor's movement animations group. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) table.
 --- @field attachTiming number 
 --- @field attackFollowTiming number 
 --- @field groundPlaneRotation tes3matrix33 The rotation of the actor around the up-down axis. When converted to euler angles, this axis corresponds to the z axis. The rotation range is [-PI, PI], where rotation of 0 corresponds to the game north.

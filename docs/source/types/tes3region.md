@@ -95,7 +95,7 @@ The region's name. It must be a string less than 32 characters long.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -325,7 +325,7 @@ myObject:changeWeather(weatherId)
 
 **Parameters**:
 
-* `weatherId` (number): Maps to values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+* `weatherId` ([tes3.weather](../references/weather-types.md)): Maps to values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 
 ***
 

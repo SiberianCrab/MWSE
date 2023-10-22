@@ -8,6 +8,6 @@
 --- @class keybindTestedEventData
 --- @field block boolean If set to `true`, vanilla logic will be suppressed. Returning `false` will set this to `true`.
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
---- @field keybind number *Read-only*. The keybind that was tested. This maps to the `tes3.keybind.*` constants.
+--- @field keybind tes3.keybind *Read-only*. The keybind that was tested. This maps to the `tes3.keybind.*` constants.
 --- @field result boolean The read state of the keybind. If true, the key was pressed/released/toggled as determined by the `transition` event data.
---- @field transition number *Read-only*. The transition for the keybind that was tested. This is typically `tes3.keyTransition.isDown` but not guaranteed to be. Always be sure to check what transition is being used.
+--- @field transition tes3.keyTransition *Read-only*. The transition for the keybind that was tested. This is typically `tes3.keyTransition.isDown` but not guaranteed to be. Always be sure to check what transition is being used.

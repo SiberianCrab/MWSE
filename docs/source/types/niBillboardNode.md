@@ -114,14 +114,15 @@ Convenient access to this object's material property. Setting this value to be n
 <div class="search_terms" style="display: none">mode</div>
 
 The orientation mode. Maps to values in [`ni.billboardMode`](https://mwse.github.io/MWSE/references/ni/billboard-modes/) table.
-`0` Always face camera. Local z-axis becomes parallel to the camera. Minimizes rotation difference from the previous frame for smoother motion.
-`1` Rotate about up vector. The object is rotated around its local y-axis so that its z-axis is pointing towards the camera.
-`2` Rigid face camera. Local z-axis becomes parallel to the camera. Does not depend on previous frame.
+
+- `0` Always face camera. Local z-axis becomes parallel to the camera. Minimizes rotation difference from the previous frame for smoother motion.
+- `1` Rotate about up vector. The object is rotated around its local y-axis so that its z-axis is pointing towards the camera.
+- `2` Rigid face camera. Local z-axis becomes parallel to the camera. Does not depend on previous frame.
 
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([ni.billboardMode](../references/ni/billboard-modes.md))
 
 ***
 
@@ -532,7 +533,7 @@ local result = myObject:detachProperty(type)
 
 **Parameters**:
 
-* `type` (integer): The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
+* `type` ([ni.propertyType](../references/ni/property-types.md)): The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
 
 **Returns**:
 
@@ -551,7 +552,7 @@ local effect = myObject:getEffect(type)
 
 **Parameters**:
 
-* `type` (integer): Use the values from [`ni.dynamicEffectType`](https://mwse.github.io/MWSE/references/ni/dynamic-effect-types/) table.
+* `type` ([ni.dynamicEffectType](../references/ni/dynamic-effect-types.md)): Use the values from [`ni.dynamicEffectType`](https://mwse.github.io/MWSE/references/ni/dynamic-effect-types/) table.
 
 **Returns**:
 
@@ -608,7 +609,7 @@ local result = myObject:getProperty(type)
 
 **Parameters**:
 
-* `type` (integer): The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
+* `type` ([ni.propertyType](../references/ni/property-types.md)): The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
 
 **Returns**:
 
@@ -729,7 +730,7 @@ local result = myObject:isFrustumCulled(camera)
 ### `isInstanceOfType`
 <div class="search_terms" style="display: none">isinstanceoftype, instanceoftype</div>
 
-Determines if the object is of a given type, or of a type derived from the given type. Types can be found in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
+Determines if the object is of a given type, or of a type derived from the given type.
 
 ```lua
 local result = myObject:isInstanceOfType(type)
@@ -737,7 +738,7 @@ local result = myObject:isInstanceOfType(type)
 
 **Parameters**:
 
-* `type` (number): Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
+* `type` ([ni.type](../references/ni/types.md)): Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
 
 **Returns**:
 
@@ -748,7 +749,7 @@ local result = myObject:isInstanceOfType(type)
 ### `isOfType`
 <div class="search_terms" style="display: none">isoftype, oftype</div>
 
-Determines if the object is of a given type. Types can be found in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
+Determines if the object is of a given type.
 
 ```lua
 local result = myObject:isOfType(type)
@@ -756,7 +757,7 @@ local result = myObject:isOfType(type)
 
 **Parameters**:
 
-* `type` (number): Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
+* `type` ([ni.type](../references/ni/types.md)): Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
 
 **Returns**:
 

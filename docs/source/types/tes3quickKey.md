@@ -53,7 +53,7 @@ A configuration detailing a quick key.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.quickKeyType](../references/quick-key-types.md))
 
 ***
 

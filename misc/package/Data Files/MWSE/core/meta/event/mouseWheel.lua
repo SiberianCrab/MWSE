@@ -7,7 +7,7 @@
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/events/mouseWheel).
 --- @class mouseWheelEventData
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
---- @field delta number *Read-only*. The direction and strength of the mouse wheel movement. This value is hardware dependent.
+--- @field delta number *Read-only*. The direction and strength of the mouse wheel movement. The value is positive for scrolling up, negative otherwise. This magnitude is hardware dependent.
 --- @field isAltDown number *Read-only*. True if alt is held.
 --- @field isControlDown number *Read-only*. True if control is held.
 --- @field isShiftDown number *Read-only*. True if either shift key is held.

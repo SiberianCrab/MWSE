@@ -26,9 +26,9 @@ event.register(tes3.event.keybindTested, keybindTestedCallback)
 
 ## Event Data
 
-* `keybind` (number): *Read-only*. The keybind that was tested. This maps to the `tes3.keybind.*` constants.
+* `keybind` ([tes3.keybind](../references/keybinds.md)): *Read-only*. The keybind that was tested. This maps to the `tes3.keybind.*` constants.
 * `result` (boolean): The read state of the keybind. If true, the key was pressed/released/toggled as determined by the `transition` event data.
-* `transition` (number): *Read-only*. The transition for the keybind that was tested. This is typically `tes3.keyTransition.isDown` but not guaranteed to be. Always be sure to check what transition is being used.
+* `transition` ([tes3.keyTransition](../references/key-transitions.md)): *Read-only*. The transition for the keybind that was tested. This is typically `tes3.keyTransition.isDown` but not guaranteed to be. Always be sure to check what transition is being used.
 
 ## Examples
 

@@ -4,7 +4,7 @@
 --- @meta
 --- A rendering property that controls the methods used to filter texture pixels, and blend texture colors and vertex colors.
 --- @class niTexturingProperty : niProperty, niObjectNET, niObject
---- @field applyMode integer The texture apply mode. The texture apply mode controls how the vertex colors are blended with the texture color. Maps to values in [`ni.texturingPropertyApplyMode`](https://mwse.github.io/MWSE/references/ni/texturing-property-apply-modes/) table.
+--- @field applyMode ni.texturingPropertyApplyMode The texture apply mode. The texture apply mode controls how the vertex colors are blended with the texture color. Maps to values in [`ni.texturingPropertyApplyMode`](https://mwse.github.io/MWSE/references/ni/texturing-property-apply-modes/) table.
 --- @field baseMap niTexturingPropertyMap|nil Gets or set the base map. Can be set to nil to delete it. Note that doing so will free the memory of the map, causing all existing handles to it to become invalid.
 --- @field bumpMap niTexturingPropertyMap|nil Gets or set the bump map. Can be set to nil to delete it. Note that doing so will free the memory of the map, causing all existing handles to it to become invalid.
 --- @field canAddDecal boolean *Read-only*. If true, the texturing property supports additional decal maps.
@@ -23,7 +23,7 @@ niTexturingProperty = {}
 function niTexturingProperty:addDecalMap(texture) end
 
 --- Attempts to remove a decal at a given index.
---- @param index integer The index of the decal to remove. The available indices are between `ni.texturingPropertyMapType.decalFirst` and `ni.texturingPropertyMapType.decalLast`.
+--- @param index ni.texturingPropertyMapType The index of the decal to remove. The available indices are between `ni.texturingPropertyMapType.decalFirst` and `ni.texturingPropertyMapType.decalLast`.
 --- @return boolean removed True if the decal was removed.
 function niTexturingProperty:removeDecalMap(index) end
 

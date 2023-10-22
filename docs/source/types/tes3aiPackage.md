@@ -160,5 +160,5 @@ The final position to be reached by the escort, follow, and travel AI packages.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.aiPackage](../references/ai-packages.md))
 

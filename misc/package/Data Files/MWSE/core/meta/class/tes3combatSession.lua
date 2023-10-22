@@ -40,7 +40,7 @@ tes3combatSession = {}
 function tes3combatSession:changeEquipment(equipmentStack) end
 
 --- Selects the alchemy item with the greatest value, for a given effect ID and loads it into the `selectedItem` property.
---- @param id integer Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @param id tes3.effect Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 --- @return number result No description yet available.
 function tes3combatSession:selectAlchemyWithEffect(id) end
 

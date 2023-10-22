@@ -75,5 +75,5 @@ The type of the skill, as assigned by the actor's class. Maps to values in [`tes
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.skillType](../references/skill-types.md))
 

@@ -37,7 +37,7 @@ function mwse.getVersion() end
 function mwse.getVirtualMemoryUsage() end
 
 --- Converts the provided string in UTF8 encoding to Morrowind's codepage base encoding.
---- @param languageCode integer Determines the language (and appropriate encoding) to use. Maps to values in [`tes3.languageCode`](https://mwse.github.io/MWSE/references/language-codes/) table.
+--- @param languageCode tes3.languageCode Determines the language (and appropriate encoding) to use. Maps to values in [`tes3.languageCode`](https://mwse.github.io/MWSE/references/language-codes/) table.
 --- @param utf8string string The string to convert
 --- @return string converted No description yet available.
 function mwse.iconv(languageCode, utf8string) end
@@ -68,7 +68,7 @@ function mwse.loadTranslations(mod) end
 function mwse.log(message, ...) end
 
 --- Converts a TES3 object type (e.g. from tes3.objectType) into an uppercase, 4-character string.
---- @param type number No description yet available.
+--- @param type tes3.objectType|number No description yet available.
 --- @return string result No description yet available.
 function mwse.longToString(type) end
 

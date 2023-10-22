@@ -6,4 +6,4 @@
 --- @class mgePerPixelLightingTable
 --- @field ambient number Corresponds to the value of "Ambient brightness multiplier" setting for given weather in the Per-pixel Lighting Settings menu of MGE XE.
 --- @field sun number Corresponds to the value of "Sun brightness multiplier" setting for given weather in the Per-pixel Lighting Settings menu of MGE XE.
---- @field weather integer The weather type passed to the `getPerPixelLighting` method. Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+--- @field weather tes3.weather The weather type passed to the `getPerPixelLighting` method. Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.

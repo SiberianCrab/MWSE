@@ -24,7 +24,7 @@ return {
 			description = "Any associated reference for the query.",
 		},
 		["context"] = {
-			type = "number",
+			type = "tes3.dialogueFilterContext",
 			readOnly = true,
 			description = "What caused the dialogue filtering. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.",
 		},

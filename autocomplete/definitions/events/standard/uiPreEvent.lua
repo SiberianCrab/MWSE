@@ -14,7 +14,7 @@ return {
 			description = "The UI element that is firing this event.",
 		},
 		["property"] = {
-			type = "number",
+			type = "tes3.uiProperty",
 			readOnly = true,
 			description = "The property identifier that is being triggered.",
 		},

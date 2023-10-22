@@ -21,7 +21,7 @@ local result = mgeWeatherConfig.getDistantFog(weather)
 
 **Parameters**:
 
-* `weather` (integer): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+* `weather` ([tes3.weather](../references/weather-types.md)): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 
 **Returns**:
 
@@ -40,7 +40,7 @@ local result = mgeWeatherConfig.getPerPixelLighting(weather)
 
 **Parameters**:
 
-* `weather` (integer): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+* `weather` ([tes3.weather](../references/weather-types.md)): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 
 **Returns**:
 
@@ -89,7 +89,7 @@ local result = mgeWeatherConfig.getWind(weather)
 
 **Parameters**:
 
-* `weather` (integer): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+* `weather` ([tes3.weather](../references/weather-types.md)): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 
 **Returns**:
 
@@ -109,7 +109,7 @@ mgeWeatherConfig.setDistantFog({ weather = ..., distance = ..., offset = ... })
 **Parameters**:
 
 * `params` (table, [mgeDistantFogTable](../types/mgeDistantFogTable.md))
-	* `weather` (integer): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+	* `weather` ([tes3.weather](../references/weather-types.md)): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 	* `distance` (number): Corresponds to the value of "Fog range factor" setting for given weather in the Distant Land Weather Settings of MGE XE.
 	* `offset` (number): Corresponds to the value of "Fog offset" setting for given weather in the Distant Land Weather Settings of MGE XE.
 
@@ -127,7 +127,7 @@ mgeWeatherConfig.setPerPixelLighting({ weather = ..., sun = ..., ambient = ... }
 **Parameters**:
 
 * `params` (table, [mgePerPixelLightingTable](../types/mgePerPixelLightingTable.md))
-	* `weather` (integer): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+	* `weather` ([tes3.weather](../references/weather-types.md)): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 	* `sun` (number): Corresponds to the value of "Sun brightness multiplier" setting for given weather in the Per-pixel Lighting Settings menu of MGE XE.
 	* `ambient` (number): Corresponds to the value of "Ambient brightness multiplier" setting for given weather in the Per-pixel Lighting Settings menu of MGE XE.
 
@@ -179,6 +179,6 @@ mgeWeatherConfig.setWind({ weather = ..., speed = ... })
 **Parameters**:
 
 * `params` (table, [mgeWindTable](../types/mgeWindTable.md))
-	* `weather` (integer): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+	* `weather` ([tes3.weather](../references/weather-types.md)): Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 	* `speed` (number)
 

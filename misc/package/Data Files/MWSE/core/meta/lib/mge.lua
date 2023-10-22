@@ -46,7 +46,7 @@ function mge.enableShader(params) end
 function mge.enableZoom() end
 
 --- Returns the lighting mode used by MGE XE. These values map to [`mge.lightingMode`](https://mwse.github.io/MWSE/references/mge/lighting-modes/) constants.
---- @return integer mode Maps to the `mge.lightingMode` constants.
+--- @return mge.lightingMode mode No description yet available.
 function mge.getLightingMode() end
 
 --- Gets the window's vertical resolution. Use `tes3.getViewportSize()` instead.
@@ -114,7 +114,7 @@ function mge.saveScreenshot(params) end
 --- @field captureWithUI boolean? *Default*: `false`. If set to `true`, the screenshot will include the user interface.
 
 --- Sets the lighting mode used by MGE XE. The values passed can be used from the [`mge.lightingMode`](https://mwse.github.io/MWSE/references/mge/lighting-modes/) constants.
---- @param mode integer Maps to the `mge.lightingMode` constants.
+--- @param mode mge.lightingMode No description yet available.
 function mge.setLightingMode(mode) end
 
 --- Sets a shader float value. Use the named variable interface on the shader handle instead.

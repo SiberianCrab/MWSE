@@ -15,8 +15,8 @@
 --- @field serialNumber number *Read-only*. Unique indentifier for just this magic source.
 --- @field source tes3alchemy|tes3enchantment|tes3spell *Read-only*. No description yet available.
 --- @field sourceEffects tes3effect[] *Read-only*. An array-style table holding spell effects this magic source has.
---- @field sourceType number *Read-only*. The type of this magic source. Maps to [`tes3.magicSourceType`](https://mwse.github.io/MWSE/references/magic-source-types/) constants.
---- @field state number Shows if the state is pre-cast, cast, beginning, working, ending, retired, etc. Maps to [`tes3.spellState`](https://mwse.github.io/MWSE/references/spell-states/) constants.
+--- @field sourceType tes3.magicSourceType *Read-only*. The type of this magic source. Maps to [`tes3.magicSourceType`](https://mwse.github.io/MWSE/references/magic-source-types/) constants.
+--- @field state tes3.spellState Shows if the state is pre-cast, cast, beginning, working, ending, retired, etc. Maps to [`tes3.spellState`](https://mwse.github.io/MWSE/references/spell-states/) constants.
 --- @field target tes3reference *Read-only*. No description yet available.
 --- @field timestampCastBegin number The timestamp at which this magic source was cast.
 tes3magicSourceInstance = {}

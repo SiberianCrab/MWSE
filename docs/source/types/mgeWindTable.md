@@ -28,5 +28,5 @@ The weather type passed to the `getWind` method. Maps to values in [`tes3.weathe
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.weather](../references/weather-types.md))
 

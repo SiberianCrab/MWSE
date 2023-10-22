@@ -39,5 +39,5 @@ The type of the wearable part. Maps to [`tes3.activeBodyPart`](https://mwse.gith
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.activeBodyPart](../references/active-body-parts.md))
 

@@ -62,7 +62,7 @@ Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-
 
 **Returns**:
 
-* `result` (integer, nil)
+* `result` ([tes3.scanCode](../references/scan-codes.md), nil)
 
 ***
 

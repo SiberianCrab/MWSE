@@ -236,9 +236,9 @@ local function buildParentChain(className)
 	return className
 end
 
----@param namespace string Should look like: `"tes3.enumName.subEnumName"` or `"tes3.enumName"`. For example, `"tes3.activeBodyPart"` or `"tes3.dialoguePage.greeting"`.
----@param keys string[] These are the keys of the table to build.
----@param file file* The file to write to.
+--- @param namespace string Should look like: `"tes3.enumName.subEnumName"` or `"tes3.enumName"`. For example, `"tes3.activeBodyPart"` or `"tes3.dialoguePage.greeting"`.
+--- @param keys string[] These are the keys of the table to build.
+--- @param file file* The file to write to.
 local function buildAlias(namespace, keys, file)
 	file:write(string.format("--- @alias %s\n", namespace))
 	for _, key in ipairs(keys) do
@@ -259,31 +259,42 @@ local function buildAlias(namespace, keys, file)
 	file:write("\n")
 end
 
-local function buildExternalRequires(package, file)
-	local fileBlacklist = {
-		["init"] = true,
-	}
-	local directory = lfs.join(common.pathAutocomplete, "..", "misc", "package", "Data Files", "MWSE", "core", "lib", package.key)
-	for entry in lfs.dir(directory) do
-		local extension = entry:match("[^.]+$")
-		if (extension == "lua") then
-			local filename = entry:match("[^/]+$"):sub(1, -1 * (#extension + 2))
-			if (not fileBlacklist[filename]) then
-				file:write(string.format('%s.%s = require("%s.%s")\n\n', package.key, filename, package.key, filename))
+local function sortEnumsByFilename(A, B)
+	return A.filename:lower() < B.filename:lower()
+end
 
-				local enumerationTable = dofile(lfs.join(directory, entry))
-				local keys = table.keys(enumerationTable, true)
-				local namespace = package.key .. "." .. filename
-				if type(enumerationTable[keys[1]]) == "table" then
-					for subNamespace, subEnumeration in pairs(enumerationTable) do
-						local completeNamespace = namespace .. "." .. subNamespace
-						local keys = table.keys(subEnumeration, true)
-						buildAlias(completeNamespace, keys, file)
-					end
-				else
-					buildAlias(namespace, keys, file)
-				end
+local function buildExternalRequires(package, file)
+	local enumMap = common.getEnumerationsMap(package.key)
+	-- Not every "lib" has enumeration tables (e.g. debuglib)
+	if not enumMap then
+		return
+	end
+
+	-- Let's sort the enumerations
+	local enums = {}
+	for filename, path in pairs(common.getEnumerationsMap(package.key)) do
+		enums[#enums + 1] = {
+			filename = filename,
+			path = path,
+		}
+	end
+	table.sort(enums, sortEnumsByFilename)
+
+	for _, data in ipairs(enums) do
+		local namespace = package.key .. "." .. data.filename
+		file:write(string.format('%s = require("%s")\n\n', namespace, namespace))
+
+		local enumerationTable = dofile(data.path)
+		local keys = table.keys(enumerationTable, true)
+		local hasSubtables = type(enumerationTable[keys[1]]) == "table"
+		if hasSubtables then
+			for subNamespace, subEnumeration in pairs(enumerationTable) do
+				local completeNamespace = namespace .. "." .. subNamespace
+				local keys = table.keys(subEnumeration, true)
+				buildAlias(completeNamespace, keys, file)
 			end
+		else
+			buildAlias(namespace, keys, file)
 		end
 	end
 end

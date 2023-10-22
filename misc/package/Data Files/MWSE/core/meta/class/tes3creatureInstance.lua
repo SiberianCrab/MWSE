@@ -30,7 +30,7 @@
 --- @field soundCreature tes3creature Simplified access to the base creature's sound generator. A creature to use instead of this one for sound generation.
 --- @field spells tes3spellList|tes3spell[] *Read-only*. Quick access to the creature's spell list. It is a `tes3spellList`, which is a list wrapper with helper functions. The actual list is iterated over using `pairs`. E.g. `for _, spell in pairs(creature.spells) do print(spell.name) end`
 --- @field swims boolean Access to the creature's swims flag.
---- @field type number Simplified access to the base creature's type. The type of the creature, maps to values in [`tes3.creatureType`](https://mwse.github.io/MWSE/references/creature-types/) namespace.
+--- @field type tes3.creatureType Simplified access to the base creature's type. The type of the creature, maps to values in [`tes3.creatureType`](https://mwse.github.io/MWSE/references/creature-types/) namespace.
 --- @field usesEquipment boolean Access to the creature's usesEquipment flag.
 --- @field walks boolean Access to the creature's walks flag.
 --- @field weapon tes3weapon *Read-only*. The creature's currently equipped weapon.

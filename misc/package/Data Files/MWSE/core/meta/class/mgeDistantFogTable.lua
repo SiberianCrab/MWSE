@@ -6,4 +6,4 @@
 --- @class mgeDistantFogTable
 --- @field distance number The range setting for given weather type. Corresponds to the value of "Fog range factor" setting for given weather in the Distant Land Weather Settings menu of MGE XE.
 --- @field offset number The fog offset setting for given weather type. Corresponds to the value of "Fog offset" setting for given weather in the Distant Land Weather Settings menu of MGE XE.
---- @field weather integer The weather type passed to the `getDistantFog` method. Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+--- @field weather tes3.weather The weather type passed to the `getDistantFog` method. Maps to values in [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.

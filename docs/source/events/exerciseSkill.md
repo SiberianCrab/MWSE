@@ -27,7 +27,7 @@ event.register(tes3.event.exerciseSkill, exerciseSkillCallback)
 ## Event Data
 
 * `progress` (number): The amount of experience that skill is gaining. Note that experience is not on a scale of 1 to 100. This value is modifiable.
-* `skill` (integer): The ID of the skill that is gaining experience. The IDs used are available in Lua by their indentifier in the [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace. This can be changed to provide experience to a different skill.
+* `skill` ([tes3.skill](../references/skills.md)): The ID of the skill that is gaining experience. The IDs used are available in Lua by their indentifier in the [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) namespace. This can be changed to provide experience to a different skill.
 
 
 ## Related events

@@ -3,7 +3,7 @@ return {
 	description = "The key event fires when a key up or key down input is detected. It is preferred that the keyDown and keyUp events are used instead.",
 	eventData = {
 		["keyCode"] = {
-			type = "integer",
+			type = "tes3.scanCode",
 			readOnly = true,
 			description = "The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.",
 		},

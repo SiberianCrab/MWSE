@@ -84,7 +84,7 @@ The modification state of the object since the last save.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -150,7 +150,7 @@ If true, references of this object can store temporary or persistent lua data.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.soundGenType](../references/sound-generator-types.md))
 
 ***
 

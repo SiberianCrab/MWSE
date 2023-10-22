@@ -18,7 +18,7 @@ This type inherits the following: [niRotKey](../types/niRotKey.md), [niAnimation
 
 **Returns**:
 
-* `result` (integer[])
+* `result` ([ni.eulerRotKeyOrder](../references/ni/euler-rotation-key-orders.md)[])
 
 ***
 
@@ -40,7 +40,7 @@ This type inherits the following: [niRotKey](../types/niRotKey.md), [niAnimation
 
 **Returns**:
 
-* `result` (integer[])
+* `result` ([ni.animationKeyType](../references/ni/animation-key-types.md)[])
 
 ***
 

@@ -2,7 +2,7 @@ return {
 	type = "function",
 	description = [[Unregisters a function previously registered for an event with `event.register()`.]],
 	arguments = {
-		{ name = "eventId", type = "string" },
+		{ name = "eventId", type = "string|tes3.event" },
 		{ name = "callback", type = "function" },
 		{
 			name = "options",

@@ -19,7 +19,7 @@ return {
 			description = "The calling element's parent.",
 		},
 		["property"] = {
-			type = "number",
+			type = "tes3.uiProperty",
 			readOnly = true,
 			description = "The property identifier that is being triggered.",
 		},

@@ -13,22 +13,11 @@ A substructure of mobile actors that provides information about the current or p
 ### `aiBehaviorState`
 <div class="search_terms" style="display: none">aibehaviorstate</div>
 
-The behavior state of the [tes3actionData](https://mwse.github.io/MWSE/types/tes3actionData). This maps to values in [`tes3.aiBehaviorState`](https://mwse.github.io/MWSE/references/ai-behavior-states/) namespace.
-
-Value | Behavior
------ | ---------
--1    | Undecided
- 0    | Hello
- 2    | Idle
- 3    | Attack
- 4    | Avoid
- 6    | Flee
- 8    | Walk
-12    | Greet
+The behavior state. This maps to values in [`tes3.aiBehaviorState`](https://mwse.github.io/MWSE/references/ai-behavior-states/) namespace.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.aiBehaviorState](../references/ai-behavior-states.md))
 
 ***
 
@@ -39,7 +28,7 @@ The actor's animation state. Maps to values in [`tes3.animationState`](https://m
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.animationState](../references/animation-states.md))
 
 ***
 
@@ -72,7 +61,7 @@ Actor's current animation group. Maps to values in [`tes3.animationGroup`](https
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.animationGroup](../references/animation-groups.md))
 
 ***
 
@@ -118,7 +107,7 @@ Proper time to change the attack direction is the [attackStart](https://mwse.git
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.physicalAttackType](../references/physical-attack-types.md))
 
 ??? example "Example: Changing axe attack direction"
 

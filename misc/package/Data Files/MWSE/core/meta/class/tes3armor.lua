@@ -15,11 +15,11 @@
 --- @field name string The player-facing name for the object.
 --- @field parts tes3wearablePart[] *Read-only*. An array-style table of the [`tes3wearablePart`](https://mwse.github.io/MWSE/types/tes3wearablePart/) data on the object.
 --- @field script tes3script The script that runs on the object.
---- @field slot number The slot used by the armor. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) namespace.
+--- @field slot tes3.armorSlot The slot used by the armor. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) namespace.
 --- @field slotName string *Read-only*. The name of the slot used by the armor.
 --- @field value number The value of the object.
 --- @field weight number The weight of the object.
---- @field weightClass number *Read-only*. The weight class of the armor. This value maps to [`tes3.armorWeightClass`](https://mwse.github.io/MWSE/references/armor-weight-classes/) constants.
+--- @field weightClass tes3.armorWeightClass *Read-only*. The weight class of the armor. This value maps to [`tes3.armorWeightClass`](https://mwse.github.io/MWSE/references/armor-weight-classes/) constants.
 tes3armor = {}
 
 --- Calculates what armor rating is provided for a given mobile actor.

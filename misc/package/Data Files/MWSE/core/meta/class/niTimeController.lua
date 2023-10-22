@@ -5,10 +5,10 @@
 --- An abstract base class from which all the animation controllers inherit. It has all the functionality needed to control the timing and update animations.
 --- @class niTimeController : niObject
 --- @field active boolean If the controller is active. When inactive, the target does not get updated and animation timing does not advance.
---- @field animTimingType integer How the time parameter passed to the update function is treated. Type 0 is the default, which treats the update time as a delta time. Type 1 treats the update time an offset from the start of the animation.
+--- @field animTimingType ni.animType How the time parameter passed to the update function is treated. Type 0 is the default, which treats the update time as a delta time. Type 1 treats the update time an offset from the start of the animation.
 --- 
 --- Maps to values in [`ni.animType`](https://mwse.github.io/MWSE/references/ni/animation-types/) table.
---- @field cycleType integer The animation cycle type. Type 0 is looping, type 2 is reverse, type 4 is clamped.
+--- @field cycleType ni.animCycleType The animation cycle type. Type 0 is looping, type 2 is reverse, type 4 is clamped.
 --- 
 --- Maps to values in [`ni.animCycleType`](https://mwse.github.io/MWSE/references/ni/animation-cycle-types/) table.
 --- @field frequency number The animation controller's frequency value. It is a scaling value used to convert from update time units to keyframe time units, if necessary.

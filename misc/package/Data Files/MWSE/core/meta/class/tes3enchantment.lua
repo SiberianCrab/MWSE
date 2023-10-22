@@ -4,7 +4,7 @@
 --- @meta
 --- An enchantment game object.
 --- @class tes3enchantment : tes3object, tes3baseObject
---- @field castType number The enchantment's cast type. Maps to [`tes3.enchantmentType`](https://mwse.github.io/MWSE/references/enchantment-types/) constants.
+--- @field castType tes3.enchantmentType The enchantment's cast type. Maps to [`tes3.enchantmentType`](https://mwse.github.io/MWSE/references/enchantment-types/) constants.
 --- @field chargeCost number The cost of using the enchantment.
 --- @field effects tes3effect[] *Read-only*. An array-style table of the [`tes3effect`](https://mwse.github.io/MWSE/types/tes3effect/) data on the object.
 --- @field flags number A bit field for the enchantment's flags.
@@ -17,7 +17,7 @@ tes3enchantment = {}
 --- 
 --- `id`: string? — *Optional*. The new object's ID. Must be unique if provided.
 --- 
---- `castType`: number — The enchantment castType. See [`tes3.enchantmentType`](https://mwse.github.io/MWSE/references/enchantment-types/) constants.
+--- `castType`: tes3.enchantmentType — The enchantment castType. See [`tes3.enchantmentType`](https://mwse.github.io/MWSE/references/enchantment-types/) constants.
 --- 
 --- `chargeCost`: number — The new enchantment charge cost. Must be greater than `0`.
 --- 
@@ -32,7 +32,7 @@ function tes3enchantment.create(params) end
 ---Table parameter definitions for `tes3enchantment.create`.
 --- @class tes3enchantment.create.params
 --- @field id string? *Optional*. The new object's ID. Must be unique if provided.
---- @field castType number The enchantment castType. See [`tes3.enchantmentType`](https://mwse.github.io/MWSE/references/enchantment-types/) constants.
+--- @field castType tes3.enchantmentType The enchantment castType. See [`tes3.enchantmentType`](https://mwse.github.io/MWSE/references/enchantment-types/) constants.
 --- @field chargeCost number The new enchantment charge cost. Must be greater than `0`.
 --- @field maxCharge number The new enchantment maximum charge. Must be greater than `0`
 --- @field flags number? *Optional*. The new enchantment flags.
@@ -60,7 +60,7 @@ function tes3enchantment:createCopy(params) end
 function tes3enchantment:getActiveEffectCount() end
 
 --- Returns the index of a first effect of a given effectId in the parent `tes3enchantment` object.
---- @param effectId number The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants, including magic effects added with [`tes3.addMagicEffect()`](https://mwse.github.io/MWSE/apis/tes3/#tes3addmagiceffect).
+--- @param effectId tes3.effect The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants, including magic effects added with [`tes3.addMagicEffect()`](https://mwse.github.io/MWSE/apis/tes3/#tes3addmagiceffect).
 --- @return number index No description yet available.
 function tes3enchantment:getFirstIndexOfEffect(effectId) end
 

@@ -7,10 +7,10 @@
 --- Animations are divided into three layers. The layer 0 is the base layer containing all the base animations for every humanoid in the game, including the player (when in third person). These animations come from `base_anim.nif`. Layer 1 is for female animations. Any animations present in `base_anim_female.nif` override their male counterparts for humanoid races. For beast races, layer 1 animations come from `base_anim_kna.nif`. Layer 2 are the custom animations assigned to the actor.
 --- @class tes3animationData
 --- @field actorNode niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode 
---- @field animationGroups tes3animationGroup[] *Read-only*. The animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
---- @field animationGroupSoundgenCounts number[] *Read-only*. The number of sound generators for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
---- @field animGroupLayerIndicies number[] *Read-only*. The layer from which each of the actor's animation groups come, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
---- @field approxRootTravelSpeeds number[] *Read-only*. The approximate root node travel speed for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+--- @field animationGroups table<tes3.animationGroup, tes3animationGroup> *Read-only*. A table of the animation group objects, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+--- @field animationGroupSoundgenCounts table<tes3.animationGroup, number> *Read-only*. The number of sound generators for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+--- @field animGroupLayerIndicies table<tes3.animationGroup, tes3.activeBodyPartLayer> *Read-only*. The layer from which each of the actor's animation groups come, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+--- @field approxRootTravelSpeeds table<tes3.animationGroup, number> *Read-only*. The approximate root node travel speed for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
 --- @field blinkMorphEndTime number Blink animation end time for `headMorphTiming`. Timing is specific to the current head model.
 --- @field blinkMorphStartTime number Blink animation start time for `headMorphTiming`. Timing is specific to the current head model.
 --- @field castSpeed number The animation speed multiplier for the spell casting animation. This is a feature added by MWSE.
@@ -46,7 +46,7 @@
 --- @field talkMorphEndTime number Lipsync animation end time for `headMorphTiming`. Timing is specific to the current head model.
 --- @field talkMorphStartTime number Lipsync animation start time for `headMorphTiming`. Timing is specific to the current head model.
 --- @field timeToNextBlink number The time in seconds until the next blink. It is fixed at 0 while the blink animation plays.
---- @field timings number[] The time in seconds indicating the current position within the animation for each individual body section, indexed by values in the [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) table.
+--- @field timings table<tes3.animationBodySection, number> The time in seconds indicating the current position within the animation for each individual body section, indexed by values in the [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) table.
 --- @field weaponSpeed number The animation speed multiplier of weapon animations. This includes all weapon related idle, attack, and ready/unready animations.
 tes3animationData = {}
 
@@ -55,15 +55,15 @@ tes3animationData = {}
 function tes3animationData:getReference() end
 
 --- This method plays an animation group on the related actor, invoking `playGroup` event.
---- @param animationGroup number The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
---- @param startFlag number A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
+--- @param animationGroup tes3.animationGroup The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+--- @param startFlag tes3.animationStartFlag A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
 --- @param loopCount number If provided, the animation will repeat its loop section a given number of times. To make an animation play through once, set loopCount = 0, while -1 is used for infinite looping.
 function tes3animationData:playAnimationGroup(animationGroup, startFlag, loopCount) end
 
 --- This method plays an animation group on the provided body section of related actor, invoking `playGroup` event.
---- @param animationGroup number The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
---- @param triIndex number The body section on which to play the animation. A value from [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.
---- @param startFlag number A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
+--- @param animationGroup tes3.animationGroup The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+--- @param triIndex tes3.animationBodySection The body section on which to play the animation. A value from [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.
+--- @param startFlag tes3.animationStartFlag A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
 --- @param loopCount number If provided, the animation will repeat its loop section a given number of times. To make an animation play through once, set loopCount = 0, while -1 is used for infinite looping.
 function tes3animationData:playAnimationGroupForIndex(animationGroup, triIndex, startFlag, loopCount) end
 

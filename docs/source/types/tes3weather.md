@@ -193,7 +193,7 @@ The weather's glare view.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.weather](../references/weather-types.md))
 
 ***
 

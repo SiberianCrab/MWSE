@@ -315,7 +315,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -425,7 +425,7 @@ Gets the skill ID for the attack skill used by the weapon. Maps to values in [`t
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.skill](../references/skills.md))
 
 ??? example "Example: Print the name of the skill the attacker's weapon uses"
 
@@ -552,7 +552,7 @@ Thrust damage inflicted at minimum weapon swing.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.weaponType](../references/weapon-types.md))
 
 ***
 

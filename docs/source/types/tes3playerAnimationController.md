@@ -51,7 +51,7 @@ The actor's idle animation. Maps to values in [`tes3.animationGroup`](https://mw
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.animationGroup](../references/animation-groups.md))
 
 ***
 
@@ -73,7 +73,7 @@ The actor's movement animations group. Maps to values in [`tes3.animationGroup`]
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.animationGroup](../references/animation-groups.md))
 
 ***
 

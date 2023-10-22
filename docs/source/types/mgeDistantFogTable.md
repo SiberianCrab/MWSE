@@ -39,5 +39,5 @@ The weather type passed to the `getDistantFog` method. Maps to values in [`tes3.
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.weather](../references/weather-types.md))
 

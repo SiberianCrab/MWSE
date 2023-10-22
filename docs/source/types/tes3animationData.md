@@ -26,11 +26,11 @@ Animations are divided into three layers. The layer 0 is the base layer containi
 ### `animationGroups`
 <div class="search_terms" style="display: none">animationgroups</div>
 
-*Read-only*. The animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+*Read-only*. A table of the animation group objects, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
 
 **Returns**:
 
-* `result` (tes3animationGroup[])
+* `result` (table&lt;[tes3.animationGroup](../references/animation-groups.md), tes3animationGroup&gt;)
 
 ***
 
@@ -41,7 +41,7 @@ Animations are divided into three layers. The layer 0 is the base layer containi
 
 **Returns**:
 
-* `result` (number[])
+* `result` (table&lt;[tes3.animationGroup](../references/animation-groups.md), number&gt;)
 
 ***
 
@@ -52,7 +52,7 @@ Animations are divided into three layers. The layer 0 is the base layer containi
 
 **Returns**:
 
-* `result` (number[])
+* `result` (table&lt;[tes3.animationGroup](../references/animation-groups.md), [tes3.activeBodyPartLayer](../references/active-body-part-layers.md)&gt;)
 
 ***
 
@@ -63,7 +63,7 @@ Animations are divided into three layers. The layer 0 is the base layer containi
 
 **Returns**:
 
-* `result` (number[])
+* `result` (table&lt;[tes3.animationGroup](../references/animation-groups.md), number&gt;)
 
 ***
 
@@ -394,7 +394,7 @@ The time in seconds indicating the current position within the animation for eac
 
 **Returns**:
 
-* `result` (number[])
+* `result` (table&lt;[tes3.animationBodySection](../references/animation-body-sections.md), number&gt;)
 
 ***
 
@@ -437,8 +437,8 @@ myObject:playAnimationGroup(animationGroup, startFlag, loopCount)
 
 **Parameters**:
 
-* `animationGroup` (number): The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
-* `startFlag` (number): A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
+* `animationGroup` ([tes3.animationGroup](../references/animation-groups.md)): The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+* `startFlag` ([tes3.animationStartFlag](../references/animation-start-flags.md)): A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
 * `loopCount` (number): If provided, the animation will repeat its loop section a given number of times. To make an animation play through once, set loopCount = 0, while -1 is used for infinite looping.
 
 ***
@@ -454,9 +454,9 @@ myObject:playAnimationGroupForIndex(animationGroup, triIndex, startFlag, loopCou
 
 **Parameters**:
 
-* `animationGroup` (number): The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
-* `triIndex` (number): The body section on which to play the animation. A value from [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.
-* `startFlag` (number): A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
+* `animationGroup` ([tes3.animationGroup](../references/animation-groups.md)): The animation group to play. A value from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+* `triIndex` ([tes3.animationBodySection](../references/animation-body-sections.md)): The body section on which to play the animation. A value from [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.
+* `startFlag` ([tes3.animationStartFlag](../references/animation-start-flags.md)): A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
 * `loopCount` (number): If provided, the animation will repeat its loop section a given number of times. To make an animation play through once, set loopCount = 0, while -1 is used for infinite looping.
 
 ***

@@ -6,7 +6,7 @@
 --- @class calcEnchantmentPriceEventData
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
 --- @field basePrice number *Read-only*. The base price of the enchantment, before any disposition or event modifications.
---- @field castType number *Read-only*. The enchantment cast type. Maps to `tes3.enchantmentType.*`.
+--- @field castType tes3.enchantmentType *Read-only*. The enchantment cast type. Maps to `tes3.enchantmentType.*`.
 --- @field effects table[] *Read-only*. An array of the effects being enchanted onto the item. This includes the `effect` object, `magnitudeLow`/`magnitudeHigh` values, the `area`, `duration`, and `range`. The `attribute` and `skill` values are available as appropriate.
 --- @field item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon *Read-only*. The item, if any, that is being enchanted.
 --- @field itemData tes3itemData *Read-only*. The item data for the enchanted item.

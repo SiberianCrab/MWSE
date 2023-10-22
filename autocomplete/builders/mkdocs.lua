@@ -17,7 +17,31 @@ lfs.remakedir(lfs.join(docsSourceFolder, "events"))
 local globals = {}
 local classes = {}
 local events = {}
-local typeLinks = {}
+local typeLinks = {
+	-- The automatic link resolving doesn't work for these enumerations.
+	-- These came as warnings in the output of the mkdocs - Start Server task defined at: "docs/.vscode/tasks.json"
+	["ni.animCycleType"] = "[ni.animCycleType](../references/ni/animation-cycle-types.md)",
+	["ni.animType"] = "[ni.animType](../references/ni/animation-types.md)",
+	["ni.cameraClearFlags"] = "[ni.cameraClearFlags](../references/ni/camera-clear-flags.md)",
+	["ni.eulerRotKeyOrder"] = "[ni.eulerRotKeyOrder](../references/ni/euler-rotation-key-orders.md)",
+	["ni.lookAtControllerAxis"] = "[ni.lookAtControllerAxis](../references/ni/look-at-controller-axes.md)",
+	["ni.pickIntersectType"] = "[ni.pickIntersectType](../references/ni/pick-intersection-types.md)",
+	["ni.textureFormatPrefsAlphaFormat"] = "[ni.textureFormatPrefsAlphaFormat](../references/ni/texture-format-preference-alpha-formats.md)",
+	["ni.textureFormatPrefsMipFlag"] = "[ni.textureFormatPrefsMipFlag](../references/ni/texture-format-preference-mip-flags.md)",
+	["ni.textureFormatPrefsPixelLayout"] = "[ni.textureFormatPrefsPixelLayout](../references/ni/texture-format-preference-pixel-layouts.md)",
+	["ni.zBufferPropertyTestFunction"] = "[ni.zBufferPropertyTestFunction](../references/ni/z-buffer-property-test-functions.md)",
+	["tes3.armorWeightClass"] = "[tes3.armorWeightClass](../references/armor-weight-classes.md)",
+	["tes3.dialogueFilterContext"] = "[tes3.dialogueFilterContext](../references/dialogue-filter-context.md)",
+	["tes3.effect"] = "[tes3.effect](../references/magic-effects.md)",
+	["tes3.soundGenType"] = "[tes3.soundGenType](../references/sound-generator-types.md)",
+	["tes3.gmst"] = "[tes3.gmst](../references/gmst.md)",
+	["tes3.justifyText"] = "[tes3.justifyText](../references/justify-text.md)",
+	["tes3.partIndex"] = "[tes3.partIndex](../references/part-indices.md)",
+	["tes3.soundMix"] = "[tes3.soundMix](../references/sound-mix-types.md)",
+	["tes3.uiElementType"] = "[tes3.uiElementType](../references/tes3uiElement-types.md)",
+	["tes3.uiProperty"] = "[tes3.uiProperty](../references/ui-properties.md)",
+	["tes3.weather"] = "[tes3.weather](../references/weather-types.md)",
+}
 
 --
 -- Utility functions.
@@ -65,18 +89,51 @@ local function buildParentChain(className)
 	return ret
 end
 
+--- @param enum string
+local function splitCamelCase(enum)
+	-- Make the first letter uppercase
+	enum = enum:gsub("^%l", string.upper)
+	-- Insert dash between lowercase and uppercase character
+	enum = enum:gsub( "(%l)(%u)", "%1-%2" )
+	return enum:lower()
+end
+
 --- @param type string Supports array annotation. For example: "tes3weather[]".
 local function getTypeLink(type)
 	if typeLinks[type] then
 		return typeLinks[type]
 	end
 
-	local isArray = type:endswith("[]")
 	local valueType = type:match("[%w%.]+")
+	local isArray = type:endswith("[]")
+	local namespace, field = type:match("([_%a][_%w]+)%.(.*)") --[[@as string]]
+	if isArray then
+		-- Exclude the ending square brackets [].
+		namespace, field = type:sub(1, -3):match("([_%a][_%w]+)%.(.*)") --[[@as string]]
+	end
+	local enums = common.getEnumerationsMap(namespace)
+	local isEnum = enums and enums[field]
 
 	if classes[valueType] then
 		typeLinks[type] = string.format("[%s](../types/%s.md)%s", valueType, valueType, isArray and "[]" or "")
+	elseif isEnum then
+		local enumName = namespace .. "." .. field
+		if isArray then
+			local cached = typeLinks[enumName]
+			if cached then
+				typeLinks[type] = cached .. "[]"
+				return typeLinks[type]
+			end
+		end
+		local filename = splitCamelCase(field)
+		local basepath = "../references/"
+		-- Reference pages for enumeration tables in tes3 namespace are one folder up
+		if namespace ~= "tes3" then
+			basepath = basepath .. namespace .. "/"
+		end
+		typeLinks[type] = string.format("[%s](%s%ss.md)%s", enumName, basepath, filename, isArray and "[]" or "")
 	else
+		-- Cache the types without any entry in the docs (e.g. primitive Lua types, string constants, etc.)
 		typeLinks[type] = type
 	end
 
@@ -84,12 +141,14 @@ local function getTypeLink(type)
 end
 
 --- This function converts a union of types to an array. E.g.:<br>
---- "table<integer, tes3ref|tes3mobile>|fun(self: infoGetTextEventData|string): boolean, string|integer" to<br>
---- {<br>
----    "table<integer, tes3ref|tes3mobile>",<br>
----    "fun(self: infoGetTextEventData|string): boolean, string",<br>
----    "integer",<br>
---- }<br>
+--- `"table<integer, tes3ref|tes3mobile>|fun(self: infoGetTextEventData|string): boolean, string|integer"` to:
+--- ```lua
+--- {
+---    "table<integer, tes3ref|tes3mobile>",
+---    "fun(self: infoGetTextEventData|string): boolean, string",
+---    "integer",
+--- }
+--- ```
 --- @param union string
 --- @return string[]
 local function breakoutUnion(union)
@@ -133,7 +192,9 @@ local function breakoutTypeLinks(type, nested)
 		-- Support "table<x, y>" as type, in HTML < and > signs have a special meaning.
 		-- Use "&lt;" and "&gt;" instead.
 		if t:startswith("table<") then
-			local keyType, valueType = t:match("table<(%w+), (.+)>")
+			local keyType, valueType = t:match("(%b<,) (.*)>")
+			-- Let's remove the "<" from the beginning and "," at the end
+			keyType = keyType:sub(2, -2)
 			keyType = breakoutTypeLinks(keyType, true)
 			valueType = breakoutTypeLinks(valueType, true)
 
@@ -280,7 +341,12 @@ local function writeOperatorPackage(file, operator, package)
 		file:write("| Left operand type | Right operand type | Result type | Description |\n")
 		file:write("| ----------------- | ------------------ | ----------- | ----------- |\n")
 		for _, overload in ipairs(operator.overloads) do
-			file:write(string.format("| %s | %s | %s | %s |\n", getTypeLink(package.namespace), getTypeLink(overload.rightType), getTypeLink(overload.resultType), overload.description or ""))
+			file:write(string.format("| %s | %s | %s | %s |\n",
+				getTypeLink(package.namespace),
+				getTypeLink(overload.rightType),
+				getTypeLink(overload.resultType),
+				overload.description or "")
+			)
 		end
 	else
 		file:write("| Result type | Description |\n")
@@ -409,7 +475,7 @@ local function writePackageDetails(file, package)
 
 	local returns = common.getConsistentReturnValues(package)
 	if (package.type == "method" or package.type == "function") then
-		file:write(string.format("```lua\n",  package.namespace))
+		file:write(string.format("```lua\n", package.namespace))
 		if (returns) then
 			local returnNames = {}
 			for i, ret in ipairs(returns) do

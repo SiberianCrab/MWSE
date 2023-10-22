@@ -35,9 +35,9 @@
 --- @field color number[] The RGB color of the element. An array of 3 numbers with values ranging from `0.0` to `1.0`. For menus and rects, it sets the background color. For text, it sets the text color. For images, it multiplies the image by the color.
 --- @field consumeMouseEvents boolean When `true`, mouse events over this element are sent to event handlers, or discarded if there is no handler. When `false`, mouse events go upwards to the first ancestor that can consume mouse events. Useful to set on widget sub-elements. `true` by default.
 --- @field contentPath string The file path to the image or model content of this element. Only used if `contentType` is set to `tes3.contentType.image` or `tes3.contentType.model`.
---- @field contentType string *Read-only*. The type of content this `tes3uiElement` represents. Maps to values in the [`tes3.contentType`](https://mwse.github.io/MWSE/references/content-types/) table.
+--- @field contentType tes3.contentType *Read-only*. The type of content this `tes3uiElement` represents. Maps to values in the [`tes3.contentType`](https://mwse.github.io/MWSE/references/content-types/) table.
 --- @field disabled boolean Disables user actions on this element. Widgets may stop accepting mouse and keyboard input while disabled.
---- @field flowDirection string Can have values `"left_to_right"` or `"top_to_bottom"`. These values are available as [`tes3.flowDirection`](https://mwse.github.io/MWSE/references/flow-directions/) enumeration. Indicates which direction child elements are laid out.
+--- @field flowDirection tes3.flowDirection Indicates which direction child elements are laid out. These values are available as [`tes3.flowDirection`](https://mwse.github.io/MWSE/references/flow-directions/) enumeration.
 --- @field font number Index of font to use for text.
 --- 		0 - Magic Cards (default)
 --- 		1 - Century Sans
@@ -58,7 +58,7 @@
 --- Elements that bypass parent layout will be ignored when automatically determing the parent's height. See [`autoHeight`](https://mwse.github.io/MWSE/types/tes3uiElement/#autoheight) for more information.
 --- @field imageScaleX number Image scaling multipliers. Only applies to image elements. `0` disables scaling and displays the original image. Negative numbers will mirror and scale along this axis.
 --- @field imageScaleY number Image scaling multipliers. Only applies to image elements. `0` disables scaling and displays the original image. Negative numbers will mirror and scale along this axis.
---- @field justifyText string Can have values `"left"`, `"center"`, or `"right"`. Controls text justification. Maps to values in the [`tes3.justifyText`](https://mwse.github.io/MWSE/references/justify-text/) table. To work correctly for center/right justification, `wrapText` must be `true`.
+--- @field justifyText tes3.justifyText Controls text justification. To work correctly for center/right justification, `wrapText` must be `true`. Maps to values in the [`tes3.justifyText`](https://mwse.github.io/MWSE/references/justify-text/) table.
 --- @field maxHeight integer The maximum height for auto-size layout and resizable frames.
 --- @field maxWidth integer The maximum width for auto-size layout and resizable frames.
 --- @field minHeight integer The minimum height for auto-size layout and resizable frames.
@@ -81,7 +81,7 @@
 --- !!! tip
 --- 	If your element's text is a number, you need to manually convert it to string using `tostring()`.
 --- @field texture niSourceTexture The underlying texture for the element. This assumes that the element is of an element type. Setting this value will change the element to an image type.
---- @field type string *Read-only*. The type of content this `tes3uiElement` represents. This is an expanded set of the options available from the `contentType` property. Maps to values in [`tes3.uiElementType`](https://mwse.github.io/MWSE/references/tes3uiElement-types/).
+--- @field type tes3.uiElementType *Read-only*. The type of content this `tes3uiElement` represents. This is an expanded set of the options available from the `contentType` property. Maps to values in [`tes3.uiElementType`](https://mwse.github.io/MWSE/references/tes3uiElement-types/).
 --- @field visible boolean Controls if the element is visible.
 --- @field widget tes3uiButton|tes3uiCycleButton|tes3uiFillBar|tes3uiHyperlink|tes3uiParagraphInput|tes3uiScrollPane|tes3uiSlider|tes3uiTextInput|tes3uiTextSelect|nil Access to element specific properties. This will be `nil` if there are no element specific properties. See the return types and the create* functions for more details.
 --- @field width integer The element's width in pixels.
@@ -411,7 +411,7 @@ function tes3uiElement:createTextInput(params) end
 --- 
 --- `text`: string? — *Optional*. The text to display.
 --- 
---- `state`: number? — *Default*: `tes3.uiState.normal`. The initial interaction state.
+--- `state`: tes3.uiState? — *Default*: `tes3.uiState.normal`. The initial interaction state.
 --- @return tes3uiElement result No description yet available.
 function tes3uiElement:createTextSelect(params) end
 
@@ -419,7 +419,7 @@ function tes3uiElement:createTextSelect(params) end
 --- @class tes3uiElement.createTextSelect.params
 --- @field id string|number|nil *Optional*. An identifier to help find this element later.
 --- @field text string? *Optional*. The text to display.
---- @field state number? *Default*: `tes3.uiState.normal`. The initial interaction state.
+--- @field state tes3.uiState? *Default*: `tes3.uiState.normal`. The initial interaction state.
 
 --- Creates a styled thin border element. Any content should be created as children of this border.
 --- @param params tes3uiElement.createThinBorder.params? This table accepts the following values:
@@ -604,17 +604,17 @@ function tes3uiElement:move(params) end
 --- button:register(tes3.uiEvent.mouseClick, onClick)
 --- ```
 --- 
---- @param eventID string The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
+--- @param eventID tes3.uiEvent The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 --- @param callback fun(e: tes3uiEventData): boolean? The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus.
 function tes3uiElement:register(eventID, callback) end
 
 --- Sets an `event` handler to run after any existing event handler on the element. Can be any event usable with `register`. The callback receives an argument with the event data. See `register` for details.
---- @param eventID string The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
+--- @param eventID tes3.uiEvent The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 --- @param callback fun(e: tes3uiEventData): boolean? The callback function.
 function tes3uiElement:registerAfter(eventID, callback) end
 
 --- Sets an `event` handler to run before any existing event handler on the element. Can be any event usable with `register`. The callback receives an argument with the event data. See `register` for details.
---- @param eventID string The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
+--- @param eventID tes3.uiEvent The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 --- @param callback fun(e: tes3uiEventData): boolean? The callback function.
 function tes3uiElement:registerBefore(eventID, callback) end
 

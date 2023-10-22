@@ -24,7 +24,7 @@ event.register(tes3.event.bodyPartAssigned, bodyPartAssignedCallback)
 ## Event Data
 
 * `bodyPart` ([tes3bodyPart](../types/tes3bodyPart.md)): The body part object assigned.
-* `index` (number): *Read-only*. The body slot index of the newly assigned body part. Maps to values in [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) constants.
+* `index` ([tes3.activeBodyPart](../references/active-body-parts.md)): *Read-only*. The body slot index of the newly assigned body part. Maps to values in [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) constants.
 * `isFirstPerson` (boolean): *Read-only*. A flag that controls whether the newly assigned body part is used while the camera is in the first person.
 * `manager` ([tes3bodyPartManager](../types/tes3bodyPartManager.md)): *Read-only*. The access to the body part manager that is associated with the reference that had a body part assigned.
 * `object` ([tes3physicalObject](../types/tes3physicalObject.md)): *Read-only*. Access to the physical object for the assigned body part.

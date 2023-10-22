@@ -21,7 +21,7 @@ event.clear(eventId, filter)
 
 **Parameters**:
 
-* `eventId` (string): *Optional*.
+* `eventId` (string, [tes3.event](../references/events.md)): *Optional*.
 * `filter` (userdata, string, number): *Optional*.
 
 ***
@@ -37,7 +37,7 @@ local result = event.isRegistered(eventId, callback, { filter = ... })
 
 **Parameters**:
 
-* `eventId` (string)
+* `eventId` (string, [tes3.event](../references/events.md))
 * `callback` (function)
 * `options` (table): *Optional*.
 	* `filter` (userdata, string, number): *Optional*. Allows searching for a callback function registered with the specified filter.
@@ -59,7 +59,7 @@ event.register(eventId, callback, { doOnce = ..., filter = ..., priority = ... }
 
 **Parameters**:
 
-* `eventId` (string)
+* `eventId` (string, [tes3.event](../references/events.md))
 * `callback` (function)
 * `options` (table): *Optional*.
 	* `doOnce` (boolean): *Default*: `false`. If this option is set to `true`, the function registered will be executed only once, and automatically unregistered thereafter.
@@ -79,7 +79,7 @@ local resultPayload = event.trigger(eventId, payload, { filter = ... })
 
 **Parameters**:
 
-* `eventId` (string)
+* `eventId` (string, [tes3.event](../references/events.md))
 * `payload` (table): *Optional*.
 * `options` (table): *Optional*.
 	* `filter` (userdata, string, number): *Optional*. Assigning a filter will make the event callbacks with filters matching this one to be executed first. All the other unfiltered callbacks are executed after.
@@ -101,7 +101,7 @@ event.unregister(eventId, callback, { filter = ... })
 
 **Parameters**:
 
-* `eventId` (string)
+* `eventId` (string, [tes3.event](../references/events.md))
 * `callback` (function)
 * `options` (table): *Optional*.
 	* `filter` (userdata, string, number): *Optional*. If a callback function was registered with a filter, the same filter needs to be passed to `event.unregister` to successfully unregister the callback function.

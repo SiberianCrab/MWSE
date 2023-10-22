@@ -216,7 +216,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -315,7 +315,7 @@ The slot used by the armor. Maps to [`tes3.armorSlot`](https://mwse.github.io/MW
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.armorSlot](../references/armor-slots.md))
 
 ***
 
@@ -403,7 +403,7 @@ The weight of the object.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.armorWeightClass](../references/armor-weight-classes.md))
 
 ***
 

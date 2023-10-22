@@ -9,9 +9,9 @@ return {
 		},
 	}},
 	returns = {
-		{ name = "lowerBodyGroup", type = "integer" },
-		{ name = "upperBodyGroup", type = "integer" },
-		{ name = "leftArmGroup", type = "integer" },
+		{ name = "lowerBodyGroup", type = "tes3.animationGroup" },
+		{ name = "upperBodyGroup", type = "tes3.animationGroup" },
+		{ name = "leftArmGroup", type = "tes3.animationGroup" },
 	},
 	examples = {
 		["usage"] = {

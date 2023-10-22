@@ -28,7 +28,7 @@ Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-e
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.effect](../references/magic-effects.md))
 
 ***
 
@@ -81,8 +81,8 @@ local eventResult, modifiedValue = myObject:trigger({ negateOnExpiry = ..., isUn
 * `params` (table): *Optional*.
 	* `negateOnExpiry` (boolean): *Default*: `true`. If this flag is `true`, the effect will be negated on expiry.
 	* `isUncapped` (boolean): *Optional*.
-	* `attribute` (integer): *Default*: `tes3.effectAttribute.nonResistable`. The attribute used in resistance calculations agains this effect. Maps to values in [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) table.
-	* `type` (integer): *Default*: `tes3.effectEventType.boolean`. This flag controls how the effect behaves. For example, `tes3.effectEventType.modStatistic` will make the effect work as calling `tes3.modStatistic`. Maps to values in [`tes3.effectEventType`](https://mwse.github.io/MWSE/references/effect-event-types/) table.
+	* `attribute` ([tes3.effectAttribute](../references/effect-attributes.md)): *Default*: `tes3.effectAttribute.nonResistable`. The attribute used in resistance calculations agains this effect. Maps to values in [`tes3.effectAttribute`](https://mwse.github.io/MWSE/references/effect-attributes/) table.
+	* `type` ([tes3.effectEventType](../references/effect-event-types.md)): *Default*: `tes3.effectEventType.boolean`. This flag controls how the effect behaves. For example, `tes3.effectEventType.modStatistic` will make the effect work as calling `tes3.modStatistic`. Maps to values in [`tes3.effectEventType`](https://mwse.github.io/MWSE/references/effect-event-types/) table.
 	* `value` (boolean, integer, number, [tes3statistic](../types/tes3statistic.md)): *Default*: `0`. The variable this effect changes. This can be a local variable in a script or a tes3statistic property on a `tes3mobileActor`. The type of the passed variable must match the type of the `type` parameter.
 	* `resistanceCheck` (fun(e: [tes3magicEffectResistenceCheckEventData](../types/tes3magicEffectResistenceCheckEventData.md)): boolean?): *Optional*. The function passed as `resistanceCheck` will be used on any of the game's spell resistance checks. Returning `true` from this function will set your effect to expired, and depending on your trigger code may stop processing.
 

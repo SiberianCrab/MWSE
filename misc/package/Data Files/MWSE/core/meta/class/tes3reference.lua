@@ -63,7 +63,7 @@ tes3reference = {}
 function tes3reference:activate(reference) end
 
 --- Unsets a bit in the reference's action data attachment
---- @param flagIndex integer The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
+--- @param flagIndex tes3.actionFlag The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
 function tes3reference:clearActionFlag(flagIndex) end
 
 --- Clones a reference for a base actor into a reference to an instance of that actor. For example, this will force a container to resolve its leveled items and have its own unique inventory. Also, marks the new cloned reference as modified.
@@ -112,7 +112,7 @@ function tes3reference:getOrCreateAttachedDynamicLight(light, phase) end
 function tes3reference:onCloseInventory() end
 
 --- Sets a bit in the reference's action data attachment.
---- @param flagIndex integer The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
+--- @param flagIndex tes3.actionFlag The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
 function tes3reference:setActionFlag(flagIndex) end
 
 --- Sets the dynamic lighting state of the reference using the global data handler.
@@ -124,7 +124,7 @@ function tes3reference:setDynamicLighting() end
 function tes3reference:setNoCollisionFlag(hasNoCollision, updateCollisions) end
 
 --- Returns the flag's value in the reference's action data attachment.
---- @param flagIndex integer The action flag to test. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
+--- @param flagIndex tes3.actionFlag The action flag to test. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
 --- @return boolean result No description yet available.
 function tes3reference:testActionFlag(flagIndex) end
 

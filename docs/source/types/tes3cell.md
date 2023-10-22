@@ -350,7 +350,7 @@ The name and id of the cell. See also `displayName` and `editorName`.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 

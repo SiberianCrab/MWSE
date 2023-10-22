@@ -19,7 +19,7 @@ return {
 			description = "Access to the physical object for the assigned body part.",
 		},
 		["index"] = {
-			type = "number",
+			type = "tes3.activeBodyPart",
 			readOnly = true,
 			description = "The body slot index of the newly assigned body part. Maps to values in [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) constants.",
 		},

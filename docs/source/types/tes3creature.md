@@ -366,7 +366,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -564,7 +564,7 @@ The type of the creature. Maps to [`tes3.creatureType`](https://mwse.github.io/M
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.creatureType](../references/creature-types.md))
 
 ***
 
@@ -680,7 +680,7 @@ local result = myObject:offersService(service)
 
 **Parameters**:
 
-* `service` (number): Use one of the values in the [`tes3.merchantService.*`](https://mwse.github.io/MWSE/references/merchant-services/) table.
+* `service` ([tes3.merchantService](../references/merchant-services.md)): Use one of the values in the [`tes3.merchantService.*`](https://mwse.github.io/MWSE/references/merchant-services/) table.
 
 **Returns**:
 
@@ -714,7 +714,7 @@ local result = myObject:tradesItemType(objectType)
 
 **Parameters**:
 
-* `objectType` (number): Accepts values from [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) namespace.
+* `objectType` ([tes3.objectType](../references/object-types.md)): Accepts values from [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) namespace.
 
 **Returns**:
 

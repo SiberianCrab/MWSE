@@ -4,8 +4,8 @@
 --- @meta
 --- A rendering property that allows the application to control the method used to compute colors for each vertex in a geometry object. This class enables effects such as static pre-lighting, dynamic lighting, etc.
 --- @class niVertexColorProperty : niProperty, niObjectNET, niObject
---- @field lighting integer Describes how vertex colors influence lighting. Maps to values in [`ni.lightingMode`](https://mwse.github.io/MWSE/references/ni/lighting-modes/) table.
---- @field source integer Determines how vertex and material colors are mixed on subclasses of niAVObject. Maps to values in [`ni.sourceVertexMode`](https://mwse.github.io/MWSE/references/ni/source-vertex-modes/) table.
+--- @field lighting ni.lightingMode Describes how vertex colors influence lighting. Maps to values in [`ni.lightingMode`](https://mwse.github.io/MWSE/references/ni/lighting-modes/) table.
+--- @field source ni.sourceVertexMode Determines how vertex and material colors are mixed on subclasses of niAVObject. Maps to values in [`ni.sourceVertexMode`](https://mwse.github.io/MWSE/references/ni/source-vertex-modes/) table.
 niVertexColorProperty = {}
 
 --- Creates a new niVertexColorProperty with `lighting` set to `ni.lightingMode.emiAmbDif` and `source` set to `ni.sourceVertexMode.ignore`.

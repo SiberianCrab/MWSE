@@ -13,4 +13,4 @@
 --- @field pressed niColor The RGB color of the text when the text select is pressed and `state` is set to `normal`. An array of 3 floats with values ranging from `0.0` to `1.0`.
 --- @field pressedActive niColor The RGB color of the text when the text select is pressed and `state` is set to `active`. An array of 3 floats with values ranging from `0.0` to `1.0`.
 --- @field pressedDisabled niColor The RGB color of the text when the text select is pressed and `state` is set to `disabled`. An array of 3 floats with values ranging from `0.0` to `1.0`.
---- @field state number The state of the text select. Controls which color set to use for text. Maps to values in [`tes3.uiState`](https://mwse.github.io/MWSE/references/ui-states/).
+--- @field state tes3.uiState The state of the text select. Controls which color set to use for text. Maps to values in [`tes3.uiState`](https://mwse.github.io/MWSE/references/ui-states/).

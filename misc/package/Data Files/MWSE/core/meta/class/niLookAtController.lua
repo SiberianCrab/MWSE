@@ -6,10 +6,11 @@
 --- 
 --- Warning: The lookAt property is not reference counted, so this controller must be removed, or lookAt set to nil before the lookAt object is deleted.
 --- @class niLookAtController : niTimeController, niObject
---- @field axis integer A number representing the axis that points at the lookAt object. `flip` determines which end of this axis points at the target.
---- `0` X axis
---- `1` Y axis
---- `2` Z axis
+--- @field axis ni.lookAtControllerAxis A number representing the axis that points at the lookAt object. `flip` determines which end of this axis points at the target.
+--- 
+--- - `0` X axis
+--- - `1` Y axis
+--- - `2` Z axis
 --- 
 --- Maps to values in [`ni.lookAtControllerAxis`](https://mwse.github.io/MWSE/references/ni/look-at-controller-axes/) table.
 --- @field flip boolean Determines which end of the chosen axis points towards the lookAt target.

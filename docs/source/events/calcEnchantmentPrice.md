@@ -21,7 +21,7 @@ event.register(tes3.event.calcEnchantmentPrice, calcEnchantmentPriceCallback)
 ## Event Data
 
 * `basePrice` (number): *Read-only*. The base price of the enchantment, before any disposition or event modifications.
-* `castType` (number): *Read-only*. The enchantment cast type. Maps to `tes3.enchantmentType.*`.
+* `castType` ([tes3.enchantmentType](../references/enchantment-types.md)): *Read-only*. The enchantment cast type. Maps to `tes3.enchantmentType.*`.
 * `effects` (table[]): *Read-only*. An array of the effects being enchanted onto the item. This includes the `effect` object, `magnitudeLow`/`magnitudeHigh` values, the `area`, `duration`, and `range`. The `attribute` and `skill` values are available as appropriate.
 * `item` ([tes3item](../types/tes3item.md)): *Read-only*. The item, if any, that is being enchanted.
 * `itemData` ([tes3itemData](../types/tes3itemData.md)): *Read-only*. The item data for the enchanted item.

@@ -106,7 +106,7 @@ The player-facing name for the object.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 

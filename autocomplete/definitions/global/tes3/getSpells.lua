@@ -13,7 +13,7 @@ return {
 				},
 				{
 					name = "spellType",
-					type = "number",
+					type = "tes3.spellType",
 					optional = true,
 					default = "-1",
 					description = "The spell type to filter for. Only spells with this spell type will be returned. A value of `-1` will return spells of all types. Maps to values in the [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) table."

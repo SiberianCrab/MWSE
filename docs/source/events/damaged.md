@@ -30,7 +30,7 @@ event.register(tes3.event.damaged, damagedCallback)
 * `mobile` ([tes3mobileActor](../types/tes3mobileActor.md)): *Read-only*. The mobile actor that took damage.
 * `projectile` ([tes3mobileProjectile](../types/tes3mobileProjectile.md)): *Read-only*. Projectile that dealt the damage. Can be `nil`.
 * `reference` ([tes3reference](../types/tes3reference.md)): *Read-only*. The mobile’s associated reference.
-* `source` (string): *Read-only*. The origin of damage. These damage sources are present as [`tes3.damageSource`](https://mwse.github.io/MWSE/references/damage-sources/) constants. See the example. Damage with `tes3.damageSource.shield` source comes from magic shields. Other sources are self-explanatory.
+* `source` ([tes3.damageSource](../references/damage-sources.md)): *Read-only*. The origin of damage. These damage sources are present as [`tes3.damageSource`](https://mwse.github.io/MWSE/references/damage-sources/) constants. See the example. Damage with `tes3.damageSource.shield` source comes from magic shields. Other sources are self-explanatory.
 
 ## Examples
 

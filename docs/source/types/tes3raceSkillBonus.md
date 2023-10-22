@@ -28,5 +28,5 @@ The skill id to modify. Maps to values in [`tes3.skill`](https://mwse.github.io/
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.skill](../references/skills.md))
 

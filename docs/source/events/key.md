@@ -27,7 +27,7 @@ event.register(tes3.event.key, keyCallback)
 * `isControlDown` (boolean): *Read-only*. True if either control key is held.
 * `isShiftDown` (boolean): *Read-only*. True if either shift key is held.
 * `isSuperDown` (boolean): *Read-only*. True if super (Windows key) is held.
-* `keyCode` (integer): *Read-only*. The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.
+* `keyCode` ([tes3.scanCode](../references/scan-codes.md)): *Read-only*. The scan code of the key that raised the event. Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) table.
 * `pressed` (boolean): *Read-only*. True if this is a key down event, false for a key up event.
 
 ## Examples

@@ -13,13 +13,13 @@ niObject = {}
 --- @return niAlphaProperty|niAmbientLight|niBillboardNode|niCamera|niCollisionSwitch|niColorData|niDirectionalLight|niFogProperty|niGeometryData|niGravity|niKeyframeController|niKeyframeData|niLookAtController|niMaterialProperty|niNode|niParticleBomb|niParticleCollider|niParticleColorModifier|niParticleGrowFade|niParticleRotation|niParticleSystemController|niParticles|niParticlesData|niPathController|niPixelData|niPlanarCollider|niPointLight|niRenderedTexture|niRenderer|niRotatingParticles|niRotatingParticlesData|niSkinData|niSkinInstance|niSkinPartition|niSortAdjustNode|niSourceTexture|niSphericalCollider|niSpotLight|niStencilProperty|niStringExtraData|niSwitchNode|niTES3ExtraData|niTextKeyExtraData|niTextureEffect|niTexturingProperty|niTriBasedGeometryData|niTriShape|niTriShapeData|niVertexColorProperty|niZBufferProperty result No description yet available.
 function niObject:clone() end
 
---- Determines if the object is of a given type, or of a type derived from the given type. Types can be found in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
---- @param type number Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
+--- Determines if the object is of a given type, or of a type derived from the given type.
+--- @param type ni.type Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
 --- @return boolean result No description yet available.
 function niObject:isInstanceOfType(type) end
 
---- Determines if the object is of a given type. Types can be found in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
---- @param type number Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
+--- Determines if the object is of a given type.
+--- @param type ni.type Use values in the [`ni.type`](https://mwse.github.io/MWSE/references/ni/types/) table.
 --- @return boolean result No description yet available.
 function niObject:isOfType(type) end
 

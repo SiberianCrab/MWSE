@@ -39,5 +39,5 @@ The weather type passed to the `getPerPixelLighting` method. Maps to values in [
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.weather](../references/weather-types.md))
 

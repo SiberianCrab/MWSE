@@ -582,5 +582,48 @@ function common.compileInheritances(classes)
 	end
 end
 
+--- A map for enumerations files. The layout is:
+--- ```lua
+--- {
+--- 	["ni"] = {
+--- 		["animCycleType"] = "path\\to\\enum\\file\\enumNamespace\\enumName.lua"
+--- 	},
+--- 	["mge"] = {},
+--- 	...
+--- }
+--- ```
+--- @class libraryEnumerations
+--- @field [string] table<string, string>
+
+---@type libraryEnumerations
+local enumerations = {}
+local fileBlacklist = {
+	["init"] = true,
+}
+
+--- Returns a map of all the enumeration files and paths to those files in the following format:
+--- `["lib.enumName"] = "path.to.enum`
+--- @param namespace string
+--- @return table<string, string> For example: `["tes3.actorType"] = "path\\to\\enum`
+function common.getEnumerationsMap(namespace)
+	local enums = enumerations[namespace]
+	if enums then
+		return enums
+	end
+
+	local directory = lfs.join(common.pathAutocomplete, "..", "misc", "package", "Data Files", "MWSE", "core", "lib", namespace)
+	for entry in lfs.dir(directory) do
+		local extension = entry:match("[^.]+$")
+		if (extension == "lua") then
+			local filename = entry:match("[^/]+$"):sub(1, -1 * (#extension + 2))
+			if (not fileBlacklist[filename]) then
+				enums = enums or {}
+				enums[filename] = lfs.join(directory, entry)
+			end
+		end
+	end
+	return enums
+end
+
 
 return common

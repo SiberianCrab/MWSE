@@ -161,7 +161,7 @@ The modification state of the object since the last save.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -249,7 +249,7 @@ The soruceless flag of the object.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.magicSourceType](../references/magic-source-types.md))
 
 ***
 
@@ -260,7 +260,7 @@ Shows if the state is pre-cast, cast, beginning, working, ending, retired, etc. 
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.spellState](../references/spell-states.md))
 
 ***
 

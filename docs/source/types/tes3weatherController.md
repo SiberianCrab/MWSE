@@ -629,11 +629,11 @@ The underwater sunset fog value.
 ### `weathers`
 <div class="search_terms" style="display: none">weathers</div>
 
-*Read-only*. Array-style table for the different weather types. Each object in the table is a [tes3weather](https://mwse.github.io/MWSE/types/tes3weather/). The indices in the table map to the values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+*Read-only*. Array-style table with weather objects for each weather type. The indices in the table map to the values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 
 **Returns**:
 
-* `result` ([tes3weather](../types/tes3weather.md)[])
+* `result` (table&lt;[tes3.weather](../references/weather-types.md), [tes3weather](../types/tes3weather.md)&gt;)
 
 ***
 
@@ -690,7 +690,7 @@ myObject:switchImmediate(weatherId)
 
 **Parameters**:
 
-* `weatherId` (number): Maps to values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+* `weatherId` ([tes3.weather](../references/weather-types.md)): Maps to values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 
 ***
 
@@ -705,7 +705,7 @@ myObject:switchTransition(weatherId)
 
 **Parameters**:
 
-* `weatherId` (number): Maps to values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
+* `weatherId` ([tes3.weather](../references/weather-types.md)): Maps to values in the [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) table.
 
 ***
 

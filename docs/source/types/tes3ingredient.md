@@ -73,7 +73,7 @@ The bounding box for the object.
 
 **Returns**:
 
-* `result` (number[])
+* `result` ([tes3.effect](../references/magic-effects.md)[])
 
 ***
 
@@ -183,7 +183,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 

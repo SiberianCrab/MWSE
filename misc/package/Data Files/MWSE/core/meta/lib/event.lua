@@ -174,12 +174,12 @@
 event = {}
 
 --- Removes all callbacks registered for a given event.
---- @param eventId string? *Optional*. No description yet available.
+--- @param eventId string|tes3.event|nil *Optional*. No description yet available.
 --- @param filter userdata|string|number|nil *Optional*. No description yet available.
 function event.clear(eventId, filter) end
 
 --- Returns true for a function previously registered to an event with `event.register()`.
---- @param eventId string No description yet available.
+--- @param eventId string|tes3.event No description yet available.
 --- @param callback function No description yet available.
 --- @param options event.isRegistered.options? This table accepts the following values:
 --- 
@@ -192,7 +192,7 @@ function event.isRegistered(eventId, callback, options) end
 --- @field filter userdata|string|number|nil *Optional*. Allows searching for a callback function registered with the specified filter.
 
 --- Registers a function to be called when an event is raised.
---- @param eventId string No description yet available.
+--- @param eventId string|tes3.event No description yet available.
 --- @param callback function No description yet available.
 --- @param options event.register.options? This table accepts the following values:
 --- 
@@ -210,7 +210,7 @@ function event.register(eventId, callback, options) end
 --- @field priority number? *Optional*. Event callback with higher priority is executed before callback with lower priority. Typically used to make certain mods compatible.
 
 --- Triggers an event. This can be used to trigger custom events with specific data.
---- @param eventId string No description yet available.
+--- @param eventId string|tes3.event No description yet available.
 --- @param payload table? *Optional*. No description yet available.
 --- @param options event.trigger.options? This table accepts the following values:
 --- 
@@ -223,7 +223,7 @@ function event.trigger(eventId, payload, options) end
 --- @field filter userdata|string|number|nil *Optional*. Assigning a filter will make the event callbacks with filters matching this one to be executed first. All the other unfiltered callbacks are executed after.
 
 --- Unregisters a function previously registered for an event with `event.register()`.
---- @param eventId string No description yet available.
+--- @param eventId string|tes3.event No description yet available.
 --- @param callback function No description yet available.
 --- @param options event.unregister.options? This table accepts the following values:
 --- 

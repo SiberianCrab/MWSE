@@ -460,7 +460,7 @@ The next object in parent collection's list.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.objectType](../references/object-types.md))
 
 ***
 
@@ -758,7 +758,7 @@ myObject:clearActionFlag(flagIndex)
 
 **Parameters**:
 
-* `flagIndex` (integer): The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
+* `flagIndex` ([tes3.actionFlag](../references/action-flags.md)): The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
 
 ***
 
@@ -928,7 +928,7 @@ myObject:setActionFlag(flagIndex)
 
 **Parameters**:
 
-* `flagIndex` (integer): The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
+* `flagIndex` ([tes3.actionFlag](../references/action-flags.md)): The action flag to clear. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
 
 ***
 
@@ -970,7 +970,7 @@ local result = myObject:testActionFlag(flagIndex)
 
 **Parameters**:
 
-* `flagIndex` (integer): The action flag to test. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
+* `flagIndex` ([tes3.actionFlag](../references/action-flags.md)): The action flag to test. Maps to values in [`tes3.actionFlag`](https://mwse.github.io/MWSE/references/action-flags/) namespace.
 
 **Returns**:
 

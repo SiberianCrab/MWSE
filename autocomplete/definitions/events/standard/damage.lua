@@ -48,7 +48,7 @@ return {
 			description = "An instance of the magic effect in the spell that will cause the damage. Can be `nil`.",
 		},
 		source = {
-			type ="string",
+			type ="tes3.damageSource",
 			readOnly = true,
 			description = "The origin of damage. These damage sources are present as [`tes3.damageSource`](https://mwse.github.io/MWSE/references/damage-sources/) constants. See the example. Damage with `tes3.damageSource.shield` source comes from magic shields. Other sources are self-explanatory.",
 		},

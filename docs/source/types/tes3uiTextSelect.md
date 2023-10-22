@@ -128,5 +128,5 @@ The state of the text select. Controls which color set to use for text. Maps to 
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.uiState](../references/ui-states.md))
 

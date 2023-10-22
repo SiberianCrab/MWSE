@@ -17,7 +17,7 @@ The attribute associated with this effect, or `nil` if no attribute is used. Map
 
 **Returns**:
 
-* `result` (integer, nil)
+* `result` ([tes3.attribute](../references/attributes.md), nil)
 
 ***
 
@@ -50,7 +50,7 @@ The base `tes3magicEffect` ID that the effect uses. Maps to values from [`tes3.e
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.effect](../references/magic-effects.md))
 
 ***
 
@@ -105,7 +105,7 @@ Determines if the effect is self, touch, or target ranged. Maps to [`tes3.effect
 
 **Returns**:
 
-* `result` (integer)
+* `result` ([tes3.effectRange](../references/effect-ranges.md))
 
 ***
 
@@ -116,5 +116,5 @@ The skill associated with this effect, or `nil` if no skill is used. Maps to val
 
 **Returns**:
 
-* `result` (integer, nil)
+* `result` ([tes3.skill](../references/skills.md), nil)
 

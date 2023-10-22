@@ -4,15 +4,15 @@
 --- @meta
 --- A game object which holds information about body parts.
 --- @class tes3bodyPartManager
---- @field activeBodyParts table<integer, table<integer, tes3bodyPartManagerActiveBodyPart>> *Read-only*. Access to the reference's [`tes3bodyPartManagerActiveBodyPart`](https://mwse.github.io/MWSE/types/tes3bodyPartManagerActiveBodyPart/) objects. It's a 2-dimensional table, with first dimension index values from [`tes3.activeBodyPartLayer`](https://mwse.github.io/MWSE/references/active-body-part-layers/) namespace, while its second dimension indexes are values from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
+--- @field activeBodyParts table<tes3.activeBodyPartLayer, table<tes3.activeBodyPart, tes3bodyPartManagerActiveBodyPart>> *Read-only*. Access to the reference's [`tes3bodyPartManagerActiveBodyPart`](https://mwse.github.io/MWSE/types/tes3bodyPartManagerActiveBodyPart/) objects. It's a 2-dimensional table, with first dimension index values from [`tes3.activeBodyPartLayer`](https://mwse.github.io/MWSE/references/active-body-part-layers/) namespace, while its second dimension indexes are values from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
 --- @field animationPhase number *Read-only*. 
---- @field attachNodes tes3bodyPartManagerAttachNode[] *Read-only*. The access to the reference's [`tes3bodyPartManagerAttachNode`](https://mwse.github.io/MWSE/types/tes3bodyPartManagerAttachNode/) objects. Indexes of that table are values from [`tes3.bodyPartAttachment`](https://mwse.github.io/MWSE/references/body-part-attachments/) namespace.
+--- @field attachNodes table<tes3.bodyPartAttachment, tes3bodyPartManagerAttachNode> *Read-only*. The access to the reference's attach node objects. Indexes of that table are values from [`tes3.bodyPartAttachment`](https://mwse.github.io/MWSE/references/body-part-attachments/) namespace.
 --- @field reference tes3reference *Read-only*. The access to the reference this body part manager operates for.
 tes3bodyPartManager = {}
 
 --- The method fetches the active body part at a given layer and position. This gives access to the associated scene node, equipped item, and base body part.
---- @param layer number A value from [`tes3.activeBodyPartLayer`](https://mwse.github.io/MWSE/references/active-body-part-layers/) namespace.
---- @param index number A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
+--- @param layer tes3.activeBodyPartLayer A value from [`tes3.activeBodyPartLayer`](https://mwse.github.io/MWSE/references/active-body-part-layers/) namespace.
+--- @param index tes3.activeBodyPart A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
 --- @return tes3bodyPartManagerActiveBodyPart result No description yet available.
 function tes3bodyPartManager:getActiveBodyPart(layer, index) end
 
@@ -22,8 +22,8 @@ function tes3bodyPartManager:getActiveBodyPart(layer, index) end
 function tes3bodyPartManager:getActiveBodyPartForItem(item) end
 
 --- Removes an active body part and optionally sets override data that can be used prevent other items using the same location.
---- @param layer number A value from [`tes3.activeBodyPartLayer`](https://mwse.github.io/MWSE/references/active-body-part-layers/) namespace.
---- @param index number A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
+--- @param layer tes3.activeBodyPartLayer A value from [`tes3.activeBodyPartLayer`](https://mwse.github.io/MWSE/references/active-body-part-layers/) namespace.
+--- @param index tes3.activeBodyPart A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
 --- @param setOverride boolean? *Default*: `true`. A flag which controls whether the override data should be written.
 --- @param overrideData number? *Default*: `0`. Use -1 to prevent other items from appearing in the same location.
 function tes3bodyPartManager:removeActiveBodyPart(layer, index, setOverride, overrideData) end
@@ -33,14 +33,14 @@ function tes3bodyPartManager:removeEquippedLayers() end
 
 --- The method sets a new body part for a given object.
 --- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item that the body part is from.
---- @param index number A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
+--- @param index tes3.activeBodyPart A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
 --- @param bodyPartId string The unique ID of the `tes3bodyPart` object to set as a new body part for given object.
 --- @param isFirstPerson boolean? *Default*: `false`. A flag which must be set if the target reference is the first person player.
 function tes3bodyPartManager:setBodyPartByIdForObject(item, index, bodyPartId, isFirstPerson) end
 
 --- The method sets an active body part slot with an item and bodyPart. Triggers `bodyPart` event.
 --- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item that the body part is from.
---- @param index number A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
+--- @param index tes3.activeBodyPart A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
 --- @param bodyPart tes3bodyPart The `tes3bodyPart` object to set as a new body part for given object.
 --- @param isFirstPerson boolean? *Default*: `false`. A flag which must be set if the target reference is the first person player.
 function tes3bodyPartManager:setBodyPartForObject(item, index, bodyPart, isFirstPerson) end

@@ -4,7 +4,7 @@
 --- @meta
 --- A rendering property that allows the application to set the test and write modes of the renderer's Z-buffer and to set the comparison function used for the Z-buffer test.
 --- @class niZBufferProperty : niProperty, niObjectNET, niObject
---- @field testFunction integer The Z-buffer test function used. Maps to values in [`ni.zBufferPropertyTestFunction`](https://mwse.github.io/MWSE/references/ni/z-buffer-property-test-functions/) table.
+--- @field testFunction ni.zBufferPropertyTestFunction The Z-buffer test function used. Maps to values in [`ni.zBufferPropertyTestFunction`](https://mwse.github.io/MWSE/references/ni/z-buffer-property-test-functions/) table.
 niZBufferProperty = {}
 
 --- Creates a new niZBufferProperty with `testFunction` set to `ni.zBufferPropertyTestFunction.lessEqual`.

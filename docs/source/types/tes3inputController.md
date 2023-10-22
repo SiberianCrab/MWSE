@@ -134,7 +134,7 @@ local result = myObject:isKeyDown(key)
 
 **Parameters**:
 
-* `key` (number): The scan code to test. Constants available through [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/).
+* `key` ([tes3.scanCode](../references/scan-codes.md)): The scan code to test. Constants available through [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/).
 
 **Returns**:
 
@@ -153,7 +153,7 @@ local result = myObject:isKeyPressedThisFrame(key)
 
 **Parameters**:
 
-* `key` (number): The scan code to test. Constants available through [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/).
+* `key` ([tes3.scanCode](../references/scan-codes.md)): The scan code to test. Constants available through [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/).
 
 **Returns**:
 
@@ -172,7 +172,7 @@ local result = myObject:isKeyReleasedThisFrame(key)
 
 **Parameters**:
 
-* `key` (number): The scan code to test. Constants available through [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/).
+* `key` ([tes3.scanCode](../references/scan-codes.md)): The scan code to test. Constants available through [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/).
 
 **Returns**:
 
@@ -278,8 +278,8 @@ local result = myObject:keybindTest(key, transition)
 
 **Parameters**:
 
-* `key` (number): The keybind to test. Constants available through [`tes3.keybind`](https://mwse.github.io/MWSE/references/keybinds/).
-* `transition` (number): *Optional*. Transition state, e.g. down, or up. Constants available through [`tes3.keyTransition`](https://mwse.github.io/MWSE/references/key-transitions/).
+* `key` ([tes3.keybind](../references/keybinds.md)): The keybind to test. Constants available through [`tes3.keybind`](https://mwse.github.io/MWSE/references/keybinds/).
+* `transition` ([tes3.keyTransition](../references/key-transitions.md)): *Optional*. Transition state, e.g. down, or up. Constants available through [`tes3.keyTransition`](https://mwse.github.io/MWSE/references/key-transitions/).
 
 **Returns**:
 
