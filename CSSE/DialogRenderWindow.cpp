@@ -1168,6 +1168,58 @@ namespace se::cs::dialog::render_window {
 		UndoManager::get()->storeCheckpoint(UndoManager::Action::Moved);
 	}
 
+	void resetSelection(bool rotX, bool rotY, bool rotZ, bool scale) {
+		auto selectionData = SelectionData::get();
+		unsigned int i = 0;
+
+		// An undo checkpoint is required before and after the movement or it will crash later on.
+		UndoManager::get()->storeCheckpoint(UndoManager::Action::Moved);
+
+		for (auto target = selectionData->firstTarget; i < SelectionData::get()->numberOfTargets; target = target->next, i++) {
+			auto reference = target->reference;
+
+			if (rotX) {
+				reference->yetAnotherOrientation.x = 0.0;
+			}
+			if (rotY) {
+				reference->yetAnotherOrientation.y = 0.0;
+			}
+			if (rotZ) {
+				reference->yetAnotherOrientation.z = 0.0;
+			}
+
+			if (scale) {
+				reference->setScale(1.0);
+			}
+
+			// Not sure exactly why these exist...
+
+			reference->unknown_0x10 = reference->position;
+			reference->orientationNonAttached = reference->yetAnotherOrientation;
+
+			// Update Scene Graph.
+
+			NI::Matrix33 rotation;
+			auto orientation = reference->yetAnotherOrientation;
+			rotation.fromEulerXYZ(orientation.x, orientation.y, orientation.z);
+
+			reference->updateRotationMatrixForRaceAndSex(rotation);
+			reference->sceneNode->setLocalRotationMatrix(&rotation);
+			reference->sceneNode->localTranslate = reference->position;
+			reference->sceneNode->localScale = reference->getScale();
+			reference->sceneNode->update(0.0f, true, true);
+
+			DataHandler::get()->updateLightingForReference(reference);
+
+			reference->setAsEdited();
+		}
+
+		selectionData->recalculateBound();
+
+		// An undo checkpoint is required before and after the movement or it will crash later on.
+		UndoManager::get()->storeCheckpoint(UndoManager::Action::Moved);
+	}
+
 	void hideSelectedReferences() {
 		auto selectionData = SelectionData::get();
 		
@@ -1398,6 +1450,12 @@ namespace se::cs::dialog::render_window {
 			TEST_FROM_CAMERA_POSITION,
 			HIDE_LANDSCAPE,
 			HIDE_WATER,
+			RESET_ROTATION_X,
+			RESET_ROTATION_Y,
+			RESET_ROTATION_Z,
+			RESET_SCALE,
+			RESET_ROTATION_X_AND_Y,
+			RESET_ROTATION_AND_SCALE,
 		};
 
 		/*
@@ -1564,6 +1622,74 @@ namespace se::cs::dialog::render_window {
 		menuItem.dwTypeData = (LPSTR)"Align References";
 		InsertMenuItemA(menu, index++, TRUE, &menuItem);
 
+		MENUITEMINFO subMenuReferenceData = {};
+		subMenuReferenceData.cbSize = sizeof(MENUITEMINFO);
+		subMenuReferenceData.hSubMenu = CreateMenu();
+
+		{
+			unsigned int subIndex = 0;
+
+			menuItem.wID = RESET_ROTATION_X;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Reset Rotation &X";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESET_ROTATION_Y;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Reset Rotation &Y";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESET_ROTATION_Z;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Reset Rotation &Z";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESERVED_NO_CALLBACK;
+			menuItem.fMask = MIIM_FTYPE | MIIM_ID;
+			menuItem.fType = MFT_SEPARATOR;
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESET_SCALE;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Reset &Scale";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESERVED_NO_CALLBACK;
+			menuItem.fMask = MIIM_FTYPE | MIIM_ID;
+			menuItem.fType = MFT_SEPARATOR;
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESET_ROTATION_X_AND_Y;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Reset Rotation X and Y";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESET_ROTATION_AND_SCALE;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Reset Rotation and Scale";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+		}
+
+		menuItem.wID = RESERVED_NO_CALLBACK;
+		menuItem.fMask = MIIM_SUBMENU | MIIM_TYPE;
+		menuItem.fType = MFT_STRING;
+		menuItem.fState = hasReferencesSelected ? MFS_ENABLED : MFS_DISABLED;
+		menuItem.hSubMenu = subMenuReferenceData.hSubMenu;
+		menuItem.dwTypeData = (LPSTR)"R&eference Data";
+		InsertMenuItemA(menu, index++, TRUE, &menuItem);
+
 		menuItem.wID = USE_GROUP_SCALING;
 		menuItem.fMask = MIIM_FTYPE | MIIM_CHECKMARKS | MIIM_STRING | MIIM_ID;
 		menuItem.fType = MFT_STRING;
@@ -1717,6 +1843,24 @@ namespace se::cs::dialog::render_window {
 			break;
 		case ALIGN_SELECTION_ALL:
 			alignSelection(true, true, true, true, true, true, true);
+			break;
+		case RESET_ROTATION_X:
+			resetSelection(true, false, false, false);
+			break;
+		case RESET_ROTATION_Y:
+			resetSelection(false, true, false, false);
+			break;
+		case RESET_ROTATION_Z:
+			resetSelection(false, false, true, false);
+			break;
+		case RESET_SCALE:
+			resetSelection(false, false, false, true);
+			break;
+		case RESET_ROTATION_X_AND_Y:
+			resetSelection(true, true, false, false);
+			break;
+		case RESET_ROTATION_AND_SCALE:
+			resetSelection(true, true, true, true);
 			break;
 		case USE_GROUP_SCALING:
 			settings.render_window.use_group_scaling = !settings.render_window.use_group_scaling;

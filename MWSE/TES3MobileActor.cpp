@@ -212,7 +212,7 @@ namespace TES3 {
 		else if (this->isDead()) {
 			// Custom resurrect logic that revives with minimal state changes.
 			actionData.animStateAttack = AttackAnimationState::Idle;
-			actionData.aiBehaviourState = 0;
+			actionData.aiBehaviorState = 0;
 			actionData.currentAnimGroup = 0xFF;
 			actorFlags &= ~(MobileActorFlag::SpellReadied | MobileActorFlag::WeaponDrawn);
 			movementFlags = 0;

@@ -31,7 +31,7 @@ namespace mwse::lua {
 		usertypeDefinition["new"] = sol::no_constructor;
 
 		// Basic property binding.
-		usertypeDefinition["aiBehaviorState"] = &TES3::ActionData::aiBehaviourState;
+		usertypeDefinition["aiBehaviorState"] = &TES3::ActionData::aiBehaviorState;
 		usertypeDefinition["animationAttackState"] = &TES3::ActionData::animStateAttack;
 		usertypeDefinition["attackSwing"] = &TES3::ActionData::attackSwing;
 		usertypeDefinition["blockingState"] = &TES3::ActionData::blockingState;

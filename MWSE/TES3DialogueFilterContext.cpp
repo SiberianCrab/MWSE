@@ -279,7 +279,7 @@ namespace TES3 {
 	}
 
 	void loadFunctionAlarmed(DialogueFilterContext::ConditionalContext* context) {
-		const auto isAlarmed = context->parentContext->speakerMobile->actionData.aiBehaviourState == AIBehavior::Alarmed;
+		const auto isAlarmed = context->parentContext->speakerMobile->actionData.aiBehaviorState == AIBehavior::Alarmed;
 		context->compareValue = isAlarmed ? 1.0f : 0.0f;
 	}
 
