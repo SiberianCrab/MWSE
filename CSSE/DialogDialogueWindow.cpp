@@ -323,7 +323,7 @@ namespace se::cs::dialog::dialogue_window {
 	}
 	constexpr auto PatchOptimizePopulatingLocalVariableNames_Setup_CallOffset = 0x2 + 0x2;
 	constexpr auto PatchOptimizePopulatingLocalVariableNames_Setup_Size = 0x5 + PatchOptimizePopulatingLocalVariableNames_Setup_CallOffset;
-	
+
 	void __fastcall PatchOptimizePopulatingCellVariableNames(HWND hWnd, int nIDDlgItem) {
 		for (const auto& [id, cell] : allCells) {
 			auto index = SendDlgItemMessageA(hWnd, nIDDlgItem, CB_ADDSTRING, 0, (LPARAM)cell->getObjectID());
@@ -420,7 +420,7 @@ namespace se::cs::dialog::dialogue_window {
 	Dialogue* __cdecl PatchOptimizeTopicListRefresh(HWND hWnd, BaseObject* a, BaseObject* filterObject, Dialogue* filterDialogue) {
 		SendDlgItemMessageA(hWnd, CONTROL_ID_TOPIC_LIST, WM_SETREDRAW, FALSE, NULL);
 
-		const auto CS_TopicListRefresh = reinterpret_cast<Dialogue*(__cdecl*)(HWND, BaseObject*, BaseObject*, Dialogue*)>(0x4E70E0);
+		const auto CS_TopicListRefresh = reinterpret_cast<Dialogue * (__cdecl*)(HWND, BaseObject*, BaseObject*, Dialogue*)>(0x4E70E0);
 		auto dialogue = CS_TopicListRefresh(hWnd, a, filterObject, filterDialogue);
 
 		SendDlgItemMessageA(hWnd, CONTROL_ID_TOPIC_LIST, WM_SETREDRAW, TRUE, NULL);
@@ -674,30 +674,28 @@ namespace se::cs::dialog::dialogue_window {
 	}
 
 	namespace ResizeConstants {
-	//Font 08
-	    //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах + высота статичного пол€ описани€ с текстом; CSSE = 13
-	    //constexpr auto LEFT_SECTION_WIDTH = 250;//Ўирина секции с топиками и фильтрами; CSSE = 250
-	    //constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 150;//ширина нижней правой секции Shared By и ниже; CSSE = 150
-	    //constexpr auto CONDITION_STATIC_WIDTH = 66;//CSSE = 55
-	    //constexpr auto BOTTOM_SECTION_HEIGHT = 400;//CSSE = 500
-	    //constexpr auto TEXT_COUNTER_WIDTH = 30;
-	//Font 10
+		//Font 08
+		//constexpr auto STATIC_HEIGHT = 13; //CSSE = 13
+		//constexpr auto LEFT_SECTION_WIDTH = 250; //Ўирина секции с топиками и фильтрами; CSSE = 250
+		//constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 150; //ширина нижней правой секции Shared By и ниже; CSSE = 150
+		//constexpr auto CONDITION_STATIC_WIDTH = 66; //CSSE = 55
+		//constexpr auto BOTTOM_SECTION_HEIGHT = 400; //CSSE = 500
+		//constexpr auto TEXT_COUNTER_WIDTH = 30;
+		//Font 10
 		constexpr auto STATIC_HEIGHT = 16;
 		constexpr auto LEFT_SECTION_WIDTH = 298;
 		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 200;
 		constexpr auto CONDITION_STATIC_WIDTH = 80;
 		constexpr auto BOTTOM_SECTION_HEIGHT = 500;
 		constexpr auto TEXT_COUNTER_WIDTH = 32;
-	//Font 12
+		//Font 12
 
-		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от пол€, которые всегда = 4 пиксел€; CSSE = 21
+		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8; //CSSE = 21
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto BIG_PADDING = 6;
 		constexpr auto WINDOW_EDGE_PADDING = 10;
 		constexpr auto BIG_BUTTON_HEIGHT = 26;
 		constexpr auto JOURNAL_CHECKBUTTON_WIDTH = 100;
-		constexpr auto JOURNAL_CHECKBUTTON_HEIGHT = STATIC_HEIGHT;
-		constexpr auto EDIT_HEIGHT = 17;
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto SPEAKER_CONDITION_PADDING_TOP = 17;
@@ -764,7 +762,7 @@ namespace se::cs::dialog::dialogue_window {
 
 		const auto clientWidth = LOWORD(lParam);
 		const auto clientHeight = HIWORD(lParam);
-		
+
 		RECT tempRect = {};
 
 		// Left section.
@@ -897,17 +895,17 @@ namespace se::cs::dialog::dialogue_window {
 				currentX = leftOfConditions + BIG_PADDING + CONDITION_STATIC_WIDTH + BASIC_PADDING + CONDITION_COMBO_WIDTH + BIG_PADDING;
 				currentY = topOfConditions + SPEAKER_CONDITION_PADDING_TOP;
 				auto hDlgJournalQuestNameCheckButton = GetDlgItem(hWnd, CONTROL_ID_CONDITION_JOURNAL_QUEST_NAME_CHECKBOX);
-				MoveWindow(hDlgJournalQuestNameCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
-				currentY += JOURNAL_CHECKBUTTON_HEIGHT + BASIC_PADDING;
+				MoveWindow(hDlgJournalQuestNameCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, STATIC_HEIGHT, FALSE);
+				currentY += STATIC_HEIGHT + BASIC_PADDING;
 
 				// Quest Finished check button
 				auto hDlgJournalQuestFinishedCheckButton = GetDlgItem(hWnd, CONTROL_ID_CONDITION_JOURNAL_FINISHED_CHECKBOX);
-				MoveWindow(hDlgJournalQuestFinishedCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
-				currentY += JOURNAL_CHECKBUTTON_HEIGHT + BASIC_PADDING;
+				MoveWindow(hDlgJournalQuestFinishedCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, STATIC_HEIGHT, FALSE);
+				currentY += STATIC_HEIGHT + BASIC_PADDING;
 
 				// Quest Restart check button
 				auto hDlgJournalQuestRestartCheckButton = GetDlgItem(hWnd, CONTROL_ID_CONDITION_JOURNAL_RESTART_CHECKBOX);
-				MoveWindow(hDlgJournalQuestRestartCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, JOURNAL_CHECKBUTTON_HEIGHT, FALSE);
+				MoveWindow(hDlgJournalQuestRestartCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, STATIC_HEIGHT, FALSE);
 			}
 			currentX = leftOfConditions;
 			currentY = topOfConditions + SPEAKER_CONDITION_HEIGHT + BASIC_PADDING;
@@ -921,7 +919,7 @@ namespace se::cs::dialog::dialogue_window {
 			auto hDlgCurrentResultEdit = GetDlgItem(hWnd, CONTROL_ID_CURRENT_RESULT_EDIT);
 			MoveWindow(hDlgCurrentResultEdit, currentX, currentY, BOTTOM_MIDDLE_WIDTH, BOTTOM_RESULT_HEIGHT - STATIC_HEIGHT - BASIC_PADDING, FALSE);
 		}
-		
+
 		// Bottom right section.
 		{
 			constexpr auto EXTRA_PADDING_ABOVE_OK_BUTTON = 16;
@@ -1213,7 +1211,7 @@ namespace se::cs::dialog::dialogue_window {
 		// Patch: Ensure variable combo box lists can always fit content.
 		genCallUnprotected(0x4E7C14, reinterpret_cast<DWORD>(PatchEnsureVariableComboBoxListWidth_GetCachedHDC), 0x6);
 		writeDoubleWordEnforced(0x4E7C28 + 0x2, 0x6D9DB0, reinterpret_cast<DWORD>(&PatchEnsureVariableComboBoxListWidth_SendDlgItemMessageAWrapper_ExternPointer));
-		
+
 		// Patch: Optimize displaying of INFO info.
 		if constexpr (ENABLE_ALL_OPTIMIZATIONS) {
 			// Optimize populating local lists.

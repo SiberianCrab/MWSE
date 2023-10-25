@@ -202,6 +202,7 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClCompile Include="WinUIUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="CSSE.def" />
     <None Include="res\CSSE.rc2" />
   </ItemGroup>
