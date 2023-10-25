@@ -1810,6 +1810,21 @@ local name = tes3.getAttributeName(attributeId)
 
 ***
 
+### `tes3.getCamera`
+<div class="search_terms" style="display: none">getcamera, camera</div>
+
+Returns the world camera.
+
+```lua
+local camera = tes3.getCamera()
+```
+
+**Returns**:
+
+* `camera` ([niCamera](../types/niCamera.md))
+
+***
+
 ### `tes3.getCameraPosition`
 <div class="search_terms" style="display: none">getcameraposition, cameraposition</div>
 

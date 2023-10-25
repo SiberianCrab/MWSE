@@ -1019,6 +1019,10 @@ function tes3.getAttachment(reference, attachment) end
 --- @return string name No description yet available.
 function tes3.getAttributeName(attributeId) end
 
+--- Returns the world camera.
+--- @return niCamera camera No description yet available.
+function tes3.getCamera() end
+
 --- Returns the camera's position.
 --- @return tes3vector3 vector3 No description yet available.
 function tes3.getCameraPosition() end

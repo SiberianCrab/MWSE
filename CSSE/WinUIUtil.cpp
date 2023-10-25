@@ -128,8 +128,15 @@ namespace se::cs::winui {
 
 	std::string GetWindowTextA(HWND hWnd) {
 		std::string text;
-		text.resize(GetWindowTextLengthA(hWnd));
+		
+		// We need to account for one extra character, a null-terminator that we'll have to manually remove.
+		text.resize(GetWindowTextLengthA(hWnd) + 1);
+
 		GetWindowTextA(hWnd, text.data(), text.capacity());
+
+		// GetWindowTextA will cause a null terminator character to be appended to the string, which we need to pop off.
+		text.pop_back();
+
 		return std::move(text);
 	}
 

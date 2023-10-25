@@ -706,6 +706,14 @@ namespace mwse::lua {
 		return std::move(effect->getComplexName(attribute, skill));
 	}
 
+	sol::optional<NI::Camera*> getCamera() {
+		auto worldController = TES3::WorldController::get();
+		if (worldController) {
+			return worldController->worldCamera.cameraData.camera;
+		}
+		return sol::optional<NI::Camera*>();
+	}
+
 	sol::optional<TES3::Vector3> getCameraVector() {
 		auto worldController = TES3::WorldController::get();
 		if (worldController) {
@@ -5967,6 +5975,7 @@ namespace mwse::lua {
 		tes3["getAnimationGroups"] = getCurrentAnimationGroups;
 		tes3["getAnimationTiming"] = getAnimationTiming;
 		tes3["getArchiveList"] = getArchiveList;
+		tes3["getCamera"] = getCamera;
 		tes3["getCameraPosition"] = getCameraPosition;
 		tes3["getCameraVector"] = getCameraVector;
 		tes3["getCell"] = getCell;

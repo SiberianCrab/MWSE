@@ -33,6 +33,10 @@ namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
 
+	std::default_random_engine generator;
+	std::uniform_real_distribution<float> rotationDistribution(0.0, 360.0);
+	std::uniform_real_distribution<float> scaleDistribution(0.5, 2.0);
+
 	using gRenderWindowHandle = memory::ExternalGlobal<HWND, 0x6CE93C>;
 
 	using gObjectMove = memory::ExternalGlobal<float, 0x6CE9B4>;
@@ -1168,7 +1172,7 @@ namespace se::cs::dialog::render_window {
 		UndoManager::get()->storeCheckpoint(UndoManager::Action::Moved);
 	}
 
-	void resetSelection(bool rotX, bool rotY, bool rotZ, bool scale) {
+	void resetOrRandomizeSelection(bool rotX, bool rotY, bool rotZ, bool scale, bool randZ, bool randScale) {
 		auto selectionData = SelectionData::get();
 		unsigned int i = 0;
 
@@ -1190,6 +1194,14 @@ namespace se::cs::dialog::render_window {
 
 			if (scale) {
 				reference->setScale(1.0);
+			}
+
+			if (randZ) {
+				reference->yetAnotherOrientation.z = rotationDistribution(generator);
+			}
+
+			if (randScale) {
+				reference->setScale(scaleDistribution(generator));
 			}
 
 			// Not sure exactly why these exist...
@@ -1456,13 +1468,17 @@ namespace se::cs::dialog::render_window {
 			RESET_SCALE,
 			RESET_ROTATION_X_AND_Y,
 			RESET_ROTATION_AND_SCALE,
+			RANDOMIZE_ROTATION_Z,
+			RANDOMIZE_SCALE,
+			RANDOMIZE_ROTATION_Z_AND_SCALE,
 		};
 
 		/*
 		* Reserved hotkeys:
 		*   D: Hide/show landscape.
-		*   T: Hide/show water.
 		*   M: Toggle legacy object movement
+		*   T: Hide/show water.
+		*	E: Change Reference Data
 		*	H: Hide Selection
 		*	R: Restore Hidden References
 		*	S: Set Snapping Axis
@@ -1680,6 +1696,32 @@ namespace se::cs::dialog::render_window {
 			menuItem.fState = MFS_ENABLED;
 			menuItem.dwTypeData = (LPSTR)"Reset Rotation and Scale";
 			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RESERVED_NO_CALLBACK;
+			menuItem.fMask = MIIM_FTYPE | MIIM_ID;
+			menuItem.fType = MFT_SEPARATOR;
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RANDOMIZE_ROTATION_Z;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Randomize Rotation Z";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RANDOMIZE_SCALE;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"Randomize Scale";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
+
+			menuItem.wID = RANDOMIZE_ROTATION_Z_AND_SCALE;
+			menuItem.fMask = MIIM_FTYPE | MIIM_STRING | MIIM_ID | MIIM_STATE;
+			menuItem.fType = MFT_STRING;
+			menuItem.fState = MFS_ENABLED;
+			menuItem.dwTypeData = (LPSTR)"&Randomize Rotation Z and Scale";
+			InsertMenuItemA(subMenuReferenceData.hSubMenu, subIndex++, TRUE, &menuItem);
 		}
 
 		menuItem.wID = RESERVED_NO_CALLBACK;
@@ -1845,22 +1887,31 @@ namespace se::cs::dialog::render_window {
 			alignSelection(true, true, true, true, true, true, true);
 			break;
 		case RESET_ROTATION_X:
-			resetSelection(true, false, false, false);
+			resetOrRandomizeSelection(true, false, false, false, false, false);
 			break;
 		case RESET_ROTATION_Y:
-			resetSelection(false, true, false, false);
+			resetOrRandomizeSelection(false, true, false, false, false, false);
 			break;
 		case RESET_ROTATION_Z:
-			resetSelection(false, false, true, false);
+			resetOrRandomizeSelection(false, false, true, false, false, false);
 			break;
 		case RESET_SCALE:
-			resetSelection(false, false, false, true);
+			resetOrRandomizeSelection(false, false, false, true, false, false);
 			break;
 		case RESET_ROTATION_X_AND_Y:
-			resetSelection(true, true, false, false);
+			resetOrRandomizeSelection(true, true, false, false, false, false);
 			break;
 		case RESET_ROTATION_AND_SCALE:
-			resetSelection(true, true, true, true);
+			resetOrRandomizeSelection(true, true, true, true, false, false);
+			break;
+		case RANDOMIZE_ROTATION_Z:
+			resetOrRandomizeSelection(false, false, false, false, true, false);
+			break;
+		case RANDOMIZE_SCALE:
+			resetOrRandomizeSelection(false, false, false, false, false, true);
+			break;
+		case RANDOMIZE_ROTATION_Z_AND_SCALE:
+			resetOrRandomizeSelection(false, false, false, false, true, true);
 			break;
 		case USE_GROUP_SCALING:
 			settings.render_window.use_group_scaling = !settings.render_window.use_group_scaling;
