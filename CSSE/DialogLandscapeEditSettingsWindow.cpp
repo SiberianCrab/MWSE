@@ -330,24 +330,29 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		auto hStaticTextEditRadius = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC);
 		auto hStaticTextEditFalloff = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
 		auto hStaticTextSelectedTexture = GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC);
+		auto hCheckBoxVertexColor = GetDlgItem(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX);
 
 		{
 			// Get the current style of the element
 			auto styleEditRadius = GetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE);
 			auto styleEditFalloff = GetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE);
 			auto styleSelectedTexture = GetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE);
+			auto styleCheckBoxVertexColor = GetWindowLongPtr(hCheckBoxVertexColor, GWL_STYLE);
 
 			// Remove bits responsible for style and set a new style
 			styleEditRadius = (styleEditRadius & ~SS_TYPEMASK) | SS_RIGHT;
 			styleEditFalloff = (styleEditFalloff & ~SS_TYPEMASK) | SS_RIGHT;
 			styleSelectedTexture = (styleSelectedTexture & ~SS_TYPEMASK) | SS_LEFT;
+			styleCheckBoxVertexColor |= BS_LEFTTEXT;
+			styleCheckBoxVertexColor |= BS_RIGHT;
 
 			// Set a new style for the element
 			SetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE, styleEditRadius);
 			SetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE, styleEditFalloff);
 			SetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE, styleSelectedTexture);
+			SetWindowLongPtr(hCheckBoxVertexColor, GWL_STYLE, styleCheckBoxVertexColor);
 		}
-		
+
 		// Restore size and position
 		const auto& settingsSize = settings.landscape_window.size;
 		const auto width = std::max(settingsSize.width, MIN_WIDTH);
@@ -558,7 +563,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			currentX += WINDOW_EDGE_PADDING;
 
 			auto editColorsButton = GetDlgItem(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX);
-			MoveWindow(editColorsButton, currentX + CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - EDIT_COLORS_CHECKBOX_WIDTH, currentY + STATIC_COMBO_OFFSET * 2 + COMBO_HEIGHT / 2, EDIT_COLORS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
+			MoveWindow(editColorsButton, currentX + CUSTOM_COLOR_SECTION_WIDTH - EDIT_COLORS_CHECKBOX_WIDTH, currentY + STATIC_COMBO_OFFSET * 2 + COMBO_HEIGHT / 2, EDIT_COLORS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
 
 			currentY += COMBO_HEIGHT * 2;
 
@@ -612,11 +617,11 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 		// Bottom Section
 		{
-			auto currentX = WINDOW_EDGE_PADDING + ( sectionWidth - BUTTON_WIDTH * 2 ) / 2;
-			auto currentY = clientHeight - BOTTOM_SECTION_HEIGHT;
+			auto currentX = WINDOW_EDGE_PADDING * 2 + BIG_PADDING + ( CUSTOM_COLOR_SECTION_WIDTH - BIG_PADDING ) / 2 - BUTTON_WIDTH;
+			auto currentY = clientHeight - BOTTOM_SECTION_HEIGHT + WINDOW_EDGE_PADDING;
 
 			auto exitEditingButton = GetDlgItem(hWnd, CONTROL_ID_EXIT_EDITING_BUTTON);
-			MoveWindow(exitEditingButton, currentX, currentY + WINDOW_EDGE_PADDING, BUTTON_WIDTH * 2, COMBO_HEIGHT, FALSE);
+			MoveWindow(exitEditingButton, currentX, currentY, BUTTON_WIDTH * 2, COMBO_HEIGHT, FALSE);
 		}
 
 		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_ERASENOW | RDW_INVALIDATE | RDW_ALLCHILDREN);
