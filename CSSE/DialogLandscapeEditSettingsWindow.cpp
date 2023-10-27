@@ -330,27 +330,22 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		auto hStaticTextEditRadius = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC);
 		auto hStaticTextEditFalloff = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
 		auto hStaticTextSelectedTexture = GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC);
-		//auto hCheckBoxVertexColor = GetDlgItem(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX);
 
 		{
 			// Get the current style of the element
 			auto styleEditRadius = GetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE);
 			auto styleEditFalloff = GetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE);
 			auto styleSelectedTexture = GetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE);
-			//auto styleCheckBoxVertexColor = GetWindowLongPtr(hCheckBoxVertexColor, GWL_EXSTYLE);
 
 			// Remove bits responsible for style and set a new style
 			styleEditRadius = (styleEditRadius & ~SS_TYPEMASK) | SS_RIGHT;
 			styleEditFalloff = (styleEditFalloff & ~SS_TYPEMASK) | SS_RIGHT;
 			styleSelectedTexture = (styleSelectedTexture & ~SS_TYPEMASK) | SS_LEFT;
-			//styleGroupBoxVertexColor &= ~WS_EX_TRANSPARENT;
-			//styleCheckBoxVertexColor |= BS_LEFTTEXT;
 
 			// Set a new style for the element
 			SetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE, styleEditRadius);
 			SetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE, styleEditFalloff);
 			SetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE, styleSelectedTexture);
-			//SetWindowLongPtr(hCheckBoxVertexColor, GWL_EXSTYLE, styleCheckBoxVertexColor);
 		}
 		
 		// Restore size and position
@@ -383,9 +378,9 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 	namespace ResizeConstants {
 		//Font 08
-		//constexpr auto STATIC_HEIGHT = 13;
+		constexpr auto STATIC_HEIGHT = 13;
 		//Font 10
-		constexpr auto STATIC_HEIGHT = 16;
+		//constexpr auto STATIC_HEIGHT = 16;
 		//Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
@@ -472,10 +467,12 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			auto editRadiusStatic = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC);
 			MoveWindow(editRadiusStatic, currentX, currentY + STATIC_COMBO_OFFSET, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
 
-			auto editRadiusEdit = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_EDIT);
-			MoveWindow(editRadiusEdit, currentX + BASIC_PADDING * 2 + BUTTON_WIDTH, currentY, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
+			currentX += BASIC_PADDING * 2 + BUTTON_WIDTH;
 
-			currentX += BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH;
+			auto editRadiusEdit = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_EDIT);
+			MoveWindow(editRadiusEdit, currentX, currentY, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
+
+			currentX += BIG_PADDING + EDIT_FIELD_WIDTH;
 
 			auto flattenVerticesCheckbox = GetDlgItem(hWnd, CONTROL_ID_FLATTEN_VERTICES_CHECKBOX);
 			MoveWindow(flattenVerticesCheckbox, currentX, currentY + STATIC_COMBO_OFFSET, FLATTEN_VERTICES_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
@@ -483,7 +480,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			auto softenVerticesCheckbox = GetDlgItem(hWnd, CONTROL_ID_SOFTEN_VERTICES_CHECKBOX);
 			MoveWindow(softenVerticesCheckbox, currentX + FLATTEN_VERTICES_CHECKBOX_WIDTH, currentY + STATIC_COMBO_OFFSET, SOFTEN_VERTICES_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
 
-			currentX -= BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH;
+			currentX -= BASIC_PADDING * 2 + BIG_PADDING + BUTTON_WIDTH + EDIT_FIELD_WIDTH;
 			currentY += COMBO_HEIGHT + BASIC_PADDING;
 
 			auto editFallofEdit = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_EDIT);
@@ -494,7 +491,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			auto editFallofStatic = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
 			MoveWindow(editFallofStatic, currentX, currentY, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
 
-			currentX += BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH + ( FLATTEN_VERTICES_CHECKBOX_WIDTH + SOFTEN_VERTICES_CHECKBOX_WIDTH - SHOW_EDIT_RADIUS_CHECKBOX_WIDTH ) / 2;
+			currentX += BASIC_PADDING * 2 + BIG_PADDING + BUTTON_WIDTH + EDIT_FIELD_WIDTH + ( FLATTEN_VERTICES_CHECKBOX_WIDTH + SOFTEN_VERTICES_CHECKBOX_WIDTH - SHOW_EDIT_RADIUS_CHECKBOX_WIDTH ) / 2;
 
 			auto showEditRadiusCheckbox = GetDlgItem(hWnd, CONTROL_ID_SHOW_EDIT_RADIUS_CHECKBOX);
 			MoveWindow(showEditRadiusCheckbox, currentX, currentY, SHOW_EDIT_RADIUS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
