@@ -318,12 +318,6 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		//Change the selected texture static to be a single line
 		SetDlgItemText(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC, "Selected Texture:");
 
-		//Remove a vertex color frame lable
-		SetDlgItemText(hWnd, CONTROL_ID_VERTEX_COLOR_GROUPBOX, "");
-
-		//Change edit colors checkbox lable
-		SetDlgItemText(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX, "Edit Vertex Colors");
-
 		//RGBs with ':'
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_RED_STATIC, "R:");
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_GREEN_STATIC, "G:");
@@ -332,32 +326,32 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		SetDlgItemText(hWnd, CONTROL_ID_SECONDARY_COLOR_GREEN_STATIC, "G:");
 		SetDlgItemText(hWnd, CONTROL_ID_SECONDARY_COLOR_BLUE_STATIC, "B:");
 
-		//Change element alignment from ss_left to ss_right
+		//Change element style
 		auto hStaticTextEditRadius = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC);
 		auto hStaticTextEditFalloff = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
 		auto hStaticTextSelectedTexture = GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC);
-		auto hGroupBoxVertexColor = GetDlgItem(hWnd, CONTROL_ID_VERTEX_COLOR_GROUPBOX);
+		//auto hCheckBoxVertexColor = GetDlgItem(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX);
 
 		{
 			// Get the current style of the element
 			auto styleEditRadius = GetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE);
 			auto styleEditFalloff = GetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE);
 			auto styleSelectedTexture = GetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE);
-			auto styleGroupBoxVertexColor = GetWindowLongPtr(hGroupBoxVertexColor, GWL_EXSTYLE);
+			//auto styleCheckBoxVertexColor = GetWindowLongPtr(hCheckBoxVertexColor, GWL_EXSTYLE);
 
-			// Remove bits responsible for alignment and set a new alignment
+			// Remove bits responsible for style and set a new style
 			styleEditRadius = (styleEditRadius & ~SS_TYPEMASK) | SS_RIGHT;
 			styleEditFalloff = (styleEditFalloff & ~SS_TYPEMASK) | SS_RIGHT;
 			styleSelectedTexture = (styleSelectedTexture & ~SS_TYPEMASK) | SS_LEFT;
-			styleGroupBoxVertexColor &= ~WS_EX_TRANSPARENT;
+			//styleGroupBoxVertexColor &= ~WS_EX_TRANSPARENT;
+			//styleCheckBoxVertexColor |= BS_LEFTTEXT;
 
 			// Set a new style for the element
 			SetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE, styleEditRadius);
 			SetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE, styleEditFalloff);
 			SetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE, styleSelectedTexture);
-			SetWindowLongPtr(hGroupBoxVertexColor, GWL_EXSTYLE, styleGroupBoxVertexColor);
+			//SetWindowLongPtr(hCheckBoxVertexColor, GWL_EXSTYLE, styleCheckBoxVertexColor);
 		}
-
 		
 		// Restore size and position
 		const auto& settingsSize = settings.landscape_window.size;
@@ -383,8 +377,8 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		int short xPos = LOWORD(lParam);
 		int short yPos = HIWORD(lParam);
 
-		settings.landscape_window.x_position = xPos -8;
-		settings.landscape_window.y_position = yPos -31;
+		settings.landscape_window.x_position = xPos - 8;
+		settings.landscape_window.y_position = yPos - 31;
 	}
 
 	namespace ResizeConstants {
@@ -405,13 +399,13 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		constexpr auto CUSTOM_COLOR_SECTION_WIDTH = CUSTOM_COLOR_WIDTH * 8 + BIG_PADDING * 8;
 		constexpr auto COLOR_PREVIEW_HEIGHT = COMBO_HEIGHT * 2 + BASIC_PADDING;
 
-		constexpr auto HEIGHT_SECTION_HEIGHT = WINDOW_EDGE_PADDING + BIG_PADDING * 3 + COMBO_HEIGHT * 2 + BASIC_PADDING;//80
-		constexpr auto VERTEX_COLOR_SECTION_HEIGHT = COMBO_HEIGHT * 5 + BIG_PADDING * 2 + BASIC_PADDING * 2 + CUSTOM_COLOR_HEIGHT * 2;
+		constexpr auto HEIGHT_SECTION_HEIGHT = BIG_PADDING * 4 + COMBO_HEIGHT * 2 + BASIC_PADDING;
+		constexpr auto VERTEX_COLOR_SECTION_HEIGHT = COMBO_HEIGHT * 5 + BASIC_PADDING * 2 + BIG_PADDING * 4 + CUSTOM_COLOR_HEIGHT * 2;
 		constexpr auto BOTTOM_SECTION_HEIGHT = COMBO_HEIGHT + WINDOW_EDGE_PADDING * 2;
 
 		constexpr auto BUTTON_WIDTH = 90;
 		constexpr auto EDIT_FIELD_WIDTH = 40;
-		constexpr auto EDIT_COLORS_CHECKBOX_WIDTH = 130;
+		constexpr auto EDIT_COLORS_CHECKBOX_WIDTH = 90;
 		constexpr auto SHOW_EDIT_RADIUS_CHECKBOX_WIDTH = 130;
 		constexpr auto FLATTEN_VERTICES_CHECKBOX_WIDTH = 120;
 		constexpr auto SOFTEN_VERTICES_CHECKBOX_WIDTH = 120;
@@ -472,49 +466,60 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			auto heightGroupbox = GetDlgItem(hWnd, CONTROL_ID_HEIGHT_GROUPBOX);
 			MoveWindow(heightGroupbox, currentX, currentY - BIG_PADDING, sectionWidth, HEIGHT_SECTION_HEIGHT, FALSE);
 
+			currentX += BIG_PADDING;
+			currentY += BIG_PADDING * 2;
+
 			auto editRadiusStatic = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC);
-			MoveWindow(editRadiusStatic, currentX + BIG_PADDING, currentY + BIG_PADDING * 3, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
-			currentY += BASIC_PADDING;
+			MoveWindow(editRadiusStatic, currentX, currentY + STATIC_COMBO_OFFSET, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
 
 			auto editRadiusEdit = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_EDIT);
-			MoveWindow(editRadiusEdit, currentX + BIG_PADDING + BASIC_PADDING * 2 + BUTTON_WIDTH, currentY + BIG_PADDING * 3 - STATIC_COMBO_OFFSET, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
-			currentY += BASIC_PADDING;
+			MoveWindow(editRadiusEdit, currentX + BASIC_PADDING * 2 + BUTTON_WIDTH, currentY, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
 
-			auto editFallofStatic = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
-			MoveWindow(editFallofStatic, currentX + BIG_PADDING, currentY + BIG_PADDING * 3 + COMBO_HEIGHT, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
-
-			auto editFallofEdit = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_EDIT);
-			MoveWindow(editFallofEdit, currentX + BIG_PADDING + BASIC_PADDING * 2 + BUTTON_WIDTH, currentY + BIG_PADDING * 3 - STATIC_COMBO_OFFSET + COMBO_HEIGHT, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
-
-			auto showEditRadiusCheckbox = GetDlgItem(hWnd, CONTROL_ID_SHOW_EDIT_RADIUS_CHECKBOX);
-			MoveWindow(showEditRadiusCheckbox, currentX + BIG_PADDING + BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH, currentY + BIG_PADDING * 3 - BASIC_PADDING, SHOW_EDIT_RADIUS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
-			currentY += BASIC_PADDING;
+			currentX += BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH;
 
 			auto flattenVerticesCheckbox = GetDlgItem(hWnd, CONTROL_ID_FLATTEN_VERTICES_CHECKBOX);
-			MoveWindow(flattenVerticesCheckbox, currentX + BIG_PADDING + BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH, currentY + BIG_PADDING * 3 - BASIC_PADDING - STATIC_COMBO_OFFSET + COMBO_HEIGHT, FLATTEN_VERTICES_CHECKBOX_WIDTH, COMBO_HEIGHT, FALSE);
+			MoveWindow(flattenVerticesCheckbox, currentX, currentY + STATIC_COMBO_OFFSET, FLATTEN_VERTICES_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
 
 			auto softenVerticesCheckbox = GetDlgItem(hWnd, CONTROL_ID_SOFTEN_VERTICES_CHECKBOX);
-			MoveWindow(softenVerticesCheckbox, currentX + BIG_PADDING + BASIC_PADDING * 5 + BUTTON_WIDTH * 2 + EDIT_FIELD_WIDTH + 30, currentY + BIG_PADDING * 3 - BASIC_PADDING - STATIC_COMBO_OFFSET + COMBO_HEIGHT, SOFTEN_VERTICES_CHECKBOX_WIDTH, COMBO_HEIGHT, FALSE);
+			MoveWindow(softenVerticesCheckbox, currentX + FLATTEN_VERTICES_CHECKBOX_WIDTH, currentY + STATIC_COMBO_OFFSET, SOFTEN_VERTICES_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
+
+			currentX -= BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH;
+			currentY += COMBO_HEIGHT + BASIC_PADDING;
+
+			auto editFallofEdit = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_EDIT);
+			MoveWindow(editFallofEdit, currentX + BASIC_PADDING * 2 + BUTTON_WIDTH, currentY, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
+
+			currentY += STATIC_COMBO_OFFSET;
+
+			auto editFallofStatic = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
+			MoveWindow(editFallofStatic, currentX, currentY, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
+
+			currentX += BASIC_PADDING * 4 + BUTTON_WIDTH + EDIT_FIELD_WIDTH + ( FLATTEN_VERTICES_CHECKBOX_WIDTH + SOFTEN_VERTICES_CHECKBOX_WIDTH - SHOW_EDIT_RADIUS_CHECKBOX_WIDTH ) / 2;
+
+			auto showEditRadiusCheckbox = GetDlgItem(hWnd, CONTROL_ID_SHOW_EDIT_RADIUS_CHECKBOX);
+			MoveWindow(showEditRadiusCheckbox, currentX, currentY, SHOW_EDIT_RADIUS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
 		}
 
 		// Texture Section
 		{
 			auto currentX = WINDOW_EDGE_PADDING;
 			auto currentY = WINDOW_EDGE_PADDING + HEIGHT_SECTION_HEIGHT;
-			const auto TEXTURE_SECTION_HEIGHT = clientHeight - HEIGHT_SECTION_HEIGHT - VERTEX_COLOR_SECTION_HEIGHT - BOTTOM_SECTION_HEIGHT - WINDOW_EDGE_PADDING * 2; //-WINDOW_EDGE_PADDING - COMBO_HEIGHT * 2 - BASIC_PADDING * 2;
+			const auto TEXTURE_SECTION_HEIGHT = clientHeight - HEIGHT_SECTION_HEIGHT - VERTEX_COLOR_SECTION_HEIGHT - BOTTOM_SECTION_HEIGHT - BIG_PADDING * 3;
 
 			auto textureGroupbox = GetDlgItem(hWnd, CONTROL_ID_TEXTURE_GROUPBOX);
 			MoveWindow(textureGroupbox, currentX, currentY, sectionWidth, TEXTURE_SECTION_HEIGHT, FALSE);
+
 			currentX += WINDOW_EDGE_PADDING;
 
 			auto TEXTURE_LIST_WIDTH = sectionWidth - WINDOW_EDGE_PADDING * 2;
-			const auto TEXTURE_LIST_HEIGHT = TEXTURE_SECTION_HEIGHT - COMBO_HEIGHT * 2 - BIG_PADDING * 2;
+			const auto TEXTURE_LIST_HEIGHT = TEXTURE_SECTION_HEIGHT - COMBO_HEIGHT * 2 - BIG_PADDING * 2 - BASIC_PADDING;
 
 			//Texture prewiew section offset
 			currentX += TEXTURE_LIST_WIDTH + WINDOW_EDGE_PADDING * 2;
 
 			auto selectedTextureStatic = GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC);
 			MoveWindow(selectedTextureStatic, currentX, currentY, PREVIEW_TEXTURE_NAME_STATIC_WIDTH, STATIC_HEIGHT, FALSE);
+
 			currentY += STATIC_HEIGHT + BIG_PADDING;
 
 			auto previewTextureImage = GetDlgItem(hWnd, CONTROL_ID_PREVIEW_TEXTURE_BUTTON);
@@ -525,6 +530,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 			currentX -= TEXTURE_LIST_WIDTH + WINDOW_EDGE_PADDING * 2;
 			currentY -= STATIC_HEIGHT + BIG_PADDING;
+
 			currentY += COMBO_HEIGHT;
 
 			auto textureList = GetDlgItem(hWnd, CONTROL_ID_TEXTURE_LIST);
@@ -536,10 +542,12 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			MoveWindow(addTextureButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
 
 			auto previewTextureNameStatic = GetDlgItem(hWnd, CONTROL_ID_PREVIEW_TEXTURE_NAME_STATIC);
-			MoveWindow(previewTextureNameStatic, currentX + BUTTON_WIDTH + BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, TEXTURE_LIST_WIDTH - BUTTON_WIDTH * 2 - BASIC_PADDING * 2, STATIC_HEIGHT, FALSE);
-				
+			MoveWindow(previewTextureNameStatic, currentX + BUTTON_WIDTH + BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - BUTTON_WIDTH * 2 - BASIC_PADDING * 2, STATIC_HEIGHT, FALSE);
+			
+			currentX += CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - BUTTON_WIDTH;
+
 			auto showPreviewTextureButton = GetDlgItem(hWnd, CONTROL_ID_SHOW_PREVIEW_TEXTURE_BUTTON);
-			MoveWindow(showPreviewTextureButton, currentX + TEXTURE_LIST_WIDTH - BUTTON_WIDTH, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
+			MoveWindow(showPreviewTextureButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
 		}
 
 		// Vertex Color Section
@@ -553,9 +561,9 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			currentX += WINDOW_EDGE_PADDING;
 
 			auto editColorsButton = GetDlgItem(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX);
-			MoveWindow(editColorsButton, currentX, currentY - BASIC_PADDING, EDIT_COLORS_CHECKBOX_WIDTH, COMBO_HEIGHT, FALSE);
+			MoveWindow(editColorsButton, currentX + CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - EDIT_COLORS_CHECKBOX_WIDTH, currentY + STATIC_COMBO_OFFSET * 2 + COMBO_HEIGHT / 2, EDIT_COLORS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
 
-			currentY += COMBO_HEIGHT + BIG_PADDING;
+			currentY += COMBO_HEIGHT * 2;
 
 			auto primaryColorPreviewStatic = GetDlgItem(hWnd, CONTROL_ID_PRIMARY_COLOR_PREVIEW_STATIC);
 			MoveWindow(primaryColorPreviewStatic, currentX + COLOR_PREVIEW_GROUP_OFFSET, currentY, BUTTON_WIDTH, COLOR_PREVIEW_HEIGHT, FALSE);
@@ -568,7 +576,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			MoveWindow(primaryColorSelectColorButton, currentX + COLOR_PREVIEW_GROUP_OFFSET, currentY - COMBO_HEIGHT - BASIC_PADDING, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
 
 			currentX += CUSTOM_COLOR_SECTION_WIDTH / 2 + (CUSTOM_COLOR_SECTION_WIDTH / 2 - CURRENT_COLOR_SECTION_WIDTH);
-			currentY = clientHeight - COMBO_HEIGHT - VERTEX_COLOR_SECTION_HEIGHT + BASIC_PADDING * 2 + BIG_PADDING;
+			currentY = clientHeight - VERTEX_COLOR_SECTION_HEIGHT - BOTTOM_SECTION_HEIGHT + COMBO_HEIGHT * 2;
 
 			auto secondaryColorPreviewStatic = GetDlgItem(hWnd, CONTROL_ID_SECONDARY_COLOR_PREVIEW_STATIC);
 			MoveWindow(secondaryColorPreviewStatic, currentX + COLOR_PREVIEW_GROUP_OFFSET, currentY, BUTTON_WIDTH, COLOR_PREVIEW_HEIGHT, FALSE);
