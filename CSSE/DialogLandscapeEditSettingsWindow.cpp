@@ -227,15 +227,15 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			width -= 270;
 			isVisible = FALSE;
 		}
-		
+
 		// hide/unhide the preview texture controls
 		ShowWindow(hDlgSelectedTextureStatic, isVisible);
 		ShowWindow(hDlgPreviewTextureFrameStatic, isVisible);
 		ShowWindow(hDlgPreviewTextureImage, isVisible);
 
-		SetWindowPos(hWnd, NULL, 0, 0, width, settings.landscape_window.size.height, SWP_NOMOVE);		
+		SetWindowPos(hWnd, NULL, 0, 0, width, settings.landscape_window.size.height, SWP_NOMOVE);
 
-		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_ERASENOW | RDW_INVALIDATE | RDW_ALLCHILDREN);	
+		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_ERASENOW | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
 
 	//
@@ -382,7 +382,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 	}
 
 	namespace ResizeConstants {
-		//Font 08
+		//Font 08 - Vanilla
 		constexpr auto STATIC_HEIGHT = 13;
 		//Font 10
 		//constexpr auto STATIC_HEIGHT = 16;
@@ -395,7 +395,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto CUSTOM_COLOR_WIDTH = 40;
-		constexpr auto CUSTOM_COLOR_HEIGHT = 20;
+		constexpr auto CUSTOM_COLOR_HEIGHT = CUSTOM_COLOR_WIDTH / 2;
 		constexpr auto CUSTOM_COLOR_SECTION_WIDTH = CUSTOM_COLOR_WIDTH * 8 + BIG_PADDING * 8;
 		constexpr auto COLOR_PREVIEW_HEIGHT = COMBO_HEIGHT * 2 + BASIC_PADDING;
 
@@ -412,11 +412,11 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 		constexpr auto PREVIEW_TEXTURE_NAME_STATIC_WIDTH = 150;
 		constexpr auto PREVIEW_TEXTURE_BOX = 256;
-		constexpr auto PREVIEW_TEXTURE_FRAME_BOX = 260;
+		constexpr auto PREVIEW_TEXTURE_FRAME_BOX = PREVIEW_TEXTURE_BOX + STATIC_COMBO_OFFSET;
 
 		constexpr auto RGB_WIDTH = EDIT_FIELD_WIDTH / 2;
 		constexpr auto VERTEX_EDIT_WIDTH = EDIT_FIELD_WIDTH;
-		constexpr auto SPIN_WIDTH = EDIT_FIELD_WIDTH /2;
+		constexpr auto SPIN_WIDTH = EDIT_FIELD_WIDTH / 2;
 
 		constexpr auto COLOR_PREVIEW_GROUP_OFFSET = RGB_WIDTH + BASIC_PADDING + VERTEX_EDIT_WIDTH + SPIN_WIDTH + BIG_PADDING;
 		constexpr auto CURRENT_COLOR_SECTION_WIDTH = COLOR_PREVIEW_GROUP_OFFSET + BUTTON_WIDTH;
@@ -452,7 +452,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		using namespace ResizeConstants;
 
 		const auto showPreviewImagePadding = IsDlgButtonChecked(hWnd, CONTROL_ID_SHOW_PREVIEW_TEXTURE_BUTTON) ? 270 : 0;
-	
+
 		const auto clientWidth = LOWORD(lParam);
 		const auto clientHeight = HIWORD(lParam);
 		const auto sectionWidth = clientWidth - WINDOW_EDGE_PADDING * 2 - showPreviewImagePadding;
@@ -532,6 +532,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 			currentX -= TEXTURE_LIST_WIDTH + WINDOW_EDGE_PADDING * 2;
 			currentY -= STATIC_HEIGHT + BIG_PADDING;
+			//Texture prewiew section offset end
 
 			currentY += COMBO_HEIGHT;
 
@@ -545,7 +546,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 			auto previewTextureNameStatic = GetDlgItem(hWnd, CONTROL_ID_PREVIEW_TEXTURE_NAME_STATIC);
 			MoveWindow(previewTextureNameStatic, currentX + BUTTON_WIDTH + BASIC_PADDING, currentY, CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - BUTTON_WIDTH * 2 - BASIC_PADDING * 2, COMBO_HEIGHT, FALSE);
-			
+
 			currentX += CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - BUTTON_WIDTH;
 
 			auto showPreviewTextureButton = GetDlgItem(hWnd, CONTROL_ID_SHOW_PREVIEW_TEXTURE_BUTTON);
