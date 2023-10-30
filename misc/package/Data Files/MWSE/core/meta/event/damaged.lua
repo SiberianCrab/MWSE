@@ -7,11 +7,13 @@
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/events/damaged).
 --- @class damagedEventData
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
---- @field activeMagicEffect tes3magicEffect *Read-only*. Magic effect which caused damage. Can be `nil`.
+--- @field activeMagicEffect tes3activeMagicEffect *Read-only*. Only valid for elemental shield reactive damage. It is the magic effect of the shield which caused damage. Can be `nil`.
 --- @field attacker tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile actor dealing the damage. Can be `nil`.
 --- @field attackerReference tes3reference *Read-only*. The attacker mobile's associated reference. Can be `nil`.
 --- @field damage number *Read-only*. The amount of damage done.
 --- @field killingBlow boolean *Read-only*. If true, the damage killed the target.
+--- @field magicEffect tes3effect *Read-only*. The specific effect that triggered the event. This is equal to accessing `e.magicSourceInstance.effects[effectIndex]`. Only valid if magicSourceInstance is set.
+--- @field magicEffectIndex number *Read-only*. The index of the effect in source's effects list. Only valid if magicSourceInstance is set.
 --- @field magicEffectInstance tes3magicEffectInstance *Read-only*. An instance of the magic effect in the spell that caused damage. Can be `nil`.
 --- @field magicSourceInstance tes3magicSourceInstance *Read-only*. A `tes3magicSourceInstance` object of a spell that caused damage. Can be `nil`.
 --- @field mobile tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile actor that took damage.

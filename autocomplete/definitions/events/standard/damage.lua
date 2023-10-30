@@ -33,18 +33,28 @@ return {
 			description = "Projectile that will deal the damage. Can be `nil`.",
 		},
 		activeMagicEffect = {
-			type = "tes3magicEffect",
+			type = "tes3activeMagicEffect",
 			readOnly = true,
-			description = "Magic effect which will cause the damage. Can be `nil`.",
+			description = "Only valid for elemental shield reactive damage. It is the magic effect of the shield which will cause damage. Can be `nil`.",
 		},
 		magicSourceInstance = {
 			type = "tes3magicSourceInstance",
-			readOnly =true ,
+			readOnly = true,
 			description = "A `tes3magicSourceInstance` object of a spell that will cause the damage. Can be `nil`.",
+		},
+		magicEffect = {
+			type = "tes3effect",
+			readOnly = true,
+			description = "The specific effect that triggered the event. This is equal to accessing `e.magicSourceInstance.effects[effectIndex]`. Only valid if magicSourceInstance is set.",
+		},
+		magicEffectIndex = {
+			type = "number",
+			readOnly = true,
+			description = "The index of the effect in source's effects list. Only valid if magicSourceInstance is set.",
 		},
 		magicEffectInstance = {
 			type = "tes3magicEffectInstance",
-			readOnly =true ,
+			readOnly = true,
 			description = "An instance of the magic effect in the spell that will cause the damage. Can be `nil`.",
 		},
 		source = {
