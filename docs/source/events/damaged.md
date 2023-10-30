@@ -20,11 +20,13 @@ event.register(tes3.event.damaged, damagedCallback)
 
 ## Event Data
 
-* `activeMagicEffect` ([tes3magicEffect](../types/tes3magicEffect.md)): *Read-only*. Magic effect which caused damage. Can be `nil`.
+* `activeMagicEffect` ([tes3activeMagicEffect](../types/tes3activeMagicEffect.md)): *Read-only*. Only valid for elemental shield reactive damage. It is the magic effect of the shield which caused damage. Can be `nil`.
 * `attacker` ([tes3mobileActor](../types/tes3mobileActor.md)): *Read-only*. The mobile actor dealing the damage. Can be `nil`.
 * `attackerReference` ([tes3reference](../types/tes3reference.md)): *Read-only*. The attacker mobile's associated reference. Can be `nil`.
 * `damage` (number): *Read-only*. The amount of damage done.
 * `killingBlow` (boolean): *Read-only*. If true, the damage killed the target.
+* `magicEffect` ([tes3effect](../types/tes3effect.md)): *Read-only*. The specific effect that triggered the event. This is equal to accessing `e.magicSourceInstance.effects[effectIndex]`. Only valid if magicSourceInstance is set.
+* `magicEffectIndex` (number): *Read-only*. The index of the effect in source's effects list. Only valid if magicSourceInstance is set.
 * `magicEffectInstance` ([tes3magicEffectInstance](../types/tes3magicEffectInstance.md)): *Read-only*. An instance of the magic effect in the spell that caused damage. Can be `nil`.
 * `magicSourceInstance` ([tes3magicSourceInstance](../types/tes3magicSourceInstance.md)): *Read-only*. A `tes3magicSourceInstance` object of a spell that caused damage. Can be `nil`.
 * `mobile` ([tes3mobileActor](../types/tes3mobileActor.md)): *Read-only*. The mobile actor that took damage.

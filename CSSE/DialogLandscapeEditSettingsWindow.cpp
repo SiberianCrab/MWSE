@@ -293,7 +293,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 		RemoveStyles(hWnd, DS_MODALFRAME | WS_SYSMENU);
 		AddStyles(hWnd, WS_POPUP | WS_CAPTION | WS_SIZEBOX);
-
+		
 		auto hInstance = (HINSTANCE)GetWindowLongA(hWnd, GWLP_HINSTANCE);
 		auto font = SendMessageA(hWnd, WM_GETFONT, FALSE, FALSE);
 

@@ -131,6 +131,7 @@
 #include "LuaRestInterruptEvent.h"
 #include "LuaSavedGameEvent.h"
 #include "LuaSaveGameEvent.h"
+#include "LuaShieldBlockedEvent.h"
 #include "LuaShowRestWaitMenuEvent.h"
 #include "LuaSimulatedEvent.h"
 #include "LuaSimulateEvent.h"
@@ -298,6 +299,7 @@ namespace mwse::lua::event {
 		usertypeDefinition["restInterrupt"] = sol::property(&RestInterruptEvent::getEventEnabled, &RestInterruptEvent::setEventEnabled);
 		usertypeDefinition["save"] = sol::property(&SaveGameEvent::getEventEnabled, &SaveGameEvent::setEventEnabled);
 		usertypeDefinition["saved"] = sol::property(&SavedGameEvent::getEventEnabled, &SavedGameEvent::setEventEnabled);
+		usertypeDefinition["shieldBlocked"] = sol::property(&ShieldBlockedEvent::getEventEnabled, &ShieldBlockedEvent::setEventEnabled);
 		usertypeDefinition["simulate"] = sol::property(&SimulateEvent::getEventEnabled, &SimulateEvent::setEventEnabled);
 		usertypeDefinition["simulated"] = sol::property(&SimulatedEvent::getEventEnabled, &SimulatedEvent::setEventEnabled);
 		usertypeDefinition["skillRaised"] = sol::property(&SkillRaisedEvent::getEventEnabled, &SkillRaisedEvent::setEventEnabled);

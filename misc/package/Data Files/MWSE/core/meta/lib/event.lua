@@ -141,6 +141,7 @@
 --- @field register fun(eventId: '"restInterrupt"', callback: fun(e: restInterruptEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"save"', callback: fun(e: saveEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"saved"', callback: fun(e: savedEventData): boolean?, options: table?)
+--- @field register fun(eventId: '"shieldBlocked"', callback: fun(e: shieldBlockedEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"simulate"', callback: fun(e: simulateEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"simulated"', callback: fun(e: simulatedEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"skillRaised"', callback: fun(e: skillRaisedEventData): boolean?, options: table?)

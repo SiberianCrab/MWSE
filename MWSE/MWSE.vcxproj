@@ -19,6 +19,7 @@
     <ClInclude Include="LuaDialogueFilteredEvent.h" />
     <ClInclude Include="LuaMagicSelectionChangedEvent.h" />
     <ClInclude Include="LuaMusicChangeTrackEvent.h" />
+    <ClInclude Include="LuaShieldBlockedEvent.h" />
     <ClInclude Include="LuaSimulatedEvent.h" />
     <ClInclude Include="LuaUiSkillTooltipEvent.h" />
     <ClInclude Include="NIAccumulator.h" />
@@ -652,6 +653,7 @@
     <ClCompile Include="LuaPlayAnimationGroupEvent.cpp" />
     <ClCompile Include="LuaPlayItemSoundEvent.cpp" />
     <ClCompile Include="LuaPostInfoResponseEvent.cpp" />
+    <ClCompile Include="LuaShieldBlockedEvent.cpp" />
     <ClCompile Include="LuaSimulatedEvent.cpp" />
     <ClCompile Include="LuaPotionBrewedEvent.cpp" />
     <ClCompile Include="LuaPotionBrewFailedEvent.cpp" />

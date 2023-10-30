@@ -3899,6 +3899,7 @@ tes3.event = require("tes3.event")
 ---| `tes3.event.restInterrupt`
 ---| `tes3.event.save`
 ---| `tes3.event.saved`
+---| `tes3.event.shieldBlocked`
 ---| `tes3.event.simulate`
 ---| `tes3.event.simulated`
 ---| `tes3.event.skillRaised`

@@ -44,6 +44,13 @@ namespace mwse::lua::event {
 
 		if (magicSourceInstance) {
 			eventData["magicSourceInstance"] = magicSourceInstance;
+			eventData["magicEffectIndex"] = m_MagicEffectIndex;
+
+			// Get the specific effect on the source.
+			TES3::Effect* effects = magicSourceInstance->sourceCombo.getSourceEffects();
+			if (effects) {
+				eventData["magicEffect"] = effects[m_MagicEffectIndex];
+			}
 
 			// Get the attacker as the caster of the spell.
 			if (!m_Attacker) {
@@ -72,6 +79,7 @@ namespace mwse::lua::event {
 	TES3::MobileProjectile* DamageEvent::m_Projectile = nullptr;
 	TES3::MagicSourceInstance* DamageEvent::m_MagicSourceInstance = nullptr;
 	TES3::MagicEffectInstance* DamageEvent::m_MagicEffectInstance = nullptr;
+	int DamageEvent::m_MagicEffectIndex = -1;
 	TES3::ActiveMagicEffect* DamageEvent::m_ActiveMagicEffect = nullptr;
 	const char* DamageEvent::m_Source = nullptr;
 }
