@@ -4,7 +4,6 @@ return {
 	eventData = {
 		["conditionDamage"] = {
 			type = "number",
-			readOnly = true,
 			description = "The shield's condition will be reduced by this amount. It is initially equal to the pre-armor-mitigation damage value of the strike.",
 		},
 		["attacker"] = {

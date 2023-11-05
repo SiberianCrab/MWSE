@@ -143,6 +143,7 @@ referenceSceneNodeCreated     | `"referenceSceneNodeCreated"`     | [`referenceS
 restInterrupt                 | `"restInterrupt"`                 | [`restInterrupt`](https://mwse.github.io/MWSE/events/restInterrupt)
 save                          | `"save"`                          | [`save`](https://mwse.github.io/MWSE/events/save)
 saved                         | `"saved"`                         | [`saved`](https://mwse.github.io/MWSE/events/saved)
+shieldBlocked                 | `"shieldBlocked"`                 | [`shieldBlocked`](https://mwse.github.io/MWSE/events/shieldBlocked)
 simulate                      | `"simulate"`                      | [`simulate`](https://mwse.github.io/MWSE/events/simulate)
 simulated                     | `"simulated"`                     | [`simulated`](https://mwse.github.io/MWSE/events/simulated)
 skillRaised                   | `"skillRaised"`                   | [`skillRaised`](https://mwse.github.io/MWSE/events/skillRaised)

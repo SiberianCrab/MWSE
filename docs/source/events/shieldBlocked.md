@@ -24,7 +24,7 @@ event.register(tes3.event.shieldBlocked, shieldBlockedCallback)
 ## Event Data
 
 * `attacker` ([tes3mobileActor](../types/tes3mobileActor.md)): *Read-only*. The mobile actor dealing the damage.
-* `conditionDamage` (number): *Read-only*. The shield's condition will be reduced by this amount. It is initially equal to the pre-armor-mitigation damage value of the strike.
+* `conditionDamage` (number): The shield's condition will be reduced by this amount. It is initially equal to the pre-armor-mitigation damage value of the strike.
 * `mobile` ([tes3mobileActor](../types/tes3mobileActor.md)): *Read-only*. The mobile actor which is blocking the strike.
 * `reference` ([tes3reference](../types/tes3reference.md)): *Read-only*. A shortcut to the mobile's reference.
 
