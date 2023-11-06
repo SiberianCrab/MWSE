@@ -340,7 +340,7 @@ namespace se::cs {
 	}
 
 	//
-    // RR - Leveled Creature Settings Window
+    // Leveled Creature Settings Window
     //
 
 	void Settings_t::LeveledCreatureWindowSettings::from_toml(const toml::value& v) {
@@ -369,8 +369,6 @@ namespace se::cs {
 			}
 		);
 	}
-
-	//RR End
 
 	//
 	// Color theme
