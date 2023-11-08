@@ -56,31 +56,31 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		auto hStaticTextChanceNone = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
 		auto hCheckBoxCalculateLevels = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
 
-		{
-		   // Get the current style of the element
-	   	   auto styleChanceNone = GetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE);
-		   auto styleCheckBoxCalculateLevels = GetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE);
+			{
+			 // Get the current style of the element
+	   		 auto styleChanceNone = GetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE);
+			 auto styleCheckBoxCalculateLevels = GetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE);
 
-		   // Remove bits responsible for style and set a new style
-		   styleChanceNone = (styleChanceNone & ~SS_TYPEMASK) | SS_RIGHT;
-		   styleCheckBoxCalculateLevels |= BS_LEFTTEXT;
-		   styleCheckBoxCalculateLevels |= BS_RIGHT;
+			 // Remove bits responsible for style and set a new style
+			 styleChanceNone = (styleChanceNone & ~SS_TYPEMASK) | SS_RIGHT;
+			 styleCheckBoxCalculateLevels |= BS_LEFTTEXT;
+			 styleCheckBoxCalculateLevels |= BS_RIGHT;
 
-		   // Set a new style for the element
-		   SetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE, styleChanceNone);
-		   SetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE, styleCheckBoxCalculateLevels);
-		}
+			 // Set a new style for the element
+			 SetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE, styleChanceNone);
+			 SetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE, styleCheckBoxCalculateLevels);
+			}
 
-	// Restore size and position
-	const auto& settingsSize = settings.leveled_creature_window.size;
-	const auto width = std::max(settingsSize.width, MIN_WIDTH);
-	const auto height = std::max(settingsSize.height, MIN_HEIGHT);
-	const auto x = settings.leveled_creature_window.x_position;
-	const auto y = settings.leveled_creature_window.y_position;
+		// Restore size and position
+		const auto& settingsSize = settings.leveled_creature_window.size;
+		const auto width = std::max(settingsSize.width, MIN_WIDTH);
+		const auto height = std::max(settingsSize.height, MIN_HEIGHT);
+		const auto x = settings.leveled_creature_window.x_position;
+		const auto y = settings.leveled_creature_window.y_position;
 
-	MoveWindow(hWnd, x, y, width, height, FALSE);
-	RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
-}
+		MoveWindow(hWnd, x, y, width, height, FALSE);
+		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+	}
 
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		const auto info = (LPMINMAXINFO)lParam;
@@ -124,124 +124,124 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 
 	}
 
-void PatchDialogProc_BeforeSize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	using namespace ResizeConstants;
+	void PatchDialogProc_BeforeSize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		using namespace ResizeConstants;
 
-	const auto clientWidth = LOWORD(lParam);
-	const auto clientHeight = HIWORD(lParam);
+		const auto clientWidth = LOWORD(lParam);
+		const auto clientHeight = HIWORD(lParam);
 
-	// Controls section
+		// Controls section
 
-	{
-		auto currentX = BIG_PADDING;
-		auto currentY = WINDOW_EDGE_PADDING;
+		{
+			auto currentX = BIG_PADDING;
+			auto currentY = WINDOW_EDGE_PADDING;
 
-		auto idStatic = GetDlgItem(hWnd, CONTROL_ID_ID_STATIC);
-		MoveWindow(idStatic, currentX, currentY + STATIC_COMBO_OFFSET, STATIC_ID_WIDTH, STATIC_HEIGHT, FALSE);
+			auto idStatic = GetDlgItem(hWnd, CONTROL_ID_ID_STATIC);
+			MoveWindow(idStatic, currentX, currentY + STATIC_COMBO_OFFSET, STATIC_ID_WIDTH, STATIC_HEIGHT, FALSE);
 
-		currentX += STATIC_ID_WIDTH + BASIC_PADDING;
+			currentX += STATIC_ID_WIDTH + BASIC_PADDING;
 
-		auto idEdit = GetDlgItem(hWnd, CONTROL_ID_ID_EDIT);
-		MoveWindow(idEdit, currentX, currentY, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
+			auto idEdit = GetDlgItem(hWnd, CONTROL_ID_ID_EDIT);
+			MoveWindow(idEdit, currentX, currentY, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
 		
-		currentY += COMBO_HEIGHT + BIG_PADDING;
-		currentX = CONTROLS_SECTION_WIDTH - CALCULATE_LEVELS_CHECKBOX_WIDTH - BIG_PADDING;
+			currentY += COMBO_HEIGHT + BIG_PADDING;
+			currentX = CONTROLS_SECTION_WIDTH - CALCULATE_LEVELS_CHECKBOX_WIDTH - BIG_PADDING;
 
-		auto calculateLevelsCheckbox = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
-		MoveWindow(calculateLevelsCheckbox, currentX, currentY, CALCULATE_LEVELS_CHECKBOX_WIDTH, COMBO_HEIGHT, FALSE);
+			auto calculateLevelsCheckbox = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
+			MoveWindow(calculateLevelsCheckbox, currentX, currentY, CALCULATE_LEVELS_CHECKBOX_WIDTH, COMBO_HEIGHT, FALSE);
 
-		currentY += COMBO_HEIGHT + BIG_PADDING;
-		currentX = CONTROLS_SECTION_WIDTH - BUTTON_WIDTH - EDIT_SMALL_FIELD_WIDTH - BIG_PADDING - BASIC_PADDING;
+			currentY += COMBO_HEIGHT + BIG_PADDING;
+			currentX = CONTROLS_SECTION_WIDTH - BUTTON_WIDTH - EDIT_SMALL_FIELD_WIDTH - BIG_PADDING - BASIC_PADDING;
 
-		auto chanceNoneStatic = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
-		MoveWindow(chanceNoneStatic, currentX, currentY + STATIC_COMBO_OFFSET, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
+			auto chanceNoneStatic = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
+			MoveWindow(chanceNoneStatic, currentX, currentY + STATIC_COMBO_OFFSET, BUTTON_WIDTH, STATIC_HEIGHT, FALSE);
 
-		currentX += BUTTON_WIDTH + BASIC_PADDING;
+			currentX += BUTTON_WIDTH + BASIC_PADDING;
 
-		auto chanceNoneEdit = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_EDIT);
-		MoveWindow(chanceNoneEdit, currentX, currentY, EDIT_SMALL_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
+			auto chanceNoneEdit = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_EDIT);
+			MoveWindow(chanceNoneEdit, currentX, currentY, EDIT_SMALL_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
 
+		}
+
+		// Leveled List Section
+
+		{
+			auto currentX = CONTROLS_SECTION_WIDTH;
+			auto currentY = WINDOW_EDGE_PADDING;
+
+			auto LEVELED_LIST_SECTION_HEIGHT = clientHeight - WINDOW_EDGE_PADDING * 2;
+			auto TEXTURE_LIST_WIDTH = clientWidth - CONTROLS_SECTION_WIDTH - BIG_PADDING;
+
+			auto leveledList = GetDlgItem(hWnd, CONTROL_ID_LEVELED_LIST);
+			MoveWindow(leveledList, currentX, currentY, TEXTURE_LIST_WIDTH, LEVELED_LIST_SECTION_HEIGHT, FALSE);
+		}
+
+		// Bottom section
+
+		{
+			auto currentX = ( CONTROLS_SECTION_WIDTH - BUTTON_WIDTH * 2 - WINDOW_EDGE_PADDING ) / 2;
+			auto currentY = clientHeight - BOTTOM_SECTION_HEIGHT;
+
+			auto okButton = GetDlgItem(hWnd, CONTROL_ID_OK_BUTTON);
+			MoveWindow(okButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
+
+			currentX += BUTTON_WIDTH + WINDOW_EDGE_PADDING;
+
+			auto cancelButton = GetDlgItem(hWnd, CONTROL_ID_CANCEL_BUTTON);
+			MoveWindow(cancelButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
+
+			currentY += COMBO_HEIGHT + WINDOW_EDGE_PADDING;
+			currentX = ( CONTROLS_SECTION_WIDTH - BLOCKED_CHECKBOX_WIDTH ) / 2;
+
+			auto blockedCheckbox = GetDlgItem(hWnd, CONTROL_ID_BLOCKED_CHECKBOX);
+			MoveWindow(blockedCheckbox, currentX, currentY, BLOCKED_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
+		}
+
+		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_ERASENOW | RDW_INVALIDATE | RDW_ALLCHILDREN);
+
+		// Store window size for later restoration.
+		SIZE winSize = {};
+		if (winui::GetWindowSize(hWnd, winSize)) {
+			settings.leveled_creature_window.size = winSize;
+		}
+
+		forcedReturnType = TRUE;
 	}
 
-	// Leveled List Section
+	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		PatchDialogProc_OverrideResult.reset();
 
-	{
-		auto currentX = CONTROLS_SECTION_WIDTH;
-		auto currentY = WINDOW_EDGE_PADDING;
+		switch (msg) {
+		case WM_SIZE:
+			PatchDialogProc_BeforeSize(hWnd, msg, wParam, lParam);
+			break;
+		case WM_DESTROY:
+			PatchDialogProc_BeforeDestroy(hWnd, msg, wParam, lParam);
+			break;
+		}
 
-		auto LEVELED_LIST_SECTION_HEIGHT = clientHeight - WINDOW_EDGE_PADDING * 2;
-		auto TEXTURE_LIST_WIDTH = clientWidth - CONTROLS_SECTION_WIDTH - BIG_PADDING;
+		if (PatchDialogProc_OverrideResult) {
+			return PatchDialogProc_OverrideResult.value();
+		}
 
-		auto leveledList = GetDlgItem(hWnd, CONTROL_ID_LEVELED_LIST);
-		MoveWindow(leveledList, currentX, currentY, TEXTURE_LIST_WIDTH, LEVELED_LIST_SECTION_HEIGHT, FALSE);
+		// Call original function.
+		const auto CS_RenderWindowDialogProc = reinterpret_cast<WNDPROC>(0x51D5E0);
+		auto vanillaResult = CS_RenderWindowDialogProc(hWnd, msg, wParam, lParam);
+
+		switch (msg) {
+		case WM_INITDIALOG:
+			PatchDialogProc_AfterInitialize(hWnd, msg, wParam, lParam);
+			break;
+		case WM_GETMINMAXINFO:
+			PatchDialogProc_GetMinMaxInfo(hWnd, msg, wParam, lParam);
+			break;
+		case WM_MOVE:
+			PatchDialogProc_AfterMove(hWnd, msg, wParam, lParam);
+			break;
+		}
+
+		return PatchDialogProc_OverrideResult.value_or(vanillaResult);
 	}
-
-	// Bottom section
-
-	{
-		auto currentX = ( CONTROLS_SECTION_WIDTH - BUTTON_WIDTH * 2 - WINDOW_EDGE_PADDING ) / 2;
-		auto currentY = clientHeight - BOTTOM_SECTION_HEIGHT;
-
-		auto okButton = GetDlgItem(hWnd, CONTROL_ID_OK_BUTTON);
-		MoveWindow(okButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
-
-		currentX += BUTTON_WIDTH + WINDOW_EDGE_PADDING;
-
-		auto cancelButton = GetDlgItem(hWnd, CONTROL_ID_CANCEL_BUTTON);
-		MoveWindow(cancelButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
-
-		currentY += COMBO_HEIGHT + WINDOW_EDGE_PADDING;
-		currentX = ( CONTROLS_SECTION_WIDTH - BLOCKED_CHECKBOX_WIDTH ) / 2;
-
-		auto blockedCheckbox = GetDlgItem(hWnd, CONTROL_ID_BLOCKED_CHECKBOX);
-		MoveWindow(blockedCheckbox, currentX, currentY, BLOCKED_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
-	}
-
-	RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_ERASENOW | RDW_INVALIDATE | RDW_ALLCHILDREN);
-
-	// Store window size for later restoration.
-	SIZE winSize = {};
-	if (winui::GetWindowSize(hWnd, winSize)) {
-		settings.leveled_creature_window.size = winSize;
-	}
-
-	forcedReturnType = TRUE;
-}
-
-LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	PatchDialogProc_OverrideResult.reset();
-
-	switch (msg) {
-	case WM_SIZE:
-		PatchDialogProc_BeforeSize(hWnd, msg, wParam, lParam);
-		break;
-	case WM_DESTROY:
-		PatchDialogProc_BeforeDestroy(hWnd, msg, wParam, lParam);
-		break;
-	}
-
-	if (PatchDialogProc_OverrideResult) {
-		return PatchDialogProc_OverrideResult.value();
-	}
-
-	// Call original function.
-	const auto CS_RenderWindowDialogProc = reinterpret_cast<WNDPROC>(0x51D5E0);
-	auto vanillaResult = CS_RenderWindowDialogProc(hWnd, msg, wParam, lParam);
-
-	switch (msg) {
-	case WM_INITDIALOG:
-		PatchDialogProc_AfterInitialize(hWnd, msg, wParam, lParam);
-		break;
-	case WM_GETMINMAXINFO:
-		PatchDialogProc_GetMinMaxInfo(hWnd, msg, wParam, lParam);
-		break;
-	case WM_MOVE:
-		PatchDialogProc_AfterMove(hWnd, msg, wParam, lParam);
-		break;
-	}
-
-	return PatchDialogProc_OverrideResult.value_or(vanillaResult);
-}
 
 	//
 	//
