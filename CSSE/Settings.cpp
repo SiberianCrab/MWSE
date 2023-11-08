@@ -555,6 +555,7 @@ namespace se::cs {
 		object_window = toml::find_or(v, "object_window", object_window);
 		render_window = toml::find_or(v, "render_window", render_window);
 		landscape_window = toml::find_or(v, "landscape_window", landscape_window);
+		leveled_item_window = toml::find_or(v, "leveled_item_window", leveled_item_window);
 		color_theme = toml::find_or(v, "color_theme", color_theme);
 		quickstart = toml::find_or(v, "quickstart", quickstart);
 		script_editor = toml::find_or(v, "script_editor", script_editor);
@@ -573,6 +574,7 @@ namespace se::cs {
 				{ "object_window", object_window },
 				{ "render_window", render_window },
 				{ "landscape_window", landscape_window},
+				{ "leveled_item_window", leveled_item_window},
 				{ "color_theme", color_theme },
 				{ "quickstart", quickstart },
 				{ "script_editor", script_editor },
