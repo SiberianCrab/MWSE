@@ -6,7 +6,7 @@
 
 namespace se::cs::dialog::edit_leveled_item_object_window {
 	constexpr auto MIN_WIDTH = 524u;
-	constexpr auto MIN_HEIGHT = 220u;
+	constexpr auto MIN_HEIGHT = 230u;
 
 	// Saving the columns size
 
@@ -46,7 +46,7 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 		SetWindowIdByValue(hWnd, "Chance None", CONTROL_ID_CHANCE_NONE_STATIC);
 
 		RemoveStyles(hWnd, DS_MODALFRAME | DS_CENTER);
-		AddStyles(hWnd, WS_MINIMIZEBOX | WS_SIZEBOX);
+		AddStyles(hWnd, WS_SIZEBOX);//WS_MINIMIZEBOX | WS_MAXIMIZEBOX | 
 
 		// Change the selected texture static to be a single line
 		SetDlgItemText(hWnd, CONTROL_ID_ID_STATIC, "ID:");
@@ -126,7 +126,6 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 		constexpr auto STATIC_ID_WIDTH = EDIT_FIELD_WIDTH / 10;
 
 		constexpr auto CALCULATE_LEVELS_CHECKBOX_WIDTH = 240;
-		constexpr auto CALCULATE_EACH_ITEM_CHECKBOX_WIDTH = 220;
 		constexpr auto BLOCKED_CHECKBOX_WIDTH = 70;
 
 		constexpr auto CONTROLS_SECTION_WIDTH = BIG_PADDING * 2 + BASIC_PADDING + STATIC_ID_WIDTH + EDIT_FIELD_WIDTH;
@@ -158,14 +157,14 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 			currentX = CONTROLS_SECTION_WIDTH - CALCULATE_LEVELS_CHECKBOX_WIDTH - BIG_PADDING;
 
 			auto calculateLevelsCheckbox = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
-			MoveWindow(calculateLevelsCheckbox, currentX, currentY, CALCULATE_LEVELS_CHECKBOX_WIDTH, COMBO_HEIGHT, FALSE);
+			MoveWindow(calculateLevelsCheckbox, currentX, currentY, CALCULATE_LEVELS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
 
-			currentY += COMBO_HEIGHT + BIG_PADDING;
+			currentY += STATIC_HEIGHT + BIG_PADDING;
 
-			auto calculateLevelsCheckbox = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_EACH_ITEM_CHECKBOX);
-			MoveWindow(calculateLevelsCheckbox, currentX, currentY, CALCULATE_EACH_ITEM_CHECKBOX_WIDTH, COMBO_HEIGHT, FALSE);
+			auto calculateEachItemCheckbox = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_EACH_ITEM_CHECKBOX);
+			MoveWindow(calculateEachItemCheckbox, currentX, currentY, CALCULATE_LEVELS_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
 
-			currentY += COMBO_HEIGHT + BIG_PADDING;
+			currentY += STATIC_HEIGHT + BIG_PADDING;
 			currentX = CONTROLS_SECTION_WIDTH - BUTTON_WIDTH - EDIT_SMALL_FIELD_WIDTH - BIG_PADDING - BASIC_PADDING;
 
 			auto chanceNoneStatic = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
