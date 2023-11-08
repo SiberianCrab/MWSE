@@ -340,6 +340,37 @@ namespace se::cs {
 	}
 
 	//
+	// Leveled Item Settings Window
+	//
+
+		void Settings_t::LeveledItemWindowSettings::from_toml(const toml::value& v) {
+			x_position = toml::find_or(v, "x_position", x_position);
+			y_position = toml::find_or(v, "y_position", y_position);
+
+			size = toml::find_or(v, "size", size);
+
+			column_PC_Level = toml::find_or(v, "column_PC_Level", column_PC_Level);
+			column_Item_Name = toml::find_or(v, "column_Item_Name", column_Item_Name);
+
+		}
+
+		toml::value Settings_t::LeveledItemWindowSettings::into_toml() const {
+			return toml::value(
+				{
+
+					{ "x_position", x_position },
+					{ "y_position", y_position },
+
+					{ "size", size },
+
+					{ "column_PC_Level", column_PC_Level },
+					{ "column_Item_Name", column_Item_Name },
+
+				}
+			);
+		}
+
+	//
 	// Color theme
 	// 
 
