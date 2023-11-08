@@ -56,7 +56,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		auto hStaticTextChanceNone = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
 		auto hCheckBoxCalculateLevels = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
 
-			{
+		{
 			 // Get the current style of the element
 	   		 auto styleChanceNone = GetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE);
 			 auto styleCheckBoxCalculateLevels = GetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE);
@@ -69,7 +69,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 			 // Set a new style for the element
 			 SetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE, styleChanceNone);
 			 SetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE, styleCheckBoxCalculateLevels);
-			}
+		}
 
 		// Restore size and position
 		const auto& settingsSize = settings.leveled_creature_window.size;
