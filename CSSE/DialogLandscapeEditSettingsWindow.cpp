@@ -291,8 +291,8 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		SetWindowIdByValue(hWnd, "G", CONTROL_ID_SECONDARY_COLOR_GREEN_STATIC);
 		SetWindowIdByValue(hWnd, "B", CONTROL_ID_SECONDARY_COLOR_BLUE_STATIC);
 
-		RemoveStyles(hWnd, DS_MODALFRAME | WS_SYSMENU);
-		AddStyles(hWnd, WS_POPUP | WS_CAPTION | WS_SIZEBOX);
+		RemoveStyles(hWnd, DS_MODALFRAME); // | WS_SYSMENU
+		//AddStyles(hWnd, WS_POPUP | WS_CAPTION | WS_SIZEBOX);
 
 		auto hInstance = (HINSTANCE)GetWindowLongA(hWnd, GWLP_HINSTANCE);
 		auto font = SendMessageA(hWnd, WM_GETFONT, FALSE, FALSE);
