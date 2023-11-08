@@ -169,6 +169,22 @@ namespace se::cs {
 			toml::value into_toml() const;
 		} landscape_window;
 
+
+		// Leveled Item window
+
+		struct LeveledItemWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			WindowSize size = { 524, 230 };
+
+			ColumnSettings column_PC_Level = { 70u };
+			ColumnSettings column_Item_Name = { 170u };
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} leveled_item_window;
+
 		// Leveled Creature window
 
 		struct LeveledCreatureWindowSettings {
@@ -183,6 +199,7 @@ namespace se::cs {
 			void from_toml(const toml::value& v);
 			toml::value into_toml() const;
 		} leveled_creature_window;
+
 
 		struct ColorTheme {
 			std::array<unsigned char, 3> highlight_deleted_object_color = { 255, 235, 235 };
