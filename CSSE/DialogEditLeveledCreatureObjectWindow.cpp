@@ -8,16 +8,16 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 	constexpr auto MIN_WIDTH = 524u;
 	constexpr auto MIN_HEIGHT = 220u;
 
-	//Saving the columns size
+	// Saving the columns size
 
-	void restoreLeveledCreatureColomnWidths(HWND hWnd) {
+	void restoreLeveledCreatureColumnWidths(HWND hWnd) {
 		const auto LeveledCreature = GetDlgItem(hWnd, CONTROL_ID_LEVELED_LIST);
 
 		ListView_SetColumnWidth(LeveledCreature, 0, settings.leveled_creature_window.column_PC_Level.width);
 		ListView_SetColumnWidth(LeveledCreature, 1, settings.leveled_creature_window.column_Creature_Name.width);
 	}
 
-	void saveLeveledCreatureColomnWidths(HWND hWnd) {
+	void saveLeveledCreatureColumnWidths(HWND hWnd) {
 		const auto LeveledCreature = GetDlgItem(hWnd, CONTROL_ID_LEVELED_LIST);
 
 		settings.leveled_creature_window.column_PC_Level.width = ListView_GetColumnWidth(LeveledCreature, 0);
@@ -29,7 +29,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
 
 	void PatchDialogProc_BeforeDestroy(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		saveLeveledCreatureColomnWidths(hWnd);
+		saveLeveledCreatureColumnWidths(hWnd);
 	}
 
 	std::optional<LRESULT> forcedReturnType = {};
@@ -39,7 +39,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		using se::cs::winui::RemoveStyles;
 		using se::cs::winui::SetWindowIdByValue;
 
-		restoreLeveledCreatureColomnWidths(hWnd);
+		restoreLeveledCreatureColumnWidths(hWnd);
 
 		// Give IDs to controls that don't normally have one.
 		SetWindowIdByValue(hWnd, "ID", CONTROL_ID_ID_STATIC);
@@ -82,6 +82,8 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
 
+	// Force min/max window size if user scale it
+
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		const auto info = (LPMINMAXINFO)lParam;
 		info->ptMinTrackSize.x = MIN_WIDTH;
@@ -89,6 +91,8 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 
 		forcedReturnType = 0;
 	}
+
+	// Saving window coords if user move it
 
 	void PatchDialogProc_AfterMove(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		int short xPos = LOWORD(lParam);
@@ -99,11 +103,11 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 	}
 
 	namespace ResizeConstants {
-		//Font 08 - Vanilla
+		// Font 08 - Vanilla
 		//constexpr auto STATIC_HEIGHT = 13;
-		//Font 10
+		// Font 10
 		constexpr auto STATIC_HEIGHT = 16;
-		//Font 12
+		// Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
@@ -217,7 +221,6 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 			break;
 		case WM_DESTROY:
 			PatchDialogProc_BeforeDestroy(hWnd, msg, wParam, lParam);
-			break;
 		}
 
 		if (PatchDialogProc_OverrideResult) {
