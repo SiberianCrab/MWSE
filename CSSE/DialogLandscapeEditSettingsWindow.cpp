@@ -383,16 +383,16 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 	namespace ResizeConstants {
 		//Font 08 - Vanilla
-		constexpr auto STATIC_HEIGHT = 13;
+		//constexpr auto STATIC_HEIGHT = 13;
 		//Font 10
-		//constexpr auto STATIC_HEIGHT = 16;
+		constexpr auto STATIC_HEIGHT = 16;
 		//Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto BIG_PADDING = 6;
 		constexpr auto WINDOW_EDGE_PADDING = 10;
-		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
+		constexpr auto STATIC_COMBO_OFFSET = 4;
 
 		constexpr auto CUSTOM_COLOR_WIDTH = 40;
 		constexpr auto CUSTOM_COLOR_HEIGHT = CUSTOM_COLOR_WIDTH / 2;
@@ -545,7 +545,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			MoveWindow(addTextureButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
 
 			auto previewTextureNameStatic = GetDlgItem(hWnd, CONTROL_ID_PREVIEW_TEXTURE_NAME_STATIC);
-			MoveWindow(previewTextureNameStatic, currentX + BUTTON_WIDTH + BASIC_PADDING, currentY, CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - BUTTON_WIDTH * 2 - BASIC_PADDING * 2, COMBO_HEIGHT, FALSE);
+			MoveWindow(previewTextureNameStatic, currentX + BUTTON_WIDTH + BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - BUTTON_WIDTH * 2 - BASIC_PADDING * 2, STATIC_HEIGHT, FALSE);
 
 			currentX += CUSTOM_COLOR_SECTION_WIDTH + BIG_PADDING - BUTTON_WIDTH;
 
