@@ -340,8 +340,8 @@ namespace se::cs {
 	}
 
 	//
-    // Leveled Creature Settings Window
-    //
+	// Leveled Creature Settings Window
+	//
 
 	void Settings_t::LeveledCreatureWindowSettings::from_toml(const toml::value& v) {
 		x_position = toml::find_or(v, "x_position", x_position);

@@ -41,22 +41,22 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 
 		restoreLeveledCreatureColomnWidths(hWnd);
 
-	    // Give IDs to controls that don't normally have one.
-	    SetWindowIdByValue(hWnd, "ID", CONTROL_ID_ID_STATIC);
-	    SetWindowIdByValue(hWnd, "Chance None", CONTROL_ID_CHANCE_NONE_STATIC);
+		// Give IDs to controls that don't normally have one.
+		SetWindowIdByValue(hWnd, "ID", CONTROL_ID_ID_STATIC);
+		SetWindowIdByValue(hWnd, "Chance None", CONTROL_ID_CHANCE_NONE_STATIC);
 
-	    RemoveStyles(hWnd, DS_MODALFRAME | DS_CENTER);
-	    AddStyles(hWnd, WS_SIZEBOX);
+		RemoveStyles(hWnd, DS_MODALFRAME | DS_CENTER);
+		AddStyles(hWnd, WS_SIZEBOX);
 
-	    // Change the selected texture static to be a single line
-	    SetDlgItemText(hWnd, CONTROL_ID_ID_STATIC, "ID:");
-	    SetDlgItemText(hWnd, CONTROL_ID_CHANCE_NONE_STATIC, "Chance None:");
+		// Change the selected texture static to be a single line
+		SetDlgItemText(hWnd, CONTROL_ID_ID_STATIC, "ID:");
+		SetDlgItemText(hWnd, CONTROL_ID_CHANCE_NONE_STATIC, "Chance None:");
 
-	    // Change element style
-	    auto hStaticTextChanceNone = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
-	    auto hCheckBoxCalculateLevels = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
+		// Change element style
+		auto hStaticTextChanceNone = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
+		auto hCheckBoxCalculateLevels = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
 
-	    {
+		{
 		   // Get the current style of the element
 	   	   auto styleChanceNone = GetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE);
 		   auto styleCheckBoxCalculateLevels = GetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE);
@@ -69,7 +69,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		   // Set a new style for the element
 		   SetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE, styleChanceNone);
 		   SetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE, styleCheckBoxCalculateLevels);
-	    }
+		}
 
 	// Restore size and position
 	const auto& settingsSize = settings.leveled_creature_window.size;
@@ -100,9 +100,9 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 
 	namespace ResizeConstants {
 		//Font 08 - Vanilla
-		constexpr auto STATIC_HEIGHT = 13;
+		//constexpr auto STATIC_HEIGHT = 13;
 		//Font 10
-		//constexpr auto STATIC_HEIGHT = 16;
+		constexpr auto STATIC_HEIGHT = 16;
 		//Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
