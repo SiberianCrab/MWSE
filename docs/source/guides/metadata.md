@@ -195,7 +195,7 @@ The following dependencies are available:
 
 -  `mcp`
 
-	A dependency on specific Morrowind Code Patch Features. Pass a list of features and the state the feature needs to be: enabled (true) or disabled (false). You can see the [list of MCP features here](https://mwse.github.io/MWSE/references/code-patch-features/). You only need to pass the feature name, for example `"creatureVoiceoverEnable"``.
+	A dependency on specific Morrowind Code Patch features. Pass a list of features and the needed state for each feature: enabled (true) or disabled (false). You can see the [list of MCP features here](https://mwse.github.io/MWSE/references/code-patch-features/). The descriptions for each MCP feature are found in the `mcpatch\\describe.json` file. Pass the feature key from the `tes3.codePatchFeature` table. For example, `"creatureVoiceoverEnable = true"`.
 
 	Example:
 

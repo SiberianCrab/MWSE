@@ -8,6 +8,9 @@ hide:
 !!! tip
 	These values are available in Lua by their index in the `tes3.codePatchFeature` table. For example, `tes3.codePatchFeature.incorrectInventorySoundsFix` has a value of `113`.
 
+!!! info
+	The descriptions for each MCP feature are found in the `mcpatch\\describe.json` file.
+
 Index                                 | Value
 ------------------------------------- | -----
 savegameCorruptionFix                 | `1`

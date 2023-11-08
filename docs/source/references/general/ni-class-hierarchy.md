@@ -238,17 +238,18 @@ The types are arranged into functional groupings. Within each grouping, indentat
 
 ```mermaid
 %%{
-    init: {
-        'er': {
-            'diagramPadding': 5,
-            'entityPadding': 5
-        },
-        'flowchart': {
-            'diagramPadding': 2,
-            'curve': 'monotoneX'
-        }
-    }
+	init: {
+		'er': {
+			'diagramPadding': 5,
+			'entityPadding': 5
+		},
+		'flowchart': {
+			'diagramPadding': 2,
+			'curve': 'monotoneX'
+		}
+	}
 }%%
+
 graph LR
 	A(niObject) --> B(niAccumulator);
 		B --> BA(niClusterAccumulator);
@@ -266,16 +267,18 @@ graph LR
 		D --> DB(niParticlesData);
 			DB --> DBA(niAutoNormalParticlesData);
 			DB --> DBB(niRotatingParticlesData);
+	subgraph Scroll down for more info
 		D --> DC(niTriBasedGeomData);
-			DC --> DCA(niTriShapeData);
-				DCA --> DCAA(niTriShapeDynamicData);
-			DC --> DCB(niTriStripsData);
+	end
 
 	A --> E(niObjectNET);
 
 	subgraph Scroll down for more info
 		E --> EA(niAVObject);
+		E --> ED(niTexture);
 	end
+
+		E --> EC(niSequenceStreamHelper);
 
 		E --> EB(niProperty);
 			EB --> EBA(niAlphaProperty);
@@ -290,13 +293,6 @@ graph LR
 			EB --> EBJ(niVertexColorProperty);
 			EB --> EBK(niWireframeProperty);
 			EB --> EBL(niZBufferProperty);
-
-		E --> EC(niSequenceStreamHelper);
-
-		E --> ED(niTexture);
-			ED --> EDA(niRenderedTexture);
-				EDA --> EDAA(niRenderedCubeMap);
-			ED --> EDB(niSourceTexture);
 
 	A --> F(niParticleModifier);
 		F --> FA(niGravity);
@@ -355,24 +351,81 @@ graph LR
 
 	%% YellowGreen
 	classDef notResearched color:#000, fill: #ADFF2F, stroke: #333, stroke-width: 2px;
-	class BA,BAA,CA,CE,DBA,DCAA,DCB,EBB,EBE,EBF,EBG,EBK,EC,EDAA,GA,HB,HBA,HBB,HE,HG,HH,HHA,HIA,HL,I,K,N,O,X notResearched;
+	class BA,BAA,CA,CE,DBA,EBB,EBE,EBF,EBG,EBK,EC,GA,HB,HBA,HBB,HE,HG,HH,HHA,HIA,HL,I,K,N,O,X notResearched;
 ```
 
 ```mermaid
 %%{
-    init: {
-        'er': {
-            'diagramPadding': 5,
-            'entityPadding': 5
-        },
-        'flowchart': {
-            'diagramPadding': 2,
-            'curve': 'monotoneX'
-        }
-    }
+	init: {
+		'er': {
+			'diagramPadding': 5,
+			'entityPadding': 5
+		},
+		'flowchart': {
+			'diagramPadding': 2,
+			'curve': 'monotoneX'
+		}
+	}
 }%%
+
 graph LR
-    EA(niAVObject);
+	ED(niTexture);
+		ED --> EDA(niRenderedTexture);
+			EDA --> EDAA(niRenderedCubeMap);
+		ED --> EDB(niSourceTexture);
+
+	%% Default style
+	classDef default color: #fafafa, fill:#434659, stroke:#e6e6e6, stroke-width:2px;
+
+	%% YellowGreen
+	classDef notResearched color:#000, fill: #ADFF2F, stroke: #333, stroke-width: 2px;
+	class EDAA notResearched;
+```
+
+```mermaid
+%%{
+	init: {
+		'er': {
+			'diagramPadding': 5,
+			'entityPadding': 5
+		},
+		'flowchart': {
+			'diagramPadding': 2,
+			'curve': 'monotoneX'
+		}
+	}
+}%%
+
+graph LR
+	DC(niTriBasedGeomData);
+		DC --> DCA(niTriShapeData);
+			DCA --> DCAA(niTriShapeDynamicData);
+		DC --> DCB(niTriStripsData);
+
+	%% Default style
+	classDef default color: #fafafa, fill:#434659, stroke:#e6e6e6, stroke-width:2px;
+
+	%% YellowGreen
+	classDef notResearched color:#000, fill: #ADFF2F, stroke: #333, stroke-width: 2px;
+	class DCAA,DCB notResearched;
+```
+
+```mermaid
+%%{
+	init: {
+		'er': {
+			'diagramPadding': 5,
+			'entityPadding': 5
+		},
+		'flowchart': {
+			'diagramPadding': 2,
+			'curve': 'monotoneX'
+		}
+	}
+}%%
+
+graph LR
+	EA(niAVObject);
 	EA --> EAA(niCamera);
 
 	EA --> EAB(niDynamicEffect);

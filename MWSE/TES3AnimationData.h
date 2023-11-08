@@ -93,8 +93,8 @@ namespace TES3 {
 		bool setOverrideLayerKeyframes(KeyframeDefinition* animData);
 		bool hasOverrideAnimations() const;
 
-		float AnimationData::getCastSpeed() const;
-		void AnimationData::setCastSpeed(float speed);
+		float getCastSpeed() const;
+		void setCastSpeed(float speed);
 
 		std::reference_wrapper<decltype(currentAnimGroup)> getCurrentAnimGroups();
 		std::reference_wrapper<decltype(currentNodeIndices)> getCurrentNodeIndices();

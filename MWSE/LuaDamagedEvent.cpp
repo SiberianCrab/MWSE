@@ -47,6 +47,13 @@ namespace mwse::lua::event {
 
 		if (magicSourceInstance) {
 			eventData["magicSourceInstance"] = magicSourceInstance;
+			eventData["magicEffectIndex"] = DamageEvent::m_MagicEffectIndex;
+
+			// Get the specific effect on the source.
+			TES3::Effect* effects = magicSourceInstance->sourceCombo.getSourceEffects();
+			if (effects) {
+				eventData["magicEffect"] = effects[DamageEvent::m_MagicEffectIndex];
+			}
 
 			// Get the attacker as the caster of the spell.
 			if (!DamageEvent::m_Attacker) {

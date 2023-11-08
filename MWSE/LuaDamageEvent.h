@@ -13,6 +13,7 @@ namespace mwse::lua::event {
 		static TES3::MobileProjectile* m_Projectile;
 		static TES3::MagicSourceInstance* m_MagicSourceInstance;
 		static TES3::MagicEffectInstance* m_MagicEffectInstance;
+		static int m_MagicEffectIndex;
 		static TES3::ActiveMagicEffect* m_ActiveMagicEffect;
 		static const char* m_Source;
 

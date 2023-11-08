@@ -32,8 +32,8 @@ namespace NI {
 		NI_ObjectNET_setName(this, name);
 	}
 
-	const auto NI_ObjectNET_setFlag = reinterpret_cast<void(__thiscall*)(ObjectNET*, bool, byte)>(0x405960);
-	void ObjectNET::setFlag(bool state, byte index) {
+	const auto NI_ObjectNET_setFlag = reinterpret_cast<void(__thiscall*)(ObjectNET*, bool, unsigned char)>(0x405960);
+	void ObjectNET::setFlag(bool state, unsigned char index) {
 		NI_ObjectNET_setFlag(this, state, index);
 	}
 

@@ -8,6 +8,7 @@
 #include "NIAnimationData.h"
 #include "NILookAtController.h"
 #include "NIKeyframeController.h"
+#include "NIKeyframeManager.h"
 #include "NIPathController.h"
 #include "NITimeController.h"
 
@@ -290,6 +291,47 @@ namespace mwse::lua {
 			usertypeDefinition["lastUsedPositionIndex"] = &NI::KeyframeController::lastPosIndex;
 			usertypeDefinition["lastUsedRotationIndex"] = &NI::KeyframeController::lastRotIndex;
 			usertypeDefinition["lastUsedScaleIndex"] = &NI::KeyframeController::lastScaleIndex;
+		}
+
+		// Bind NI::KeyframeManager
+		{
+			// Start our usertype.
+			auto usertypeDefinition = state.new_usertype<NI::KeyframeManager>("niKeyframeManager");
+			usertypeDefinition["new"] = sol::no_constructor;
+
+			// Define inheritance structures. These must be defined in order from top to bottom. The complete chain must be defined.
+			usertypeDefinition[sol::base_classes] = sol::bases<NI::TimeController, NI::Object>();
+			setUserdataForNITimeController(usertypeDefinition);
+
+			// Basic property binding.
+			usertypeDefinition["cumulative"] = &NI::KeyframeManager::cumulative;
+			usertypeDefinition["globalScaleRotation"] = &NI::KeyframeManager::globalScaleRotation;
+			usertypeDefinition["globalTranslation"] = &NI::KeyframeManager::globalTranslation;
+			usertypeDefinition["sequences"] = sol::readonly_property(&NI::KeyframeManager::sequences);
+		}
+
+		// Bind NI::Sequence
+		{
+			// Start our usertype.
+			auto usertypeDefinition = state.new_usertype<NI::Sequence>("niSequence");
+			usertypeDefinition["new"] = sol::no_constructor;
+
+			// Basic property binding.
+			usertypeDefinition["boneNames"] = sol::readonly_property(&NI::Sequence::boneNames);
+			usertypeDefinition["controllers"] = sol::readonly_property(&NI::Sequence::controllers);
+			usertypeDefinition["endPointTime"] = sol::readonly_property(&NI::Sequence::endPointTime);
+			usertypeDefinition["filename"] = sol::readonly_property(&NI::Sequence::filename);
+			usertypeDefinition["fileNum"] = sol::readonly_property(&NI::Sequence::fileNum);
+			usertypeDefinition["isCumulative"] = sol::readonly_property(&NI::Sequence::bCumulative);
+			usertypeDefinition["isFirstFrame"] = sol::readonly_property(&NI::Sequence::bFirstFrame);
+			usertypeDefinition["manager"] = sol::readonly_property(&NI::Sequence::manager);
+			usertypeDefinition["name"] = sol::readonly_property(&NI::Sequence::name);
+			usertypeDefinition["lastTime"] = sol::readonly_property(&NI::Sequence::lastTime);
+			usertypeDefinition["offset"] = sol::readonly_property(&NI::Sequence::offset);
+			usertypeDefinition["partnerSequence"] = sol::readonly_property(&NI::Sequence::partnerSequence);
+			usertypeDefinition["state"] = sol::readonly_property(&NI::Sequence::state);
+			usertypeDefinition["textKeyControllerIndex"] = sol::readonly_property(&NI::Sequence::textKeyControllerIndex);
+			usertypeDefinition["textKeys"] = sol::readonly_property(&NI::Sequence::textKeys);
 		}
 
 		// Bind NI::PathController

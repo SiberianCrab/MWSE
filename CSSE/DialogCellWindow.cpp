@@ -183,24 +183,38 @@ namespace se::cs::dialog::cell_window {
 		const auto mainWidth = LOWORD(lParam);
 		const auto mainHeight = HIWORD(lParam);
 
+	//Font 08
+	    //constexpr auto STATIC_HEIGHT = 13;//CSSE = 13
+	    //constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 11;//CSSE = 9
+	    //constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 17;//CSSE = 21
+	//Font 10
+	    //constexpr auto STATIC_HEIGHT = 16;
+	    //constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 14;
+	    //constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 21;
+	//Font 12
+		constexpr auto STATIC_HEIGHT = 20;
+		constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 16;
+		constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 23;
+
+		constexpr auto EDIT_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от поля, которые всегда = 4 пикселя; CSSE = 21
+		constexpr auto STATIC_WIDTH = 90;//CSSE = 54
 		constexpr auto BASIC_PADDING = 2;
-		constexpr auto STATIC_HEIGHT = 13;
-		constexpr auto EDIT_HEIGHT = 21;
 		constexpr auto STATIC_COMBO_OFFSET = (EDIT_HEIGHT - STATIC_HEIGHT) / 2;
+		constexpr auto BOTTOM_SECTION_Y_OFFSET = 3;//CSSE = 3
 
 		// Update list view area.
 		RECT listViewRect = {};
 		GetWindowRelativeRect(cellListView, &listViewRect);
-		MoveWindow(cellListView, listViewRect.left, listViewRect.top, GetRectWidth(&listViewRect), GetRectHeight(&listViewRect) - 3, FALSE);
+		MoveWindow(cellListView, listViewRect.left, listViewRect.top, GetRectWidth(&listViewRect), GetRectHeight(&listViewRect) - BOTTOM_SECTION_Y_OFFSET, FALSE);
 		GetWindowRelativeRect(refsListView, &listViewRect);
-		MoveWindow(refsListView, listViewRect.left, listViewRect.top, GetRectWidth(&listViewRect), GetRectHeight(&listViewRect) - 3, FALSE);
+		MoveWindow(refsListView, listViewRect.left, listViewRect.top, GetRectWidth(&listViewRect), GetRectHeight(&listViewRect) - BOTTOM_SECTION_Y_OFFSET, FALSE);
 
 		// Update the search bar placement.
 		int currentY = mainHeight - EDIT_HEIGHT - BASIC_PADDING;
 		auto searchEditWidth = std::min<int>(mainWidth - BASIC_PADDING * 2, 300);
-		MoveWindow(showModifiedButton, 9, currentY, 160, EDIT_HEIGHT, TRUE);
-		MoveWindow(searchLabel, (mainWidth - 21) - searchEditWidth - 54 - BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, 54, STATIC_HEIGHT, TRUE);
-		MoveWindow(searchEdit, (mainWidth - 21) - searchEditWidth, currentY, searchEditWidth, EDIT_HEIGHT, FALSE);
+		MoveWindow(showModifiedButton, BOTTOM_SECTION_LEFT_OFFSET, currentY, 160, EDIT_HEIGHT, TRUE);
+		MoveWindow(searchLabel, (mainWidth - BOTTOM_SECTION_RIGHT_OFFSET) - searchEditWidth - STATIC_WIDTH - BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);//Filter cells
+		MoveWindow(searchEdit, (mainWidth - BOTTOM_SECTION_RIGHT_OFFSET) - searchEditWidth, currentY, searchEditWidth, EDIT_HEIGHT, FALSE);
 
 		RedrawWindow(hDlg, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}

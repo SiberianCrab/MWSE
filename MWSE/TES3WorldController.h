@@ -82,25 +82,25 @@ namespace TES3 {
 
 	struct WorldControllerRenderTarget : WorldControllerRenderCamera {
 		NI::Pointer<NI::RenderedTexture> renderedTexture; // 0x2C
-		NI::Pointer<NI::Object> unknown_0x30;
+		NI::Pointer<NI::SourceTexture> readbackTexture; // 0x30
 		int unknown_0x34;
-		int unknown_0x38;
-		int unknown_0x3C;
-		int unknown_0x40;
-		int unknown_0x44;
+		unsigned int rendererWidth; // 0x38
+		unsigned int rendererHeight; // 0x3C
+		unsigned int targetWidth; // 0x40
+		unsigned int targetHeight; // 0x44
 		int unknown_0x48;
 		NI::Pointer<NI::ZBufferProperty> zBufferProperty; // 0x4C
-		int unknown_0x50;
-		int unknown_0x54;
-		NI::Pointer<NI::Object> unknown_0x58; // OffscreenSceneGraph::MasterPropertyAccumulator
+		void* offscreenD3DSurface; // 0x50
+		void* textureD3DSurface; // 0x54
+		NI::Pointer<NI::Object> accumulator; // OffscreenSceneGraph::MasterPropertyAccumulator
 		int unknown_0x5C;
 		NI::Pointer<NI::DirectionalLight> directionalLight; // 0x60
 		int unknown_0x64;
 		NI::Pointer<NI::Object> unknown_0x68; // NiScreenPolygon
-		int unknown_0x6C;
-		int unknown_0x70;
-		int unknown_0x74;
-		int unknown_0x78;
+		bool readbackAlphaDataInitialized; // 0x6C
+		char* readbackAlphaChannelData; // 0x70
+		void* unknown_0x74;
+		void* unknown_0x78;
 		NI::Pointer<NI::AlphaProperty> alphaProperty; // 0x7C
 		NI::Pointer<NI::VertexColorProperty> vertexColorProperty; // 0x80
 

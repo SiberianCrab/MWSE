@@ -135,6 +135,7 @@ return {
 	["restInterrupt"] = "restInterrupt",
 	["save"] = "save",
 	["saved"] = "saved",
+	["shieldBlocked"] = "shieldBlocked",
 	["simulate"] = "simulate",
 	["simulated"] = "simulated",
 	["skillRaised"] = "skillRaised",
