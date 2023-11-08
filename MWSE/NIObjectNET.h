@@ -26,7 +26,7 @@ namespace NI {
 		const char* getName() const;
 		void setName(const char* name);
 
-		void setFlag(bool state, byte index);
+		void setFlag(bool state, unsigned char index);
 
 		//
 		// Custom functions.
