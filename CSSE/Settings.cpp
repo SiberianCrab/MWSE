@@ -340,6 +340,7 @@ namespace se::cs {
 	}
 
 	//
+
 	// Leveled Item Settings Window
 	//
 
@@ -369,6 +370,36 @@ namespace se::cs {
 				}
 			);
 		}
+
+	// Leveled Creature Settings Window
+	//
+
+	void Settings_t::LeveledCreatureWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+
+		size = toml::find_or(v, "size", size);
+
+		column_PC_Level = toml::find_or(v, "column_PC_Level", column_PC_Level);
+		column_Creature_Name = toml::find_or(v, "column_Creature_Name", column_Creature_Name);
+
+	}
+
+	toml::value Settings_t::LeveledCreatureWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+				{ "size", size },
+
+				{ "column_PC_Level", column_PC_Level },
+				{ "column_Creature_Name", column_Creature_Name },
+
+			}
+		);
+	}
 
 	//
 	// Color theme
@@ -556,6 +587,7 @@ namespace se::cs {
 		render_window = toml::find_or(v, "render_window", render_window);
 		landscape_window = toml::find_or(v, "landscape_window", landscape_window);
 		leveled_item_window = toml::find_or(v, "leveled_item_window", leveled_item_window);
+		leveled_creature_window = toml::find_or(v, "leveled_creature_window", leveled_creature_window);
 		color_theme = toml::find_or(v, "color_theme", color_theme);
 		quickstart = toml::find_or(v, "quickstart", quickstart);
 		script_editor = toml::find_or(v, "script_editor", script_editor);
@@ -575,6 +607,7 @@ namespace se::cs {
 				{ "render_window", render_window },
 				{ "landscape_window", landscape_window},
 				{ "leveled_item_window", leveled_item_window},
+				{ "leveled_creature_window", leveled_creature_window},
 				{ "color_theme", color_theme },
 				{ "quickstart", quickstart },
 				{ "script_editor", script_editor },
