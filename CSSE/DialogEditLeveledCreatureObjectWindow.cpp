@@ -113,7 +113,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto BIG_PADDING = 6;
 		constexpr auto WINDOW_EDGE_PADDING = 10;
-		constexpr auto STATIC_COMBO_OFFSET = 4;
+		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto BUTTON_WIDTH = 90;
 		constexpr auto EDIT_FIELD_WIDTH = 220;
