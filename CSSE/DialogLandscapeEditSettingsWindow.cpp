@@ -315,10 +315,10 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			Button_SetCheck(GetDlgItem(hWnd, CONTROL_ID_SHOW_PREVIEW_TEXTURE_BUTTON), settings.landscape_window.show_preview_enabled);
 		}
 
-		//Change the selected texture static to be a single line
+		// Change the selected texture static to be a single line
 		SetDlgItemText(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC, "Selected Texture:");
 
-		//RGBs with ':'
+		// RGBs with ':'
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_RED_STATIC, "R:");
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_GREEN_STATIC, "G:");
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_BLUE_STATIC, "B:");
@@ -326,7 +326,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		SetDlgItemText(hWnd, CONTROL_ID_SECONDARY_COLOR_GREEN_STATIC, "G:");
 		SetDlgItemText(hWnd, CONTROL_ID_SECONDARY_COLOR_BLUE_STATIC, "B:");
 
-		//Change element style
+		// Change element style
 		auto hStaticTextEditRadius = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC);
 		auto hStaticTextEditFalloff = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
 		auto hStaticTextSelectedTexture = GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC);
@@ -382,17 +382,17 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 	}
 
 	namespace ResizeConstants {
-		//Font 08 - Vanilla
+		// Font 08 - Vanilla
 		//constexpr auto STATIC_HEIGHT = 13;
-		//Font 10
+		// Font 10
 		constexpr auto STATIC_HEIGHT = 16;
-		//Font 12
+		// Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto BIG_PADDING = 6;
 		constexpr auto WINDOW_EDGE_PADDING = 10;
-		constexpr auto STATIC_COMBO_OFFSET = 4;
+		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto CUSTOM_COLOR_WIDTH = 40;
 		constexpr auto CUSTOM_COLOR_HEIGHT = CUSTOM_COLOR_WIDTH / 2;
@@ -516,7 +516,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			auto TEXTURE_LIST_WIDTH = sectionWidth - WINDOW_EDGE_PADDING * 2;
 			const auto TEXTURE_LIST_HEIGHT = TEXTURE_SECTION_HEIGHT - COMBO_HEIGHT * 2 - BIG_PADDING * 2 - BASIC_PADDING;
 
-			//Texture prewiew section offset
+			// Texture prewiew section offset
 			currentX += TEXTURE_LIST_WIDTH + WINDOW_EDGE_PADDING * 2;
 
 			auto selectedTextureStatic = GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC);
@@ -532,7 +532,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 			currentX -= TEXTURE_LIST_WIDTH + WINDOW_EDGE_PADDING * 2;
 			currentY -= STATIC_HEIGHT + BIG_PADDING;
-			//Texture prewiew section offset end
+			// Texture prewiew section offset end
 
 			currentY += COMBO_HEIGHT;
 
