@@ -157,7 +157,7 @@ namespace se::cs {
 			int x_position = 0;
 			int y_position = 71;
 
-			WindowSize size = { 436, 483 };
+			WindowSize size = { 430, 540 };
 
 			ColumnSettings column_id = { 175u };
 			ColumnSettings column_used = { 37u };
