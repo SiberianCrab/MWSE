@@ -228,8 +228,8 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		}
 
 		// Call original function.
-		const auto CS_RenderWindowDialogProc = reinterpret_cast<WNDPROC>(0x51D5E0);
-		auto vanillaResult = CS_RenderWindowDialogProc(hWnd, msg, wParam, lParam);
+		const auto CS_LeveledCreatureDialogProc = reinterpret_cast<WNDPROC>(0x51D5E0);
+		auto vanillaResult = CS_LeveledCreatureDialogProc(hWnd, msg, wParam, lParam);
 
 		switch (msg) {
 		case WM_INITDIALOG:
