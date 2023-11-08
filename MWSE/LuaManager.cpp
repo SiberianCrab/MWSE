@@ -1230,7 +1230,7 @@ namespace mwse::lua {
 	// Shield blocked event.
 	//
 
-	static __declspec(naked) void patchOnShieldWearFromBlocking() {
+	__declspec(naked) void patchOnShieldWearFromBlocking() {
 		__asm {
 			push eax	// damage
 			push esi	// attacker
