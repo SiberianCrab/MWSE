@@ -10,8 +10,8 @@
 #include "CSRegion.h"
 
 namespace se::cs::dialog::landscape_edit_settings_window {
-	constexpr auto MIN_WIDTH = 430u;//CSSE = 416u + 17u;
-	constexpr auto MIN_HEIGHT = 540u;//CSSE = 474u + 14u;
+	constexpr auto MIN_WIDTH = 430u;
+	constexpr auto MIN_HEIGHT = 540u;
 
 
 	namespace LandscapeEditFlag {
