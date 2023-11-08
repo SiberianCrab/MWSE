@@ -6,7 +6,7 @@
 
 namespace se::cs::dialog::edit_leveled_creature_object_window {
 	constexpr auto MIN_WIDTH = 524u;
-	constexpr auto MIN_HEIGHT = 220u;
+	constexpr auto MIN_HEIGHT = 230u;
 
 	// Saving the columns size
 
