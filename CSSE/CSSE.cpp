@@ -29,6 +29,8 @@
 #include "DialogScriptListWindow.h"
 #include "DialogSearchAndReplaceWindow.h"
 #include "DialogTextSearchWindow.h"
+#include "DialogEditLeveledItemObjectWindow.h"
+#include "DialogEditLeveledCreatureObjectWindow.h"
 
 #include "TextureRenderer.h"
 
@@ -537,6 +539,8 @@ namespace se::cs {
 		dialog::script_list_window::installPatches();
 		dialog::search_and_replace_window::installPatches();
 		dialog::text_search_window::installPatches();
+		dialog::edit_leveled_item_object_window::installPatches();
+		dialog::edit_leveled_creature_object_window::installPatches();
 		TextureRenderer::installPatches();
 	}
 
