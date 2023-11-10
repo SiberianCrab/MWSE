@@ -90,9 +90,8 @@ namespace se::cs::window::main {
 	void UpdateLoadedFilesInTestEnvironment() {
 		const auto recordHandler = DataHandler::get()->recordHandler;
 		settings.test_environment.game_files.clear();
-		for (auto i = 0; i < recordHandler->activeModCount; ++i) {
-			const auto gameFile = recordHandler->activeGameFiles[i];
-			if (gameFile) {
+		for (const auto& gameFile : *recordHandler->availableDataFiles) {
+			if (gameFile->getToLoadFlag()) {
 				settings.test_environment.game_files.push_back(gameFile->fileName);
 			}
 		}

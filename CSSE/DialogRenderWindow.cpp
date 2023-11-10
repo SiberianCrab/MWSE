@@ -342,7 +342,7 @@ namespace se::cs::dialog::render_window {
 		}
 
 		const auto snapAngle = math::degreesToRadians((float)gSnapAngleInDegrees::get());
-		const bool isSnapping = (isAngleSnapping() || isKeyDown(VK_LCONTROL)) && (snapAngle != 0.0f);
+		const bool isSnapping = isAngleSnapping() && (snapAngle != 0.0f);
 
 		NI::Vector3 orientation = cumulativeRot;
 		if (isSnapping) {
@@ -849,8 +849,7 @@ namespace se::cs::dialog::render_window {
 		}
 
 		// Apply grid snap.
-		auto forceSnapping = isKeyDown(VK_LCONTROL);
-		if (isGridSnapping() || forceSnapping) {
+		if (isGridSnapping()) {
 			auto increment = gSnapGrid::get();
 			if (increment != 0.0f) {
 				// "Unlocked" movement defaults to XY axis.
