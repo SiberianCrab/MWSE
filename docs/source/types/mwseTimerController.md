@@ -28,6 +28,9 @@ The current clock time for this timer controller. Timer Controller, responsible 
 
 Creates a timer for the given Timer Controller.
 
+!!! tip
+	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
+
 ```lua
 local timer = myObject:create({ duration = ..., callback = ..., iterations = ..., persist = ..., data = ... })
 ```

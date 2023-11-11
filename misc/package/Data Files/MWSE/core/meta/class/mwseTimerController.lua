@@ -13,6 +13,9 @@ mwseTimerController = {}
 function mwseTimerController.new(startTime) end
 
 --- Creates a timer for the given Timer Controller.
+--- 
+--- !!! tip
+--- 	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
 --- @param params mwseTimerController.create.params This table accepts the following values:
 --- 
 --- `duration`: number — Duration of the timer. The method of time passing depends on the timer type.

@@ -17,7 +17,7 @@ A Timer is a class used to keep track of callback that should be invoked at a la
 
 **Returns**:
 
-* `result` (function, string)
+* `result` (fun(e: [mwseTimerCallbackData](../types/mwseTimerCallbackData.md)), string)
 
 ***
 

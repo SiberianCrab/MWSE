@@ -79,3 +79,5 @@ local myTimer = timer.start({ duration = 30, callback = onTimerComplete, type = 
 -- Create a timer that ends after 4 game hours.
 local myTimer = timer.start({ duration = 4, callback = onTimerComplete, type = timer.game })
 ```
+!!! note
+	After reading the Timers guide, it's recommended to proceed to the [Object Liftimes](./object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.

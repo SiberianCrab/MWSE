@@ -59,6 +59,9 @@ Constant to represent timers that run when the game isn't paused - the game's me
 
 Creates a timer that will finish the next frame. It defaults to the next simulation frame.
 
+!!! tip
+	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
+
 ```lua
 local timer = timer.delayOneFrame(callback, type)
 ```
@@ -78,6 +81,9 @@ local timer = timer.delayOneFrame(callback, type)
 <div class="search_terms" style="display: none">register</div>
 
 Registers a named timer with a callback to persist between game sessions. Bear in mind that nothing in MWSE is sandboxed, so all the registered timers are in the global namespace. Consider prefixing your timer with mod name or something else to avoid name collisions. For instance, `iceCreamMod:myTimer`.
+
+!!! tip
+	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
 
 ```lua
 timer.register(name, fn)
@@ -143,6 +149,9 @@ timer.register(name, fn)
 <div class="search_terms" style="display: none">start</div>
 
 Creates a timer.
+
+!!! tip
+	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
 
 ```lua
 local timer = timer.start({ type = ..., duration = ..., callback = ..., iterations = ..., persist = ..., data = ... })

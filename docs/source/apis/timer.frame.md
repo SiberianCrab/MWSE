@@ -15,6 +15,9 @@ Convenience access to frame timer functions. This is the same as passing `type =
 
 Creates a timer that will finish the next frame.
 
+!!! tip
+	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
+
 ```lua
 local timer = timer.frame.delayOneFrame(callback)
 ```

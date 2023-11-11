@@ -13,12 +13,18 @@
 timer = {}
 
 --- Creates a timer that will finish the next frame. It defaults to the next simulation frame.
+--- 
+--- !!! tip
+--- 	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
 --- @param callback fun(e: mwseTimerCallbackData) The callback function that will execute when the timer expires.
 --- @param type integer? *Default*: ``timer.simulate``. Type of the timer. This value can be `timer.simulate`, `timer.game` or `timer.real`.
 --- @return mwseTimer timer No description yet available.
 function timer.delayOneFrame(callback, type) end
 
 --- Registers a named timer with a callback to persist between game sessions. Bear in mind that nothing in MWSE is sandboxed, so all the registered timers are in the global namespace. Consider prefixing your timer with mod name or something else to avoid name collisions. For instance, `iceCreamMod:myTimer`.
+--- 
+--- !!! tip
+--- 	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
 ---
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/apis/timer/#timerregister).
 --- @param name string Name of the registered timer.
@@ -26,6 +32,9 @@ function timer.delayOneFrame(callback, type) end
 function timer.register(name, fn) end
 
 --- Creates a timer.
+--- 
+--- !!! tip
+--- 	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.
 ---
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/apis/timer/#timerstart).
 --- @param params timer.start.params This table accepts the following values:

@@ -1,6 +1,9 @@
 return {
 	type = "function",
-	description = [[Creates a timer.]],
+	description = [[Creates a timer.
+
+!!! tip
+	It's recommended to study the [Object Lifetimes](../guides/object-lifetimes.md) guide. It describes how to safely use [tes3reference](../types/tes3reference.md) objects inside timer callbacks.]],
 	arguments = {{
 		name = "params",
 		type = "table",

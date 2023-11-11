@@ -4,7 +4,7 @@
 --- @meta
 --- A Timer is a class used to keep track of callback that should be invoked at a later time.
 --- @class mwseTimer
---- @field callback function|string *Read-only*. The callback that will be invoked at the end of each iteration.
+--- @field callback fun(e: mwseTimerCallbackData)|string *Read-only*. The callback that will be invoked at the end of each iteration.
 --- @field data table|nil Arbitrary json-serializable data stored in the timer. This defaults to `nil`, but can be set at the time of timer creation, or changed later.
 --- @field duration number *Read-only*. The duration of single iteration of the timer in seconds for timers of `timer.real` and `timer.simulate` types. It's in hours for `timer.game` timers.
 --- @field iterations integer *Read-only*. The amount of iterations left for the timer.
