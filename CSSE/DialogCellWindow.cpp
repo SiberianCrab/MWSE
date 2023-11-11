@@ -196,11 +196,11 @@ namespace se::cs::dialog::cell_window {
 		constexpr auto BOTTOM_SECTION_LEFT_OFFSET = 16;
 		constexpr auto BOTTOM_SECTION_RIGHT_OFFSET = 23;
 
-		constexpr auto EDIT_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от поля, которые всегда = 4 пикселя; CSSE = 21
-		constexpr auto STATIC_WIDTH = 90;//CSSE = 54
+		constexpr auto EDIT_HEIGHT = STATIC_HEIGHT + 8;
+		constexpr auto STATIC_WIDTH = 90;
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto STATIC_COMBO_OFFSET = (EDIT_HEIGHT - STATIC_HEIGHT) / 2;
-		constexpr auto BOTTOM_SECTION_Y_OFFSET = 3;//CSSE = 3
+		constexpr auto BOTTOM_SECTION_Y_OFFSET = 3;
 
 		// Update list view area.
 		RECT listViewRect = {};
