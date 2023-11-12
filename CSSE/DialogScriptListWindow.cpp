@@ -123,8 +123,10 @@ namespace se::cs::dialog::script_list_window {
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto BUTTON_WIDTH = 130;
+		constexpr auto CLEAR_BUTTON_WIDTH = 20;
 		constexpr auto STATIC_WIDTH = 50;
-		constexpr auto SEARCH_WIDTH = 160;
+		constexpr auto SEARCH_WIDTH = 140;
+
 
 		constexpr auto BOTTOM_SECTION = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
 
@@ -139,6 +141,7 @@ namespace se::cs::dialog::script_list_window {
 
 		auto scriptListView = GetDlgItem(hDlg, CONTROL_ID_SCRIPT_LIST);
 		auto showModifiedButton = GetDlgItem(hDlg, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
+		auto clearSearchFiedButton = GetDlgItem(hDlg, CONTROL_ID_CLEAR_BUTTON);
 		auto searchLabel = GetDlgItem(hDlg, CONTROL_ID_FILTER_LABEL);
 		auto searchEdit = GetDlgItem(hDlg, CONTROL_ID_FILTER_EDIT);
 
@@ -156,8 +159,9 @@ namespace se::cs::dialog::script_list_window {
 		int currentX = WINDOW_EDGE_PADDING;
 
 		MoveWindow(showModifiedButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
-		MoveWindow(searchLabel, mainWidth - WINDOW_EDGE_PADDING - SEARCH_WIDTH - BASIC_PADDING - STATIC_WIDTH, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);
-		MoveWindow(searchEdit, mainWidth - WINDOW_EDGE_PADDING - SEARCH_WIDTH, currentY, SEARCH_WIDTH, COMBO_HEIGHT, FALSE);
+		MoveWindow(clearSearchFiedButton, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH, currentY, CLEAR_BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
+		MoveWindow(searchLabel, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH - SEARCH_WIDTH - BASIC_PADDING - STATIC_WIDTH, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);
+		MoveWindow(searchEdit, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH - SEARCH_WIDTH, currentY, SEARCH_WIDTH, COMBO_HEIGHT, FALSE);
 
 		RedrawWindow(hDlg, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
@@ -169,6 +173,7 @@ namespace se::cs::dialog::script_list_window {
 		auto hDlgShowModifiedOnly = CreateWindowExA(NULL, WC_BUTTON, "Show modified only", BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON, hInstance, NULL);
 		auto hDlgFilterStatic = CreateWindowExA(NULL, WC_STATIC, "Filter:", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_FILTER_LABEL, hInstance, NULL);
 		auto hDlgFilterEdit = CreateWindowExA(WS_EX_CLIENTEDGE, WC_EDIT, "", ES_LEFT | ES_AUTOHSCROLL | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_FILTER_EDIT, hInstance, NULL);
+		auto hClearButton = CreateWindowExA(NULL, WC_BUTTON, "X", WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_CLEAR_BUTTON, hInstance, NULL);
 		if (hDlgFilterEdit) {
 			SetWindowSubclass(hDlgFilterEdit, ui_subclass::edit::BasicExtendedProc, NULL, NULL);
 
@@ -176,6 +181,7 @@ namespace se::cs::dialog::script_list_window {
 			SendMessageA(hDlgShowModifiedOnly, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 			SendMessageA(hDlgFilterStatic, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 			SendMessageA(hDlgFilterEdit, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
+			SendMessageA(hClearButton, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 		}
 		else {
 			log::stream << "ERROR: Could not create search control!" << std::endl;
@@ -204,7 +210,7 @@ namespace se::cs::dialog::script_list_window {
 
 	}
 
-	void PatchDialogProc_BeforeCommand(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void CALLBACK PatchDialogProc_BeforeCommand(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		const auto command = HIWORD(wParam);
 		const auto id = LOWORD(wParam);
 
@@ -213,6 +219,12 @@ namespace se::cs::dialog::script_list_window {
 			switch (id) {
 			case CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON:
 				modeShowModifiedOnly = SendDlgItemMessageA(hWnd, id, BM_GETCHECK, 0, 0);
+				RefreshScriptListBox(hWnd);
+				break;
+			case CONTROL_ID_CLEAR_BUTTON:
+				// Handle clear button click
+				SetWindowTextA(GetDlgItem(hWnd, CONTROL_ID_FILTER_EDIT), "");
+				currentSearchText = ""; // Update the stored search text
 				RefreshScriptListBox(hWnd);
 				break;
 			}
