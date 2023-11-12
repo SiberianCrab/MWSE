@@ -109,10 +109,33 @@ namespace se::cs::dialog::script_list_window {
 		}
 	}
 
+	namespace ResizeConstants {
+		// Font 08 - Vanilla
+		//constexpr auto STATIC_HEIGHT = 13;
+		// Font 10
+		constexpr auto STATIC_HEIGHT = 16;
+		// Font 12
+
+		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
+		constexpr auto BASIC_PADDING = 2;
+		constexpr auto BIG_PADDING = 6;
+		constexpr auto WINDOW_EDGE_PADDING = 10;
+		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
+
+		constexpr auto BUTTON_WIDTH = 130;
+		constexpr auto STATIC_WIDTH = 60;
+		constexpr auto SEARCH_WIDTH = 150;
+
+		constexpr auto BOTTOM_SECTION = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
+
+	}
+
 	void CALLBACK PatchDialogProc_BeforeSize(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
 		using winui::GetRectHeight;
 		using winui::GetRectWidth;
 		using winui::GetWindowRelativeRect;
+
+		using namespace ResizeConstants;
 
 		auto scriptListView = GetDlgItem(hDlg, CONTROL_ID_SCRIPT_LIST);
 		auto showModifiedButton = GetDlgItem(hDlg, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
@@ -122,22 +145,19 @@ namespace se::cs::dialog::script_list_window {
 		const auto mainWidth = LOWORD(lParam);
 		const auto mainHeight = HIWORD(lParam);
 
-		constexpr auto BASIC_PADDING = 2;
-		constexpr auto STATIC_HEIGHT = 13;
-		constexpr auto EDIT_HEIGHT = 21;
-		constexpr auto STATIC_COMBO_OFFSET = (EDIT_HEIGHT - STATIC_HEIGHT) / 2;
-
 		// Update list view area.
 		RECT listViewRect = {};
 		GetWindowRelativeRect(scriptListView, &listViewRect);
-		MoveWindow(scriptListView, listViewRect.left, listViewRect.top, mainWidth - 20, mainHeight - 36, FALSE);
+		// Border padding.
+		MoveWindow(scriptListView, WINDOW_EDGE_PADDING, WINDOW_EDGE_PADDING, mainWidth - WINDOW_EDGE_PADDING * 2, mainHeight - BOTTOM_SECTION, FALSE);
 
 		// Update the search bar placement.
-		int currentY = mainHeight - EDIT_HEIGHT - BASIC_PADDING;
-		auto searchEditWidth = std::min<int>(mainWidth - BASIC_PADDING * 2, 150);
-		MoveWindow(showModifiedButton, 12, currentY, 120, EDIT_HEIGHT, TRUE);
-		MoveWindow(searchLabel, (mainWidth - 15) - searchEditWidth - 54 - BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, 54, STATIC_HEIGHT, TRUE);
-		MoveWindow(searchEdit, (mainWidth - 15) - searchEditWidth, currentY, searchEditWidth, EDIT_HEIGHT, FALSE);
+		int currentY = mainHeight - COMBO_HEIGHT - BIG_PADDING;
+		int currentX = WINDOW_EDGE_PADDING;
+
+		MoveWindow(showModifiedButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
+		MoveWindow(searchLabel, mainWidth - WINDOW_EDGE_PADDING - SEARCH_WIDTH - BASIC_PADDING - STATIC_WIDTH, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);
+		MoveWindow(searchEdit, mainWidth - WINDOW_EDGE_PADDING - SEARCH_WIDTH, currentY, SEARCH_WIDTH, COMBO_HEIGHT, FALSE);
 
 		RedrawWindow(hDlg, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
@@ -170,6 +190,18 @@ namespace se::cs::dialog::script_list_window {
 		}
 		SendMessageA(hDlgShowModifiedOnly, BM_SETCHECK, modeShowModifiedOnly ? BST_CHECKED : BST_UNCHECKED, 0);
 		RefreshScriptListBox(hWnd);
+	}
+
+	// Set min/max window size for scaling.
+	constexpr auto MIN_WIDTH = 380u;
+	constexpr auto MIN_HEIGHT = 500u;
+
+	// Force min/max window size for scaling.
+	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		const auto info = (LPMINMAXINFO)lParam;
+		info->ptMinTrackSize.x = MIN_WIDTH;
+		info->ptMinTrackSize.y = MIN_HEIGHT;
+
 	}
 
 	void PatchDialogProc_BeforeCommand(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -214,6 +246,9 @@ namespace se::cs::dialog::script_list_window {
 		switch (msg) {
 		case WM_INITDIALOG:
 			PatchDialogProc_AfterCreate(hWnd, msg, wParam, lParam);
+			break;
+		case WM_GETMINMAXINFO:
+			PatchDialogProc_GetMinMaxInfo(hWnd, msg, wParam, lParam);
 			break;
 		}
 
