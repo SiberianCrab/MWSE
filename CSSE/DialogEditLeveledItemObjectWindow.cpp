@@ -101,9 +101,9 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 	// Set list of resize constants for UI layout.
 	namespace ResizeConstants {
 		// Font 08 - Vanilla
-		//constexpr auto STATIC_HEIGHT = 13;
+		constexpr auto STATIC_HEIGHT = 13;
 		// Font 10
-		constexpr auto STATIC_HEIGHT = 16;
+		//constexpr auto STATIC_HEIGHT = 16;
 		// Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
