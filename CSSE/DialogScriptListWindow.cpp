@@ -127,7 +127,6 @@ namespace se::cs::dialog::script_list_window {
 		constexpr auto STATIC_WIDTH = 50;
 		constexpr auto SEARCH_WIDTH = 140;
 
-
 		constexpr auto BOTTOM_SECTION = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
 
 	}
