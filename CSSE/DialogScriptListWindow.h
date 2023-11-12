@@ -10,6 +10,7 @@ namespace se::cs::dialog::script_list_window {
 	constexpr UINT CONTROL_ID_FILTER_LABEL = 2000;
 	constexpr UINT CONTROL_ID_FILTER_EDIT = 2001;
 	constexpr UINT CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON = 2002;
+	constexpr UINT CONTROL_ID_CLEAR_BUTTON = 2003;
 
 	void installPatches();
 }
