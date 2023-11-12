@@ -315,10 +315,8 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			Button_SetCheck(GetDlgItem(hWnd, CONTROL_ID_SHOW_PREVIEW_TEXTURE_BUTTON), settings.landscape_window.show_preview_enabled);
 		}
 
-		// Change the selected texture static to be a single line
+		// Change names of statics.
 		SetDlgItemText(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC, "Selected Texture:");
-
-		// RGBs with ':'
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_RED_STATIC, "R:");
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_GREEN_STATIC, "G:");
 		SetDlgItemText(hWnd, CONTROL_ID_PRIMARY_COLOR_BLUE_STATIC, "B:");
