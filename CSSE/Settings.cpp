@@ -340,7 +340,6 @@ namespace se::cs {
 	}
 
 	//
-
 	// Leveled Item Settings Window
 	//
 
@@ -371,6 +370,7 @@ namespace se::cs {
 			);
 		}
 
+	//
 	// Leveled Creature Settings Window
 	//
 
