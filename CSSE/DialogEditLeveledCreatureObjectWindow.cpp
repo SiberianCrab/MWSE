@@ -4,12 +4,15 @@
 
 #include "Settings.h"
 
+#include "MemoryUtil.h"
+
 namespace se::cs::dialog::edit_leveled_creature_object_window {
+
+	// Set min/max window size for scaling.
 	constexpr auto MIN_WIDTH = 524u;
-	constexpr auto MIN_HEIGHT = 220u;
+	constexpr auto MIN_HEIGHT = 230u;
 
-	// Saving the columns size
-
+	// Restoring/saving the columns size.
 	void restoreLeveledCreatureColumnWidths(HWND hWnd) {
 		const auto LeveledCreature = GetDlgItem(hWnd, CONTROL_ID_LEVELED_LIST);
 
@@ -29,6 +32,8 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
 
 	void PatchDialogProc_BeforeDestroy(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+
+		// Write columns size to .toml.
 		saveLeveledCreatureColumnWidths(hWnd);
 	}
 
@@ -39,39 +44,31 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		using se::cs::winui::RemoveStyles;
 		using se::cs::winui::SetWindowIdByValue;
 
+		// Read columns size from .toml.
 		restoreLeveledCreatureColumnWidths(hWnd);
 
 		// Give IDs to controls that don't normally have one.
 		SetWindowIdByValue(hWnd, "ID", CONTROL_ID_ID_STATIC);
 		SetWindowIdByValue(hWnd, "Chance None", CONTROL_ID_CHANCE_NONE_STATIC);
 
+		// Change window styles.
 		RemoveStyles(hWnd, DS_MODALFRAME | DS_CENTER);
 		AddStyles(hWnd, WS_SIZEBOX);
 
-		// Change the selected texture static to be a single line
+		// Change names of statics.
 		SetDlgItemText(hWnd, CONTROL_ID_ID_STATIC, "ID:");
 		SetDlgItemText(hWnd, CONTROL_ID_CHANCE_NONE_STATIC, "Chance None:");
 
 		// Change element style
-		auto hStaticTextChanceNone = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
-		auto hCheckBoxCalculateLevels = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
+		auto setControlStyle = [](HWND hCtrl, DWORD addStyle, DWORD removeStyle = 0) {
+			DWORD style = GetWindowLongPtr(hCtrl, GWL_STYLE);
+			SetWindowLongPtr(hCtrl, GWL_STYLE, (style & ~removeStyle) | addStyle);
+		};
 
-		{
-			 // Get the current style of the element
-	   		 auto styleChanceNone = GetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE);
-			 auto styleCheckBoxCalculateLevels = GetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE);
+		setControlStyle(GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC), SS_RIGHT, SS_TYPEMASK);
+		setControlStyle(GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX), BS_LEFTTEXT | BS_RIGHT);
 
-			 // Remove bits responsible for style and set a new style
-			 styleChanceNone = (styleChanceNone & ~SS_TYPEMASK) | SS_RIGHT;
-			 styleCheckBoxCalculateLevels |= BS_LEFTTEXT;
-			 styleCheckBoxCalculateLevels |= BS_RIGHT;
-
-			 // Set a new style for the element
-			 SetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE, styleChanceNone);
-			 SetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE, styleCheckBoxCalculateLevels);
-		}
-
-		// Restore size and position
+		// Restore window size and position.
 		const auto& settingsSize = settings.leveled_creature_window.size;
 		const auto width = std::max(settingsSize.width, MIN_WIDTH);
 		const auto height = std::max(settingsSize.height, MIN_HEIGHT);
@@ -82,8 +79,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
 
-	// Force min/max window size if user scale it
-
+	// Force min/max window size for scaling.
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		const auto info = (LPMINMAXINFO)lParam;
 		info->ptMinTrackSize.x = MIN_WIDTH;
@@ -92,8 +88,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		forcedReturnType = 0;
 	}
 
-	// Saving window coords if user move it
-
+	// Saving window coords if user move it.
 	void PatchDialogProc_AfterMove(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		int short xPos = LOWORD(lParam);
 		int short yPos = HIWORD(lParam);
@@ -102,11 +97,12 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		settings.leveled_creature_window.y_position = yPos - 31;
 	}
 
+	// Set list of resize constants for UI layout.
 	namespace ResizeConstants {
 		// Font 08 - Vanilla
-		constexpr auto STATIC_HEIGHT = 13;
+		//constexpr auto STATIC_HEIGHT = 13;
 		// Font 10
-		//constexpr auto STATIC_HEIGHT = 16;
+		constexpr auto STATIC_HEIGHT = 16;
 		// Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
@@ -131,11 +127,14 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 	void PatchDialogProc_BeforeSize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		using namespace ResizeConstants;
 
+		//
+		// Set UI layout.
+		//
+
 		const auto clientWidth = LOWORD(lParam);
 		const auto clientHeight = HIWORD(lParam);
 
-		// Controls section
-
+		// Controls section.
 		{
 			auto currentX = BIG_PADDING;
 			auto currentY = WINDOW_EDGE_PADDING;
@@ -147,7 +146,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 
 			auto idEdit = GetDlgItem(hWnd, CONTROL_ID_ID_EDIT);
 			MoveWindow(idEdit, currentX, currentY, EDIT_FIELD_WIDTH, COMBO_HEIGHT, FALSE);
-		
+
 			currentY += COMBO_HEIGHT + BIG_PADDING;
 			currentX = CONTROLS_SECTION_WIDTH - CALCULATE_LEVELS_CHECKBOX_WIDTH - BIG_PADDING;
 
@@ -167,8 +166,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 
 		}
 
-		// Leveled List Section
-
+		// Leveled List Section.
 		{
 			auto currentX = CONTROLS_SECTION_WIDTH;
 			auto currentY = WINDOW_EDGE_PADDING;
@@ -180,10 +178,9 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 			MoveWindow(leveledList, currentX, currentY, TEXTURE_LIST_WIDTH, LEVELED_LIST_SECTION_HEIGHT, FALSE);
 		}
 
-		// Bottom section
-
+		// Bottom section.
 		{
-			auto currentX = ( CONTROLS_SECTION_WIDTH - BUTTON_WIDTH * 2 - WINDOW_EDGE_PADDING ) / 2;
+			auto currentX = (CONTROLS_SECTION_WIDTH - BUTTON_WIDTH * 2 - WINDOW_EDGE_PADDING) / 2;
 			auto currentY = clientHeight - BOTTOM_SECTION_HEIGHT;
 
 			auto okButton = GetDlgItem(hWnd, CONTROL_ID_OK_BUTTON);
@@ -195,7 +192,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 			MoveWindow(cancelButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
 
 			currentY += COMBO_HEIGHT + WINDOW_EDGE_PADDING;
-			currentX = ( CONTROLS_SECTION_WIDTH - BLOCKED_CHECKBOX_WIDTH ) / 2;
+			currentX = (CONTROLS_SECTION_WIDTH - BLOCKED_CHECKBOX_WIDTH) / 2;
 
 			auto blockedCheckbox = GetDlgItem(hWnd, CONTROL_ID_BLOCKED_CHECKBOX);
 			MoveWindow(blockedCheckbox, currentX, currentY, BLOCKED_CHECKBOX_WIDTH, STATIC_HEIGHT, FALSE);
