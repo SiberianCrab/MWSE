@@ -123,7 +123,7 @@ namespace se::cs::dialog::script_list_window {
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto BUTTON_WIDTH = 130;
-		constexpr auto STATIC_WIDTH = 60;
+		constexpr auto STATIC_WIDTH = 50;
 		constexpr auto SEARCH_WIDTH = 160;
 
 		constexpr auto BOTTOM_SECTION = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
