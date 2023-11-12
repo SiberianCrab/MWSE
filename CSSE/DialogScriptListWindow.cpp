@@ -111,9 +111,9 @@ namespace se::cs::dialog::script_list_window {
 
 	namespace ResizeConstants {
 		// Font 08 - Vanilla
-		//constexpr auto STATIC_HEIGHT = 13;
+		constexpr auto STATIC_HEIGHT = 13;
 		// Font 10
-		constexpr auto STATIC_HEIGHT = 16;
+		//constexpr auto STATIC_HEIGHT = 16;
 		// Font 12
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
@@ -126,7 +126,6 @@ namespace se::cs::dialog::script_list_window {
 		constexpr auto CLEAR_BUTTON_WIDTH = 20;
 		constexpr auto STATIC_WIDTH = 50;
 		constexpr auto SEARCH_WIDTH = 140;
-
 
 		constexpr auto BOTTOM_SECTION = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
 
