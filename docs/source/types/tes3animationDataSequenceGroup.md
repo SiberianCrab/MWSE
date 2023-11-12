@@ -17,7 +17,7 @@ The niSequence object for the actor's left arm.
 
 **Returns**:
 
-* `result` (niSequence)
+* `result` ([niSequence](../types/niSequence.md))
 
 ***
 
@@ -28,7 +28,7 @@ The niSequence object for the actor's legs.
 
 **Returns**:
 
-* `result` (niSequence)
+* `result` ([niSequence](../types/niSequence.md))
 
 ***
 
@@ -39,5 +39,5 @@ The niSequence object for the actor's upper body.
 
 **Returns**:
 
-* `result` (niSequence)
+* `result` ([niSequence](../types/niSequence.md))
 

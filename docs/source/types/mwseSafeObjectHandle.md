@@ -6,31 +6,39 @@
 	More information: https://github.com/MWSE/MWSE/tree/master/docs
 -->
 
-A handle to safely operate on ([tes3object](https://mwse.github.io/MWSE/types/tes3object/)).
+A handle to safely operate on [tes3object](https://mwse.github.io/MWSE/types/tes3object/).
 
 ??? example "Example: An example of usage"
 
 	```lua
-	local result = tes3.rayTest{ -- the result can get invalidated
-		position = tes3.getPlayerEyePosition(),
-		direction = tes3.getPlayerEyeVector(),
-		ignore = { tes3.player }
-	}
+	local function doMyRayTest()
+		-- the result can get invalidated
+		local result = tes3.rayTest({
+			position = tes3.getPlayerEyePosition(),
+			direction = tes3.getPlayerEyeVector(),
+			ignore = { tes3.player }
+		})
 	
-	local refHandle
-	
-	if result then
-		refHandle = tes3.makeSafeObjectHandle(result.reference)
-	end
-	
-	local function myFunction()
-		-- Before using the reference, we need to check that it's still valid.
-		-- References get unloaded on cell changes etc.
-		if refHandle and refHandle:valid() then
-			-- Now we can safely do something with our stored reference.
-			local reference = refHandle:getObject()
-	
+		if not result then
+			return
 		end
+	
+		local refHandle = tes3.makeSafeObjectHandle(result.reference)
+		timer.start({
+			type = timer.simulate,
+			duration = 20,
+			iterations = 1,
+			callback = function()
+				-- Before using the reference, we need to check that it's still valid.
+				-- References get unloaded on cell changes etc.
+				if not refHandle:valid() then
+					return
+				end
+				local reference = refHandle:getObject()
+				-- Now we can use the `reference` variable safely
+				-- ...
+			end
+		})
 	end
 
 	```

@@ -273,7 +273,7 @@ Value      | Behavior
 
 **Returns**:
 
-* `result` (niKeyframeManager)
+* `result` ([niKeyframeManager](../types/niKeyframeManager.md))
 
 ***
 

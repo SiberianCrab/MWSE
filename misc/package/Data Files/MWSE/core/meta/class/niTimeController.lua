@@ -16,7 +16,7 @@
 --- @field lastScaledTime number This function returns the last scaled time computed by this controller. The scaled time takes the `frequency` and `phase` into account, along with the `cycleType` and `animTimingType`. This is the last value used to interpolate animation keys.
 --- @field lastTime number No description.
 --- @field lowKeyFrame number This is the beginning animation key time of the animation controller.
---- @field nextController niKeyframeController|niLookAtController|niParticleSystemController|niPathController The next animation controller in the list of controllers containing the calling controller.
+--- @field nextController niKeyframeController|niKeyframeManager|niLookAtController|niParticleSystemController|niPathController The next animation controller in the list of controllers containing the calling controller.
 --- @field phase number The phase value. It is an offset applied to the animation's update time, in seconds.
 --- @field startTime number The time at which the animation controller starts playing its animation.
 --- @field target niAlphaProperty|niAmbientLight|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niFogProperty|niMaterialProperty|niNode|niParticles|niPointLight|niRenderedTexture|niRotatingParticles|niSortAdjustNode|niSourceTexture|niSpotLight|niStencilProperty|niSwitchNode|niTextureEffect|niTexturingProperty|niTriShape|niVertexColorProperty|niZBufferProperty *Read-only*. The scene graph object that this animation controller is to animate.

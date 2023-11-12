@@ -141,6 +141,20 @@ ni.propertyType = require("ni.propertyType")
 ---| `ni.propertyType.wireframe`
 ---| `ni.propertyType.zBuffer`
 
+ni.sequenceState = require("ni.sequenceState")
+
+--- @alias ni.sequenceState
+---| `ni.sequenceState.animating`
+---| `ni.sequenceState.blendDest`
+---| `ni.sequenceState.blendSource`
+---| `ni.sequenceState.inactive`
+---| `ni.sequenceState.layerBlend`
+---| `ni.sequenceState.morphDest`
+---| `ni.sequenceState.morphSource`
+---| `ni.sequenceState.sumDest`
+---| `ni.sequenceState.sumSource`
+---| `ni.sequenceState.syncSeqBlend`
+
 ni.sortAdjustMode = require("ni.sortAdjustMode")
 
 --- @alias ni.sortAdjustMode

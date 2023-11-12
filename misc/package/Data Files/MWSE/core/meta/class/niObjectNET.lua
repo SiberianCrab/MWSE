@@ -4,7 +4,7 @@
 --- @meta
 --- An object that has a name, extra data, and controllers.
 --- @class niObjectNET : niObject
---- @field controller niKeyframeController|niLookAtController|niParticleSystemController|niPathController *Read-only*. The first controller available on the object.
+--- @field controller niKeyframeController|niKeyframeManager|niLookAtController|niParticleSystemController|niPathController *Read-only*. The first controller available on the object.
 --- @field extraData niStringExtraData|niTES3ExtraData|niTextKeyExtraData *Read-only*. The first extra data available on the object.
 --- @field name string The human-facing name of the given object.
 niObjectNET = {}
@@ -39,7 +39,7 @@ function niObjectNET:hasStringDataStartingWith(value) end
 function niObjectNET:hasStringDataWith(value) end
 
 --- Add a controller to the object as the first controller.
---- @param controller niKeyframeController|niLookAtController|niParticleSystemController|niPathController No description yet available.
+--- @param controller niKeyframeController|niKeyframeManager|niLookAtController|niParticleSystemController|niPathController No description yet available.
 function niObjectNET:prependController(controller) end
 
 --- Removes all controllers.
@@ -49,7 +49,7 @@ function niObjectNET:removeAllControllers() end
 function niObjectNET:removeAllExtraData() end
 
 --- Removes a controller from the object.
---- @param controller niKeyframeController|niLookAtController|niParticleSystemController|niPathController No description yet available.
+--- @param controller niKeyframeController|niKeyframeManager|niLookAtController|niParticleSystemController|niPathController No description yet available.
 function niObjectNET:removeController(controller) end
 
 --- Removes a specific extra data from the object.
