@@ -200,14 +200,14 @@ The types are arranged into functional groupings. Within each grouping, indentat
 	- niKeyframeData
 	- <span  style = "color:YellowGreen">niMorphData</span>
 	- <span style = "color:Turquoise">niPosData</span>
-	- <span style = "color:Turquoise">niSequence</span>
+	- niSequence
 	- niTimeController
 		- <span style = "color:Turquoise">niFlipController</span>
 		- <span  style = "color:YellowGreen">niFloatController</span>
 			- <span  style = "color:YellowGreen">niAlphaController</span>
 			- <span  style = "color:YellowGreen">niRollController</span>
 		- niKeyframeController
-		- <span style = "color:Turquoise">niKeyframeManager</span>
+		- niKeyframeManager
 		- <span  style = "color:YellowGreen">niLightColorController</span>
 		- niLookAtController
 		- <span  style = "color:YellowGreen">niMaterialColorController</span>
@@ -347,7 +347,7 @@ graph LR
 
 	%% Turquoise
 	classDef notExposed color:#000, fill: #40E0D0, stroke: #333, stroke-width: 2px;
-	class B,DA,HA,HD,HK,L,Q,R,W notExposed;
+	class B,DA,HA,HK,L,Q,R,W notExposed;
 
 	%% YellowGreen
 	classDef notResearched color:#000, fill: #ADFF2F, stroke: #333, stroke-width: 2px;

@@ -5,7 +5,8 @@ return {
 		["reference"] = {
 			type = "tes3reference",
 			readOnly = true,
-			description = "The reference.",
+			description = "The reference to the dropped item.",
 		},
 	},
+	filter = "reference.baseObject",
 }

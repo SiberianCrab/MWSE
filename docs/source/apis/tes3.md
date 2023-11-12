@@ -3436,26 +3436,34 @@ local safeObjectHandle = tes3.makeSafeObjectHandle(object)
 ??? example "Example: Example"
 
 	```lua
-	local result = tes3.rayTest{ -- the result can get invalidated
-		position = tes3.getPlayerEyePosition(),
-		direction = tes3.getPlayerEyeVector(),
-		ignore = { tes3.player }
-	}
+	local function doMyRayTest()
+		-- the result can get invalidated
+		local result = tes3.rayTest({
+			position = tes3.getPlayerEyePosition(),
+			direction = tes3.getPlayerEyeVector(),
+			ignore = { tes3.player }
+		})
 	
-	local refHandle
-	
-	if result then
-		refHandle = tes3.makeSafeObjectHandle(result.reference)
-	end
-	
-	local function myFunction()
-		-- Before using the reference, we need to check that it's still valid.
-		-- References get unloaded on cell changes etc.
-		if refHandle and refHandle:valid() then
-			-- Now we can safely do something with our stored reference.
-			local reference = refHandle:getObject()
-	
+		if not result then
+			return
 		end
+	
+		local refHandle = tes3.makeSafeObjectHandle(result.reference)
+		timer.start({
+			type = timer.simulate,
+			duration = 20,
+			iterations = 1,
+			callback = function()
+				-- Before using the reference, we need to check that it's still valid.
+				-- References get unloaded on cell changes etc.
+				if not refHandle:valid() then
+					return
+				end
+				local reference = refHandle:getObject()
+				-- Now we can use the `reference` variable safely
+				-- ...
+			end
+		})
 	end
 
 	```
@@ -3885,26 +3893,34 @@ local result = tes3.rayTest({ position = ..., direction = ..., findAll = ..., ma
 	If you plan to use the results of rayTest, you should make sure it still exists. For example, an object which was in a list of results of rayTest can get unloaded when the player changes cells and become invalid, so it shouldn't be accessed.
 
 	```lua
-	local result = tes3.rayTest{ -- the result can get invalidated
-		position = tes3.getPlayerEyePosition(),
-		direction = tes3.getPlayerEyeVector(),
-		ignore = { tes3.player }
-	}
+	local function doMyRayTest()
+		-- the result can get invalidated
+		local result = tes3.rayTest({
+			position = tes3.getPlayerEyePosition(),
+			direction = tes3.getPlayerEyeVector(),
+			ignore = { tes3.player }
+		})
 	
-	local refHandle
-	
-	if result then
-		refHandle = tes3.makeSafeObjectHandle(result.reference)
-	end
-	
-	local function myFunction()
-		-- Before using the reference, we need to check that it's still valid.
-		-- References get unloaded on cell changes etc.
-		if refHandle and refHandle:valid() then
-			-- Now we can safely do something with our stored reference.
-			local reference = refHandle:getObject()
-	
+		if not result then
+			return
 		end
+	
+		local refHandle = tes3.makeSafeObjectHandle(result.reference)
+		timer.start({
+			type = timer.simulate,
+			duration = 20,
+			iterations = 1,
+			callback = function()
+				-- Before using the reference, we need to check that it's still valid.
+				-- References get unloaded on cell changes etc.
+				if not refHandle:valid() then
+					return
+				end
+				local reference = refHandle:getObject()
+				-- Now we can use the `reference` variable safely
+				-- ...
+			end
+		})
 	end
 
 	```

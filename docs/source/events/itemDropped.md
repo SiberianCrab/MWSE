@@ -16,9 +16,12 @@ event.register(tes3.event.itemDropped, itemDroppedCallback)
 ```
 
 !!! tip
+	This event can be filtered based on the **`reference.baseObject`** event data.
+
+!!! tip
 	An event can be claimed by setting `e.claim` to `true`, or by returning `false` from the callback. Claiming the event prevents any lower priority callbacks from being called.
 
 ## Event Data
 
-* `reference` ([tes3reference](../types/tes3reference.md)): *Read-only*. The reference.
+* `reference` ([tes3reference](../types/tes3reference.md)): *Read-only*. The reference to the dropped item.
 
