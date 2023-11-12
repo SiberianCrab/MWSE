@@ -63,7 +63,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		auto setControlStyle = [](HWND hCtrl, DWORD addStyle, DWORD removeStyle = 0) {
 			DWORD style = GetWindowLongPtr(hCtrl, GWL_STYLE);
 			SetWindowLongPtr(hCtrl, GWL_STYLE, (style & ~removeStyle) | addStyle);
-			};
+		};
 
 			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC), SS_RIGHT, SS_TYPEMASK);
 			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX), BS_LEFTTEXT | BS_RIGHT);

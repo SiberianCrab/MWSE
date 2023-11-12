@@ -327,31 +327,15 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		SetDlgItemText(hWnd, CONTROL_ID_SECONDARY_COLOR_BLUE_STATIC, "B:");
 
 		// Change element style
-		auto hStaticTextEditRadius = GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC);
-		auto hStaticTextEditFalloff = GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC);
-		auto hStaticTextSelectedTexture = GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC);
-		auto hCheckBoxVertexColor = GetDlgItem(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX);
+		auto setControlStyle = [](HWND hCtrl, DWORD addStyle, DWORD removeStyle = 0) {
+			DWORD style = GetWindowLongPtr(hCtrl, GWL_STYLE);
+			SetWindowLongPtr(hCtrl, GWL_STYLE, (style & ~removeStyle) | addStyle);
+		};
 
-		{
-			// Get the current style of the element
-			auto styleEditRadius = GetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE);
-			auto styleEditFalloff = GetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE);
-			auto styleSelectedTexture = GetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE);
-			auto styleCheckBoxVertexColor = GetWindowLongPtr(hCheckBoxVertexColor, GWL_STYLE);
-
-			// Remove bits responsible for style and set a new style
-			styleEditRadius = (styleEditRadius & ~SS_TYPEMASK) | SS_RIGHT;
-			styleEditFalloff = (styleEditFalloff & ~SS_TYPEMASK) | SS_RIGHT;
-			styleSelectedTexture = (styleSelectedTexture & ~SS_TYPEMASK) | SS_LEFT;
-			styleCheckBoxVertexColor |= BS_LEFTTEXT;
-			styleCheckBoxVertexColor |= BS_RIGHT;
-
-			// Set a new style for the element
-			SetWindowLongPtr(hStaticTextEditRadius, GWL_STYLE, styleEditRadius);
-			SetWindowLongPtr(hStaticTextEditFalloff, GWL_STYLE, styleEditFalloff);
-			SetWindowLongPtr(hStaticTextSelectedTexture, GWL_STYLE, styleSelectedTexture);
-			SetWindowLongPtr(hCheckBoxVertexColor, GWL_STYLE, styleCheckBoxVertexColor);
-		}
+			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_EDIT_RADIUS_STATIC), SS_RIGHT, SS_TYPEMASK);
+			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_EDIT_FALLOFF_STATIC), SS_RIGHT, SS_TYPEMASK);
+			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_SELECTED_TEXTURE_STATIC), SS_LEFT | SS_TYPEMASK);
+			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_EDIT_COLORS_CHECKBOX), BS_LEFTTEXT | BS_RIGHT);
 
 		// Restore size and position
 		const auto& settingsSize = settings.landscape_window.size;
