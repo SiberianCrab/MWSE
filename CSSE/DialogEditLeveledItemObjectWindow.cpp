@@ -55,28 +55,14 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 		SetDlgItemText(hWnd, CONTROL_ID_CHANCE_NONE_STATIC, "Chance None:");
 
 		// Change element style
-		auto hStaticTextChanceNone = GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC);
-		auto hCheckBoxCalculateLevels = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX);
-		auto hCheckBoxCalculateEachItem = GetDlgItem(hWnd, CONTROL_ID_CALCULATE_EACH_ITEM_CHECKBOX);
+		auto setControlStyle = [](HWND hCtrl, DWORD addStyle, DWORD removeStyle = 0) {
+			DWORD style = GetWindowLongPtr(hCtrl, GWL_STYLE);
+			SetWindowLongPtr(hCtrl, GWL_STYLE, (style & ~removeStyle) | addStyle);
+			};
 
-		{
-			// Get the current style of the element
-			auto styleChanceNone = GetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE);
-			auto styleCheckBoxCalculateLevels = GetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE);
-			auto styleCheckBoxCalculateEachItem = GetWindowLongPtr(hCheckBoxCalculateEachItem, GWL_STYLE);
-
-			// Remove bits responsible for style and set a new style
-			styleChanceNone = (styleChanceNone & ~SS_TYPEMASK) | SS_RIGHT;
-			styleCheckBoxCalculateLevels |= BS_LEFTTEXT;
-			styleCheckBoxCalculateLevels |= BS_RIGHT;
-			styleCheckBoxCalculateEachItem |= BS_LEFTTEXT;
-			styleCheckBoxCalculateEachItem |= BS_RIGHT;
-
-			// Set a new style for the element
-			SetWindowLongPtr(hStaticTextChanceNone, GWL_STYLE, styleChanceNone);
-			SetWindowLongPtr(hCheckBoxCalculateLevels, GWL_STYLE, styleCheckBoxCalculateLevels);
-			SetWindowLongPtr(hCheckBoxCalculateEachItem, GWL_STYLE, styleCheckBoxCalculateEachItem);
-		}
+			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_CHANCE_NONE_STATIC), SS_RIGHT, SS_TYPEMASK);
+			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_CALCULATE_LEVELS_CHECKBOX), BS_LEFTTEXT | BS_RIGHT);
+			setControlStyle(GetDlgItem(hWnd, CONTROL_ID_CALCULATE_EACH_ITEM_CHECKBOX), BS_LEFTTEXT | BS_RIGHT);
 
 		// Restore size and position
 		const auto& settingsSize = settings.leveled_item_window.size;
