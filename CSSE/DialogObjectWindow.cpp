@@ -269,11 +269,11 @@ namespace se::cs::dialog::object_window {
 
 	namespace ResizeConstants {
 		//Font 08
-		//constexpr auto STATIC_HEIGHT = 13;
+		constexpr auto STATIC_HEIGHT = 13;
 		//Font 10
 		//constexpr auto STATIC_HEIGHT = 16;
 		//Font 12
-		constexpr auto STATIC_HEIGHT = 20;
+		//constexpr auto STATIC_HEIGHT = 20;
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
@@ -318,12 +318,12 @@ namespace se::cs::dialog::object_window {
 		const auto mainHeight = HIWORD(lParam);
 
 		// Make room for our new search bar.
-		MoveWindow(tabControl, 0, 0, mainWidth, mainHeight - COMBO_HEIGHT, TRUE);
+		MoveWindow(tabControl, 0, 0, mainWidth, mainHeight - COMBO_HEIGHT - BASIC_PADDING * 2, TRUE);
 
 		// Update list view area.
 		RECT tabContentRect = {};
 		TabCtrl_GetInteriorRect(tabControl, &tabContentRect);
-		MoveWindow(objectListView, BASIC_PADDING * 2, tabContentRect.top, mainWidth - BASIC_PADDING * 4, GetRectHeight(&tabContentRect), TRUE);
+		MoveWindow(objectListView, BASIC_PADDING * 2, tabContentRect.top + BASIC_PADDING * 2, mainWidth - BASIC_PADDING * 4, GetRectHeight(&tabContentRect), TRUE);
 
 		// Bottom section.
 		{
@@ -383,7 +383,7 @@ namespace se::cs::dialog::object_window {
 
 	// Set min/max window size for scaling.
 	constexpr auto MIN_WIDTH = 700u;
-	constexpr auto MIN_HEIGHT = 250u;
+	constexpr auto MIN_HEIGHT = 0u;
 
 	// Force min/max window size for scaling.
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -614,7 +614,7 @@ namespace se::cs::dialog::object_window {
 		}
 		return -1;
 	}
-	
+
 	//
 	// Main patching function.
 	//
