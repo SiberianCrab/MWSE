@@ -267,10 +267,34 @@ namespace se::cs::dialog::object_window {
 
 	std::optional<LRESULT> forcedReturnType = {};
 
+	namespace ResizeConstants {
+		//Font 08
+		//constexpr auto STATIC_HEIGHT = 13;
+		//Font 10
+		//constexpr auto STATIC_HEIGHT = 16;
+		//Font 12
+		constexpr auto STATIC_HEIGHT = 20;
+
+		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
+		constexpr auto BASIC_PADDING = 2;
+		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
+
+		constexpr auto BUTTON_WIDTH = 160;
+		constexpr auto CLEAR_BUTTON_WIDTH = 50;
+		constexpr auto STATIC_WIDTH = 100;
+
+	}
+
 	void CALLBACK PatchDialogProc_BeforeSize(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
 		using winui::GetRectHeight;
 		using winui::GetRectWidth;
 		using winui::TabCtrl_GetInteriorRect;
+
+		using namespace ResizeConstants;
+
+		//
+		// Set UI layout.
+		//
 
 		// Update view menu.
 		auto mainWindow = GetMenu(window::main::ghWnd::get());
@@ -285,44 +309,42 @@ namespace se::cs::dialog::object_window {
 
 		auto tabControl = GetDlgItem(hDlg, CONTROL_ID_TABS);
 		auto objectListView = GetDlgItem(hDlg, CONTROL_ID_LIST_VIEW);
-		auto showModifiedButton = GetDlgItem(hDlg, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
-		auto searchLabel = GetDlgItem(hDlg, CONTROL_ID_FILTER_LABEL);
-		auto searchEdit = GetDlgItem(hDlg, CONTROL_ID_FILTER_EDIT);
 
 		// Update globals.
 		ghWndTabControl::set(tabControl);
 		ghWndObjectList::set(objectListView);
-		objectWindowSearchControl = searchEdit;
 
 		const auto mainWidth = LOWORD(lParam);
 		const auto mainHeight = HIWORD(lParam);
 
-	//Font 08
-	    //constexpr auto STATIC_HEIGHT = 13;//внутренн€€ высота пол€ при определенном шрифте в пикселах CSSE = 13
-	//Font 10
-	    //constexpr auto STATIC_HEIGHT = 16;
-	//Font 12
-		constexpr auto STATIC_HEIGHT = 20;
-
-		constexpr auto EDIT_HEIGHT = STATIC_HEIGHT + 8;//STATIC_HEIGHT + 2 рамки снизу/сверху от пол€, которые всегда = 4 пиксел€; CSSE = 21
-		constexpr auto BASIC_PADDING = 2;
-		constexpr auto STATIC_WIDTH = 54;
-		constexpr auto STATIC_COMBO_OFFSET = (EDIT_HEIGHT - STATIC_HEIGHT) / 2;
-
 		// Make room for our new search bar.
-		MoveWindow(tabControl, 0, 0, mainWidth, mainHeight - EDIT_HEIGHT, TRUE);
+		MoveWindow(tabControl, 0, 0, mainWidth, mainHeight - COMBO_HEIGHT, TRUE);
 
 		// Update list view area.
 		RECT tabContentRect = {};
 		TabCtrl_GetInteriorRect(tabControl, &tabContentRect);
-		MoveWindow(objectListView, tabContentRect.left, tabContentRect.top, GetRectWidth(&tabContentRect), GetRectHeight(&tabContentRect), TRUE);
+		MoveWindow(objectListView, BASIC_PADDING * 2, tabContentRect.top, mainWidth - BASIC_PADDING * 4, GetRectHeight(&tabContentRect), TRUE);
 
-		// Update the search bar placement.
-		int currentY = mainHeight - EDIT_HEIGHT - BASIC_PADDING;
-		auto searchEditWidth = std::min<int>(mainWidth - BASIC_PADDING * 2, 300);
-		MoveWindow(showModifiedButton, BASIC_PADDING, currentY, 160, EDIT_HEIGHT, TRUE);
-		MoveWindow(searchLabel, mainWidth - BASIC_PADDING - searchEditWidth - STATIC_WIDTH - BASIC_PADDING, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);//Filter
-		MoveWindow(objectWindowSearchControl, mainWidth - BASIC_PADDING - searchEditWidth, currentY, searchEditWidth, EDIT_HEIGHT, FALSE);
+		// Bottom section.
+		{
+			auto currentY = mainHeight - COMBO_HEIGHT - BASIC_PADDING;
+			auto currentX = BASIC_PADDING * 2;
+
+			auto showModifiedButton = GetDlgItem(hDlg, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
+			MoveWindow(showModifiedButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
+
+			auto searchLabel = GetDlgItem(hDlg, CONTROL_ID_FILTER_LABEL);
+			MoveWindow(searchLabel, mainWidth - BASIC_PADDING * 2 - CLEAR_BUTTON_WIDTH - BUTTON_WIDTH * 2 - BASIC_PADDING - STATIC_WIDTH, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);
+
+			auto searchEdit = GetDlgItem(hDlg, CONTROL_ID_FILTER_EDIT);
+			MoveWindow(searchEdit, mainWidth - BASIC_PADDING * 2 - CLEAR_BUTTON_WIDTH - BUTTON_WIDTH * 2, currentY, BUTTON_WIDTH * 2, COMBO_HEIGHT, FALSE);
+
+			auto clearSearchFiedButton = GetDlgItem(hDlg, CONTROL_ID_CLEAR_BUTTON);
+			MoveWindow(clearSearchFiedButton, mainWidth - BASIC_PADDING * 2 - CLEAR_BUTTON_WIDTH, currentY, CLEAR_BUTTON_WIDTH, COMBO_HEIGHT, FALSE);
+
+			objectWindowSearchControl = searchEdit;
+
+		}
 
 		RedrawWindow(hDlg, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
@@ -343,6 +365,7 @@ namespace se::cs::dialog::object_window {
 			auto hDlgShowModifiedOnly = CreateWindowExA(NULL, WC_BUTTON, "Show modified only", BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON, hInstance, NULL);
 			auto hDlgFilterStatic = CreateWindowExA(NULL, WC_STATIC, "Filter:", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_FILTER_LABEL, hInstance, NULL);
 			hDlgFilterEdit = CreateWindowExA(WS_EX_CLIENTEDGE, WC_EDIT, "", ES_LEFT | ES_AUTOHSCROLL | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_FILTER_EDIT, hInstance, NULL);
+			auto hClearButton = CreateWindowExA(NULL, WC_BUTTON, "Clear", WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_CLEAR_BUTTON, hInstance, NULL);
 			if (hDlgFilterEdit) {
 				SetWindowSubclass(hDlgFilterEdit, ui_subclass::edit::BasicExtendedProc, NULL, NULL);
 
@@ -350,11 +373,25 @@ namespace se::cs::dialog::object_window {
 				SendMessageA(hDlgShowModifiedOnly, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 				SendMessageA(hDlgFilterStatic, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 				SendMessageA(hDlgFilterEdit, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
+				SendMessageA(hClearButton, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
 			}
 			else {
 				log::stream << "ERROR: Could not create search control!" << std::endl;
 			}
 		}
+	}
+
+	// Set min/max window size for scaling.
+	constexpr auto MIN_WIDTH = 700u;
+	constexpr auto MIN_HEIGHT = 250u;
+
+	// Force min/max window size for scaling.
+	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		const auto info = (LPMINMAXINFO)lParam;
+		info->ptMinTrackSize.x = MIN_WIDTH;
+		info->ptMinTrackSize.y = MIN_HEIGHT;
+
+		forcedReturnType = 0;
 	}
 
 	inline void OnNotifyFromMainListView(HWND hWnd, UINT msg, WPARAM id, LPARAM lParam) {
@@ -510,6 +547,12 @@ namespace se::cs::dialog::object_window {
 				modeShowModifiedOnly = SendDlgItemMessageA(hWnd, id, BM_GETCHECK, 0, 0);
 				RefreshListView(hWnd);
 				break;
+			case CONTROL_ID_CLEAR_BUTTON:
+				// Handle clear button click
+				SetWindowTextA(GetDlgItem(hWnd, CONTROL_ID_FILTER_EDIT), "");
+				currentSearchText = ""; // Update the stored search text
+				RefreshListView(hWnd);
+				break;
 			}
 			break;
 		case EN_CHANGE:
@@ -554,6 +597,9 @@ namespace se::cs::dialog::object_window {
 		case WM_INITDIALOG:
 			PatchDialogProc_AfterCreate(hWnd, msg, wParam, lParam);
 			break;
+		case WM_GETMINMAXINFO:
+			PatchDialogProc_GetMinMaxInfo(hWnd, msg, wParam, lParam);
+			break;
 		}
 
 		return forcedReturnType.value_or(result);
@@ -568,7 +614,7 @@ namespace se::cs::dialog::object_window {
 		}
 		return -1;
 	}
-	
+
 	//
 	// Main patching function.
 	//
