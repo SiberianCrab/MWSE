@@ -127,40 +127,48 @@ namespace se::cs::dialog::script_list_window {
 		constexpr auto STATIC_WIDTH = 50;
 		constexpr auto SEARCH_WIDTH = 140;
 
-		constexpr auto BOTTOM_SECTION = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
+		constexpr auto BOTTOM_SECTION_HEIGHT = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
 
 	}
 
 	void CALLBACK PatchDialogProc_BeforeSize(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
-		using winui::GetRectHeight;
-		using winui::GetRectWidth;
-		using winui::GetWindowRelativeRect;
-
 		using namespace ResizeConstants;
 
-		auto scriptListView = GetDlgItem(hDlg, CONTROL_ID_SCRIPT_LIST);
-		auto showModifiedButton = GetDlgItem(hDlg, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
-		auto clearSearchFiedButton = GetDlgItem(hDlg, CONTROL_ID_CLEAR_BUTTON);
-		auto searchLabel = GetDlgItem(hDlg, CONTROL_ID_FILTER_LABEL);
-		auto searchEdit = GetDlgItem(hDlg, CONTROL_ID_FILTER_EDIT);
+		//
+		// Set UI layout.
+		//
 
 		const auto mainWidth = LOWORD(lParam);
 		const auto mainHeight = HIWORD(lParam);
 
-		// Update list view area.
-		RECT listViewRect = {};
-		GetWindowRelativeRect(scriptListView, &listViewRect);
-		// Border padding.
-		MoveWindow(scriptListView, WINDOW_EDGE_PADDING, WINDOW_EDGE_PADDING, mainWidth - WINDOW_EDGE_PADDING * 2, mainHeight - BOTTOM_SECTION, FALSE);
+		// Scripts list section.
+		{
+			auto currentY = WINDOW_EDGE_PADDING;
+			auto currentX = WINDOW_EDGE_PADDING;
 
-		// Update the search bar placement.
-		int currentY = mainHeight - COMBO_HEIGHT - BIG_PADDING;
-		int currentX = WINDOW_EDGE_PADDING;
+			auto scriptListView = GetDlgItem(hDlg, CONTROL_ID_SCRIPT_LIST);
+			MoveWindow(scriptListView, currentX, currentY, mainWidth - WINDOW_EDGE_PADDING * 2, mainHeight - BOTTOM_SECTION_HEIGHT, FALSE);
 
-		MoveWindow(showModifiedButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
-		MoveWindow(clearSearchFiedButton, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH, currentY, CLEAR_BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
-		MoveWindow(searchLabel, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH - SEARCH_WIDTH - BASIC_PADDING - STATIC_WIDTH, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);
-		MoveWindow(searchEdit, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH - SEARCH_WIDTH, currentY, SEARCH_WIDTH, COMBO_HEIGHT, FALSE);
+		}
+
+		// Bottom section.
+		{
+			auto currentY = mainHeight - COMBO_HEIGHT - BIG_PADDING;
+			auto currentX = WINDOW_EDGE_PADDING;
+
+			auto showModifiedButton = GetDlgItem(hDlg, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
+			MoveWindow(showModifiedButton, currentX, currentY, BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
+
+			auto clearSearchFiedButton = GetDlgItem(hDlg, CONTROL_ID_CLEAR_BUTTON);
+			MoveWindow(clearSearchFiedButton, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH, currentY, CLEAR_BUTTON_WIDTH, COMBO_HEIGHT, TRUE);
+
+			auto searchLabel = GetDlgItem(hDlg, CONTROL_ID_FILTER_LABEL);
+			MoveWindow(searchLabel, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH - SEARCH_WIDTH - BASIC_PADDING - STATIC_WIDTH, currentY + STATIC_COMBO_OFFSET, STATIC_WIDTH, STATIC_HEIGHT, TRUE);
+
+			auto searchEdit = GetDlgItem(hDlg, CONTROL_ID_FILTER_EDIT);
+			MoveWindow(searchEdit, mainWidth - WINDOW_EDGE_PADDING - CLEAR_BUTTON_WIDTH - SEARCH_WIDTH, currentY, SEARCH_WIDTH, COMBO_HEIGHT, FALSE);
+
+		}
 
 		RedrawWindow(hDlg, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
