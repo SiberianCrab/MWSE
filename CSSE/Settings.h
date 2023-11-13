@@ -176,11 +176,6 @@ namespace se::cs {
 			int x_position = 0;
 			int y_position = 71;
 
-			WindowSize size = { 524, 230 };
-
-			ColumnSettings column_PC_Level = { 70u };
-			ColumnSettings column_Item_Name = { 170u };
-
 			void from_toml(const toml::value& v);
 			toml::value into_toml() const;
 		} leveled_item_window;
@@ -190,11 +185,6 @@ namespace se::cs {
 		struct LeveledCreatureWindowSettings {
 			int x_position = 0;
 			int y_position = 71;
-
-			WindowSize size = { 524, 230 };
-
-			ColumnSettings column_PC_Level = { 70u };
-			ColumnSettings column_Creature_Name = { 170u };
 
 			void from_toml(const toml::value& v);
 			toml::value into_toml() const;
