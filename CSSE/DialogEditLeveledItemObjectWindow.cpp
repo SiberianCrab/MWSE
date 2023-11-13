@@ -13,7 +13,7 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 	//
 
 	constexpr auto ENABLE_ALL_OPTIMIZATIONS = true;
-	constexpr auto LOG_PERFORMANCE_RESULTS = true;
+	constexpr auto LOG_PERFORMANCE_RESULTS = false;
 
 	//
 	// Extended window messages
@@ -35,7 +35,7 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		if constexpr (LOG_PERFORMANCE_RESULTS) {
 			auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
-			log::stream << "Displaying leveled creature object data took " << timeToInitialize.count() << "ms" << std::endl;
+			log::stream << "Displaying leveled item object data took " << timeToInitialize.count() << "ms" << std::endl;
 		}
 
 		// Get the current window size
@@ -81,8 +81,8 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 		}
 
 		// Call original function.
-		const auto CS_LeveledCreatureDialogProc = reinterpret_cast<WNDPROC>(0x520240);
-		auto vanillaResult = CS_LeveledCreatureDialogProc(hWnd, msg, wParam, lParam);
+		const auto CS_LeveledItemDialogProc = reinterpret_cast<WNDPROC>(0x520240);
+		auto vanillaResult = CS_LeveledItemDialogProc(hWnd, msg, wParam, lParam);
 
 		switch (msg) {
 		case WM_INITDIALOG:

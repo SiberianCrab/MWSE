@@ -13,7 +13,7 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 	//
 
 	constexpr auto ENABLE_ALL_OPTIMIZATIONS = true;
-	constexpr auto LOG_PERFORMANCE_RESULTS = true;
+	constexpr auto LOG_PERFORMANCE_RESULTS = false;
 
 	//
 	// Extended window messages
