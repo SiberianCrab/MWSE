@@ -340,6 +340,42 @@ namespace se::cs {
 	}
 
 	//
+	// Leveled Item Settings Window.
+	//
+
+	void Settings_t::LeveledItemWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::LeveledItemWindowSettings::into_toml() const {
+		return toml::value(
+			{
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+			}
+		);
+	}
+
+	//
+	// Leveled Creature Settings Window.
+	//
+
+	void Settings_t::LeveledCreatureWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::LeveledCreatureWindowSettings::into_toml() const {
+		return toml::value(
+			{
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+			}
+		);
+	}
+
+	//
 	// Color theme
 	// 
 
