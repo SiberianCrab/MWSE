@@ -383,7 +383,7 @@ namespace se::cs::dialog::object_window {
 
 	// Set min/max window size for scaling.
 	constexpr auto MIN_WIDTH = 700u;
-	constexpr auto MIN_HEIGHT = 250u;
+	constexpr auto MIN_HEIGHT = 32;
 
 	// Force min/max window size for scaling.
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
