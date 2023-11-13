@@ -2,15 +2,41 @@
 
 #include "Settings.h"
 
+#include "LogUtil.h"
+
 #include "MemoryUtil.h"
 
 namespace se::cs::dialog::edit_leveled_creature_object_window {
 
+	//
+	// Configuration
+	//
+
+	constexpr auto ENABLE_ALL_OPTIMIZATIONS = true;
+	constexpr auto LOG_PERFORMANCE_RESULTS = true;
+
+	//
 	// Extended window messages
+	//
+
+	std::optional<LRESULT> messageResult;
+
+	std::chrono::high_resolution_clock::time_point initializationTimer;
+
+	void PatchDialogProc_BeforeInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		if constexpr (LOG_PERFORMANCE_RESULTS) {
+			initializationTimer = std::chrono::high_resolution_clock::now();
+		}
+
+	}
 
 	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
 
 	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		if constexpr (LOG_PERFORMANCE_RESULTS) {
+			auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
+			log::stream << "Displaying leveled creature object data took " << timeToInitialize.count() << "ms" << std::endl;
+		}
 
 		// Get the current window size
 		RECT rect;
@@ -38,6 +64,17 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		PatchDialogProc_OverrideResult.reset();
+		messageResult = {};
+
+		switch (msg) {
+		case WM_INITDIALOG:
+			PatchDialogProc_BeforeInitialize(hWnd, msg, wParam, lParam);
+			break;
+		}
+
+		if (messageResult) {
+			return messageResult.value();
+		}
 
 		if (PatchDialogProc_OverrideResult) {
 			return PatchDialogProc_OverrideResult.value();
