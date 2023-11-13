@@ -323,7 +323,7 @@ namespace se::cs::dialog::object_window {
 		// Update list view area.
 		RECT tabContentRect = {};
 		TabCtrl_GetInteriorRect(tabControl, &tabContentRect);
-		MoveWindow(objectListView, BASIC_PADDING * 2, tabContentRect.top + BASIC_PADDING * 2, mainWidth - BASIC_PADDING * 4, GetRectHeight(&tabContentRect), TRUE);
+		MoveWindow(objectListView, BASIC_PADDING * 2, tabContentRect.top, mainWidth - BASIC_PADDING * 4, GetRectHeight(&tabContentRect) + BASIC_PADDING * 2, TRUE);
 
 		// Bottom section.
 		{
