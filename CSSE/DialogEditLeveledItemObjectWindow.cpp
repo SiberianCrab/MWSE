@@ -1,6 +1,9 @@
 #include "DialogEditLeveledItemObjectWindow.h"
 
+#include "Settings.h"
+
 #include "LogUtil.h"
+
 #include "MemoryUtil.h"
 
 namespace se::cs::dialog::edit_leveled_item_object_window {
@@ -13,7 +16,7 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 	constexpr auto LOG_PERFORMANCE_RESULTS = false;
 
 	//
-	// Extended window messages.
+	// Extended window messages
 	//
 
 	std::optional<LRESULT> messageResult;
@@ -24,16 +27,43 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 		if constexpr (LOG_PERFORMANCE_RESULTS) {
 			initializationTimer = std::chrono::high_resolution_clock::now();
 		}
+
 	}
+
+	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
 
 	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		if constexpr (LOG_PERFORMANCE_RESULTS) {
 			auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
 			log::stream << "Displaying leveled item object data took " << timeToInitialize.count() << "ms" << std::endl;
 		}
+
+		// Get the current window size
+		RECT rect;
+		GetWindowRect(hWnd, &rect);
+
+		const auto width = rect.right - rect.left;
+		const auto height = rect.bottom - rect.top;
+
+		// Restore window size and position.
+		const auto x = settings.leveled_item_window.x_position;
+		const auto y = settings.leveled_item_window.y_position;
+
+		MoveWindow(hWnd, x, y, width, height, FALSE);
+		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+	}
+
+	// Saving window coords if user move it.
+	void PatchDialogProc_AfterMove(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		int short xPos = LOWORD(lParam);
+		int short yPos = HIWORD(lParam);
+
+		settings.leveled_item_window.x_position = xPos - 3;
+		settings.leveled_item_window.y_position = yPos - 26;
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		PatchDialogProc_OverrideResult.reset();
 		messageResult = {};
 
 		switch (msg) {
@@ -46,17 +76,24 @@ namespace se::cs::dialog::edit_leveled_item_object_window {
 			return messageResult.value();
 		}
 
+		if (PatchDialogProc_OverrideResult) {
+			return PatchDialogProc_OverrideResult.value();
+		}
+
 		// Call original function.
-		const auto CS_VanillaDialogProc = reinterpret_cast<WNDPROC>(0x520240);
-		const auto vanillaResult = CS_VanillaDialogProc(hWnd, msg, wParam, lParam);
+		const auto CS_LeveledItemDialogProc = reinterpret_cast<WNDPROC>(0x520240);
+		auto vanillaResult = CS_LeveledItemDialogProc(hWnd, msg, wParam, lParam);
 
 		switch (msg) {
 		case WM_INITDIALOG:
 			PatchDialogProc_AfterInitialize(hWnd, msg, wParam, lParam);
 			break;
+		case WM_MOVE:
+			PatchDialogProc_AfterMove(hWnd, msg, wParam, lParam);
+			break;
 		}
 
-		return messageResult.value_or(vanillaResult);
+		return PatchDialogProc_OverrideResult.value_or(vanillaResult);
 	}
 
 	//
