@@ -318,7 +318,7 @@ namespace se::cs::dialog::object_window {
 		const auto mainHeight = HIWORD(lParam);
 
 		// Make room for our new search bar.
-		MoveWindow(tabControl, 0, 0, mainWidth, mainHeight - COMBO_HEIGHT - BASIC_PADDING * 2, TRUE);
+		MoveWindow(tabControl, BASIC_PADDING * 2, BASIC_PADDING * 2, mainWidth - BASIC_PADDING * 3, mainHeight - COMBO_HEIGHT - BASIC_PADDING * 4, TRUE);
 
 		// Update list view area.
 		RECT tabContentRect = {};
