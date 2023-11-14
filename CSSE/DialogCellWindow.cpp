@@ -293,9 +293,17 @@ namespace se::cs::dialog::cell_window {
 				break;
 			case CONTROL_ID_CLEAR_BUTTON:
 				// Handle clear button click
-				SetWindowTextA(GetDlgItem(hWnd, CONTROL_ID_FILTER_EDIT), "");
-				currentSearchText = ""; // Update the stored search text
-				RefreshCellListView(hWnd);
+				HWND hEditControl = GetDlgItem(hWnd, CONTROL_ID_FILTER_EDIT);
+
+				// Get the length of the text in the edit control
+				int textLength = GetWindowTextLength(hEditControl);
+
+				if (textLength > 0) {
+					// Clear the text only if it's not already empty
+					SetWindowTextA(hEditControl, "");
+					currentSearchText = ""; // Update the stored search text
+					RefreshCellListView(hWnd);
+				}
 				break;
 			}
 			break;

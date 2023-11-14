@@ -540,6 +540,7 @@ namespace se::cs::dialog::object_window {
 	void PatchDialogProc_BeforeCommand(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		const auto command = HIWORD(wParam);
 		const auto id = LOWORD(wParam);
+
 		switch (command) {
 		case BN_CLICKED:
 			switch (id) {
@@ -549,9 +550,17 @@ namespace se::cs::dialog::object_window {
 				break;
 			case CONTROL_ID_CLEAR_BUTTON:
 				// Handle clear button click
-				SetWindowTextA(GetDlgItem(hWnd, CONTROL_ID_FILTER_EDIT), "");
-				currentSearchText = ""; // Update the stored search text
-				RefreshListView(hWnd);
+				HWND hEditControl = GetDlgItem(hWnd, CONTROL_ID_FILTER_EDIT);
+
+				// Get the length of the text in the edit control
+				int textLength = GetWindowTextLength(hEditControl);
+
+				if (textLength > 0) {
+					// Clear the text only if it's not already empty
+					SetWindowTextA(hEditControl, "");
+					currentSearchText = ""; // Update the stored search text
+					RefreshListView(hWnd);
+				}
 				break;
 			}
 			break;
