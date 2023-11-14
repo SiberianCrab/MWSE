@@ -61,6 +61,9 @@ namespace TES3 {
 
 		PathGrid() = delete;
 		~PathGrid() = delete;
+
+		void show();
+		void hide();
 	};
 	static_assert(sizeof(PathGrid) == 0x3C, "TES3::PathGrid failed size validation");
 	static_assert(sizeof(PathGrid::Node) == 0x1C, "TES3::PathGrid::Node failed size validation");

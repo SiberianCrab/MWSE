@@ -56,7 +56,9 @@ namespace TES3::UI {
 	void logToConsole(const char* text, bool isCommand = false);
 	void logToConsole_lua(const char* text, sol::optional<bool> isCommand = false);
 
+	void hideCursor();
 	void closeBookMenu();
+	void closeDialogueMenu();
 	void closeScrollMenu();
 	bool showJournal();
 	bool closeJournal();

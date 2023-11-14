@@ -10,6 +10,50 @@ The controller responsible for the menu system.
 
 ## Properties
 
+### `aiDisabled`
+<div class="search_terms" style="display: none">aidisabled</div>
+
+A flag that controls if AI is active.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
+### `bordersEnabled`
+<div class="search_terms" style="display: none">bordersenabled</div>
+
+A flag that controls if cell borders are rendered.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
+### `collisionBoxesEnabled`
+<div class="search_terms" style="display: none">collisionboxesenabled</div>
+
+A flag that controls if collision boxes are rendered.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
+### `collisionDisabled`
+<div class="search_terms" style="display: none">collisiondisabled</div>
+
+A flag that controls if collisions are disabled.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `fogOfWarDisabled`
 <div class="search_terms" style="display: none">fogofwardisabled</div>
 
@@ -31,6 +75,17 @@ Namely: `normal`, `normal_over`, `normal_pressed`, `active`, `active_over`, `act
 **Returns**:
 
 * `result` ([tes3uiFontColor](../types/tes3uiFontColor.md)[])
+
+***
+
+### `godModeEnabled`
+<div class="search_terms" style="display: none">godmodeenabled</div>
+
+A flag that controls if god mode is enabled.
+
+**Returns**:
+
+* `result` (boolean)
 
 ***
 
@@ -111,6 +166,28 @@ A flag that controls whether the map menu is enabled or disabled.
 
 ***
 
+### `menusDisabled`
+<div class="search_terms" style="display: none">menusdisabled</div>
+
+A flag that controls if menus are disabled.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
+### `pathGridShown`
+<div class="search_terms" style="display: none">pathgridshown</div>
+
+A flag that controls if path grid nodes are rendered.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `scriptCompiler`
 <div class="search_terms" style="display: none">scriptcompiler</div>
 
@@ -122,10 +199,54 @@ A flag that controls whether the map menu is enabled or disabled.
 
 ***
 
+### `scriptsDisabled`
+<div class="search_terms" style="display: none">scriptsdisabled</div>
+
+A flag that controls if mwscript is allowed to execute.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
+### `skyDisabled`
+<div class="search_terms" style="display: none">skydisabled</div>
+
+A flag that controls if the sky is rendered.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `statsMenuEnabled`
 <div class="search_terms" style="display: none">statsmenuenabled</div>
 
 A flag that controls whether the stats menu is enabled or disabled. Stats menu lists all of the player's current skill and attribute values, level, race, class, health, magicka and fatigue.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
+### `wireframeEnabled`
+<div class="search_terms" style="display: none">wireframeenabled</div>
+
+A flag that controls if a wireframe property is active on the worldspace.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
+### `worldDisabled`
+<div class="search_terms" style="display: none">worlddisabled</div>
+
+A flag that controls if the world is rendered.
 
 **Returns**:
 

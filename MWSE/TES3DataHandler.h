@@ -367,6 +367,9 @@ namespace TES3 {
 
 		NI::Pointer<NI::SourceTexture> loadSourceTexture(const char* path);
 
+		void setDisplayCellBorders(bool display);
+		void setActorCollisionBoxesDisplay(bool showActorDrawBounds, bool showWireframe);
+
 		void updateLightingForReference(Reference * reference);
 		void updateLightingForExteriorCells();
 		void setDynamicLightingForReference(Reference* reference);

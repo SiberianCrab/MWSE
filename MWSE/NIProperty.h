@@ -294,6 +294,19 @@ namespace NI {
 	};
 	static_assert(sizeof(VertexColorProperty) == 0x20, "NI::VertexColorProperty failed size validation");
 
+	namespace WireframePropertyFlags {
+		enum WireframePropertyFlags : unsigned int {
+			Enabled = 0x1,
+		};
+	}
+
+	struct WireframeProperty : Property {
+
+		bool getEnabled() const;
+		void setEnabled(bool state);
+	};
+	static_assert(sizeof(WireframeProperty) == 0x18, "NI::WireframeProperty failed size validation");
+
 	struct ZBufferProperty : Property {
 		enum struct TestFunction : unsigned int {
 			ALWAYS,
@@ -323,4 +336,5 @@ MWSE_SOL_CUSTOMIZED_PUSHER_DECLARE_NI(NI::MaterialProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DECLARE_NI(NI::StencilProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DECLARE_NI(NI::TexturingProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DECLARE_NI(NI::VertexColorProperty)
+MWSE_SOL_CUSTOMIZED_PUSHER_DECLARE_NI(NI::WireframeProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DECLARE_NI(NI::ZBufferProperty)

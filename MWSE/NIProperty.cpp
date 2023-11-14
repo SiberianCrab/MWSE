@@ -1,5 +1,6 @@
 #include "NIProperty.h"
 
+#include "BitUtil.h"
 #include "MemoryUtil.h"
 
 #include "NIBinaryStream.h"
@@ -441,6 +442,18 @@ namespace NI {
 	}
 
 	//
+	// WireframeProperty
+	//
+
+	bool WireframeProperty::getEnabled() const {
+		return BITMASK_TEST(flags, WireframePropertyFlags::Enabled);
+	}
+
+	void WireframeProperty::setEnabled(bool state) {
+		BITMASK_SET(flags, WireframePropertyFlags::Enabled, state);
+	}
+
+	//
 	// NiZBufferProperty
 	//
 
@@ -467,4 +480,5 @@ MWSE_SOL_CUSTOMIZED_PUSHER_DEFINE_NI(NI::MaterialProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DEFINE_NI(NI::StencilProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DEFINE_NI(NI::TexturingProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DEFINE_NI(NI::VertexColorProperty)
+MWSE_SOL_CUSTOMIZED_PUSHER_DEFINE_NI(NI::WireframeProperty)
 MWSE_SOL_CUSTOMIZED_PUSHER_DEFINE_NI(NI::ZBufferProperty)

@@ -221,8 +221,30 @@ namespace TES3::UI {
 		bool getMapMenuEnabled();
 		bool getStatsMenuEnabled();
 
+		bool getGodModeEnabled() const;
+		void setGodModeEnabled(bool state);
+		bool getAIDisabled() const;
+		void setAIDisabled(bool state);
+		bool getBordersEnabled() const;
+		void setBordersEnabled(bool state);
+		bool getSkyDisabled() const;
+		void setSkyDisabled(bool state);
+		bool getWorldDisabled() const;
+		void setWorldDisabled(bool state);
+		bool getWireframeEnabled() const;
+		void setWireframeEnabled(bool state);
+		bool getCollisionDisabled() const;
+		void setCollisionDisabled(bool state);
+		bool getCollisionBoxesEnabled() const;
+		void setCollisionBoxesEnabled(bool state);
 		bool getFogOfWarDisabled() const;
 		void setFogOfWarDisabled(bool state);
+		bool getMenusDisabled() const;
+		void setMenusDisabled(bool state);
+		bool getScriptsDisabled() const;
+		void setScriptsDisabled(bool state);
+		bool getShowPathGrid() const;
+		void setShowPathGrid(bool state);
 
 		std::reference_wrapper<FontColor[FontColorId::MAX_ID + 1]> getFontColors();
 

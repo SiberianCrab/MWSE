@@ -328,7 +328,7 @@ namespace TES3 {
 		bool flagMenuMode; // 0xD6
 		char unknown_0xD7;
 		bool collisionEnabled; // 0xD8
-		char unknown_0xD9;
+		bool showActorCollisionBoxes; // 0xD9
 		char disableAI; // 0xDA
 		bool stopGameLoop; // 0xDB
 		char unknown_0xDC;

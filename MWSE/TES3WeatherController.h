@@ -151,6 +151,9 @@ namespace TES3 {
 		int getCurrentWeatherIndex() const;
 		float calcSunDamageScalar();
 		void switchWeather(int weatherId, float startingTransition);
+
+		void enableSky();
+		void disableSky();
 		
 		//
 		// Helper functions.
