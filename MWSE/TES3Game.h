@@ -92,7 +92,7 @@ namespace TES3 {
 		NI::Pointer<NI::Node> worldPickObjectRoot; // 0xA4
 		NI::Pointer<NI::Node> worldLandscapeRoot; // 0xA8
 		NI::Pointer<NI::Node> debugRoot; // 0xAC
-		NI::Pointer<NI::Property> wireframeProperty; // 0xB0
+		NI::Pointer<NI::WireframeProperty> wireframeProperty; // 0xB0
 		NI::Pointer<NI::AmbientLight> activationAmbientLight; // 0xB4
 		NI::Pointer<NI::Node> gridString; // 0xB8
 		NI::Pointer<NI::Node> collideString; // 0xBC

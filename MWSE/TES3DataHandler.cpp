@@ -564,6 +564,16 @@ namespace TES3 {
 		return TES3_DataHandler_loadSourceTexture(this, path);
 	}
 
+	const auto TES3_DataHandler_setDisplayCellBorders = reinterpret_cast<void(__thiscall*)(TES3::DataHandler*, bool)>(0x48E0E0);
+	void DataHandler::setDisplayCellBorders(bool display) {
+		TES3_DataHandler_setDisplayCellBorders(this, display);
+	}
+
+	const auto TES3_DataHandler_setActorCollisionBoxesDisplay = reinterpret_cast<void(__thiscall*)(TES3::DataHandler*, bool, bool)>(0x48DCC0);
+	void DataHandler::setActorCollisionBoxesDisplay(bool showActorDrawBounds, bool showWireframe) {
+		TES3_DataHandler_setActorCollisionBoxesDisplay(this, showActorDrawBounds, showWireframe);
+	}
+
 	const auto TES3_DataHandler_updateLightingForReference = reinterpret_cast<void(__thiscall*)(TES3::DataHandler*, TES3::Reference*)>(0x485E40);
 	void DataHandler::updateLightingForReference(Reference* reference) {
 		TES3_DataHandler_updateLightingForReference(this, reference);

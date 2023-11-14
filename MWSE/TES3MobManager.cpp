@@ -150,6 +150,16 @@ namespace TES3 {
 		}
 	}
 
+	const auto TES3_MobManager_resetConstantVelocities = reinterpret_cast<void(__thiscall*)(MobManager*)>(0x563990);
+	void MobManager::resetConstantVelocities() {
+		TES3_MobManager_resetConstantVelocities(this);
+	}
+
+	const auto TES3_MobManager_clampAllActors = reinterpret_cast<void(__thiscall*)(MobManager*)>(0x563CF0);
+	void MobManager::clampAllActors() {
+		TES3_MobManager_clampAllActors(this);
+	}
+
 	Vector3* MobManager::getGravity() {
 		return &gravity;
 	}

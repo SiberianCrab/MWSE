@@ -47,6 +47,16 @@ namespace TES3 {
 		TES3_WeatherController_switch(this, weatherId, startingTransition);
 	}
 
+	const auto TES3_WeatherController_enableSky = reinterpret_cast<void(__thiscall*)(WeatherController*)>(0x440820);
+	void WeatherController::enableSky() {
+		TES3_WeatherController_enableSky(this);
+	}
+
+	const auto TES3_WeatherController_disableSky = reinterpret_cast<void(__thiscall*)(WeatherController*)>(0x440870);
+	void WeatherController::disableSky() {
+		TES3_WeatherController_disableSky(this);
+	}
+
 	std::reference_wrapper<Weather*[10]> WeatherController::getWeathers() {
 		return std::ref(arrayWeathers);
 	}

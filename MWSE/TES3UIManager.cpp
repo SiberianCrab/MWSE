@@ -462,12 +462,22 @@ namespace TES3::UI {
 		logToConsole(text, isCommand.value_or(false));
 	}
 
+	const auto TES3_HideCursor = reinterpret_cast<void(__cdecl*)()>(0x5966F0);
+	void hideCursor() {
+		TES3_HideCursor();
+	}
+
 	const auto TES3_CloseBookMenu = reinterpret_cast<void(__cdecl*)()>(0x5AC7F0);
 	void closeBookMenu() {
 		Element* menuBook = TES3::UI::findMenu("MenuBook");
 		if (menuBook) {
 			TES3_CloseBookMenu();
 		}
+	}
+
+	const auto TES3_CloseDialogueMenu = reinterpret_cast<void(__cdecl*)()>(0x5BE5B0);
+	void closeDialogueMenu() {
+		TES3_CloseDialogueMenu();
 	}
 
 	const auto TES3_CloseScrollMenu = reinterpret_cast<void(__cdecl*)()>(0x613A60);

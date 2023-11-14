@@ -99,6 +99,8 @@ namespace TES3 {
 		bool hasMobileCollision(const MobileActor* mobile);
 		void enableMobileCollision(MobileActor* mobile);
 		void disableMobileCollision(MobileActor* mobile);
+		void resetConstantVelocities();
+		void clampAllActors();
 
 		Vector3* getGravity();
 		void setGravity(sol::stack_object);

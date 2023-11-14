@@ -50,8 +50,13 @@ namespace mwse::lua {
 			usertypeDefinition["new"] = sol::no_constructor;
 
 			// Basic property binding.
+			usertypeDefinition["aiDisabled"] = sol::property(&TES3::UI::MenuController::getAIDisabled, &TES3::UI::MenuController::setAIDisabled);
+			usertypeDefinition["bordersEnabled"] = sol::property(&TES3::UI::MenuController::getBordersEnabled, &TES3::UI::MenuController::setBordersEnabled);
+			usertypeDefinition["collisionBoxesEnabled"] = sol::property(&TES3::UI::MenuController::getCollisionBoxesEnabled, &TES3::UI::MenuController::setCollisionBoxesEnabled);
+			usertypeDefinition["collisionDisabled"] = sol::property(&TES3::UI::MenuController::getCollisionDisabled, &TES3::UI::MenuController::setCollisionDisabled);
 			usertypeDefinition["fogOfWarDisabled"] = sol::property(&TES3::UI::MenuController::getFogOfWarDisabled, &TES3::UI::MenuController::setFogOfWarDisabled);
 			usertypeDefinition["fontColors"] = sol::readonly_property(&TES3::UI::MenuController::getFontColors);
+			usertypeDefinition["godModeEnabled"] = sol::property(&TES3::UI::MenuController::getGodModeEnabled, &TES3::UI::MenuController::setGodModeEnabled);
 			usertypeDefinition["helpDelay"] = sol::readonly_property(&TES3::UI::MenuController::helpDelay);
 			usertypeDefinition["helpRoot"] = sol::readonly_property(&TES3::UI::MenuController::helpRoot);
 			usertypeDefinition["inputController"] = sol::readonly_property(&TES3::UI::MenuController::menuInputController);
@@ -59,8 +64,14 @@ namespace mwse::lua {
 			usertypeDefinition["magicMenuEnabled"] = sol::property(&TES3::UI::MenuController::getMagicMenuEnabled, &TES3::UI::MenuController::setMagicMenuEnabled);
 			usertypeDefinition["mainRoot"] = sol::readonly_property(&TES3::UI::MenuController::mainRoot);
 			usertypeDefinition["mapMenuEnabled"] = sol::property(&TES3::UI::MenuController::getMapMenuEnabled, &TES3::UI::MenuController::setMapMenuEnabled);
+			usertypeDefinition["menusDisabled"] = sol::property(&TES3::UI::MenuController::getMenusDisabled, &TES3::UI::MenuController::setMenusDisabled);
+			usertypeDefinition["pathGridShown"] = sol::property(&TES3::UI::MenuController::getShowPathGrid, &TES3::UI::MenuController::setShowPathGrid);
 			usertypeDefinition["scriptCompiler"] = sol::readonly_property(&TES3::UI::MenuController::scriptCompiler);
+			usertypeDefinition["scriptsDisabled"] = sol::property(&TES3::UI::MenuController::getScriptsDisabled, &TES3::UI::MenuController::setScriptsDisabled);
+			usertypeDefinition["skyDisabled"] = sol::property(&TES3::UI::MenuController::getSkyDisabled, &TES3::UI::MenuController::setSkyDisabled);
 			usertypeDefinition["statsMenuEnabled"] = sol::property(&TES3::UI::MenuController::getStatsMenuEnabled, &TES3::UI::MenuController::setStatsMenuEnabled);
+			usertypeDefinition["wireframeEnabled"] = sol::property(&TES3::UI::MenuController::getWireframeEnabled, &TES3::UI::MenuController::setWireframeEnabled);
+			usertypeDefinition["worldDisabled"] = sol::property(&TES3::UI::MenuController::getWorldDisabled, &TES3::UI::MenuController::setWorldDisabled);
 		}
 	}
 }

@@ -4,10 +4,15 @@
 --- @meta
 --- The controller responsible for the menu system.
 --- @class tes3uiMenuController
+--- @field aiDisabled boolean A flag that controls if AI is active.
+--- @field bordersEnabled boolean A flag that controls if cell borders are rendered.
+--- @field collisionBoxesEnabled boolean A flag that controls if collision boxes are rendered.
+--- @field collisionDisabled boolean A flag that controls if collisions are disabled.
 --- @field fogOfWarDisabled boolean A flag that controls whether the local map menu renders fog of war.
 --- @field fontColors tes3uiFontColor[] *Read-only*. A 1-indexed table with 49 [`tes3uiFontColor`](https://mwse.github.io/MWSE/types/tes3uiFontColor/) objects for all different in-game uses for fonts.
 --- 
 --- Namely: `normal`, `normal_over`, `normal_pressed`, `active`, `active_over`, `active_pressed`, `disabled`, `disabled_over`, `disabled_pressed`, `link`, `link_over`, `link_pressed`, `journal`, `journal_over`, `journal_pressed`, `journal_topic`, `journal_topic_over`, `journal_topic_pressed`, `journal_finished_quest_topic`, `journal_finished_quest_topic_over`, `journal_finished_quest_topic_pressed`, `answer`, `answer_over`, `answer_pressed`, `header`, `notify`, `big_normal`, `big_normal_over`, `big_normal_pressed`, `big_link`, `big_link_over`, `big_link_pressed`, `big_answer`, `big_answer_over`, `big_answer_pressed`, `big_header`, `big_notify`, `background`, `focus`, `npc_health`, `health`, `magic`, `fatigue`, `misc`, `weapon_fill`, `magic_fill`, `positive`, `negative`, `count`.
+--- @field godModeEnabled boolean A flag that controls if god mode is enabled.
 --- @field helpDelay number *Read-only*. Delay in seconds before help tooltip appears. Corresponds to the Menu Help Delay slider in Options menu.
 --- @field helpRoot tes3uiElement *Read-only*. The root element of the help UI layer. The help UI layer will always be drawn after the main UI layer and therefore all elements on it will be shown in front of elements of the main UI layer. This element contains top level menus like tooltips, message boxes and more as direct children. Prefer using the [`tes3ui.findHelpLayerMenu()`](https://mwse.github.io/MWSE/apis/tes3ui/#tes3uifindhelplayermenu) function to find one of this element's direct children.
 --- @field inputController tes3uiMenuInputController *Read-only*. Access to `tes3uiMenuInputController`.
@@ -15,5 +20,11 @@
 --- @field magicMenuEnabled boolean A flag that controls whether the magic menu is enabled or disabled. Magic menu is the menu used to select a spell for casting from available spells, scrolls and enchantments.
 --- @field mainRoot tes3uiElement *Read-only*. The root element of the main UI layer. This element contains top level menus like the inventory menu, magic menu, status menu, map menu, the HUD and more as direct children. Prefer using the [`tes3ui.findMenu()`](https://mwse.github.io/MWSE/apis/tes3ui/#tes3uifindmenu) function to find one of this element's direct children.
 --- @field mapMenuEnabled boolean A flag that controls whether the map menu is enabled or disabled.
+--- @field menusDisabled boolean A flag that controls if menus are disabled.
+--- @field pathGridShown boolean A flag that controls if path grid nodes are rendered.
 --- @field scriptCompiler tes3scriptCompiler *Read-only*. Access to `tes3scriptCompiler` object.
+--- @field scriptsDisabled boolean A flag that controls if mwscript is allowed to execute.
+--- @field skyDisabled boolean A flag that controls if the sky is rendered.
 --- @field statsMenuEnabled boolean A flag that controls whether the stats menu is enabled or disabled. Stats menu lists all of the player's current skill and attribute values, level, race, class, health, magicka and fatigue.
+--- @field wireframeEnabled boolean A flag that controls if a wireframe property is active on the worldspace.
+--- @field worldDisabled boolean A flag that controls if the world is rendered.
