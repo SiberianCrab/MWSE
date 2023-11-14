@@ -382,7 +382,7 @@ namespace se::cs::dialog::object_window {
 	}
 
 	// Set min/max window size for scaling.
-	constexpr auto MIN_WIDTH = 700u;
+	constexpr auto MIN_WIDTH = 600u;
 	constexpr auto MIN_HEIGHT = 0u;
 
 	// Force min/max window size for scaling.
