@@ -189,6 +189,56 @@ namespace se::cs {
 			toml::value into_toml() const;
 		} leveled_creature_window;
 
+		// Spell Object window.
+
+		struct SpellObjectWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} spell_object_window;
+
+		// Enchantment Object window.
+
+		struct EnchantmentObjectWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} enchantment_object_window;
+
+		// Enchantment Object window.
+
+		struct AlchemyObjectWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} alchemy_object_window;
+
+		// Creature Object window.
+
+		struct CreatureObjectWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} creature_object_window;
+
+		// NPC Object window.
+
+		struct NPCObjectWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} NPC_object_window;
+
 		struct ColorTheme {
 			std::array<unsigned char, 3> highlight_deleted_object_color = { 255, 235, 235 };
 			std::array<unsigned char, 3> highlight_modified_from_master_color = { 235, 255, 235 };

@@ -19,6 +19,8 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 	// Extended window messages
 	//
 
+	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
+
 	std::optional<LRESULT> messageResult;
 
 	std::chrono::high_resolution_clock::time_point initializationTimer;
@@ -29,8 +31,6 @@ namespace se::cs::dialog::edit_leveled_creature_object_window {
 		}
 
 	}
-
-	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
 
 	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		if constexpr (LOG_PERFORMANCE_RESULTS) {

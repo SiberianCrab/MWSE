@@ -380,6 +380,106 @@ namespace se::cs {
 	}
 
 	//
+	// Spell Object Settings Window.
+	//
+
+	void Settings_t::SpellObjectWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::SpellObjectWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
+	// Enchantment Object Settings Window.
+	//
+
+	void Settings_t::EnchantmentObjectWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::EnchantmentObjectWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
+	// Alchemy Object Settings Window.
+	//
+
+	void Settings_t::AlchemyObjectWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::AlchemyObjectWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
+	// Creature Object Settings Window.
+	//
+
+	void Settings_t::CreatureObjectWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::CreatureObjectWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
+	// NPC Object Settings Window.
+	//
+
+	void Settings_t::NPCObjectWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::NPCObjectWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
 	// Color theme
 	// 
 
@@ -566,6 +666,11 @@ namespace se::cs {
 		landscape_window = toml::find_or(v, "landscape_window", landscape_window);
 		leveled_item_window = toml::find_or(v, "leveled_item_window", leveled_item_window);
 		leveled_creature_window = toml::find_or(v, "leveled_creature_window", leveled_creature_window);
+		spell_object_window = toml::find_or(v, "spell_object_window", spell_object_window);
+		enchantment_object_window = toml::find_or(v, "enchantment_object_window", enchantment_object_window);
+		alchemy_object_window = toml::find_or(v, "alchemy_object_window", alchemy_object_window);
+		creature_object_window = toml::find_or(v, "creature_object_window", creature_object_window);
+		NPC_object_window = toml::find_or(v, "NPC_object_window", NPC_object_window);
 		color_theme = toml::find_or(v, "color_theme", color_theme);
 		quickstart = toml::find_or(v, "quickstart", quickstart);
 		script_editor = toml::find_or(v, "script_editor", script_editor);
@@ -586,6 +691,11 @@ namespace se::cs {
 				{ "landscape_window", landscape_window },
 				{ "leveled_item_window", leveled_item_window },
 				{ "leveled_creature_window", leveled_creature_window },
+				{ "spell_object_window", spell_object_window },
+				{ "enchantment_object_window", enchantment_object_window },
+				{ "alchemy_object_window", alchemy_object_window },
+				{ "creature_object_window", creature_object_window },
+				{ "NPC_object_window", NPC_object_window },
 				{ "color_theme", color_theme },
 				{ "quickstart", quickstart },
 				{ "script_editor", script_editor },
