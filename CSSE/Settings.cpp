@@ -351,8 +351,10 @@ namespace se::cs {
 	toml::value Settings_t::LeveledItemWindowSettings::into_toml() const {
 		return toml::value(
 			{
+
 				{ "x_position", x_position },
 				{ "y_position", y_position },
+
 			}
 		);
 	}
@@ -369,8 +371,10 @@ namespace se::cs {
 	toml::value Settings_t::LeveledCreatureWindowSettings::into_toml() const {
 		return toml::value(
 			{
+
 				{ "x_position", x_position },
 				{ "y_position", y_position },
+
 			}
 		);
 	}
@@ -579,9 +583,9 @@ namespace se::cs {
 				{ "dialogue_window", dialogue_window },
 				{ "object_window", object_window },
 				{ "render_window", render_window },
-				{ "landscape_window", landscape_window},
-				{ "leveled_item_window", leveled_item_window},
-				{ "leveled_creature_window", leveled_creature_window},
+				{ "landscape_window", landscape_window },
+				{ "leveled_item_window", leveled_item_window },
+				{ "leveled_creature_window", leveled_creature_window },
 				{ "color_theme", color_theme },
 				{ "quickstart", quickstart },
 				{ "script_editor", script_editor },
