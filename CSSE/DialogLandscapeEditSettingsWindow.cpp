@@ -268,8 +268,6 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		}
 	}
 
-	std::optional<LRESULT> forcedReturnType = {};
-
 	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		using se::cs::winui::AddStyles;
 		using se::cs::winui::RemoveStyles;
@@ -352,7 +350,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		info->ptMinTrackSize.x = MIN_WIDTH + showPreviewImagePadding;
 		info->ptMinTrackSize.y = MIN_HEIGHT;
 
-		forcedReturnType = 0;
+		PatchDialogProc_OverrideResult = 0;
 	}
 
 	void PatchDialogProc_AfterMove(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -615,7 +613,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			settings.landscape_window.size = winSize;
 		}
 
-		forcedReturnType = TRUE;
+		PatchDialogProc_OverrideResult = TRUE;
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
