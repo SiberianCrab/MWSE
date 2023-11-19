@@ -63,7 +63,7 @@ local result = myObject:getObject()
 ### `valid`
 <div class="search_terms" style="display: none">valid</div>
 
-Returns true if the object of this handle is still valid. Objects that are invalid do no longer exist and cannot be used.
+Returns true if the object of this handle is still valid. Invalid objects no longer exist or were deleted.
 
 ```lua
 local valid = myObject:valid()

@@ -12,7 +12,7 @@ mwseSafeObjectHandle = {}
 --- @return tes3reference result No description yet available.
 function mwseSafeObjectHandle:getObject() end
 
---- Returns true if the object of this handle is still valid. Objects that are invalid do no longer exist and cannot be used.
+--- Returns true if the object of this handle is still valid. Invalid objects no longer exist or were deleted.
 --- @return boolean valid No description yet available.
 function mwseSafeObjectHandle:valid() end
 

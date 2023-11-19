@@ -90,7 +90,7 @@ The minimum magnitude of the effect.
 ### `radius`
 <div class="search_terms" style="display: none">radius</div>
 
-The radius of the effect.
+The radius of the effect in feet. The [game units](../references/general/game-units.md) reference page covers how to convert between feet and game units.
 
 **Returns**:
 

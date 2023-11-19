@@ -81,11 +81,11 @@ The total number of items in the stack.
 ### `object`
 <div class="search_terms" style="display: none">object</div>
 
-*Read-only*. The core game object that the stack represents.
+*Read-only*. The core game object that the stack represents. Leveled items can only appear in inventories of base actors (tes3container, tes3creature, tes3npc) while corresponding actor instances always have leveled lists resolved.
 
 **Returns**:
 
-* `result` ([tes3item](../types/tes3item.md))
+* `result` ([tes3item](../types/tes3item.md), [tes3leveledItem](../types/tes3leveledItem.md))
 
 ***
 

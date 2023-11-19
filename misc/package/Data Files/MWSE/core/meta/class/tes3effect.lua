@@ -11,6 +11,6 @@
 --- @field max integer The maximum magnitude of the effect.
 --- @field min integer The minimum magnitude of the effect.
 --- @field object tes3magicEffect *Read-only*. Fetches the `tes3magicEffect` for the given id used.
---- @field radius integer The radius of the effect.
+--- @field radius integer The radius of the effect in feet. The [game units](../references/general/game-units.md) reference page covers how to convert between feet and game units.
 --- @field rangeType tes3.effectRange Determines if the effect is self, touch, or target ranged. Maps to [`tes3.effectRange`](https://mwse.github.io/MWSE/references/effect-ranges/) constants.
 --- @field skill tes3.skill|nil The skill associated with this effect, or `nil` if no skill is used. Maps to values from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
