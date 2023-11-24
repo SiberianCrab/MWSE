@@ -2,6 +2,7 @@
 
 #include "TES3Defines.h"
 
+#include "TES3UIManager.h"
 #include "TES3UIString.h"
 #include "TES3UITree.h"
 #include "TES3UIVector.h"
@@ -25,7 +26,7 @@ namespace TES3::UI {
 		bool flagExtendImageToBounds; // 0x74
 		bool visible; // 0x75
 		bool visibleAtLastUpdate; // 0x76
-		bool flagUsesRGBA; // 0x77
+		bool flagColourChanged; // 0x77
 		bool flagPosChanged; // 0x78
 		bool flagSizeChanged; // 0x79
 		bool flagVisibilityChanged; // 0x7A

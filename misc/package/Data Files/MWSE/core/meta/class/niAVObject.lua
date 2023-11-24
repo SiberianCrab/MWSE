@@ -90,18 +90,18 @@ function niAVObject:propagatePositionChange(args) end
 --- 
 --- @param args niAVObject.update.args? This table accepts the following values:
 --- 
---- `time`: number? — *Default*: `0`. This parameter is the time-slice for transformation and bounds updates
+--- `time`: number? — *Default*: `0`. This parameter is passed to controllers. Only needed if controllers are being updated.
 --- 
---- `controllers`: boolean? — *Default*: `false`. Update object's controllers?
+--- `controllers`: boolean? — *Default*: `false`. Update controllers before updating transforms.
 --- 
---- `bounds`: boolean? — *Default*: `true`. Update object's bounds?
+--- `children`: boolean? — *Default*: `true`. Recursively updates the children of this node.
 function niAVObject:update(args) end
 
 ---Table parameter definitions for `niAVObject.update`.
 --- @class niAVObject.update.args
---- @field time number? *Default*: `0`. This parameter is the time-slice for transformation and bounds updates
---- @field controllers boolean? *Default*: `false`. Update object's controllers?
---- @field bounds boolean? *Default*: `true`. Update object's bounds?
+--- @field time number? *Default*: `0`. This parameter is passed to controllers. Only needed if controllers are being updated.
+--- @field controllers boolean? *Default*: `false`. Update controllers before updating transforms.
+--- @field children boolean? *Default*: `true`. Recursively updates the children of this node.
 
 --- Update all attached effects. This method must be called at or above any object when dynamic effects are attached or detached from it
 function niAVObject:updateEffects() end

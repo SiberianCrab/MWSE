@@ -905,15 +905,15 @@ Updates the world transforms of this node and its children, which makes changes 
 
 
 ```lua
-myObject:update({ time = ..., controllers = ..., bounds = ... })
+myObject:update({ time = ..., controllers = ..., children = ... })
 ```
 
 **Parameters**:
 
 * `args` (table): *Optional*.
-	* `time` (number): *Default*: `0`. This parameter is the time-slice for transformation and bounds updates
-	* `controllers` (boolean): *Default*: `false`. Update object's controllers?
-	* `bounds` (boolean): *Default*: `true`. Update object's bounds?
+	* `time` (number): *Default*: `0`. This parameter is passed to controllers. Only needed if controllers are being updated.
+	* `controllers` (boolean): *Default*: `false`. Update controllers before updating transforms.
+	* `children` (boolean): *Default*: `true`. Recursively updates the children of this node.
 
 ***
 

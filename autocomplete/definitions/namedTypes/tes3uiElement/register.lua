@@ -53,8 +53,9 @@ Widget-specific events:
 	* **PartScrollBar_changed**
 		Triggers on value change; moving the slider is not enough if the value is the same.
 
-#### Event forwarding
 ***
+
+#### Event forwarding
 
 The original Morrowind event handler is saved when you first register an event. It may be optionally invoked with the `forwardEvent` method. Note that handler may or may not destroy the event widget or the menu, so you should know how it behaves before accessing any elements after a callback.
 
@@ -71,9 +72,37 @@ end
 local button = menu:findChild("MenuExample_Ok")
 button:register(tes3.uiEvent.mouseClick, onClick)
 ```
+
+***
+
+#### Event handler
+
+The standard type signature for the event handler function:
+
+eventHandler (fun(e: [tes3uiEventData](https://mwse.github.io/MWSE/types/tes3uiEventData/)): boolean?) Returning `false` may cancel an interaction for certain events. e.g. unfocus.
+
+EventData:
+
+* **source** ([tes3uiElement](https://mwse.github.io/MWSE/types/tes3uiElement/))
+	The source element of the event.
+* **forwardSource** ([tes3uiElement](https://mwse.github.io/MWSE/types/tes3uiElement/))
+	No description yet available.
+* **id** (`number`)
+	The numeric id of the event type.
+* **widget** ([tes3uiElement](https://mwse.github.io/MWSE/types/tes3uiElement/))
+	The widget element that the source belongs to, if the element is a sub-part of a widget. May not be accurate if the element is not a sub-part.
+* **data0** (`number`)
+	Event-specific raw data values. For mouse events, these are the screen X and Y coordinates of the pointer. For keyboard events, data0 is the scancode.
+* **data1** (`number`)
+	See *data0* description.
+* **relativeX** (`number`)
+	For mouse events only. X and Y coordinates of the pointer relative to the top-left of the element.
+* **relativeY** (`number`)
+	See *relativeX* description.
+
 ]],
 	arguments = {
-		{ name = "eventID", type = "tes3.uiEvent", description = "The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/)." },
+		{ name = "eventID", type = "tes3.uiEvent", description = "The UI event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/)." },
 		{ name = "callback", type = "integer|fun(e: tes3uiEventData): boolean?", description = "The callback function. Returning `false` from this function may cancel an interaction for certain events, such as unfocus." },
 	},
 }

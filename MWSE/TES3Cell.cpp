@@ -212,8 +212,8 @@ namespace TES3 {
 		setCellFlag(TES3::CellFlag::SleepIsIllegal, value);
 	}
 
-	bool Cell::getIsLoaded() const {
-		return getCellFlag(TES3::CellFlag::IsLoaded);
+	bool Cell::getIsMarkerDrawn() const {
+		return getCellFlag(TES3::CellFlag::MarkerDrawn);
 	}
 
 	bool Cell::getIsOrBehavesAsExterior() const {

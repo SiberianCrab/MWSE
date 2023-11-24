@@ -16,7 +16,8 @@ namespace TES3 {
 			HasWater = 0x2,
 			SleepIsIllegal = 0x4,
 			WasLoaded = 0x8,
-			IsLoaded = 0x20,
+			TempRefsLoaded = 0x10,
+			MarkerDrawn = 0x20,
 			BehavesAsExterior = 0x80
 		};
 	}
@@ -201,7 +202,7 @@ namespace TES3 {
 		bool getSleepingIsIllegal() const;
 		void setSleepingIsIllegal(bool value);
 
-		bool getIsLoaded() const;
+		bool getIsMarkerDrawn() const;
 
 		bool getIsOrBehavesAsExterior() const;
 

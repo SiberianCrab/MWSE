@@ -63,8 +63,8 @@ namespace NI {
 		return false;
 	}
 
-	void AVObject::update(float fTime, bool bUpdateControllers, bool bUpdateBounds) {
-		reinterpret_cast<void(__thiscall*)(AVObject*, float, int, int)>(NI_AVObject_update)(this, fTime, bUpdateControllers, bUpdateBounds);
+	void AVObject::update(float fTime, bool bUpdateControllers, bool bUpdateChildren) {
+		reinterpret_cast<void(__thiscall*)(AVObject*, float, int, int)>(NI_AVObject_update)(this, fTime, bUpdateControllers, bUpdateChildren);
 	}
 
 	void AVObject::updateEffects() {
@@ -251,9 +251,9 @@ namespace NI {
 			auto values = args.value();
 			float time = values.get_or("time", 0.0f);
 			bool updateControllers = values.get_or("controllers", false);
-			bool updateBounds = values.get_or("bounds", true);
+			bool updateChildren = values.get_or("children", true);
 
-			update(time, updateControllers, updateBounds);
+			update(time, updateControllers, updateChildren);
 		}
 		else {
 			update();

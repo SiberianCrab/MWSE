@@ -99,10 +99,10 @@ namespace NI {
 		vTable.asAVObject->updateWorldBound(this);
 	}
 
-	void AVObject::update(float fTime, bool bUpdateControllers, bool bUpdateBounds) {
+	void AVObject::update(float fTime, bool bUpdateControllers, bool bUpdateChildren) {
 #if defined(SE_NI_AVOBJECT_FNADDR_UPDATE) && SE_NI_AVOBJECT_FNADDR_UPDATE > 0
 		const auto NI_PropertyList_update = reinterpret_cast<void(__thiscall*)(AVObject*, float, int, int)>(SE_NI_AVOBJECT_FNADDR_UPDATE);
-		NI_PropertyList_update(this, fTime, bUpdateControllers, bUpdateBounds);
+		NI_PropertyList_update(this, fTime, bUpdateControllers, bUpdateChildren);
 #else
 		throw not_implemented_exception();
 #endif

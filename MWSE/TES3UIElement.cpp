@@ -590,7 +590,7 @@ namespace TES3::UI {
 
 	void Element::setAlpha(float value) {
 		colourAlpha = value;
-		flagUsesRGBA = true;
+		flagColourChanged = true;
 	}
 
 	int Element::getBorderAllSides() const {
@@ -674,7 +674,7 @@ namespace TES3::UI {
 		colourRed = value[1];
 		colourGreen = value[2];
 		colourBlue = value[3];
-		flagUsesRGBA = true;
+		flagColourChanged = true;
 	}
 
 	bool Element::getConsumeMouseEvents() const {
@@ -1375,7 +1375,7 @@ namespace TES3::UI {
 				element->colourRed = color.value().x;
 				element->colourGreen = color.value().y;
 				element->colourBlue = color.value().z;
-				element->flagUsesRGBA = true;
+				element->flagColourChanged = true;
 			}
 		}
 

@@ -22,7 +22,7 @@ event.clear(eventId, filter)
 **Parameters**:
 
 * `eventId` (string, [tes3.event](../references/events.md)): *Optional*.
-* `filter` (userdata, string, number): *Optional*.
+* `filter` (userdata, string, number, [tes3baseObject](../types/tes3baseObject.md)): *Optional*.
 
 ***
 
@@ -40,7 +40,7 @@ local result = event.isRegistered(eventId, callback, { filter = ... })
 * `eventId` (string, [tes3.event](../references/events.md))
 * `callback` (function)
 * `options` (table): *Optional*.
-	* `filter` (userdata, string, number): *Optional*. Allows searching for a callback function registered with the specified filter.
+	* `filter` (userdata, string, number, [tes3baseObject](../types/tes3baseObject.md)): *Optional*. Allows searching for a callback function registered with the specified filter.
 
 **Returns**:
 
@@ -63,7 +63,7 @@ event.register(eventId, callback, { doOnce = ..., filter = ..., priority = ... }
 * `callback` (function)
 * `options` (table): *Optional*.
 	* `doOnce` (boolean): *Default*: `false`. If this option is set to `true`, the function registered will be executed only once, and automatically unregistered thereafter.
-	* `filter` (userdata, string, number): *Optional*. This parameter allows selectively executing the callback function only when a specific condition is met. The exact behavior depends on each event.
+	* `filter` (userdata, string, number, [tes3baseObject](../types/tes3baseObject.md)): *Optional*. This parameter allows selectively executing the callback function only when a specific condition is met. The exact behavior depends on each event.
 	* `priority` (number): *Optional*. Event callback with higher priority is executed before callback with lower priority. Typically used to make certain mods compatible.
 
 ***
@@ -82,7 +82,7 @@ local resultPayload = event.trigger(eventId, payload, { filter = ... })
 * `eventId` (string, [tes3.event](../references/events.md))
 * `payload` (table): *Optional*.
 * `options` (table): *Optional*.
-	* `filter` (userdata, string, number): *Optional*. Assigning a filter will make the event callbacks with filters matching this one to be executed first. All the other unfiltered callbacks are executed after.
+	* `filter` (userdata, string, number, [tes3baseObject](../types/tes3baseObject.md)): *Optional*. Assigning a filter will make the event callbacks with filters matching this one to be executed first. All the other unfiltered callbacks are executed after.
 
 **Returns**:
 
@@ -104,5 +104,5 @@ event.unregister(eventId, callback, { filter = ... })
 * `eventId` (string, [tes3.event](../references/events.md))
 * `callback` (function)
 * `options` (table): *Optional*.
-	* `filter` (userdata, string, number): *Optional*. If a callback function was registered with a filter, the same filter needs to be passed to `event.unregister` to successfully unregister the callback function.
+	* `filter` (userdata, string, number, [tes3baseObject](../types/tes3baseObject.md)): *Optional*. If a callback function was registered with a filter, the same filter needs to be passed to `event.unregister` to successfully unregister the callback function.
 

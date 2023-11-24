@@ -10,9 +10,9 @@ return {
 			optional = true,
 			type = "table",
 			tableParams = {
-				{ name = "time", type = "number", optional = true, default = 0, description = "This parameter is the time-slice for transformation and bounds updates" },
-				{ name = "controllers", type = "boolean", optional = true, default = false, description = "Update object's controllers?" },
-				{ name = "bounds", type = "boolean", optional = true, default = true, description = "Update object's bounds?" },
+				{ name = "time", type = "number", optional = true, default = 0, description = "This parameter is passed to controllers. Only needed if controllers are being updated." },
+				{ name = "controllers", type = "boolean", optional = true, default = false, description = "Update controllers before updating transforms." },
+				{ name = "children", type = "boolean", optional = true, default = true, description = "Recursively updates the children of this node." },
 			}
 		},
 	}

@@ -82,7 +82,7 @@ namespace NI {
 		// Other related this-call functions.
 		//
 
-		void update(float fTime = 0.0f, bool bUpdateControllers = false, bool bUpdateBounds = true);
+		void update(float fTime = 0.0f, bool bUpdateControllers = false, bool bUpdateChildren = true);
 		void updateEffects();
 		void updateProperties();
 		TES3::Matrix33* getLocalRotationMatrix() const;
