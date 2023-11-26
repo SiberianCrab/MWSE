@@ -22,4 +22,6 @@ return {
 	["replaceDialogueFiltering.description"] = "If enabled, MWSE will replace the logic for dialogue filtering. This feature is currently in public testing.",
 	["enableLuaErrorNotifications.label"] = "Enable lua error notifications",
 	["enableLuaErrorNotifications.description"] = "If enabled, notification pop-ups will appear when a lua error is logged. They contain the mod name and a short error description only. Many released mods cause frequent non-critical errors, so this mode is primarily intended for use in development and bugfixing.",
+	["useSkinnedAccurateActivationRaytests.label"] = "Enable skinned-accurate activation raytests",
+	["useSkinnedAccurateActivationRaytests.description"] = "If enabled, the player activation target raytest will be more accurate around skinned actors. This may impose a performance penalty in very complex situations.",
 }

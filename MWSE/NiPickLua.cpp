@@ -5,6 +5,7 @@
 
 #include "NIUtil.h"
 #include "NIDefines.h"
+#include "NIGeometry.h"
 #include "NINode.h"
 #include "NIPick.h"
 #include "NIRTTI.h"

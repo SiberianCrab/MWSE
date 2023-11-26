@@ -26,6 +26,7 @@ The following patches are included by MWSE.
 - Optimizes `ShowMap` and `FillMap` to not be absurdly slow.
 - Raises mod limit from 256 to 1024.
 - Replaces Morrowind's dialogue filtering system with one that is much more performant.
+- Fixes the activation raytest when around skinned objects, such as creatures/NPCs.
 
 
 ## Bug Fixes

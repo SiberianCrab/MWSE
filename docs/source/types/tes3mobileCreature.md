@@ -1858,7 +1858,7 @@ local result = myObject:getActiveMagicEffects({ effect = ..., serial = ... })
 **Parameters**:
 
 * `params` (table): *Optional*.
-	* `effect` ([tes3.effect](../references/magic-effects.md)): *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+	* `effect` ([tes3.effect](../references/magic-effects.md), integer): *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 	* `serial` (integer): *Optional*. The magic instance serial to search for.
 
 **Returns**:

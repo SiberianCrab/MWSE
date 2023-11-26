@@ -6,8 +6,8 @@ return {
 		type = "table",
 		tableParams = {
 			{ name = "reference", type = "tes3reference|tes3mobileActor|string" },
-			{ name = "service", type = "tes3.merchantService", optional = true, description = "The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table." },
-			{ name = "context", type = "tes3.dialogueFilterContext", default = "tes3.dialogueFilterContext.script", description = "An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table." },
+			{ name = "service", type = "tes3.merchantService|integer", optional = true, description = "The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table." },
+			{ name = "context", type = "tes3.dialogueFilterContext|integer", default = "tes3.dialogueFilterContext.script", description = "An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table." },
 		}
 	}},
 	returns = {

@@ -73,17 +73,6 @@ The variable type to create. One of the following:
 
 ***
 
-### `numbersOnly`
-<div class="search_terms" style="display: none">numbersonly</div>
-
-*Optional*. *Default*: `false`. If true, only numbers will be allowed for this variable in TextFields.
-
-**Returns**:
-
-* `result` (boolean?)
-
-***
-
 ### `path`
 <div class="search_terms" style="display: none">path</div>
 

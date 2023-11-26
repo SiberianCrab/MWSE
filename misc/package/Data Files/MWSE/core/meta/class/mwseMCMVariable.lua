@@ -11,7 +11,6 @@
 --- @field converter fun(newValue): unknown This function is called when the value of the variable is changed. The function can modify the new value before it is stored.
 --- @field id string The unique identifier for the variable.
 --- @field inGameOnly boolean If true, the setting containing this variable will be disabled while the game is on main menu.
---- @field numbersOnly boolean If true, only numbers will be allowed for this variable in TextFields.
 --- @field restartRequired boolean If true, updating the setting containing this variable will notify the player to restart the game.
 --- @field restartRequiredMessage string The default text is a localized version of: "The game must be restarted before this change will come into effect.".
 --- @field value unknown The value stored in the variable.

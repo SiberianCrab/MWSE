@@ -27,6 +27,7 @@ event.register(tes3.event.playGroup, playGroupCallback)
 ## Event Data
 
 * `animationData` ([tes3animationData](../types/tes3animationData.md)): *Read-only*. The related animation data.
+* `currentGroup` ([tes3.animationGroup](../references/animation-groups.md)): The animation group that is currently playing. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
 * `flags` ([tes3.animationStartFlag](../references/animation-start-flags.md)): Maps to values in [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) namespace.
 * `group` ([tes3.animationGroup](../references/animation-groups.md)): The animation group about to be played. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
 * `index` ([tes3.animationBodySection](../references/animation-body-sections.md)): *Read-only*. The index of the body section the animation will be played on. Maps to values in [`tes3.animationBodySection`](https://mwse.github.io/MWSE/references/animation-body-sections/) namespace.

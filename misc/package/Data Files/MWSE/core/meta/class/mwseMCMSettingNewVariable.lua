@@ -17,7 +17,6 @@
 --- @field getter nil|fun(self: mwseMCMCustomVariable): unknown *Optional*. Used only in Custom variable.
 --- @field id string? *Optional*. The unique identifier for the variable.
 --- @field inGameOnly boolean? *Optional*. *Default*: `false`. If true, the setting containing this variable will be disabled if the game is on main menu.
---- @field numbersOnly boolean? *Optional*. *Default*: `false`. If true, only numbers will be allowed for this variable in TextFields.
 --- @field path string? *Optional*. Used only for ConfigVariable and PlayerData.
 --- @field restartRequired boolean? *Optional*. *Default*: `false`. If true, updating the setting containing this variable will notify the player to restart the game.
 --- @field restartRequiredMessage string? *Optional*. The default text is a localized version of: "The game must be restarted before this change will come into effect.".

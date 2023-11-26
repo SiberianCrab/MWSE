@@ -39,7 +39,7 @@ namespace mwse::lua {
 			// Functions exposed as properties.
 			usertypeDefinition["mesh"] = sol::property(&TES3::Container::getModelPath, &TES3::Container::setModelPath);
 			usertypeDefinition["name"] = sol::property(&TES3::Container::getName, &TES3::Container::setName);
-			usertypeDefinition["script"] = sol::readonly_property(&TES3::Container::getScript);
+			usertypeDefinition["script"] = &TES3::Container::script;
 
 			// TODO: Deprecated. Remove before 2.1-stable.
 			usertypeDefinition["clone"] = &TES3::Container::clone;

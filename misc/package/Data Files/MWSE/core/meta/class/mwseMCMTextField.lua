@@ -8,8 +8,8 @@
 --- @field elements mwseMCMParagraphFieldElements|mwseMCMTextFieldElements This dictionary-style table holds all the UI elements of the TextField, for easy access.
 --- @field label string Text shown above the text field.
 --- @field minHeight integer|nil The minimum height set on the `self.elements.border` UI element.
+--- @field numbersOnly boolean If true, only numbers will be allowed for this variable in TextFields.
 --- @field sNewValue string The message shown after a new value is submitted. This can be formatted with a '%s' which will be replaced with the new value. The default text is a localized version of: "New value: '%s'".
---- @field sNumbersOnly string The text shown in a messageBox when the user entered an invalid input when `self.variable.numbersOnly` is true. The default text is a localized version of: "Value must be a number.".
 mwseMCMTextField = {}
 
 --- This method is called when setting is updated. Shows a messageBox with `self.sNewValue` with curent variable value formatted in.

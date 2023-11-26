@@ -116,6 +116,16 @@ local config = {
 						table = mwseConfig,
 					},
 				},
+				{
+					class = "OnOffButton",
+					label = i18n("useSkinnedAccurateActivationRaytests.label"),
+					description = i18n("useSkinnedAccurateActivationRaytests.description"),
+					variable = {
+						id = "UseSkinnedAccurateActivationRaytests",
+						class = "TableVariable",
+						table = mwseConfig,
+					},
+				},
 			},
 			sidebarComponents = {
 				{

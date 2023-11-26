@@ -7,7 +7,7 @@ return {
 		tableParams = {
 			{
 				name = "id",
-				type = "tes3.effect",
+				type = "tes3.effect|integer",
 				description = "Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown."
 			},
 			{
@@ -26,7 +26,7 @@ return {
 			},
 			{
 				name = "school",
-				type = "tes3.magicSchool",
+				type = "tes3.magicSchool|integer",
 				optional = true,
 				default = "tes3.magicSchool.alteration",
 				description = "The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants."

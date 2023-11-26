@@ -198,6 +198,17 @@ This array of UI elements will have an event handler registered to trigger "MCM:
 
 ***
 
+### `numbersOnly`
+<div class="search_terms" style="display: none">numbersonly</div>
+
+If true, only numbers will be allowed for this variable in TextFields.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `paddingBottom`
 <div class="search_terms" style="display: none">paddingbottom</div>
 
@@ -279,17 +290,6 @@ The message shown after a new value is submitted. This can be formatted with a '
 <div class="search_terms" style="display: none">sno</div>
 
 Set to the value of `sNo` GMST.
-
-**Returns**:
-
-* `result` (string)
-
-***
-
-### `sNumbersOnly`
-<div class="search_terms" style="display: none">snumbersonly</div>
-
-The text shown in a messageBox when the user entered an invalid input when `self.variable.numbersOnly` is true. The default text is a localized version of: "Value must be a number.".
 
 **Returns**:
 

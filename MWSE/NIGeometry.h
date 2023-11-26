@@ -32,3 +32,5 @@ namespace NI {
 	};
 	static_assert(sizeof(Geometry) == 0xAC, "NI::Geometry failed size validation");
 }
+
+MWSE_SOL_CUSTOMIZED_PUSHER_DECLARE_NI(NI::Geometry)

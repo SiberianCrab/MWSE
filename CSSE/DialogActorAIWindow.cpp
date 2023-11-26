@@ -48,7 +48,7 @@ namespace se::cs::dialog::actor_ai_window {
 		// Finish measure of initialization time.
 		if constexpr (LOG_PERFORMANCE_RESULTS) {
 			auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
-			log::stream << "Total dialogue window initialization time: " << timeToInitialize.count() << "ms" << std::endl;
+			log::stream << "Total actor AI data window initialization time: " << timeToInitialize.count() << "ms" << std::endl;
 		}
 	}
 

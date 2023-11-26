@@ -79,17 +79,6 @@ Key of entry used on the `tes3.player.data` table.
 
 ***
 
-### `numbersOnly`
-<div class="search_terms" style="display: none">numbersonly</div>
-
-If true, only numbers will be allowed for this variable in TextFields.
-
-**Returns**:
-
-* `result` (boolean)
-
-***
-
 ### `path`
 <div class="search_terms" style="display: none">path</div>
 

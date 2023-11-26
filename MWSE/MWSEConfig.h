@@ -13,6 +13,7 @@ namespace mwse {
 		static bool EnableDependencyChecks;
 		static bool ReplaceDialogueFiltering;
 		static bool EnableLuaErrorNotifications;
+		static bool UseSkinnedAccurateActivationRaytests;
 		static UINT BuildNumber;
 
 		static sol::table getDefaults();

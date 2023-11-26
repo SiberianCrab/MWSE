@@ -79,17 +79,6 @@ If true, the setting containing this variable will be disabled while the game is
 
 ***
 
-### `numbersOnly`
-<div class="search_terms" style="display: none">numbersonly</div>
-
-If true, only numbers will be allowed for this variable in TextFields.
-
-**Returns**:
-
-* `result` (boolean)
-
-***
-
 ### `path`
 <div class="search_terms" style="display: none">path</div>
 

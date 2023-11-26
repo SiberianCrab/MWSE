@@ -60,7 +60,7 @@ function tes3enchantment:createCopy(params) end
 function tes3enchantment:getActiveEffectCount() end
 
 --- Returns the index of a first effect of a given effectId in the parent `tes3enchantment` object.
---- @param effectId tes3.effect The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants, including magic effects added with [`tes3.addMagicEffect()`](https://mwse.github.io/MWSE/apis/tes3/#tes3addmagiceffect).
+--- @param effectId tes3.effect|integer The effectId to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants, including magic effects added with [`tes3.addMagicEffect()`](https://mwse.github.io/MWSE/apis/tes3/#tes3addmagiceffect).
 --- @return number index No description yet available.
 function tes3enchantment:getFirstIndexOfEffect(effectId) end
 

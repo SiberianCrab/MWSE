@@ -335,7 +335,7 @@ The scene graph node for this object.
 ### `script`
 <div class="search_terms" style="display: none">script</div>
 
-The script that runs on the object.
+*Read-only*. The script that runs on the object.
 
 **Returns**:
 

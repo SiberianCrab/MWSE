@@ -957,7 +957,14 @@ namespace mwse::lua {
 
 		// Our pick is configured. Let's run it! (Use normalized direction for skinned mesh fix later.)
 		auto directionNormalized = direction.value().normalized();
-		auto pickSuccess = rayTestCache->pickObjects(&position.value(), &directionNormalized, false, maxDistance);
+		auto pickSuccess = false;
+		const auto accurateSkinned = getOptionalParam<bool>(params, "accurateSkinned", false);
+		if (accurateSkinned) {
+			pickSuccess = rayTestCache->pickObjectsWithSkinDeforms(&position.value(), &directionNormalized, false, maxDistance);
+		}
+		else {
+			pickSuccess = rayTestCache->pickObjects(&position.value(), &directionNormalized, false, maxDistance);
+		}
 
 		// Restore previous cull states.
 		for (auto itt = ignoreRestoreList.begin(); itt != ignoreRestoreList.end(); ++itt) {
@@ -970,24 +977,26 @@ namespace mwse::lua {
 		}
 
 		// Fix distances and missing intersection data for skinned nodes.
-		auto distanceScale = 1.0 / direction.value().length();
-		auto skinnedCorrection = (maxDistance != 0.0) ? maxDistance : 1.0;
+		if (!accurateSkinned) {
+			auto distanceScale = 1.0 / direction.value().length();
+			auto skinnedCorrection = (maxDistance != 0.0) ? maxDistance : 1.0;
 
-		for (auto& r : rayTestCache->results) {
-			if (r == nullptr) {
-				continue;
-			}
+			for (auto& r : rayTestCache->results) {
+				if (r == nullptr) {
+					continue;
+				}
 
-			// Adjust distance as if direction was not normalized.
-			r->distance *= float(distanceScale);
+				// Adjust distance as if direction was not normalized.
+				r->distance *= float(distanceScale);
 
-			// Skinned nodes only have usable scaled distance data.
-			if (r->object->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
-				auto node = static_cast<const NI::TriShape*>(r->object);
-				if (node->skinInstance) {
-					r->distance *= float(skinnedCorrection);
-					r->intersection = position.value() + direction.value() * r->distance;
-					r->normal = (r->intersection - node->worldBoundOrigin).normalized();
+				// Skinned nodes only have usable scaled distance data.
+				if (r->object->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
+					auto node = static_cast<const NI::TriShape*>(r->object);
+					if (node->skinInstance) {
+						r->distance *= float(skinnedCorrection);
+						r->intersection = position.value() + direction.value() * r->distance;
+						r->normal = (r->intersection - node->worldBoundOrigin).normalized();
+					}
 				}
 			}
 		}

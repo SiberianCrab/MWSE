@@ -49,7 +49,7 @@ namespace mwse::lua {
 			usertypeDefinition["magicka"] = sol::readonly_property(&TES3::Creature::getMagicka);
 			usertypeDefinition["mesh"] = sol::property(&TES3::Creature::getModelPath, &TES3::Creature::setModelPath);
 			usertypeDefinition["name"] = sol::property(&TES3::Creature::getName, &TES3::Creature::setName);
-			usertypeDefinition["script"] = sol::readonly_property(&TES3::Creature::getScript);
+			usertypeDefinition["script"] = &TES3::Creature::script;
 
 			// Easy access to actor flags.
 			usertypeDefinition["biped"] = sol::property(&TES3::Creature::getIsBiped, &TES3::Creature::setIsBiped);

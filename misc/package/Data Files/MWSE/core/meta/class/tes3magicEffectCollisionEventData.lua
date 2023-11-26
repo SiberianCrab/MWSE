@@ -5,6 +5,6 @@
 --- This table is passed to the `onCollision` callback function in a custom magic effect.
 --- @class tes3magicEffectCollisionEventData
 --- @field collision tes3mobileObjectCollision The collision data.
---- @field effectId tes3.effect Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @field effectId tes3.effect|integer Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 --- @field effectIndex integer The index of the effect in the spell.
 --- @field sourceInstance tes3magicSourceInstance Access to the magic source of the effect instance.

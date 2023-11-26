@@ -6,7 +6,7 @@ return {
 		type = "table",
 		optional = true,
 		tableParams = {
-			{ name = "effect", type = "tes3.effect", optional = true, description = "The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table." },
+			{ name = "effect", type = "tes3.effect|integer", optional = true, description = "The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table." },
 			{ name = "serial", type = "integer", optional = true, description = "The magic instance serial to search for." },
 		},
 	}},

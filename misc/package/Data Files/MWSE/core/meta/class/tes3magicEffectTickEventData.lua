@@ -5,7 +5,7 @@
 --- This table is passed to the `onTick` callback function in a custom magic effect.
 --- @class tes3magicEffectTickEventData
 --- @field deltaTime number The time passed since the last tick of the spell.
---- @field effectId tes3.effect Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @field effectId tes3.effect|integer Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 --- @field effectIndex integer The index of the effect in the spell.
 --- @field effectInstance tes3magicEffectInstance The time passed since the last tick of the spell.
 --- @field sourceInstance tes3magicSourceInstance Access to the magic source of the effect instance.

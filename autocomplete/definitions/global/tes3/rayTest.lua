@@ -31,6 +31,7 @@ return {
 			{ name = "returnSmoothNormal", type = "boolean", optional = true, default = false, description = "Use normal interpolation for calculating vertex normals." },
 			{ name = "returnTexture", type = "boolean", optional = true, default = false, description = "Calculate and return the texture coordinate at intersections." },
 			{ name = "ignore", type = "table<integer, niNode|tes3reference>", description = "An array of references and/or scene graph nodes to cull from the result(s).", optional = true },
+			{ name = "accurateSkinned", type = "boolean", default = false, optional = true, description = "If true, the raytest will deform skinned objects to accurately raytest against them. This significantly slows down the operation." },
 		},
 	}},
 	examples = {

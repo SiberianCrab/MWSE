@@ -8,7 +8,7 @@ Note `reference.object.spells:contains(spellID)` will give the same output as th
 		type = "table",
 		tableParams = {
 			{ name = "reference", type = "tes3reference|tes3mobileActor|string" },
-			{ name = "effect", type = "tes3.effect", optional = true, description = "A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`." },
+			{ name = "effect", type = "tes3.effect|integer", optional = true, description = "A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`." },
 			{ name = "object", type = "tes3alchemy|tes3enchantment|tes3spell|tes3magicEffect|string", optional = true, description = "An object to perform a check for." },
 		},
 	}},

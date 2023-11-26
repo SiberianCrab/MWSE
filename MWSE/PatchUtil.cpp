@@ -32,6 +32,7 @@
 #include "NICollisionSwitch.h"
 #include "NIFlipController.h"
 #include "NILinesData.h"
+#include "NIPick.h"
 #include "NISortAdjustNode.h"
 #include "NIUVController.h"
 
@@ -882,6 +883,19 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Use skinned-object-aware picks
+	//
+
+	bool __fastcall PatchPickSkinnedAware(NI::Pick* pick, DWORD _EDX_, TES3::Vector3* origin, TES3::Vector3* direction, bool append, float maxDist) {
+		if (Configuration::UseSkinnedAccurateActivationRaytests) {
+			return pick->pickObjectsWithSkinDeforms(origin, direction, append, maxDist);
+		}
+		else {
+			return pick->pickObjects(origin, direction, append, maxDist);
+		}
+	}
+
+	//
 	// Install all the patches.
 	//
 
@@ -1296,6 +1310,11 @@ namespace mwse::patch {
 		// Provide lua stack traces with invalid UI access.
 		genCallEnforced(0x581484, 0x476E20, reinterpret_cast<DWORD>(PatchLogUIMemoryPointerErrors));
 		genCallEnforced(0x582DFA, 0x476E20, reinterpret_cast<DWORD>(PatchLogUIMemoryPointerErrors));
+
+		// Patch: Use skinned-object-aware picks
+		genCallEnforced(0x41D3D0, 0x6F3050, reinterpret_cast<DWORD>(PatchPickSkinnedAware));
+		genCallEnforced(0x41D5E6, 0x6F3050, reinterpret_cast<DWORD>(PatchPickSkinnedAware));
+		genCallEnforced(0x41D6C4, 0x6F3050, reinterpret_cast<DWORD>(PatchPickSkinnedAware));
 	}
 
 	void installPostLuaPatches() {

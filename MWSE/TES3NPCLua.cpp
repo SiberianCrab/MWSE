@@ -41,7 +41,7 @@ namespace mwse::lua {
 			usertypeDefinition["class"] = &TES3::NPC::class_;
 			usertypeDefinition["faction"] = &TES3::NPC::faction;
 			usertypeDefinition["race"] = &TES3::NPC::race;
-			usertypeDefinition["script"] = sol::readonly_property(&TES3::NPC::getScript);
+			usertypeDefinition["script"] = &TES3::NPC::script;
 			usertypeDefinition["soul"] = sol::readonly_property(&TES3::NPC::getSoulValue);
 
 			// Indirect bindings to unions and arrays.

@@ -25,6 +25,7 @@ namespace mwse::lua::event {
 
 		eventData["animationData"] = m_AnimationData;
 		eventData["reference"] = m_AnimationData->getReference();
+		eventData["currentGroup"] = m_AnimationData->currentAnimGroup[m_TriIndex];
 		eventData["group"] = m_AnimationGroup;
 		eventData["index"] = m_TriIndex;
 		eventData["flags"] = m_StartFlag;

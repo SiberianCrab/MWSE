@@ -50,7 +50,7 @@ The base `tes3magicEffect` ID that the effect uses. Maps to values from [`tes3.e
 
 **Returns**:
 
-* `result` ([tes3.effect](../references/magic-effects.md))
+* `result` ([tes3.effect](../references/magic-effects.md), integer)
 
 ***
 

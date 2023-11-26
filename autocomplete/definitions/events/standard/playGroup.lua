@@ -12,6 +12,10 @@ return {
 			readOnly = true,
 			description = "The actor that is about to play the animation.",
 		},
+		["currentGroup"] = {
+			type = "tes3.animationGroup",
+			description = "The animation group that is currently playing. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.",
+		},
 		["group"] = {
 			type = "tes3.animationGroup",
 			description = "The animation group about to be played. Maps to values in [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.",

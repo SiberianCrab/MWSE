@@ -437,7 +437,7 @@ local result = myObject:getFirstIndexOfEffect(effectId)
 
 **Parameters**:
 
-* `effectId` ([tes3.effect](../references/magic-effects.md)): A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+* `effectId` ([tes3.effect](../references/magic-effects.md), integer): A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 
 **Returns**:
 

@@ -187,7 +187,7 @@ local result = myObject:selectAlchemyWithEffect(id)
 
 **Parameters**:
 
-* `id` ([tes3.effect](../references/magic-effects.md)): Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+* `id` ([tes3.effect](../references/magic-effects.md), integer): Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 
 **Returns**:
 

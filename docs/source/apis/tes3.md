@@ -250,10 +250,10 @@ local effect = tes3.addMagicEffect({ id = ..., name = ..., baseCost = ..., schoo
 **Parameters**:
 
 * `params` (table)
-	* `id` ([tes3.effect](../references/magic-effects.md)): Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
+	* `id` ([tes3.effect](../references/magic-effects.md), integer): Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
 	* `name` (string): *Default*: `Unnamed Effect`. Name of the effect.
 	* `baseCost` (number): *Default*: `1`. Base magicka cost for the effect.
-	* `school` ([tes3.magicSchool](../references/magic-schools.md)): *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
+	* `school` ([tes3.magicSchool](../references/magic-schools.md), integer): *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
 	* `size` (number): *Default*: `1`. Controls how much the visual effect scales with its magnitude.
 	* `sizeCap` (number): *Default*: `1`. The maximum possible size of the projectile.
 	* `speed` (number): *Default*: `1`.
@@ -575,7 +575,7 @@ tes3.adjustSoundVolume({ sound = ..., reference = ..., mixChannel = ..., volume 
 * `params` (table)
 	* `sound` ([tes3sound](../types/tes3sound.md), string): The sound object, or id of the sound to look for.
 	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): The reference to attach the sound to.
-	* `mixChannel` ([tes3.soundMix](../references/sound-mix-types.md)): *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
+	* `mixChannel` ([tes3.soundMix](../references/sound-mix-types.md), integer): *Default*: `tes3.soundMix.effects`. The channel to base volume off of. Maps to [`tes3.soundMix`](https://mwse.github.io/MWSE/references/sound-mix-types/) constants.
 	* `volume` (number): *Default*: `1.0`. A value between 0.0 and 1.0 to scale the volume off of.
 
 ***
@@ -624,10 +624,10 @@ local instance = tes3.applyMagicSource({ reference = ..., source = ..., name = .
 	* `source` ([tes3object](../types/tes3object.md)): *Optional*. A magic source to apply.
 	* `name` (string): *Optional*. While optional for other uses, if applying alchemy as a source, you must specify a name for the magic source.
 	* `effects` (table): *Optional*. A table of custom effects to apply as a potion. Maximal number of effects is 8.
-		* `id` ([tes3.effect](../references/magic-effects.md)): *Default*: `-1`. ID of the effect. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
-		* `skill` ([tes3.skill](../references/skills.md)): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
-		* `attribute` ([tes3.attribute](../references/attributes.md)): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
-		* `rangeType` ([tes3.effectRange](../references/effect-ranges.md)): *Default*: `tes3.effectRange.self`. The range of the effect. This maps to [`tes3.effectRange`](https://mwse.github.io/MWSE/references/effect-ranges/) constants.
+		* `id` ([tes3.effect](../references/magic-effects.md), integer): *Default*: `-1`. ID of the effect. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+		* `skill` ([tes3.skill](../references/skills.md), integer): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
+		* `attribute` ([tes3.attribute](../references/attributes.md), integer): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
+		* `rangeType` ([tes3.effectRange](../references/effect-ranges.md), integer): *Default*: `tes3.effectRange.self`. The range of the effect. This maps to [`tes3.effectRange`](https://mwse.github.io/MWSE/references/effect-ranges/) constants.
 		* `radius` (number): *Default*: `0`. The radius of the effect.
 		* `duration` (number): *Default*: `0`. Number of seconds the effect is going to be active.
 		* `min` (number): *Default*: `0`. The minimal magintude of the effect per tick.
@@ -716,7 +716,7 @@ local price = tes3.calculatePrice({ object = ..., basePrice = ..., buying = ...,
 	* `training` (boolean): *Default*: `false`. If `true`, a [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event will be triggered, passing the given `skill` ID.
 	* `count` (number): *Default*: `1`. If `bartering`, the count passed to the [calcBarterPrice](https://mwse.github.io/MWSE/events/calcBarterPrice) event.
 	* `itemData` ([tes3itemData](../types/tes3itemData.md)): *Optional*. If `bartering` or `repairing`, the item data passed to the [calcBarterPrice](https://mwse.github.io/MWSE/events/calcBarterPrice) or [calcRepairPrice](https://mwse.github.io/MWSE/events/calcRepairPrice) event.
-	* `skill` ([tes3.skill](../references/skills.md)): If `training`, the skill ID passed to the [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+	* `skill` ([tes3.skill](../references/skills.md), integer): If `training`, the skill ID passed to the [calcTrainingPrice](https://mwse.github.io/MWSE/events/calcTrainingPrice) event. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 
 **Returns**:
 
@@ -914,8 +914,8 @@ local offersService, refusalReply = tes3.checkMerchantOffersService({ reference 
 
 * `params` (table)
 	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string)
-	* `service` ([tes3.merchantService](../references/merchant-services.md)): *Optional*. The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table.
-	* `context` ([tes3.dialogueFilterContext](../references/dialogue-filter-context.md)): *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
+	* `service` ([tes3.merchantService](../references/merchant-services.md), integer): *Optional*. The specific service to check for availability. Maps to values in the [`tes3.merchantService`](https://mwse.github.io/MWSE/references/merchant-services/) table.
+	* `context` ([tes3.dialogueFilterContext](../references/dialogue-filter-context.md), integer): *Default*: `tes3.dialogueFilterContext.script`. An override for how this info request should be treated. Maps to values in the [`tes3.dialogueFilterContext`](https://mwse.github.io/MWSE/references/dialogue-filter-context/) table.
 
 **Returns**:
 
@@ -1066,7 +1066,7 @@ local createdObject = tes3.createObject({ id = ..., objectType = ..., getIfExist
 
 * `params` (table)
 	* `id` (string): *Optional*. The id of the new object.
-	* `objectType` ([tes3.objectType](../references/object-types.md)): The type of object to create. Maps to values in the [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) table. Supported object types are:
+	* `objectType` ([tes3.objectType](../references/object-types.md), integer): The type of object to create. Maps to values in the [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) table. Supported object types are:
 		- `tes3.objectType.activator`
 		- `tes3.objectType.alchemy`
 		- `tes3.objectType.armor`
@@ -1252,7 +1252,7 @@ tes3.disableKey(keyCode)
 
 **Parameters**:
 
-* `keyCode` ([tes3.scanCode](../references/scan-codes.md)): Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+* `keyCode` ([tes3.scanCode](../references/scan-codes.md), integer): Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 
 ***
 
@@ -1292,7 +1292,7 @@ tes3.enableKey(keyCode)
 
 **Parameters**:
 
-* `keyCode` ([tes3.scanCode](../references/scan-codes.md)): Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
+* `keyCode` ([tes3.scanCode](../references/scan-codes.md), integer): Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.
 
 ***
 
@@ -1444,8 +1444,8 @@ local dialogue = tes3.findDialogue({ topic = ..., type = ..., page = ... })
 
 * `params` (table)
 	* `topic` (string): *Optional*. The dialogue topic to look for.
-	* `type` ([tes3.dialogueType](../references/dialogue-types.md)): *Optional*. The type of dialogue to look for. Uses [`tes3.dialogueType`](https://mwse.github.io/MWSE/references/dialogue-types/) constants.
-	* `page` (tes3.dialoguePage.voice, tes3.dialoguePage.greeting, tes3.dialoguePage.service): *Optional*. The page of dialogue to fetch. Uses [`tes3.dialoguePage`](https://mwse.github.io/MWSE/references/dialogue-pages/) constants.
+	* `type` ([tes3.dialogueType](../references/dialogue-types.md), integer): *Optional*. The type of dialogue to look for. Uses [`tes3.dialogueType`](https://mwse.github.io/MWSE/references/dialogue-types/) constants.
+	* `page` (tes3.dialoguePage.voice, tes3.dialoguePage.greeting, tes3.dialoguePage.service, integer): *Optional*. The page of dialogue to fetch. Uses [`tes3.dialoguePage`](https://mwse.github.io/MWSE/references/dialogue-pages/) constants.
 
 **Returns**:
 
@@ -1483,7 +1483,7 @@ local gameSetting = tes3.findGMST(id)
 
 **Parameters**:
 
-* `id` ([tes3.gmst](../references/gmst.md), string)
+* `id` ([tes3.gmst](../references/gmst.md), integer, string)
 
 **Returns**:
 
@@ -1646,7 +1646,7 @@ local result = tes3.getAnimationActionTiming({ reference = ..., group = ... })
 
 * `params` (table)
 	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): A reference to the which actor whose animations will be checked.
-	* `group` ([tes3.animationGroup](../references/animation-groups.md)): *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+	* `group` ([tes3.animationGroup](../references/animation-groups.md), integer): *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 
 **Returns**:
 
@@ -1802,7 +1802,7 @@ local name = tes3.getAttributeName(attributeId)
 
 **Parameters**:
 
-* `attributeId` ([tes3.attribute](../references/attributes.md)): The attribute id to get the name of. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) namespace.
+* `attributeId` ([tes3.attribute](../references/attributes.md), integer): The attribute id to get the name of. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) namespace.
 
 **Returns**:
 
@@ -2000,9 +2000,9 @@ local effectiveMagnitude, magnitude = tes3.getEffectMagnitude({ reference = ...,
 
 * `params` (table)
 	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): An associated mobile should exist for this function to be able to work.
-	* `effect` ([tes3.effect](../references/magic-effects.md)): Effect ID. Can be any of the predefined spell effects, or one added by `tes3.claimSpellEffectId()`. Maps to values of [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants
-	* `skill` ([tes3.skill](../references/skills.md)): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
-	* `attribute` ([tes3.attribute](../references/attributes.md)): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
+	* `effect` ([tes3.effect](../references/magic-effects.md), integer): Effect ID. Can be any of the predefined spell effects, or one added by `tes3.claimSpellEffectId()`. Maps to values of [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants
+	* `skill` ([tes3.skill](../references/skills.md), integer): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Skill, a skill should be provided. This also applies to any custom spell effect which operates on a certain skill. This value maps to [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) constants.
+	* `attribute` ([tes3.attribute](../references/attributes.md), integer): *Default*: `-1`. If effect parameter specified is: Absorb, Damage, Drain, Fortify or Restore Attribute, an attribute should be provided. This also applies to any custom spell effect which operates on a certain attribute. This value maps to [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) constants.
 
 **Returns**:
 
@@ -2043,9 +2043,9 @@ local stack = tes3.getEquippedItem({ actor = ..., enchanted = ..., objectType = 
 * `params` (table)
 	* `actor` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), [tes3actor](../types/tes3actor.md))
 	* `enchanted` (boolean): *Optional*. If true, filters only enchanted items.
-	* `objectType` ([tes3.objectType](../references/object-types.md)): *Optional*. Maps to [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) constants. Used to filter equipment by type.
-	* `slot` ([tes3.armorSlot](../references/armor-slots.md), [tes3.clothingSlot](../references/clothing-slots.md)): *Optional*. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) or [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/). Used to filter equipment by slot.
-	* `type` ([tes3.weaponType](../references/weapon-types.md)): *Optional*. Maps to [`tes3.weaponType`](https://mwse.github.io/MWSE/references/weapon-types/). Used to filter equipment by type.
+	* `objectType` ([tes3.objectType](../references/object-types.md), integer): *Optional*. Maps to [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) constants. Used to filter equipment by type.
+	* `slot` ([tes3.armorSlot](../references/armor-slots.md), [tes3.clothingSlot](../references/clothing-slots.md), integer): *Optional*. Maps to [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) or [`tes3.clothingSlot`](https://mwse.github.io/MWSE/references/clothing-slots/). Used to filter equipment by slot.
+	* `type` ([tes3.weaponType](../references/weapon-types.md), integer): *Optional*. Maps to [`tes3.weaponType`](https://mwse.github.io/MWSE/references/weapon-types/). Used to filter equipment by type.
 
 **Returns**:
 
@@ -2390,7 +2390,7 @@ local magicEffect = tes3.getMagicEffect(id)
 
 **Parameters**:
 
-* `id` ([tes3.effect](../references/magic-effects.md)): Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+* `id` ([tes3.effect](../references/magic-effects.md), integer): Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 
 **Returns**:
 
@@ -2410,9 +2410,9 @@ local complexName = tes3.getMagicEffectName({ effect = ..., attribute = ..., ski
 **Parameters**:
 
 * `params` (table)
-	* `effect` ([tes3.effect](../references/magic-effects.md)): The effect ID to get the name of. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
-	* `attribute` ([tes3.attribute](../references/attributes.md)): *Optional*. The attribute ID to use, if applicable. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) table.
-	* `skill` ([tes3.skill](../references/skills.md)): *Optional*. The skill ID to use, if applicable. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
+	* `effect` ([tes3.effect](../references/magic-effects.md), integer): The effect ID to get the name of. Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+	* `attribute` ([tes3.attribute](../references/attributes.md), integer): *Optional*. The attribute ID to use, if applicable. Maps to values in [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) table.
+	* `skill` ([tes3.skill](../references/skills.md), integer): *Optional*. The skill ID to use, if applicable. Maps to values in [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table.
 
 **Returns**:
 
@@ -3069,7 +3069,7 @@ local isAffectedBy = tes3.isAffectedBy({ reference = ..., effect = ..., object =
 
 * `params` (table)
 	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string)
-	* `effect` ([tes3.effect](../references/magic-effects.md)): *Optional*. A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`.
+	* `effect` ([tes3.effect](../references/magic-effects.md), integer): *Optional*. A numerical identifier of the magic effect to perform a check for. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constant, including those claimed with `tes3.claimSpellEffectId()`, and then added with `tes3.addMagicEffect()`.
 	* `object` ([tes3alchemy](../types/tes3alchemy.md), [tes3enchantment](../types/tes3enchantment.md), [tes3spell](../types/tes3spell.md), [tes3magicEffect](../types/tes3magicEffect.md), string): *Optional*. An object to perform a check for.
 
 **Returns**:
@@ -3737,7 +3737,7 @@ local played = tes3.playVoiceover({ actor = ..., voiceover = ... })
 
 * `params` (table)
 	* `actor` ([tes3mobileActor](../types/tes3mobileActor.md), [tes3reference](../types/tes3reference.md), string): The actor to play a voiceover.
-	* `voiceover` ([tes3.voiceover](../references/voiceovers.md), string): Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants.
+	* `voiceover` ([tes3.voiceover](../references/voiceovers.md), integer, string): Maps to [`tes3.voiceover`](https://mwse.github.io/MWSE/references/voiceovers/) constants.
 
 **Returns**:
 
@@ -3818,7 +3818,7 @@ Performs a ray test and returns various information related to the result(s). If
 
 
 ```lua
-local result = tes3.rayTest({ position = ..., direction = ..., findAll = ..., maxDistance = ..., sort = ..., useModelBounds = ..., useModelCoordinates = ..., useBackTriangles = ..., observeAppCullFlag = ..., root = ..., returnColor = ..., returnNormal = ..., returnSmoothNormal = ..., returnTexture = ..., ignore = ... })
+local result = tes3.rayTest({ position = ..., direction = ..., findAll = ..., maxDistance = ..., sort = ..., useModelBounds = ..., useModelCoordinates = ..., useBackTriangles = ..., observeAppCullFlag = ..., root = ..., returnColor = ..., returnNormal = ..., returnSmoothNormal = ..., returnTexture = ..., ignore = ..., accurateSkinned = ... })
 ```
 
 **Parameters**:
@@ -3839,6 +3839,7 @@ local result = tes3.rayTest({ position = ..., direction = ..., findAll = ..., ma
 	* `returnSmoothNormal` (boolean): *Default*: `false`. Use normal interpolation for calculating vertex normals.
 	* `returnTexture` (boolean): *Default*: `false`. Calculate and return the texture coordinate at intersections.
 	* `ignore` (table&lt;integer, [niNode](../types/niNode.md)|[tes3reference](../types/tes3reference.md)&gt;): *Optional*. An array of references and/or scene graph nodes to cull from the result(s).
+	* `accurateSkinned` (boolean): *Default*: `false`. If true, the raytest will deform skinned objects to accurately raytest against them. This significantly slows down the operation.
 
 **Returns**:
 
@@ -3955,7 +3956,7 @@ tes3.removeEffects({ reference = ..., effect = ..., castType = ..., chance = ...
 
 * `params` (table)
 	* `reference` ([tes3reference](../types/tes3reference.md)): Target reference to remove effects from.
-	* `effect` ([tes3.effect](../references/magic-effects.md)): *Optional*. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
+	* `effect` ([tes3.effect](../references/magic-effects.md), integer): *Optional*. Maps to [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) constants.
 	* `castType` ([tes3.spellType](../references/spell-types.md)): *Optional*. Maps to [`tes3.spellType`](https://mwse.github.io/MWSE/references/spell-types/) constants.
 	* `chance` (number): *Default*: `100`. The chance for the effect to be removed.
 	* `removeSpell` (boolean): *Optional*. If removing by cast type, determines if the spell should be removed from the target's spell list. Defaults to true if `castType` is not `tes3.spellType.spell.` This causes diseases and curses to be removed when dispelled.
@@ -4552,8 +4553,8 @@ tes3.setStatistic({ reference = ..., attribute = ..., skill = ..., name = ..., b
 
 * `params` (table)
 	* `reference` ([tes3mobileActor](../types/tes3mobileActor.md), [tes3reference](../types/tes3reference.md), string)
-	* `attribute` ([tes3.attribute](../references/attributes.md)): *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
-	* `skill` ([tes3.skill](../references/skills.md)): *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
+	* `attribute` ([tes3.attribute](../references/attributes.md), integer): *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
+	* `skill` ([tes3.skill](../references/skills.md), integer): *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
 	* `name` (string): *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
 	* `base` (number): *Optional*. If set, the base value will be set.
 	* `current` (number): *Optional*. If set, the current value will be set.

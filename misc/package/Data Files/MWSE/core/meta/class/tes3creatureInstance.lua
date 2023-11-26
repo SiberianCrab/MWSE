@@ -24,7 +24,7 @@
 --- @field name string The player-facing name for the object.
 --- @field reference tes3reference *Read-only*. The reference that the object is represented by.
 --- @field respawns boolean Access to the creature's respawns flag.
---- @field script tes3script The script that runs on the object.
+--- @field script tes3script *Read-only*. The script that runs on the object.
 --- @field skills number[] Simplified access to the base creature's skills. A table of three numbers, representing the base values for the creature's combat, magic, and stealth skills.
 --- @field soul number Simplified access to the base creature's soul. The amount of soul value that the creature provides.
 --- @field soundCreature tes3creature Simplified access to the base creature's sound generator. A creature to use instead of this one for sound generation.

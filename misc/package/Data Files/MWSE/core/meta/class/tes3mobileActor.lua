@@ -304,7 +304,7 @@ function tes3mobileActor:forceWeaponAttack(params) end
 --- Fetches a filtered list of the active magic effects on the actor.
 --- @param params tes3mobileActor.getActiveMagicEffects.params? This table accepts the following values:
 --- 
---- `effect`: tes3.effect? — *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- `effect`: tes3.effect|integer|nil — *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 --- 
 --- `serial`: integer? — *Optional*. The magic instance serial to search for.
 --- @return tes3activeMagicEffect[] result No description yet available.
@@ -312,7 +312,7 @@ function tes3mobileActor:getActiveMagicEffects(params) end
 
 ---Table parameter definitions for `tes3mobileActor.getActiveMagicEffects`.
 --- @class tes3mobileActor.getActiveMagicEffects.params
---- @field effect tes3.effect? *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @field effect tes3.effect|integer|nil *Optional*. The magic effect ID to search for, from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
 --- @field serial integer? *Optional*. The magic instance serial to search for.
 
 --- *Read-only*. Gets the weight of the boots equipped on the actor, or 0 if no boots are equipped.

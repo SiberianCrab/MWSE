@@ -9,7 +9,6 @@ local Parent = require("mcm.components.settings.Setting")
 --- @class mwseMCMTextField
 local TextField = Parent:new()
 TextField.buttonText = mwse.mcm.i18n("Submit")
-TextField.sNumbersOnly = mwse.mcm.i18n("Value must be a number.")
 TextField.sNewValue = mwse.mcm.i18n("New value: '%s'")
 TextField.defaultSetting = ""
 
@@ -45,14 +44,8 @@ function TextField:disable()
 end
 
 function TextField:update()
-	local isNumber = (tonumber(self.elements.inputField.text))
-	if self.variable.numbersOnly and not isNumber then
-		local sOk = tes3.findGMST(tes3.gmst.sOK).value --[[@as string]]
-		tes3.messageBox({ message = self.sNumbersOnly, buttons = { sOk } })
-		self.elements.inputField.text = self.variable.value
-		return
-	end
 	self.variable.value = self.elements.inputField.text
+
 	-- Do this after changing the variable so the callback is correct
 	Parent.update(self)
 end
@@ -101,8 +94,18 @@ function TextField:makeComponent(parentBlock)
 		border.minHeight = self.minHeight
 	end
 
-	local inputField = border:createTextInput()
-	inputField.text = self.variable.defaultSetting or ""
+	-- Backwards compatibility support.
+	if (self.variable.numbersOnly ~= nil) then
+		if (self.numbersOnly == nil) then
+			self.numbersOnly = self.variable.numbersOnly
+		end
+		self.variable.numbersOnly = nil --- @diagnostic disable-line
+	end
+
+	local inputField = border:createTextInput({
+		text = self.variable.defaultSetting or "",
+		numeric = self.numbersOnly,
+	})
 	inputField.widthProportional = 1.0
 	inputField.autoHeight = true
 	inputField.widget.lengthLimit = nil

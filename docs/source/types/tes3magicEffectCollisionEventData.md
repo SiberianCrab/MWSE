@@ -28,7 +28,7 @@ Maps to values in [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-e
 
 **Returns**:
 
-* `result` ([tes3.effect](../references/magic-effects.md))
+* `result` ([tes3.effect](../references/magic-effects.md), integer)
 
 ***
 

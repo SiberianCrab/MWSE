@@ -71,6 +71,8 @@ namespace NI {
 		AVObject** bones; // 0x10
 		int unknown_0x14;
 
+		void deform(const TES3::Vector3* srcVertices, const TES3::Vector3* srcNormals, unsigned int vertexCount, TES3::Vector3* dstVertices, TES3::Vector3* dstNormals) const;
+
 		nonstd::span<AVObject*> getBoneObjects();
 	};
 	static_assert(sizeof(SkinInstance) == 0x18, "NI::SkinInstance failed size validation");

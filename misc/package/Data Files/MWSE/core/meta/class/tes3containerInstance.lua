@@ -13,4 +13,4 @@
 --- @field respawns boolean Determines if the container's respawn flag is enabled. Only the organic containers can have respawn flag set.
 --- 
 --- The global script variable, "MonthsToRespawn" is decremented at the end of each month. If it reaches zero at the first day of next month, it is reset to `iMonthsToRespawn` (GMST) and all respawning containers are refilled.
---- @field script tes3script The script that runs on the object.
+--- @field script tes3script *Read-only*. The script that runs on the object.
