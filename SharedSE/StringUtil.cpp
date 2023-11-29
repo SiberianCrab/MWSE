@@ -48,6 +48,18 @@ namespace se::string {
 		return std::search(haystack.begin(), haystack.end(), needle.begin(), needle.end()) != haystack.end();
 	}
 
+	bool complex_contains(const std::string_view& haystack, const std::string_view& needle, bool caseSensitive, std::regex* regex) {
+		if (regex) {
+			return std::regex_search(haystack.data(), *regex);
+		}
+		else if (caseSensitive) {
+			return contains(haystack, needle);
+		}
+		else {
+			return cicontains(haystack, needle);
+		}
+	}
+
 	bool replace(std::string& str, const std::string_view from, const std::string_view to) {
 		size_t start_pos = str.find(from);
 		if (start_pos == std::string::npos)

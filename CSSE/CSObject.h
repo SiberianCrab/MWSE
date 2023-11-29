@@ -172,6 +172,9 @@ namespace se::cs {
 		inline void populateObjectWindow(HWND hWnd) const {
 			vtbl.object->populateObjectWindow(this, hWnd);
 		}
+
+		bool search(const std::string_view& needle, bool caseSensitive, std::regex* regex = nullptr) const;
+		bool searchWithInheritance(const std::string_view& needle, bool caseSensitive, std::regex* regex = nullptr) const;
 	};
 	static_assert(sizeof(Object) == 0x28, "CS::Object failed size validation");
 	static_assert(sizeof(Object_VirtualTable) == 0x138, "CS::Object's virtual table failed size validation");

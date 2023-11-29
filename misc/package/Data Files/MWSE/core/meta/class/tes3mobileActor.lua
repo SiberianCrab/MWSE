@@ -9,7 +9,7 @@
 --- @field activeAI boolean Friendly access to the actor's flag that controls if AI is active.
 --- @field activeMagicEffectList tes3activeMagicEffect[] *Read-only*. The active magic effects on the actor, from which all others can be accessed. A table with [`tes3activeMagicEffect`](https://mwse.github.io/MWSE/types/tes3activeMagicEffect/) items.
 --- @field actorType tes3.actorType *Read-only*. The type of the mobile actor. Maps to values in [`tes3.actorType`](https://mwse.github.io/MWSE/references/actor-types/) namespace.
---- @field agility tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's agility attribute statistic.
+--- @field agility tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's agility attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field aiPlanner tes3aiPlanner|nil *Read-only*. Access to the mobile's AI planner and AI package information. Doesn't exist on the player mobile.
 --- @field alarm number The actor's alarm AI value.
 --- @field animationController tes3actorAnimationController|tes3playerAnimationController *Read-only*. No description yet available.
@@ -30,7 +30,7 @@
 --- 
 --- @field attackBonus number Direct access to the actor's attack bonus effect attribute.
 --- @field attacked boolean *Read-only*. Friendly access to the actor's flag that controls if the actor has been attacked.
---- @field attributes tes3statistic[]|tes3statisticSkill[] *Read-only*. Access to a table of 8 [`tes3statistic`](https://mwse.github.io/MWSE/types/tes3statistic/) objects for the actor's attributes.
+--- @field attributes tes3statistic[]|tes3statisticSkill[] *Read-only*. Access to a table of 8 [`tes3statistic`](https://mwse.github.io/MWSE/types/tes3statistic/) objects for the actor's attributes. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field barterGold number The current amount of gold that the actor has access to for bartering.
 --- @field blind number Direct access to the actor's blind effect attribute.
 --- @field canAct boolean *Read-only*. If `true`, the actor is able to freely execute actions like attacking or casting magic. This is equal to checking if the actor is not dead, knocked down, knocked out, hit stunned, paralyzed, drawing/sheathing their weapon, attacking, casting magic or using a lockpick or probe.
@@ -45,10 +45,10 @@
 --- @field currentEnchantedItem tes3equipmentStack|nil *Read-only*. The currently equipped enchanted item that the actor will use.
 --- @field currentSpell tes3spell|tes3enchantment *Read-only*. The currently equipped spell that the actor will use.
 --- @field effectAttributes number[] *Read-only*. Access to a table of 24 numbers for the actor's effect attributes. In order those are: `attackBonus`, `sanctuary`, `resistMagicka`, `resistFire`, `resistFrost`, `resistShock`, `resistCommonDisease`, `resistBlightDisease`, `resistCorprus`, `resistPoison`, `resistParalysis`, `chameleon`, `resistNormalWeapons`, `waterBreathing`, `waterWalking`, `swiftSwim`, `jump`, `levitate`, `shield`, `sound`, `silence`, `blind`, `paralyze`, and `invisibility`. Each of those can be accessed individually. For example, `tes3mobileActor.chameleon`.
---- @field encumbrance tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's encumbrance statistic.
---- @field endurance tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's endurance attribute statistic.
+--- @field encumbrance tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's encumbrance statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
+--- @field endurance tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's endurance attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field facing number *Read-only*. The facing of the actor, in radians. It corresponds to the `mobile.reference.orientation.z`. Facing of 0 corresponds to the in game North, facing of PI corresponds to the game South. It's in clockwise direction.
---- @field fatigue tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's fatigue statistic.
+--- @field fatigue tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's fatigue statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field fight number The actor's fight AI value.
 --- @field flee number The actor's flee AI value.
 --- @field friendlyActors tes3mobileCreature[]|tes3mobileNPC[]|tes3mobilePlayer[] *Read-only*. A collection of other `tes3mobileActor`s that this actor considers friendly.
@@ -60,13 +60,13 @@
 --- @field hasCorprusDisease boolean *Read-only*. True if the actor is has a corprus disease effect. This does not include common or blight diseases, nor does it include vampirism.
 --- @field hasFreeAction boolean *Read-only*. If true, the actor isn't knocked down or knocked out.
 --- @field hasVampirism boolean *Read-only*. True if the actor has a vampirism effect.
---- @field health tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's health statistic.
+--- @field health tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's health statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field hello number The actor's hello AI value.
 --- @field holdBreathTime number This is the time the actor can stay underwater without taking drowning damage, measured in seconds. It's starting value is `fHoldBreathTime`(GMST) seconds by default. Once the actor is underwater, this value is decreasing based on the time passed while underwater. The actor will start taking drowning damage once this time is below 0. During drowning this time will have more and more negative values based on the duration of the drowning. Changing this allows manipulating for how long the actor can stay underwater without drowning. Note that player's Breath HUD element won't show values larger than `fHoldBreathTime`.
 --- @field hostileActors tes3mobileCreature[]|tes3mobileNPC[]|tes3mobilePlayer[] *Read-only*. A collection of other `tes3mobileActor`s that this actor considers hostile.
 --- @field idleAnim boolean *Read-only*. Friendly access to the actor's flag that controls if the actor is using their idle animation.
 --- @field inCombat boolean *Read-only*. Friendly access to the actor's flag that controls if the actor is in combat.
---- @field intelligence tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's intelligence attribute statistic.
+--- @field intelligence tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's intelligence attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field invisibility number Direct access to the actor's invisibility effect attribute.
 --- @field isAttackingOrCasting boolean *Read-only*. If `true`, the actor is attacking, casting magic or using a lockpick or probe.
 --- @field isCrittable boolean *Read-only*. Friendly access to the actor's flag that controls if the actor can be critically hit.
@@ -95,15 +95,15 @@
 --- @field jump number Direct access to the actor's jump effect attribute.
 --- @field lastGroundZ number This has a large negative value if the actor is on the ground. When the actor jumps, this will have a positive value. During `jump` event this value is still negative. A split second after, it will have the value of the `.z` coordinate when the actor was on the ground. Beware that this value changes after some amount of time while the actors is in the air.
 --- @field levitate number Direct access to the actor's levitate effect attribute.
---- @field luck tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's luck attribute statistic.
---- @field magicka tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's magicka statistic.
+--- @field luck tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's luck attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
+--- @field magicka tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's magicka statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field magickaMultiplier tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's magicka multiplier statistic.
 --- @field mobToMobCollision boolean Allows modifying if this actor will collide with other actors. When `true` (default), the actor cannot move through other actors. When `false`, the actor is allowed to move through other actors, and other actors can move through it.
 --- 
 --- May be useful when free movement is required in crowded situations, or to temporarily let the player move past an actor.
 --- @field nextActionWeight number *Read-only*. No description yet available.
 --- @field paralyze number Direct access to the actor's paralyze effect attribute.
---- @field personality tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's personality attribute statistic.
+--- @field personality tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's personality attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field readiedAmmo tes3equipmentStack|nil The currently equipped ammo, if any.
 --- @field readiedAmmoCount integer The number of ammo equipped for the readied ammo.
 --- @field readiedShield tes3equipmentStack|nil The currently equipped shield, if any.
@@ -124,9 +124,9 @@
 --- @field shield number Direct access to the actor's shield effect attribute.
 --- @field silence number Direct access to the actor's silence effect attribute.
 --- @field sound number Direct access to the actor's sound effect attribute.
---- @field speed tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's speed attribute statistic.
+--- @field speed tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's speed attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field spellReadied boolean *Read-only*. Friendly access to the actor's flag that controls if the actor has a spell readied.
---- @field strength tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's strength attribute statistic.
+--- @field strength tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's strength attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field swiftSwim number Direct access to the actor's swift swim effect attribute.
 --- @field talkedTo boolean Direct access to the actor's flag that shows it was recently talked to.
 --- @field torchSlot tes3equipmentStack The currently equipped light.
@@ -137,7 +137,7 @@
 --- @field weaponReady boolean A flag for if the actor has a weapon ready or being readied (visible and held in the hand). Setting it to true will cause the actor to take out their weapon. Setting it to false will cause the actor to put it away.
 --- @field werewolf boolean *Read-only*. Friendly access to the actor's flag that controls if the actor in werewolf form.
 --- @field width number *Read-only*. No description yet available.
---- @field willpower tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's willpower attribute statistic.
+--- @field willpower tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's willpower attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 tes3mobileActor = {}
 
 --- Damages the actor, with options to control mitigation and difficulty scaling. Invokes the [`damage`](https://mwse.github.io/MWSE/events/damage/) and [`damaged`](https://mwse.github.io/MWSE/events/damaged/) events, with `tes3.damageSource.script` source. Returns the actual damage done after armor mitigation and resistance, but before difficulty scaling.
@@ -232,7 +232,12 @@ function tes3mobileActor:doJump(params) end
 --- @field applyFatigueCost boolean? *Default*: `true`. If `true`, reduces the actor's current fatigue by the amount a regular jump would currently cost. Will not reduce fatigue if `false`.
 --- @field allowMidairJumping boolean? *Default*: `false`. If `true`, enables the jump to be performed while already jumping or falling. Does not work during levitation or other methods of flying.
 
---- Equips an item, optionally adding the item if needed. If the best match is already equipped, it does not perform an unequip-equip cycle, but does return `true`.
+--- Equips an item, optionally adding the item if needed. If the best match is already equipped, it does not perform an unequip-equip cycle, but does return `true`. If the item cannot be equipped, it will return `false`.
+--- 
+--- Equip may fail for the following reasons:
+--- - The item cannot be found in the inventory.
+--- - The exact match cannot be found when itemData is provided.
+--- - When a weapon is being used to attack, it cannot be replaced.
 --- @param params tes3mobileActor.equip.params This table accepts the following values:
 --- 
 --- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string — The item to equip.

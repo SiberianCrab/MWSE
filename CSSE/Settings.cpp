@@ -554,6 +554,24 @@ namespace se::cs {
 	}
 
 	//
+	// Text Search
+	//
+
+	void Settings_t::TextSearch::from_toml(const toml::value& v) {
+		use_regex = toml::find_or(v, "use_regex", use_regex);
+		case_sensitive = toml::find_or(v, "case_sensitive", case_sensitive);
+	}
+
+	toml::value Settings_t::TextSearch::into_toml() const {
+		return toml::value(
+			{
+				{ "use_regex", use_regex },
+				{ "case_sensitive", case_sensitive },
+			}
+		);
+	}
+
+	//
 	// Test Environment
 	//
 
@@ -674,6 +692,7 @@ namespace se::cs {
 		color_theme = toml::find_or(v, "color_theme", color_theme);
 		quickstart = toml::find_or(v, "quickstart", quickstart);
 		script_editor = toml::find_or(v, "script_editor", script_editor);
+		text_search = toml::find_or(v, "text_search", text_search);
 		test_environment = toml::find_or(v, "test_environment", test_environment);
 		openmw = toml::find_or(v, "openmw", openmw);
 
@@ -699,6 +718,7 @@ namespace se::cs {
 				{ "color_theme", color_theme },
 				{ "quickstart", quickstart },
 				{ "script_editor", script_editor },
+				{ "text_search", text_search },
 				{ "test_environment", test_environment },
 				{ "openmw", openmw },
 			}

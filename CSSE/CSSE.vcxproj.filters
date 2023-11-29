@@ -90,6 +90,24 @@
     <ClCompile Include="TextureRenderer.cpp">
       <Filter>Source Files\UI\Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="CSGameSetting.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSClass.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSRace.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSFaction.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSBirthsign.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSObject.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CSSE.def">
@@ -367,6 +385,15 @@
     </ClInclude>
     <ClInclude Include="TextureRenderer.h">
       <Filter>Header Files\UI\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="CSClass.h">
+      <Filter>Header Files\CS</Filter>
+    </ClInclude>
+    <ClInclude Include="CSRace.h">
+      <Filter>Header Files\CS</Filter>
+    </ClInclude>
+    <ClInclude Include="CSBirthsign.h">
+      <Filter>Header Files\CS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

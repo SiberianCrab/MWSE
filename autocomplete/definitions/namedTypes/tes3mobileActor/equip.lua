@@ -1,6 +1,11 @@
 return {
 	type = "method",
-	description = [[Equips an item, optionally adding the item if needed. If the best match is already equipped, it does not perform an unequip-equip cycle, but does return `true`.]],
+	description = [[Equips an item, optionally adding the item if needed. If the best match is already equipped, it does not perform an unequip-equip cycle, but does return `true`. If the item cannot be equipped, it will return `false`.
+
+Equip may fail for the following reasons:
+- The item cannot be found in the inventory.
+- The exact match cannot be found when itemData is provided.
+- When a weapon is being used to attack, it cannot be replaced.]],
 	arguments = {{
 		name = "params",
 		type = "table",

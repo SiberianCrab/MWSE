@@ -274,6 +274,14 @@ namespace se::cs {
 			toml::value into_toml() const;
 		} script_editor;
 
+		struct TextSearch {
+			bool use_regex = false;
+			bool case_sensitive = false;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} text_search;
+
 		struct TestEnvironment {
 			std::vector<std::string> game_files = {};
 			bool start_new_game = true;

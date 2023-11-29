@@ -3,10 +3,9 @@
 #include "NIColor.h"
 #include "NIQuaternion.h"
 
-namespace TES3 {
-	constexpr double MATH_PI = 3.14159265358979323846;
-	constexpr double MATH_PI_2 = MATH_PI / 2;
+#include "MathUtil.h"
 
+namespace TES3 {
 	//
 	// Vector2
 	//
@@ -91,7 +90,7 @@ namespace TES3 {
 
 	bool Vector2::normalize() {
 		float len = length();
-		if (len > 0.0f) {
+		if (len > mwse::math::M_NORMALIZE_EPSILON) {
 			x = x / len;
 			y = y / len;
 			return true;
@@ -110,6 +109,13 @@ namespace TES3 {
 	//
 	// Vector3
 	//
+
+	const Vector3 Vector3::UNIT_X = { 1.0f, 0.0f, 0.0f };
+	const Vector3 Vector3::UNIT_NEG_X = { -1.0f, 0.0f, 0.0f };
+	const Vector3 Vector3::UNIT_Y = { 0.0f, 1.0f, 0.0f };
+	const Vector3 Vector3::UNIT_NEG_Y = { 0.0f, -1.0f, 0.0f };
+	const Vector3 Vector3::UNIT_Z = { 0.0f, 0.0f, 1.0f };
+	const Vector3 Vector3::UNIT_NEG_Z = { 0.0f, 0.0f, -1.0f };
 
 	Vector3::Vector3() :
 		x(0.0f),
@@ -288,17 +294,19 @@ namespace TES3 {
 	}
 
 	bool Vector3::normalize() {
-		float len = length();
-		if (len > 0.0f) {
+		const auto len = length();
+		if (len > mwse::math::M_NORMALIZE_EPSILON) {
 			x = x / len;
 			y = y / len;
 			z = z / len;
 			return true;
 		}
-		x = 0;
-		y = 0;
-		z = 0;
-		return false;
+		else {
+			x = 0.0f;
+			y = 0.0f;
+			z = 0.0f;
+			return false;
+		}
 	}
 
 	Vector3 Vector3::normalized() const {
@@ -398,7 +406,7 @@ namespace TES3 {
 	const auto TES3_Matrix33_addMatrix = reinterpret_cast<Matrix33 * (__thiscall*)(Matrix33*, Matrix33*, const Matrix33*)>(0x6E7F60);
 	const auto TES3_Matrix33_subtractMatrix = reinterpret_cast<Matrix33 * (__thiscall*)(Matrix33*, Matrix33*, const Matrix33*)>(0x6E8000);
 	const auto TES3_Matrix33_multiplyMatrix = reinterpret_cast<Matrix33 * (__thiscall*)(Matrix33*, Matrix33*, const Matrix33*)>(0x6E80A0);
-	const auto TES3_Matrix33_multiplyVector = reinterpret_cast<Vector3 * (__thiscall*)(Matrix33*, Vector3*, const Vector3*)>(0x6E8230);
+	const auto TES3_Matrix33_multiplyVector = reinterpret_cast<Vector3 * (__thiscall*)(const Matrix33*, Vector3*, const Vector3*)>(0x6E8230);
 	const auto TES3_Matrix33_multiplyScalar = reinterpret_cast<Matrix33 * (__thiscall*)(Matrix33*, Matrix33*, float)>(0x6E81B0);
 
 	const auto TES3_Matrix33_toIdentity = reinterpret_cast<void(__thiscall*)(Matrix33*)>(0x6E7CF0);
@@ -411,6 +419,7 @@ namespace TES3 {
 	const auto TES3_Matrix33_toEulerXYZ = reinterpret_cast<bool(__thiscall*)(const Matrix33*, float*, float*, float*)> (0x6E8C50);
 
 	const auto TES3_Matrix33_transpose = reinterpret_cast<Matrix33 * (__thiscall*)(Matrix33*, Matrix33*)> (0x6E8420);
+	const auto TES3_Matrix33_transposeMult = reinterpret_cast<Vector3 * (__cdecl*)(Vector3*, const Vector3*, const Matrix33*)> (0x6E8290);
 	const auto TES3_Matrix33_inverseRaw = reinterpret_cast<bool(__thiscall*)(const Matrix33*, Matrix33*)> (0x6E82F0);
 	const auto TES3_Matrix33_inverse = reinterpret_cast<Matrix33 * (__thiscall*)(const Matrix33*, Matrix33*)> (0x6E83E0);
 
@@ -474,7 +483,7 @@ namespace TES3 {
 		return result;
 	}
 
-	Vector3 Matrix33::operator*(const Vector3& vector) {
+	Vector3 Matrix33::operator*(const Vector3& vector) const {
 		Vector3 result;
 		TES3_Matrix33_multiplyVector(this, &result, &vector);
 		return result;
@@ -553,6 +562,12 @@ namespace TES3 {
 		return result;
 	}
 
+	Vector3 Matrix33::transposeMult(const Vector3& vector) const {
+		Vector3 result;
+		TES3_Matrix33_transposeMult(&result, &vector, this);
+		return result;
+	}
+
 	Matrix33 Matrix33::invert() const {
 		Matrix33 result;
 		TES3_Matrix33_inverse(this, &result);
@@ -596,8 +611,8 @@ namespace TES3 {
 		*y = asin(m2.x);
 		*z = 0;
 
-		if (*y < MATH_PI_2) {
-			if (*y > -MATH_PI_2) {
+		if (*y < mwse::math::M_PI_2) {
+			if (*y > -mwse::math::M_PI_2) {
 				*z = -atan2(m1.x, m0.x);
 				*x = -atan2(m2.y, m2.z);
 				return true;
@@ -641,11 +656,14 @@ namespace TES3 {
 		return Vector3(m0.z, m1.z, m2.z);
 	}
 
-	void Matrix33::lookAt(Vector3 direction, Vector3 worldUp) {
-		auto forward = direction.normalized();
+	void Matrix33::lookAt(const Vector3& direction, const Vector3& worldUp) {
+		const auto forward = direction.normalized();
 		auto left = worldUp.crossProduct(&forward);
+		if (left.dotProduct(&left) < mwse::math::M_NORMALIZE_EPSILON) {
+			left = forward.crossProduct(&Vector3::UNIT_NEG_Y);
+		}
 		left.normalize();
-		auto up = forward.crossProduct(&left);
+		const auto up = forward.crossProduct(&left);
 		m0.x = -left.x;
 		m1.x = -left.y;
 		m2.x = -left.z;

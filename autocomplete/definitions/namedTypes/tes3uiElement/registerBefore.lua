@@ -4,5 +4,6 @@ return {
 	arguments = {
 		{ name = "eventID", type = "tes3.uiEvent", description = "The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/)." },
 		{ name = "callback", type = "integer|fun(e: tes3uiEventData): boolean?", description = "The callback function." },
+		{ name = "priority", type = "integer", default = 0, description = "The priority of the event, relative to other register-befored events." },
 	},
 }

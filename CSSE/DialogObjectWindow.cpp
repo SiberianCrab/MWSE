@@ -172,6 +172,7 @@ namespace se::cs::dialog::object_window {
 		}
 	}
 
+	// TODO: Make use of the new object-class search features.
 	bool PatchFilterObjectWindow_ObjectMatchesSearchText(const Object* object) {
 		if (modeShowModifiedOnly && !object->getModified()) {
 			return false;

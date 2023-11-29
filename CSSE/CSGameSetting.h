@@ -1526,23 +1526,35 @@ namespace se::cs {
 			sSpellsword,
 			sThief,
 			sWarrior,
-			sWitchhunter
+			sWitchhunter,
+
+			COUNT
 		};
 	}
 
-	struct GameSetting : BaseObject {
-		struct Initializer {
-			enum class ValueType : unsigned int {
-				Integer,
-				Float,
-				String,
-			};
-			const char* name; // 0x0
-			const char* defaultStringValue; // 0x4
-			int defaultIntValue; // 0x8
-			float defaultFloatValue; // 0xC
-			ValueType valueType;
+	struct GameSettingInitializer {
+		enum class ValueType : unsigned int {
+			Integer,
+			Float,
+			String,
+
+			INVALID
 		};
+		char* name; // 0x0
+		char* defaultStringValue; // 0x4
+		int defaultIntValue; // 0x8
+		float defaultFloatValue; // 0xC
+		ValueType valueType; // 0x10
+
+		int getIndex() const;
+		ValueType getType() const;
+		GameSetting* getSetting() const;
+
+		static nonstd::span<GameSettingInitializer> get();
+	};
+	static_assert(sizeof(GameSettingInitializer) == 0x14, "GameSettingInitializer failed size validation");
+
+	struct GameSetting : BaseObject {
 		union {
 			int asInt;
 			float asFloat;
@@ -1550,7 +1562,9 @@ namespace se::cs {
 		} value; // 0x10
 		int index; // 0x14
 
-		static constexpr auto initializers = reinterpret_cast<Initializer*>(0x6A8128);
+		GameSettingInitializer* getInitializer() const;
+
+		bool search(const std::string_view& needle, bool caseSensitive, std::regex* regex = nullptr) const;
 	};
-	static_assert(sizeof(GameSetting) == 0x18, "TES3::GameSetting failed size validation");
+	static_assert(sizeof(GameSetting) == 0x18, "GameSetting failed size validation");
 }

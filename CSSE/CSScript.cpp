@@ -1,5 +1,7 @@
 #include "CSScript.h"
 
+#include "StringUtil.h"
+
 namespace se::cs {
 	const char* Script::getShortVarName(int index) const {
 		const auto Script_getShortName = reinterpret_cast<const char* (__thiscall*)(const Script*, int)>(0x5645E0);
@@ -15,6 +17,18 @@ namespace se::cs {
 	const char* Script::getFloatVarName(int index) const {
 		const auto Script_getFloatVarName = reinterpret_cast<const char* (__thiscall*)(const Script*, int)>(0x564820);
 		return Script_getFloatVarName(this, index);
+	}
 
+
+	bool Script::search(const std::string_view& needle, bool caseSensitive, std::regex* regex) const {
+		if (BaseObject::search(needle, caseSensitive, regex)) {
+			return true;
+		}
+
+		if (text && string::complex_contains(text, needle, caseSensitive, regex)) {
+			return true;
+		}
+
+		return false;
 	}
 }

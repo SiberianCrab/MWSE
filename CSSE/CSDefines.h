@@ -7,6 +7,7 @@ namespace se::cs {
 	struct Apparatus;
 	struct Armor;
 	struct BaseObject;
+	struct Birthsign;
 	struct BodyPart;
 	struct Book;
 	struct Cell;
@@ -20,6 +21,7 @@ namespace se::cs {
 	struct Faction;
 	struct GameFile;
 	struct GameSetting;
+	struct GameSettingInitializer;
 	struct LandTexture;
 	struct LeveledCreature;
 	struct LeveledItem;

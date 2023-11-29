@@ -1526,13 +1526,14 @@ myObject:register(eventID, callback)
 Sets an `event` handler to run after any existing event handler on the element. Can be any event usable with `register`. The callback receives an argument with the event data. See `register` for details.
 
 ```lua
-myObject:registerAfter(eventID, callback)
+myObject:registerAfter(eventID, callback, priority)
 ```
 
 **Parameters**:
 
 * `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 * `callback` (integer, fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
+* `priority` (integer): *Default*: `0`. The priority of the event, relative to other register-aftered events.
 
 ***
 
@@ -1542,13 +1543,14 @@ myObject:registerAfter(eventID, callback)
 Sets an `event` handler to run before any existing event handler on the element. Can be any event usable with `register`. The callback receives an argument with the event data. See `register` for details.
 
 ```lua
-myObject:registerBefore(eventID, callback)
+myObject:registerBefore(eventID, callback, priority)
 ```
 
 **Parameters**:
 
 * `eventID` ([tes3.uiEvent](../references/ui-events.md)): The event id. Maps to values in [`tes3.uiEvent`](https://mwse.github.io/MWSE/references/ui-events/).
 * `callback` (integer, fun(e: [tes3uiEventData](../types/tes3uiEventData.md)): boolean?): The callback function.
+* `priority` (integer): *Default*: `0`. The priority of the event, relative to other register-befored events.
 
 ***
 

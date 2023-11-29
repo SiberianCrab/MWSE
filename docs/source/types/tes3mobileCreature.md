@@ -69,7 +69,7 @@ Friendly access to the actor's flag that controls if AI is active.
 ### `agility`
 <div class="search_terms" style="display: none">agility</div>
 
-*Read-only*. Direct access to the actor's agility attribute statistic.
+*Read-only*. Direct access to the actor's agility attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -160,7 +160,7 @@ Direct access to the actor's attack bonus effect attribute.
 ### `attributes`
 <div class="search_terms" style="display: none">attributes</div>
 
-*Read-only*. Access to a table of 8 [`tes3statistic`](https://mwse.github.io/MWSE/types/tes3statistic/) objects for the actor's attributes.
+*Read-only*. Access to a table of 8 [`tes3statistic`](https://mwse.github.io/MWSE/types/tes3statistic/) objects for the actor's attributes. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -380,7 +380,7 @@ This is the time measured in hours from the beginning of the game when the actor
 ### `encumbrance`
 <div class="search_terms" style="display: none">encumbrance</div>
 
-*Read-only*. Access to the actor's encumbrance statistic.
+*Read-only*. Access to the actor's encumbrance statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -391,7 +391,7 @@ This is the time measured in hours from the beginning of the game when the actor
 ### `endurance`
 <div class="search_terms" style="display: none">endurance</div>
 
-*Read-only*. Direct access to the actor's endurance attribute statistic.
+*Read-only*. Direct access to the actor's endurance attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -413,7 +413,7 @@ This is the time measured in hours from the beginning of the game when the actor
 ### `fatigue`
 <div class="search_terms" style="display: none">fatigue</div>
 
-*Read-only*. Access to the actor's fatigue statistic.
+*Read-only*. Access to the actor's fatigue statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -567,7 +567,7 @@ No description yet available.
 ### `health`
 <div class="search_terms" style="display: none">health</div>
 
-*Read-only*. Access to the actor's health statistic.
+*Read-only*. Access to the actor's health statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -655,7 +655,7 @@ A vector that represents the 3D acceleration of the object.
 ### `intelligence`
 <div class="search_terms" style="display: none">intelligence</div>
 
-*Read-only*. Direct access to the actor's intelligence attribute statistic.
+*Read-only*. Direct access to the actor's intelligence attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -1011,7 +1011,7 @@ Direct access to the actor's levitate effect attribute.
 ### `luck`
 <div class="search_terms" style="display: none">luck</div>
 
-*Read-only*. Direct access to the actor's luck attribute statistic.
+*Read-only*. Direct access to the actor's luck attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -1033,7 +1033,7 @@ Direct access to the actor's levitate effect attribute.
 ### `magicka`
 <div class="search_terms" style="display: none">magicka</div>
 
-*Read-only*. Access to the actor's magicka statistic.
+*Read-only*. Access to the actor's magicka statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -1145,7 +1145,7 @@ Direct access to the actor's paralyze effect attribute.
 ### `personality`
 <div class="search_terms" style="display: none">personality</div>
 
-*Read-only*. Direct access to the actor's personality attribute statistic.
+*Read-only*. Direct access to the actor's personality attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -1442,7 +1442,7 @@ Direct access to the actor's sound effect attribute.
 ### `speed`
 <div class="search_terms" style="display: none">speed</div>
 
-*Read-only*. Direct access to the actor's speed attribute statistic.
+*Read-only*. Direct access to the actor's speed attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -1475,7 +1475,7 @@ Direct access to the actor's sound effect attribute.
 ### `strength`
 <div class="search_terms" style="display: none">strength</div>
 
-*Read-only*. Direct access to the actor's strength attribute statistic.
+*Read-only*. Direct access to the actor's strength attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -1640,7 +1640,7 @@ A flag for if the actor has a weapon ready or being readied (visible and held in
 ### `willpower`
 <div class="search_terms" style="display: none">willpower</div>
 
-*Read-only*. Direct access to the actor's willpower attribute statistic.
+*Read-only*. Direct access to the actor's willpower attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 
 **Returns**:
 
@@ -1774,7 +1774,12 @@ local result = myObject:doJump({ velocity = ..., applyFatigueCost = ..., allowMi
 ### `equip`
 <div class="search_terms" style="display: none">equip</div>
 
-Equips an item, optionally adding the item if needed. If the best match is already equipped, it does not perform an unequip-equip cycle, but does return `true`.
+Equips an item, optionally adding the item if needed. If the best match is already equipped, it does not perform an unequip-equip cycle, but does return `true`. If the item cannot be equipped, it will return `false`.
+
+Equip may fail for the following reasons:
+- The item cannot be found in the inventory.
+- The exact match cannot be found when itemData is provided.
+- When a weapon is being used to attack, it cannot be replaced.
 
 ```lua
 local itemEquipped = myObject:equip({ item = ..., itemData = ..., addItem = ..., selectBestCondition = ..., selectWorstCondition = ... })

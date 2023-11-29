@@ -34,7 +34,7 @@ namespace se::cs {
 		int activeModCount; // 0x0
 		GameFile* activeFile; // 0x4
 		LinkedObjectList<Object>* allObjects; // 0x8
-		int unknown_0xC;
+		LinkedObjectList<Spell>* allSpells; // 0xC
 		ModelLoader* modelLoader; // 0x10
 		GameSettingsContainer* gameSettingsHandler; // 0x14
 		NI::IteratedList<Race*>* races; // 0x18
@@ -47,7 +47,7 @@ namespace se::cs {
 		int unknown_0x34;
 		NI::IteratedList<Dialogue*>* dialogues; // 0x38
 		NI::IteratedList<Region*>* regions; // 0x3C
-		NI::IteratedList<BaseObject*>* birthsigns; // 0x40
+		NI::IteratedList<Birthsign*>* birthsigns; // 0x40
 		NI::IteratedList<BaseObject*>* startScripts; // 0x44
 		Skill_dummy skills[27]; // 0x48
 		MagicEffect_dummy magicEffects[143]; // 0x558

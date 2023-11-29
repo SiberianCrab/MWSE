@@ -21,6 +21,8 @@ namespace se::cs {
 		int unknown_0x288;
 		int unknown_0x28C;
 		int unknown_0x290;
+
+		bool search(const std::string_view& needle, bool caseSensitive, std::regex* regex = nullptr) const;
 	};
 	static_assert(sizeof(Faction) == 0x294, "Faction failed size validation");
 }

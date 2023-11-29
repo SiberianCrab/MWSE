@@ -72,6 +72,11 @@ BOOL DialogCSSESettings::OnInitDialog() {
 	m_PropertyGrid.AddProperty(groupScriptEditor);
 	*/
 
+	auto groupTextSearch = new CMFCPropertyGridProperty("TextSearch");
+	groupTextSearch->AddSubItem(new CDataBoundPropertyGridProperty("Case Sensitive", &se::cs::settings.text_search.case_sensitive, "If true, searching will be case sensitive."));
+	groupTextSearch->AddSubItem(new CDataBoundPropertyGridProperty("Use Regex", &se::cs::settings.text_search.use_regex, "If true, searching will be performed with regex. The case sensitive option is still used."));
+	m_PropertyGrid.AddProperty(groupTextSearch);
+
 	auto groupQuickStart = new CMFCPropertyGridProperty("QuickStart");
 	groupQuickStart->AddSubItem(new CDataBoundPropertyGridProperty("Enabled", &se::cs::settings.quickstart.enabled, "Determines if the QuickStart feature is used on startup."));
 	groupQuickStart->AddSubItem(new CDataBoundPropertyGridProperty("Load Cell", &se::cs::settings.quickstart.load_cell, "Should the CS automatically load a cell? If false, data files will still load."));

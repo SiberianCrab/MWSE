@@ -35,6 +35,9 @@ namespace se::cs {
 		bool getBlocked() const;
 
 		void setFlag80(bool set);
+
+		bool search(const std::string_view& needle, bool caseSensitive, std::regex* regex = nullptr) const;
+		bool searchWithInheritance(const std::string_view& needle, bool caseSensitive, std::regex* regex = nullptr) const;
 	};
 	static_assert(sizeof(BaseObject) == 0x10, "TES3::BaseObject failed size validation");
 	static_assert(sizeof(BaseObject_VirtualTable) == 0x24, "TES3::BaseObject_VirtualTable failed size validation");
