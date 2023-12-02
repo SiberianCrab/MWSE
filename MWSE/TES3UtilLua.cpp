@@ -3548,7 +3548,8 @@ namespace mwse::lua {
 			throw std::runtime_error("Function called while mobile player animation controller is unavailable.");
 		}
 
-		animController->togglePOV = true;
+		// Switch even if player is incapacitated.
+		animController->switchPOVMode = 2;
 
 		return animController->is3rdPerson;
 	}

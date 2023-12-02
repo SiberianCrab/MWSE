@@ -392,6 +392,91 @@ namespace se::cs {
 				return 0;
 			}
 		}
+
+		//
+		// Patch: Respect symbolic links.
+		// 
+		// Unlike most of the Win32 API, FindFirstFileA and FindNextFileA don't respect symbolic links and
+		// instead return information about the link itself instead of its target.
+		// 
+		// This patch makes it return the file size of the target file, rather than the symlink itself (0).
+		//
+
+		namespace sizeForSymbolicLinks {
+			static std::unordered_map<HANDLE, std::string> findFilePaths;
+			static std::recursive_mutex findFileMutex;
+
+			std::optional<std::string> getFindFilePath(HANDLE hFindFile) {
+				findFileMutex.lock();
+				const auto itt = findFilePaths.find(hFindFile);
+				if (itt == findFilePaths.end()) {
+					findFileMutex.unlock();
+					return {};
+				}
+
+				findFileMutex.unlock();
+				return itt->second;
+			}
+
+			void fixSymlinkData(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData) {
+				const auto path = getFindFilePath(hFindFile);
+				if (!path) {
+					return;
+				}
+
+				const auto fullPath = std::filesystem::path(path.value()) / lpFindFileData->cFileName;
+				if (!std::filesystem::exists(fullPath)) {
+					return;
+				}
+
+				const auto fileSize = std::filesystem::file_size(fullPath);
+				lpFindFileData->nFileSizeHigh = unsigned int(fileSize / std::numeric_limits<unsigned int>::max());
+				lpFindFileData->nFileSizeLow = unsigned int(fileSize);
+			}
+
+			HANDLE __stdcall findFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData) {
+				auto result = FindFirstFileA(lpFileName, lpFindFileData);
+				if (result == INVALID_HANDLE_VALUE) {
+					return result;
+				}
+
+				findFileMutex.lock();
+				findFilePaths[result] = std::filesystem::path(lpFileName).parent_path().string();
+				findFileMutex.unlock();
+
+				// Check to see if it resolved to a symbolic link.
+				if (lpFindFileData->dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT && lpFindFileData->dwReserved0 == IO_REPARSE_TAG_SYMLINK) {
+					fixSymlinkData(result, lpFindFileData);
+				}
+
+				return result;
+			}
+
+			BOOL __stdcall findNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData) {
+				auto result = FindNextFileA(hFindFile, lpFindFileData);
+				if (!result) {
+					return result;
+				}
+
+				// Check to see if it resolved to a symbolic link.
+				if (lpFindFileData->dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT && lpFindFileData->dwReserved0 == IO_REPARSE_TAG_SYMLINK) {
+					fixSymlinkData(hFindFile, lpFindFileData);
+				}
+
+				return result;
+			}
+
+			BOOL __stdcall findClose(HANDLE hFindFile) {
+				findFileMutex.lock();
+				const auto itt = findFilePaths.find(hFindFile);
+				if (itt != findFilePaths.end()) {
+					findFilePaths.erase(itt);
+				}
+				findFileMutex.unlock();
+
+				return FindClose(hFindFile);
+			}
+		}
 	}
 
 	CSSE application;
@@ -523,6 +608,11 @@ namespace se::cs {
 		// Patch: Remember last used model/icon directories.
 		genCallEnforced(0x414EB4, 0x573290, reinterpret_cast<DWORD>(patch::GetOpenFileNameForIcon));
 		genCallEnforced(0x414C5E, 0x573290, reinterpret_cast<DWORD>(patch::GetOpenFileNameForModel));
+
+		// Patch: Respect targets when searching for symlinks.
+		writeDoubleWordUnprotected(0x6D99E8, reinterpret_cast<DWORD>(&patch::sizeForSymbolicLinks::findFirstFileA));
+		writeDoubleWordUnprotected(0x6D99EC, reinterpret_cast<DWORD>(&patch::sizeForSymbolicLinks::findNextFileA));
+		writeDoubleWordUnprotected(0x6D9A00, reinterpret_cast<DWORD>(&patch::sizeForSymbolicLinks::findClose));
 
 		// Install all our sectioned patches.
 		window::main::installPatches();
