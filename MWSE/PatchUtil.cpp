@@ -1,8 +1,8 @@
 #include "PatchUtil.h"
 
-#include "mwOffsets.h"
-#include "MemoryUtil.h"
 #include "Log.h"
+#include "MemoryUtil.h"
+#include "mwOffsets.h"
 
 #include "TES3Actor.h"
 #include "TES3ActorAnimationController.h"
@@ -17,6 +17,7 @@
 #include "TES3GameFile.h"
 #include "TES3GameSetting.h"
 #include "TES3InputController.h"
+#include "TES3Light.h"
 #include "TES3LoadScreenManager.h"
 #include "TES3Misc.h"
 #include "TES3MobilePlayer.h"
@@ -38,16 +39,16 @@
 #include "NIUVController.h"
 
 #include "BitUtil.h"
-#include "TES3Util.h"
 #include "ScriptUtil.h"
+#include "TES3Util.h"
 
 #include "LuaManager.h"
 #include "LuaUtil.h"
 
-#include "MWSEConfig.h"
-#include "MWSEDefs.h"
 #include "BuildDate.h"
 #include "CodePatchUtil.h"
+#include "MWSEConfig.h"
+#include "MWSEDefs.h"
 
 namespace mwse::patch {
 
@@ -967,6 +968,22 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Guard against invalid light flicker/pulse updates.
+	//
+
+	const auto TES3_Light_UpdateFlickerPulse = reinterpret_cast<void(__thiscall*)(TES3::Light*, NI::Node*, float*, TES3::ItemData*)>(0x4D33D0);
+	void __fastcall PatchEntityLightFlickerPulseUpdate(TES3::Light* light, DWORD _EDX_, NI::Node* sgNode, float* flickerPhase, TES3::ItemData* itemData) {
+		if (sgNode == nullptr) {
+#if _DEBUG
+			log::getLog() << "[MWSE] Warning: Light '" << light->getObjectID() << "' attempting to update update flicker/phase without a scene graph node." << std::endl;
+#endif
+			return;
+		}
+
+		TES3_Light_UpdateFlickerPulse(light, sgNode, flickerPhase, itemData);
+	}
+
+	//
 	// Install all the patches.
 	//
 
@@ -1392,6 +1409,10 @@ namespace mwse::patch {
 		writeDoubleWordUnprotected(0x746114, reinterpret_cast<DWORD>(&PatchFindFirstFileA));
 		writeDoubleWordUnprotected(0x746118, reinterpret_cast<DWORD>(&PatchFindNextFileA));
 		writeDoubleWordUnprotected(0x74611C, reinterpret_cast<DWORD>(&PatchFindClose));
+
+		// Patch: Guard against invalid light flicker/pulse updates.
+		genCallEnforced(0x49B75E, 0x4D33D0, reinterpret_cast<DWORD>(PatchEntityLightFlickerPulseUpdate));
+		genCallEnforced(0x4D33BF, 0x4D33D0, reinterpret_cast<DWORD>(PatchEntityLightFlickerPulseUpdate));
 	}
 
 	void installPostLuaPatches() {

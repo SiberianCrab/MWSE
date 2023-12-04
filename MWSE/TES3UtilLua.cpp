@@ -2338,14 +2338,16 @@ namespace mwse::lua {
 			}
 		}
 		else {
-			TES3::DataHandler::suppressThreadLoad = true;
+			bool suppressThreadLoad = true;
+			std::swap(TES3::DataHandler::suppressThreadLoad, suppressThreadLoad);
+
 			if (userProvidedOrientation) {
 				reference->relocate(cell, &position.value(), orientation.value().z * (180.0f / math::M_PI));
 			}
 			else {
 				reference->relocateNoRotation(cell, &position.value());
 			}
-			TES3::DataHandler::suppressThreadLoad = false;
+			std::swap(TES3::DataHandler::suppressThreadLoad, suppressThreadLoad);
 
 			// Script item data needs to be instanced if the reference is now active but has not been seen before.
 			reference->ensureScriptDataIsInstanced();
