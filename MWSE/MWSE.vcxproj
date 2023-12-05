@@ -19,6 +19,8 @@
     <ClInclude Include="LuaDialogueFilteredEvent.h" />
     <ClInclude Include="LuaMagicSelectionChangedEvent.h" />
     <ClInclude Include="LuaMusicChangeTrackEvent.h" />
+    <ClInclude Include="LuaObjectCopiedEvent.h" />
+    <ClInclude Include="LuaObjectCreatedEvent.h" />
     <ClInclude Include="LuaShieldBlockedEvent.h" />
     <ClInclude Include="LuaSimulatedEvent.h" />
     <ClInclude Include="LuaUiSkillTooltipEvent.h" />
@@ -647,6 +649,8 @@
     <ClCompile Include="LuaMusicChangeTrackEvent.cpp" />
     <ClCompile Include="LuaMusicSelectTrackEvent.cpp" />
     <ClCompile Include="LuaObject.cpp" />
+    <ClCompile Include="LuaObjectCopiedEvent.cpp" />
+    <ClCompile Include="LuaObjectCreatedEvent.cpp" />
     <ClCompile Include="LuaObjectFilteredEvent.cpp" />
     <ClCompile Include="LuaObjectInvalidatedEvent.cpp" />
     <ClCompile Include="LuaPickLockEvent.cpp" />
@@ -1245,9 +1249,13 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="MWSE.props" />
+    <Import Project="MWSE.User.props" Condition="exists('$(ProjectDir)\MWSE.User.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="MWSE.props" />
+    <Import Project="MWSE.User.props" Condition="exists('$(ProjectDir)\MWSE.User.props')" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -1284,8 +1292,8 @@
     <PostBuildEvent />
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>copy /y "$(TargetDir)MWSE.dll" "$(SolutionDir)..\MWSE.dll"
-copy /y "$(TargetDir)MWSE.pdb" "$(SolutionDir)..\MWSE.pdb"</Command>
+      <Command>copy /y "$(TargetDir)MWSE.dll" "$(MorrowindDir)MWSE.dll"
+copy /y "$(TargetDir)MWSE.pdb" "$(MorrowindDir)MWSE.pdb"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>set buildTime=
@@ -1322,8 +1330,8 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <PostBuildEvent />
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>copy /y "$(TargetDir)MWSE.dll" "$(SolutionDir)..\MWSE.dll"
-copy /y "$(TargetDir)MWSE.pdb" "$(SolutionDir)..\MWSE.pdb"</Command>
+      <Command>copy /y "$(TargetDir)MWSE.dll" "$(MorrowindDir)MWSE.dll"
+copy /y "$(TargetDir)MWSE.pdb" "$(MorrowindDir)MWSE.pdb"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>set buildTime=

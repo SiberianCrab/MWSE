@@ -120,6 +120,8 @@
 --- @field register fun(eventId: '"mouseWheel"', callback: fun(e: mouseWheelEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"musicChangeTrack"', callback: fun(e: musicChangeTrackEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"musicSelectTrack"', callback: fun(e: musicSelectTrackEventData): boolean?, options: table?)
+--- @field register fun(eventId: '"objectCopied"', callback: fun(e: objectCopiedEventData): boolean?, options: table?)
+--- @field register fun(eventId: '"objectCreated"', callback: fun(e: objectCreatedEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"objectInvalidated"', callback: fun(e: objectInvalidatedEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"playGroup"', callback: fun(e: playGroupEventData): boolean?, options: table?)
 --- @field register fun(eventId: '"playItemSound"', callback: fun(e: playItemSoundEventData): boolean?, options: table?)

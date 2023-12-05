@@ -43,9 +43,13 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="CSSE.props" />
+    <Import Project="CSSE.User.props" Condition="exists('$(ProjectDir)\CSSE.User.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="CSSE.props" />
+    <Import Project="CSSE.User.props" Condition="exists('$(ProjectDir)\CSSE.User.props')" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -83,8 +87,8 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>copy /y "$(TargetDir)CSSE.dll" "$(SolutionDir)..\CSSE.dll"
-copy /y "$(TargetDir)CSSE.pdb" "$(SolutionDir)..\CSSE.pdb"</Command>
+      <Command>copy /y "$(TargetDir)CSSE.dll" "$(MorrowindDir)CSSE.dll"
+copy /y "$(TargetDir)CSSE.pdb" "$(MorrowindDir)CSSE.pdb"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>set buildTime=
@@ -124,8 +128,8 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>copy /y "$(TargetDir)CSSE.dll" "$(SolutionDir)..\CSSE.dll"
-copy /y "$(TargetDir)CSSE.pdb" "$(SolutionDir)..\CSSE.pdb"</Command>
+      <Command>copy /y "$(TargetDir)CSSE.dll" "$(MorrowindDir)CSSE.dll"
+copy /y "$(TargetDir)CSSE.pdb" "$(MorrowindDir)CSSE.pdb"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>set buildTime=
@@ -157,6 +161,10 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClCompile Include="CSRace.cpp" />
     <ClCompile Include="CSSpell.cpp" />
     <ClCompile Include="CSWeapon.cpp" />
+    <ClCompile Include="DarkModePatcher.cpp" />
+    <ClCompile Include="DarkPlusPlus.cpp" />
+    <ClCompile Include="DarkProcessHacker.cpp" />
+    <ClCompile Include="win32-darkmode.cpp" />
     <ClCompile Include="DialogAboutCSSE.cpp" />
     <ClCompile Include="DialogActorAIWindow.cpp" />
     <ClCompile Include="DialogCSSESettings.cpp" />
@@ -220,6 +228,10 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClInclude Include="CSRace.h" />
     <ClInclude Include="CSRegion.h" />
     <ClInclude Include="CSSE.h" />
+    <ClInclude Include="DarkModePatcher.h" />
+    <ClInclude Include="DarkPlusPlus.h" />
+    <ClInclude Include="DarkProcessHacker.h" />
+    <ClInclude Include="win32-darkmode.h" />
     <ClInclude Include="DialogAboutCSSE.h" />
     <ClInclude Include="DialogActorAIWindow.h" />
     <ClInclude Include="DialogCSSESettings.h" />

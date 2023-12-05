@@ -8,8 +8,8 @@
 #include "LuaKeyframesLoadEvent.h"
 #include "LuaLoadedGameEvent.h"
 #include "LuaLoadGameEvent.h"
-#include "LuaMeshLoadEvent.h"
 #include "LuaMeshLoadedEvent.h"
+#include "LuaMeshLoadEvent.h"
 #include "LuaSavedGameEvent.h"
 #include "LuaSaveGameEvent.h"
 
@@ -24,8 +24,8 @@
 #include "TES3Reference.h"
 #include "TES3Sound.h"
 #include "TES3Spell.h"
-#include "TES3WorldController.h"
 #include "TES3UIManager.h"
+#include "TES3WorldController.h"
 
 namespace TES3 {
 

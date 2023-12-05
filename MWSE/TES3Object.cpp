@@ -56,6 +56,7 @@
 
 #include "LuaManager.h"
 #include "LuaObjectInvalidatedEvent.h"
+#include "LuaObjectCopiedEvent.h"
 
 #include "Log.h"
 
@@ -76,6 +77,12 @@ namespace TES3 {
 			UI::MenuInputController::lastTooltipObject = nullptr;
 			UI::MenuInputController::lastTooltipItemData = nullptr;
 			UI::MenuInputController::lastTooltipCount = 0;
+		}
+
+		using namespace mwse::lua::event;
+		if (ObjectCopiedEvent::ms_LastCopied == this || ObjectCopiedEvent::ms_LastCopiedFrom == this) {
+			ObjectCopiedEvent::ms_LastCopied = nullptr;
+			ObjectCopiedEvent::ms_LastCopiedFrom = nullptr;
 		}
 
 		BaseObject_dtor(this);

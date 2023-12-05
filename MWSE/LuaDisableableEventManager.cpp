@@ -100,8 +100,8 @@
 #include "LuaMeshLoadedEvent.h"
 #include "LuaMeshLoadEvent.h"
 #include "LuaMobileObjectActivatedEvent.h"
-#include "LuaMobileObjectDeactivatedEvent.h"
 #include "LuaMobileObjectCollisionEvent.h"
+#include "LuaMobileObjectDeactivatedEvent.h"
 #include "LuaMobileObjectWaterImpactEvent.h"
 #include "LuaMobileProjectileActorCollisionEvent.h"
 #include "LuaMobileProjectileObjectCollisionEvent.h"
@@ -112,6 +112,8 @@
 #include "LuaMouseWheelEvent.h"
 #include "LuaMusicChangeTrackEvent.h"
 #include "LuaMusicSelectTrackEvent.h"
+#include "LuaObjectCopiedEvent.h"
+#include "LuaObjectCreatedEvent.h"
 #include "LuaObjectInvalidatedEvent.h"
 #include "LuaPickLockEvent.h"
 #include "LuaPlayAnimationGroupEvent.h"
@@ -278,6 +280,8 @@ namespace mwse::lua::event {
 		usertypeDefinition["mouseWheel"] = sol::property(&MouseWheelEvent::getEventEnabled, &MouseWheelEvent::setEventEnabled);
 		usertypeDefinition["musicChangeTrack"] = sol::property(&MusicChangeTrackEvent::getEventEnabled, &MusicChangeTrackEvent::setEventEnabled);
 		usertypeDefinition["musicSelectTrack"] = sol::property(&MusicSelectTrackEvent::getEventEnabled, &MusicSelectTrackEvent::setEventEnabled);
+		usertypeDefinition["objectCopied"] = sol::property(&ObjectCopiedEvent::getEventEnabled, &ObjectCopiedEvent::setEventEnabled);
+		usertypeDefinition["objectCreated"] = sol::property(&ObjectCreatedEvent::getEventEnabled, &ObjectCreatedEvent::setEventEnabled);
 		usertypeDefinition["objectInvalidated"] = sol::property(&ObjectInvalidatedEvent::getEventEnabled, &ObjectInvalidatedEvent::setEventEnabled);
 		usertypeDefinition["playGroup"] = sol::property(&PlayAnimationGroupEvent::getEventEnabled, &PlayAnimationGroupEvent::setEventEnabled);
 		usertypeDefinition["playItemSound"] = sol::property(&PlayItemSoundEvent::getEventEnabled, &PlayItemSoundEvent::setEventEnabled);
