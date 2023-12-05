@@ -161,10 +161,6 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClCompile Include="CSRace.cpp" />
     <ClCompile Include="CSSpell.cpp" />
     <ClCompile Include="CSWeapon.cpp" />
-    <ClCompile Include="DarkModePatcher.cpp" />
-    <ClCompile Include="DarkPlusPlus.cpp" />
-    <ClCompile Include="DarkProcessHacker.cpp" />
-    <ClCompile Include="win32-darkmode.cpp" />
     <ClCompile Include="DialogAboutCSSE.cpp" />
     <ClCompile Include="DialogActorAIWindow.cpp" />
     <ClCompile Include="DialogCSSESettings.cpp" />
@@ -228,10 +224,6 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClInclude Include="CSRace.h" />
     <ClInclude Include="CSRegion.h" />
     <ClInclude Include="CSSE.h" />
-    <ClInclude Include="DarkModePatcher.h" />
-    <ClInclude Include="DarkPlusPlus.h" />
-    <ClInclude Include="DarkProcessHacker.h" />
-    <ClInclude Include="win32-darkmode.h" />
     <ClInclude Include="DialogAboutCSSE.h" />
     <ClInclude Include="DialogActorAIWindow.h" />
     <ClInclude Include="DialogCSSESettings.h" />
