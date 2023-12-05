@@ -146,7 +146,7 @@ namespace se::cs::dialog::text_search_window {
 			for (const auto& dialogue : *recordHandler->dialogues) {
 				DialogueResult* result = nullptr;
 				for (const auto& info : dialogue->topics) {
-					if (info->text && string::complex_contains(info->text, needle, caseSensitive, regex)) {
+					if (info->search(needle, caseSensitive, regex)) {
 						if (result == nullptr) {
 							result = new DialogueResult();
 							result->dialogue = dialogue;

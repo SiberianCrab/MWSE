@@ -54,7 +54,7 @@ namespace se::cs {
 		byte filterPlayerRank; // 0x1E
 		Condition conditions[6]; // 0x20
 		const char* text; // 0x80
-		int unknown_0x84;
+		const char* resultsText; // 0x84
 		BaseObject* filterActor; // 0x88
 		BaseObject* filterRace; // 0x8C
 		BaseObject* filterClass; // 0x90
@@ -66,6 +66,8 @@ namespace se::cs {
 		Dialogue* getDialogue() const;
 
 		bool filter(Object* actor, Reference* reference = nullptr, int source = 1, Dialogue* dialogue = nullptr) const;
+
+		bool search(const std::string_view& needle, bool caseSensitive, std::regex* regex = nullptr) const;
 	};
 	static_assert(sizeof(DialogueInfo) == 0xA4, "TES3::DialogueInfo failed size validation");
 	static_assert(sizeof(DialogueInfo::LoadLinkNode) == 0xC, "TES3::DialogueInfo::LoadLinkNode failed size validation");
