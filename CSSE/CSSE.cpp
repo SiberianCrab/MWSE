@@ -38,6 +38,7 @@
 #include "PathUtil.h"
 #include "StringUtil.h"
 #include "WindowsUtil.h"
+#include "MetadataUtil.h"
 
 #include "BuildDate.h"
 #include "Settings.h"
@@ -477,6 +478,16 @@ namespace se::cs {
 				return FindClose(hFindFile);
 			}
 		}
+
+		//
+		// Patch: Load metadata when mods load.
+		//
+
+		const auto CS_RecordHandler_LoadFiles = reinterpret_cast<void(__thiscall*)(RecordHandler*)>(0x501500);
+		void __fastcall PatchOnLoadFiles(RecordHandler* recordHandler) {
+			CS_RecordHandler_LoadFiles(recordHandler);
+			metadata::reloadModMetadata();
+		}
 	}
 
 	CSSE application;
@@ -613,6 +624,9 @@ namespace se::cs {
 		writeDoubleWordUnprotected(0x6D99E8, reinterpret_cast<DWORD>(&patch::sizeForSymbolicLinks::findFirstFileA));
 		writeDoubleWordUnprotected(0x6D99EC, reinterpret_cast<DWORD>(&patch::sizeForSymbolicLinks::findNextFileA));
 		writeDoubleWordUnprotected(0x6D9A00, reinterpret_cast<DWORD>(&patch::sizeForSymbolicLinks::findClose));
+
+		// Patch: Load mod metadata with mod data.
+		genJumpEnforced(0x40178A, 0x501500, reinterpret_cast<DWORD>(patch::PatchOnLoadFiles));
 
 		// Install all our sectioned patches.
 		window::main::installPatches();

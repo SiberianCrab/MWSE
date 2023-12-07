@@ -302,11 +302,19 @@ function table.empty(t, deepCheck)
 end
 
 function table.choice(t)
-	-- We need to get a list of all of our values first.
-	local keys = table.keys(t)
+	-- We can abort on empty tables.
+	local size = table.size(t)
+	if (size == 0) then
+		return
+	end
 
-	-- Now we want to get a random key, and return the value for that key.
-	local key = keys[math.random(#keys)]
+	-- Call next a random amount of times up to the size of the table to get a random key.
+	local key = nil
+	local nextCount = math.random(size)
+	for _ = 1, nextCount do
+		key = next(t, key)
+	end
+
 	return t[key], key
 end
 

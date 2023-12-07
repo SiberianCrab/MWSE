@@ -310,11 +310,12 @@ namespace se::cs {
 
 		bool valid = true;
 		bool enabled = true;
+		toml::value loadedConfig = {};
 
 		std::filesystem::path file_location() const;
 
 		void load();
-		void save() const;
+		void save();
 
 		void from_toml(const toml::value& v);
 		toml::value into_toml() const;

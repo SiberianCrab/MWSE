@@ -3881,6 +3881,8 @@ tes3.event = require("tes3.event")
 ---| `tes3.event.mouseWheel`
 ---| `tes3.event.musicChangeTrack`
 ---| `tes3.event.musicSelectTrack`
+---| `tes3.event.objectCopied`
+---| `tes3.event.objectCreated`
 ---| `tes3.event.objectInvalidated`
 ---| `tes3.event.playGroup`
 ---| `tes3.event.playItemSound`

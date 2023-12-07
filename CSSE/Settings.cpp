@@ -1,6 +1,7 @@
 #include "Settings.h"
 
 #include "LogUtil.h"
+#include "TomlUtil.h"
 #include "PathUtil.h"
 
 namespace se::cs {
@@ -594,6 +595,8 @@ namespace se::cs {
 	}
 
 	toml::value Settings_t::TestEnvironment::into_toml() const {
+		toml::value foo = {};
+
 		return toml::value(
 			{
 				{ "start_new_game", start_new_game },
@@ -647,8 +650,8 @@ namespace se::cs {
 		const auto path = file_location();
 		if (std::filesystem::exists(path)) {
 			try {
-				const auto data = toml::parse(path);
-				from_toml(data);
+				loadedConfig = toml::parse(path);
+				from_toml(loadedConfig);
 			}
 			catch (toml::syntax_error& e) {
 				valid = false;
@@ -659,7 +662,7 @@ namespace se::cs {
 		}
 	}
 
-	void Settings_t::save() const {
+	void Settings_t::save() {
 		if (!valid) {
 			return;
 		}
@@ -668,8 +671,10 @@ namespace se::cs {
 		outFile.open(file_location());
 
 		if (!outFile.fail()) {
-			const toml::value data = settings;
+			toml::value data = settings;
+			toml_util::copyComments(data, loadedConfig);
 			outFile << std::setw(80) << std::setprecision(8) << data;
+			loadedConfig = data;
 		}
 		else {
 			log::stream << "Failed to save settings file " << file_location().string() << "." << std::endl;

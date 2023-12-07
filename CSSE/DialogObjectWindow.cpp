@@ -2,6 +2,7 @@
 
 #include "LogUtil.h"
 #include "MemoryUtil.h"
+#include "MetadataUtil.h"
 #include "StringUtil.h"
 #include "WindowsUtil.h"
 #include "WinUIUtil.h"
@@ -174,6 +175,11 @@ namespace se::cs::dialog::object_window {
 
 	// TODO: Make use of the new object-class search features.
 	bool PatchFilterObjectWindow_ObjectMatchesSearchText(const Object* object) {
+		// Hide deprecated objects.
+		if (metadata::isDeprecated(object)) {
+			return false;
+		}
+
 		if (modeShowModifiedOnly && !object->getModified()) {
 			return false;
 		}
