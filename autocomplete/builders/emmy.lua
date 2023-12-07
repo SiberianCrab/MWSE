@@ -361,7 +361,7 @@ local function build(package)
 	if (package.type == "lib" and package.key == "event") then
 		file:write(string.format("--- @field register fun(eventId: string, callback: fun(e: table): boolean?, options: table?)\n"))
 		for _, key in ipairs(table.keys(events, true)) do
-			file:write(string.format("--- @field register fun(eventId: '\"%s\"', callback: fun(e: %sEventData): boolean?, options: table?)\n", key, key))
+			file:write(string.format("--- @field register fun(eventId: '\"%s\"', callback: (fun(e: %sEventData): boolean?), options: table?)\n", key, key))
 		end
 	end
 

@@ -8,5 +8,4 @@ namespace se::cs::metadata {
 	const std::vector<std::shared_ptr<ModMetadata>>& getActiveModMetadata();
 
 	bool isDeprecated(const BaseObject* object);
-	const std::unordered_set<std::string>& getDeprecatedObjectIds();
 }

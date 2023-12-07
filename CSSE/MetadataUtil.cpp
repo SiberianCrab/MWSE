@@ -12,7 +12,8 @@
 namespace se::cs::metadata {
 	static std::vector<std::shared_ptr<ModMetadata>> activeMetadata;
 	static std::unordered_map<GameFile*, std::shared_ptr<ModMetadata>> gameFileMap;
-	static std::unordered_set<std::string> deprecatedIds;
+
+	std::unordered_set<std::string> deprecatedIds;
 
 	void reloadModMetadata() {
 		// Reload any currently loaded metadata.
@@ -75,9 +76,7 @@ namespace se::cs::metadata {
 				const auto& data = metadata->toml();
 				const auto& deprecated = toml::find<std::vector<std::string>>(data, "tools", "csse", "deprecated");
 				for (const auto& id : deprecated) {
-					std::string lower = id;
-					string::to_lower(lower);
-					deprecatedIds.insert(lower);
+					deprecatedIds.insert(id);
 				}
 			}
 			catch (...) {
@@ -104,13 +103,11 @@ namespace se::cs::metadata {
 	}
 
 	bool isDeprecated(const BaseObject* object) {
-		std::string id = object->getObjectID();
-		string::to_lower(id);
+		const auto id = object->getObjectID();
+		if (id == nullptr) {
+			return false;
+		}
 
 		return deprecatedIds.find(id) != deprecatedIds.end();
-	}
-
-	const std::unordered_set<std::string>& getDeprecatedObjectIds() {
-		return deprecatedIds;
 	}
 }
