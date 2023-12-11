@@ -23,6 +23,10 @@ namespace mge::lua {
 
 		// API v2+ for following functions
 		static void saveScreenshot(sol::optional<sol::table> params);
+
+		// API v3+ for following functions
+		static float getNearRenderDistance();
+		static void setNearRenderDistance(float distance);
 	};
 
 	class CameraConfig {

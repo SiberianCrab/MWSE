@@ -62,15 +62,25 @@ namespace mwse::lua {
 			// Note that DistantLandRenderConfig::ShadowResolution does not appear, as it is not configurable.
 		}
 		lua_mge["distantLandRenderConfig"] = mge::api->getDistantLandRenderConfig();
-		lua_mge["reloadDistantLand"] = &mge::lua::CoreInterface::reloadDistantLand;
 
-		lua_mge["getUIScale"] = &mge::lua::CoreInterface::getGUIScale;
-		lua_mge["setUIScale"] = &mge::lua::CoreInterface::setGUIScale;
-		lua_mge["getLightingMode"] = &mge::lua::CoreInterface::getLightingMode;
-		lua_mge["setLightingMode"] = &mge::lua::CoreInterface::setLightingMode;
+		// Core interface functions.
+		{
+			using CoreInterface = mge::lua::CoreInterface;
 
-		if (mge::apiVersion >= 2) {
-			lua_mge["saveScreenshot"] = &mge::lua::CoreInterface::saveScreenshot;
+			lua_mge["reloadDistantLand"] = &CoreInterface::reloadDistantLand;
+
+			lua_mge["getUIScale"] = &CoreInterface::getGUIScale;
+			lua_mge["setUIScale"] = &CoreInterface::setGUIScale;
+			lua_mge["getLightingMode"] = &CoreInterface::getLightingMode;
+			lua_mge["setLightingMode"] = &CoreInterface::setLightingMode;
+
+			if (mge::apiVersion >= 2) {
+				lua_mge["saveScreenshot"] = &CoreInterface::saveScreenshot;
+			}
+
+			if (mge::apiVersion >= 3) {
+				lua_mge["nearRenderDistance"] = sol::property(&CoreInterface::getNearRenderDistance, &CoreInterface::setNearRenderDistance);
+			}
 		}
 
 		// Rendering feature functions.

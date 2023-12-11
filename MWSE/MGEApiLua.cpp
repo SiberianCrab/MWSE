@@ -66,6 +66,14 @@ namespace mge::lua {
 		static_cast<MGEAPIv2*>(api)->saveScreenshot(path, captureWithUI);
 	}
 
+	float CoreInterface::getNearRenderDistance() {
+		return static_cast<MGEAPIv3*>(api)->nearRenderDistanceGet();
+	}
+
+	void CoreInterface::setNearRenderDistance(float distance) {
+		static_cast<MGEAPIv3*>(api)->nearRenderDistanceSet(distance);
+	}
+
 	//
 	// CameraConfig
 	//
@@ -152,7 +160,6 @@ namespace mge::lua {
 	void CameraConfig::setCameraShakeAcceleration(float value) {
 		api->cameraShakeSetAcceleration(value);
 	}
-
 
 	//
 	// ShadersConfig
