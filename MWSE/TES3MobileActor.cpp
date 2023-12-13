@@ -1393,6 +1393,8 @@ namespace TES3 {
 		return false;
 	}
 
+	static MobileActor* overrideActorsNextHitStunTest = nullptr;
+
 	bool MobileActor::hitStun_lua(sol::optional<sol::table> params) {
 		auto cancel = mwse::lua::getOptionalParam<bool>(params, "cancel", false);
 		auto knockDown = mwse::lua::getOptionalParam<bool>(params, "knockDown", false);
@@ -1406,13 +1408,16 @@ namespace TES3 {
 			// Attempt to cancel hit stun or knockdown.
 			if (actionData.animGroupStunEffect != 255) {
 				actionData.animGroupStunEffect = 255;
-				return true;
 			}
-			if (actionData.animStateAttack == AttackAnimationState::Knockdown) {
+			else if (actionData.animStateAttack == AttackAnimationState::Knockdown) {
 				actionData.animStateAttack = AttackAnimationState::Ready;
-				return true;
 			}
-			return false;
+			else {
+				// Set up cancellation of the next hitstun.
+				// This feature allows affecting hitstun logic that runs after the 'damaged' event.
+				overrideActorsNextHitStunTest = this;
+			}
+			return true;
 		}
 
 		// Conditionals matching the hit stun mechanics.
@@ -1451,6 +1456,18 @@ namespace TES3 {
 			}
 		}
 		return false;
+	}
+
+	const auto TES3_MobileActor_hitStunTestAndReportCrime = reinterpret_cast<void(__thiscall*)(MobileActor*, float, bool)>(0x557840);
+	void MobileActor::hitStunTestAndReportCrime(float damage, bool wasKillingBlow) {
+		// Additional check to support the hitstun cancelling code.
+		if (this == overrideActorsNextHitStunTest) {
+			// Prevent hitstun by zeroing the reported damage.
+			overrideActorsNextHitStunTest = nullptr;
+			damage = 0.0f;
+		}
+
+		TES3_MobileActor_hitStunTestAndReportCrime(this, damage, wasKillingBlow);
 	}
 
 	void MobileActor::updateOpacity() {

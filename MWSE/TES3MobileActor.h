@@ -346,6 +346,7 @@ namespace TES3 {
 		void setWeaponReady(bool value);
 		bool forceWeaponAttack_lua(sol::optional<sol::table> params);
 		bool hitStun_lua(sol::optional<sol::table> params);
+		void hitStunTestAndReportCrime(float damage, bool wasKillingBlow);
 
 		void updateOpacity();
 		void notifyActorDeadOrDestroyed(MobileActor* mobileActor);

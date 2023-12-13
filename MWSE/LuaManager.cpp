@@ -4924,6 +4924,10 @@ namespace mwse::lua {
 		// Event: Damage(d)HandToHand
 		genCallEnforced(0x5576D4, 0x5581B0, reinterpret_cast<DWORD>(OnApplyFatigueDamageFromAttack_Wrapper));
 
+		// Allow changes to hitstun test function.
+		auto hitStunTestAndReportCrime = &TES3::MobileActor::hitStunTestAndReportCrime;
+		genCallEnforced(0x556AE9, 0x557840, *reinterpret_cast<DWORD*>(&hitStunTestAndReportCrime));
+
 		// Event: Shield blocked
 		writePatchCodeUnprotected(0x5575EC, (BYTE*)&patchOnShieldWearFromBlocking, patchOnShieldWearFromBlocking_size);
 		genCallEnforced(0x5575EF, 0x558690, reinterpret_cast<DWORD>(OnShieldWearFromBlocking));

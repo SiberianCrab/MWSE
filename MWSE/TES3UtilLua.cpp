@@ -5572,12 +5572,41 @@ namespace mwse::lua {
 
 	int calculatePrice(sol::table params) {
 		bool buying = getOptionalParam(params, "buying", !getOptionalParam(params, "selling", false));
+		bool isBartering = getOptionalParam(params, "bartering", false);
+		bool isRepairing = getOptionalParam(params, "repairing", false);
+		bool isTraining = getOptionalParam(params, "training", false);
 
 		// Get the base value.
 		auto object = getOptionalParamObject<TES3::Object>(params, "object");
+		auto itemData = getOptionalParam<TES3::ItemData*>(params, "itemData", nullptr);
 		auto basePrice = getOptionalParam(params, "basePrice", object ? object->getValue() : 0);
 		if (object && object->objectType == TES3::ObjectType::Spell) {
 			basePrice = static_cast<TES3::Spell*>(object)->getValue();
+		}
+		if (isRepairing) {
+			// Standard repair price calculation. Note it uses integer divisions.
+			if (object && itemData) {
+				auto fRepairMult = TES3::DataHandler::get()->nonDynamicData->GMSTs[TES3::GMST::fRepairMult];
+				auto maxCondition = object->getDurability();
+				int repairRatio = std::max(1, maxCondition / std::max(1, basePrice));
+				int x = (maxCondition - itemData->condition) / repairRatio;
+				basePrice = int(fRepairMult->value.asFloat * x);
+			}
+			else {
+				throw std::invalid_argument("Invalid 'object' or 'itemData' parameter provided.");
+			}
+		}
+		else if (isTraining) {
+			// Standard training price calculation.
+			auto skill = getOptionalParam(params, "skill", TES3::SkillID::Invalid);
+			if (skill >= TES3::SkillID::FirstSkill && skill <= TES3::SkillID::LastSkill) {
+				auto iTrainingMod = TES3::DataHandler::get()->nonDynamicData->GMSTs[TES3::GMST::iTrainingMod];
+				auto& skillAttr = TES3::WorldController::get()->getMobilePlayer()->skills[skill];
+				basePrice = int(iTrainingMod->value.asLong * skillAttr.base);
+			}
+			else {
+				throw std::invalid_argument("Invalid 'skill' parameter provided.");
+			}
 		}
 
 		// Get the first-modified value.
@@ -5589,23 +5618,21 @@ namespace mwse::lua {
 
 		// Fire off the appropriate event.
 		event::BaseEvent* firedEvent = nullptr;
-		if (getOptionalParam(params, "bartering", false)) {
+		if (isBartering) {
 			if (event::CalculateSpellPriceEvent::getEventEnabled() && object && object->objectType == TES3::ObjectType::Spell) {
 				firedEvent = new event::CalculateSpellPriceEvent(merchant, basePrice, price, static_cast<TES3::Spell*>(object));
 			}
 			else if (event::CalculateBarterPriceEvent::getEventEnabled()) {
 				auto count = getOptionalParam(params, "count", 1);
-				auto itemData = getOptionalParam<TES3::ItemData*>(params, "itemData", nullptr);
 				firedEvent = new event::CalculateBarterPriceEvent(merchant, basePrice, price, buying, count, object, itemData);
 			}
 		}
-		else if (getOptionalParam(params, "repairing", false)) {
+		else if (isRepairing) {
 			if (event::CalculateRepairPriceEvent::getEventEnabled()) {
-				auto itemData = getOptionalParam<TES3::ItemData*>(params, "itemData", nullptr);
 				firedEvent = new event::CalculateRepairPriceEvent(merchant, basePrice, price, object, itemData);
 			}
 		}
-		else if (getOptionalParam(params, "training", false)) {
+		else if (isTraining) {
 			if (event::CalculateTrainingPriceEvent::getEventEnabled()) {
 				auto skill = getOptionalParam(params, "skill", TES3::SkillID::Invalid);
 				firedEvent = new event::CalculateTrainingPriceEvent(merchant, basePrice, price, skill);
