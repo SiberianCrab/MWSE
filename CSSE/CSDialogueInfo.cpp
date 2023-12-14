@@ -10,7 +10,7 @@ namespace se::cs {
 	Dialogue* DialogueInfo::getDialogue() const {
 		const auto& dialogues = *DataHandler::get()->recordHandler->dialogues;
 		for (const auto& dialogue : dialogues) {
-			for (const auto& info : dialogue->topics) {
+			for (const auto& info : dialogue->infos) {
 				if (info == this) {
 					return dialogue;
 				}

@@ -150,6 +150,7 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClCompile Include="CSClass.cpp" />
     <ClCompile Include="CSContainer.cpp" />
     <ClCompile Include="CSCreature.cpp" />
+    <ClCompile Include="CSDialogue.cpp" />
     <ClCompile Include="CSDialogueInfo.cpp" />
     <ClCompile Include="CSFaction.cpp" />
     <ClCompile Include="CSGameSetting.cpp" />

@@ -123,6 +123,9 @@
     <ClCompile Include="ModMetadata.cpp">
       <Filter>Source Files\Metadata</Filter>
     </ClCompile>
+    <ClCompile Include="CSDialogue.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CSSE.def">

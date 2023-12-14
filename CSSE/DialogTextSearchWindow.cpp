@@ -145,7 +145,15 @@ namespace se::cs::dialog::text_search_window {
 			// Search dialogues.
 			for (const auto& dialogue : *recordHandler->dialogues) {
 				DialogueResult* result = nullptr;
-				for (const auto& info : dialogue->topics) {
+
+				if (dialogue->search(needle, caseSensitive, regex)) {
+					if (result == nullptr) {
+						result = new DialogueResult();
+						result->dialogue = dialogue;
+					}
+				}
+
+				for (const auto& info : dialogue->infos) {
 					if (info->search(needle, caseSensitive, regex)) {
 						if (result == nullptr) {
 							result = new DialogueResult();
@@ -158,7 +166,7 @@ namespace se::cs::dialog::text_search_window {
 				if (result) {
 					dialogueResults->push_back(result);
 				}
-		}
+			}
 
 			// Search objects.
 			TextSearchGatherObjectResults(needle, objectResults, caseSensitive, regex);

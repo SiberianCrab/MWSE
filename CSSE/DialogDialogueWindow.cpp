@@ -100,8 +100,8 @@ namespace se::cs::dialog::dialogue_window {
 			}
 			else {
 				bool hasValidInfo = false;
-				for (const auto& topic : dialogue->topics) {
-					if (topic->filter(userData->currentFilterObject, nullptr, 1, dialogue)) {
+				for (const auto& iterInfo : dialogue->infos) {
+					if (iterInfo->filter(userData->currentFilterObject, nullptr, 1, dialogue)) {
 						hasValidInfo = true;
 						break;
 					}
