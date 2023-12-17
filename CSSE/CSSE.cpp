@@ -224,7 +224,7 @@ namespace se::cs {
 				return FALSE;
 			}
 
-			lastModelDirectory = std::filesystem::canonical(openData->lpstrFile).parent_path().string();
+			lastModelDirectory = std::filesystem::path(openData->lpstrFile).remove_filename().string();
 
 			return TRUE;
 		}
@@ -245,7 +245,7 @@ namespace se::cs {
 				return FALSE;
 			}
 
-			lastIconDirectory = std::filesystem::canonical(openData->lpstrFile).parent_path().string();
+			lastIconDirectory = std::filesystem::path(openData->lpstrFile).remove_filename().string();
 
 			return TRUE;
 		}
