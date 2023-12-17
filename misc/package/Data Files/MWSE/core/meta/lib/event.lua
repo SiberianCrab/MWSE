@@ -97,6 +97,7 @@
 --- @field register fun(eventId: '"keyUp"', callback: (fun(e: keyUpEventData): boolean?), options: table?)
 --- @field register fun(eventId: '"keybindTested"', callback: (fun(e: keybindTestedEventData): boolean?), options: table?)
 --- @field register fun(eventId: '"keyframesLoad"', callback: (fun(e: keyframesLoadEventData): boolean?), options: table?)
+--- @field register fun(eventId: '"keyframesLoaded"', callback: (fun(e: keyframesLoadedEventData): boolean?), options: table?)
 --- @field register fun(eventId: '"levelUp"', callback: (fun(e: levelUpEventData): boolean?), options: table?)
 --- @field register fun(eventId: '"leveledCreaturePicked"', callback: (fun(e: leveledCreaturePickedEventData): boolean?), options: table?)
 --- @field register fun(eventId: '"leveledItemPicked"', callback: (fun(e: leveledItemPickedEventData): boolean?), options: table?)

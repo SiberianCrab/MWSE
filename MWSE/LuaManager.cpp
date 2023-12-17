@@ -4189,7 +4189,7 @@ namespace mwse::lua {
 		isWeaponAnim:
 			cmp cl, 0x80			// AnimGroup_SpellCast (added test)
 			je weapon
-			cmp cl, 0x8A			// AnimGroup_Crossbow
+			cmp cl, 0x83			// AnimGroup_Attack1 (added creature and h2h attacks)
 			jb done
 			cmp cl, 0x8F			// AnimGroup_WeaponTwoWide
 			ja done

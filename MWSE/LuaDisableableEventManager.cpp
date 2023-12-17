@@ -87,6 +87,7 @@
 #include "LuaKeyDownEvent.h"
 #include "LuaKeyEvent.h"
 #include "LuaKeyframesLoadEvent.h"
+#include "LuaKeyframesLoadedEvent.h"
 #include "LuaKeyUpEvent.h"
 #include "LuaLeveledCreaturePickedEvent.h"
 #include "LuaLeveledItemPickedEvent.h"
@@ -258,6 +259,7 @@ namespace mwse::lua::event {
 		usertypeDefinition["keybindTested"] = sol::property(&KeybindTestedEvent::getEventEnabled, &KeybindTestedEvent::setEventEnabled);
 		usertypeDefinition["keyDown"] = sol::property(&KeyDownEvent::getEventEnabled, &KeyDownEvent::setEventEnabled);
 		usertypeDefinition["keyframesLoad"] = sol::property(&KeyframesLoadEvent::getEventEnabled, &KeyframesLoadEvent::setEventEnabled);
+		usertypeDefinition["keyframesLoaded"] = sol::property(&KeyframesLoadedEvent::getEventEnabled, &KeyframesLoadedEvent::setEventEnabled);
 		usertypeDefinition["keyUp"] = sol::property(&KeyUpEvent::getEventEnabled, &KeyUpEvent::setEventEnabled);
 		usertypeDefinition["leveledCreaturePicked"] = sol::property(&LeveledCreaturePickedEvent::getEventEnabled, &LeveledCreaturePickedEvent::setEventEnabled);
 		usertypeDefinition["leveledItemPicked"] = sol::property(&LeveledItemPickedEvent::getEventEnabled, &LeveledItemPickedEvent::setEventEnabled);

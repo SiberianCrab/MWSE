@@ -6,6 +6,7 @@
 #include "LuaAddSoundEvent.h"
 #include "LuaAddTempSoundEvent.h"
 #include "LuaKeyframesLoadEvent.h"
+#include "LuaKeyframesLoadedEvent.h"
 #include "LuaLoadedGameEvent.h"
 #include "LuaLoadGameEvent.h"
 #include "LuaMeshLoadedEvent.h"
@@ -155,7 +156,14 @@ namespace TES3 {
 		path = keyframesPath.c_str();
 		sequenceName = sequenceString.c_str();
 
-		return TES3_MeshData_loadKeyframes(this, path, sequenceName);
+		auto keyframeDefinition = TES3_MeshData_loadKeyframes(this, path, sequenceName);
+		if (keyframeDefinition && mwse::lua::event::KeyframesLoadedEvent::getEventEnabled()) {
+			mwse::lua::LuaManager::getInstance().getThreadSafeStateHandle().triggerEvent(
+				new mwse::lua::event::KeyframesLoadedEvent(path, sequenceName, keyframeDefinition)
+			);
+		}
+
+		return keyframeDefinition;
 	}
 
 	//

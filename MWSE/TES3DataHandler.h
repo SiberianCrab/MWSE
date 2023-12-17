@@ -73,8 +73,8 @@ namespace TES3 {
 
 	struct NonDynamicData {
 		int activeModCount; // 0x0
-		long unknown_0x04; // always 0?
-		GameFile* unknown_0x08; // Points to info about the last loaded save?
+		GameFile* saveGameDuringLoadSave; // 0x4
+		GameFile* lastLoadedOrSavedGame; // 0x8
 		LinkedObjectList<Object> * list; // 0x0C
 		LinkedObjectList<Spell> * spellsList; // 0x10
 		MeshData * meshData; // 0x14
@@ -131,11 +131,11 @@ namespace TES3 {
 		char unknown_0xB377;
 		char unknown_0xB378;
 		char unknown_0xB379;
-		char unknown_0xB37A;
+		bool allSavegameMastersMatchLoadOrder; // 0xB37A
 		IteratedList<BaseObject*>* initiallyLoadedObjects; // 0xB37C
 		NI::Pointer<NI::SourceTexture> mapTexture; // 0xB380
 		Reference * playerSaveGame; // 0xB384
-		CriticalSection criticalSection; // 0xB388
+		CriticalSection criticalSectionSounds; // 0xB388
 
 		NonDynamicData() = delete;
 		~NonDynamicData() = delete;

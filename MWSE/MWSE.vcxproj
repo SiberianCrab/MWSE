@@ -17,6 +17,7 @@
     <ClInclude Include="LuaCalcChargenStatsEvent.h" />
     <ClInclude Include="LuaCalcHitDetectionConeEvent.h" />
     <ClInclude Include="LuaDialogueFilteredEvent.h" />
+    <ClInclude Include="LuaKeyframesLoadedEvent.h" />
     <ClInclude Include="LuaMagicSelectionChangedEvent.h" />
     <ClInclude Include="LuaMusicChangeTrackEvent.h" />
     <ClInclude Include="LuaObjectCopiedEvent.h" />
@@ -621,6 +622,7 @@
     <ClCompile Include="LuaKeybindTestedEvent.cpp" />
     <ClCompile Include="LuaKeyDownEvent.cpp" />
     <ClCompile Include="LuaKeyEvent.cpp" />
+    <ClCompile Include="LuaKeyframesLoadedEvent.cpp" />
     <ClCompile Include="LuaKeyframesLoadEvent.cpp" />
     <ClCompile Include="LuaKeyUpEvent.cpp" />
     <ClCompile Include="LuaLeveledCreaturePickedEvent.cpp" />
