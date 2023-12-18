@@ -61,7 +61,7 @@ namespace se::cs {
 		Attachment* firstAttachment; // 0x68
 		int unknown_0x6C;
 		int unknown_0x70;
-		int unknown_0x74;
+		NI::Pointer<NI::AVObject> selectionWidget; // 0x74. NiLines
 
 		LightAttachmentNode* getLightAttachment() const;
 
@@ -71,6 +71,10 @@ namespace se::cs {
 		Reference* getAttachment7() const;
 
 		void updateRotationMatrixForRaceAndSex(NI::Matrix33& matrix, bool unknown = false) const;
+
+		bool createSelectionWidget(NI::Vector3 boundsMin, NI::Vector3 boundsMax);
+		void setSelectionWidgetEnabled(int flag);
+		bool hasActiveSelectionWidget() const;
 	};
 	static_assert(sizeof(Reference) == 0x78, "TES3::Reference failed size validation");
 }

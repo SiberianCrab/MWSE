@@ -49,6 +49,7 @@ namespace se::cs::dialog::render_window {
 	using gSnapGrid = memory::ExternalGlobal<int, 0x6CE9A8>;
 	using gSnapAngleInDegrees = memory::ExternalGlobal<int, 0x6CE9AC>;
 	using gCumulativeRotationValues = memory::ExternalGlobal<NI::Vector3, 0x6CF760>;
+	using gPreviousCumulativeRotationValues = memory::ExternalGlobal<NI::Vector3, 0x6CF4A8>;
 
 	using gRenderWindowPick = memory::ExternalGlobal<NI::Pick, 0x6CF528>;
 
@@ -76,6 +77,8 @@ namespace se::cs::dialog::render_window {
 	using gRenderControlFlags = memory::ExternalGlobal<DWORD, 0x6CE9A4>;
 	using gAutoSaveTime = memory::ExternalGlobal<int, 0x6CEA38>;
 
+	const auto resetCumulativeRotationValues = reinterpret_cast<void(__stdcall*)()>(0x466470);
+
 	// Convenience function to see if X, Y, or Z are held down.
 	bool isHoldingAxisKey() {
 		return gIsHoldingX::get() || gIsHoldingY::get() || gIsHoldingZ::get();
@@ -87,6 +90,10 @@ namespace se::cs::dialog::render_window {
 
 	bool isAngleSnapping() {
 		return gRenderControlFlags::get() & RenderControlFlags::SnapToAngle;
+	}
+
+	bool isModifyingObject() {
+		return gIsTranslating::get() || gIsRotating::get() || gIsScaling::get();
 	}
 
 	struct NetImmerseInstance {
@@ -297,6 +304,7 @@ namespace se::cs::dialog::render_window {
 	const auto TES3_CS_OriginalRotationLogic = reinterpret_cast<bool(__cdecl*)(void*, SelectionData::Target*, int, SelectionData::RotationAxis)>(0x4652D0);
 	bool __cdecl Patch_ReplaceRotationLogic(void* unknown1, SelectionData::Target* firstTarget, int relativeMouseDelta, SelectionData::RotationAxis rotationAxis) {
 		using windows::isKeyDown;
+		using windows::isControlDown;
 
 		// Allow holding ALT modifier to do vanilla behavior.
 		bool useWorldAxisRotation = settings.render_window.use_world_axis_rotations_by_default;
@@ -342,7 +350,7 @@ namespace se::cs::dialog::render_window {
 		}
 
 		const auto snapAngle = math::degreesToRadians((float)gSnapAngleInDegrees::get());
-		const bool isSnapping = isAngleSnapping() && (snapAngle != 0.0f);
+		const bool isSnapping = (isControlDown() || isAngleSnapping()) && (snapAngle != 0.0f);
 
 		NI::Vector3 orientation = cumulativeRot;
 		if (isSnapping) {
@@ -737,6 +745,7 @@ namespace se::cs::dialog::render_window {
 	const auto DefaultDragMovementFunction = reinterpret_cast<int(__cdecl*)(RenderController*, SelectionData::Target*, int, int, bool, bool, bool)>(0x464B70);
 	int __cdecl Patch_ReplaceDragMovementLogic(RenderController* renderController, SelectionData::Target* firstTarget, int dx, int dy, bool lockX, bool lockY, bool lockZ) {
 		using windows::isKeyDown;
+		using windows::isControlDown;
 
 		auto selectionData = SelectionData::get();
 		auto lastTarget = selectionData->getLastTarget();
@@ -749,8 +758,9 @@ namespace se::cs::dialog::render_window {
 			return DefaultDragMovementFunction(renderController, firstTarget, dx, dy, lockX, lockY, lockZ);
 		}
 
-		// When holding alt perform align-to-surface behavior.
-		if (isKeyDown(VK_MENU)) {
+		// When holding alt perform align-to-surface behavior. 
+		// Disallow while control is down (grid snap enabled).
+		if (isKeyDown(VK_MENU) && !isControlDown()) {
 			return Patch_AlignToSurfaceDragMovementLogic(renderController, firstTarget, dx, dy, lockX, lockY, lockZ);
 		}
 
@@ -849,7 +859,7 @@ namespace se::cs::dialog::render_window {
 		}
 
 		// Apply grid snap.
-		if (isGridSnapping()) {
+		if (isGridSnapping() || isControlDown()) {
 			auto increment = gSnapGrid::get();
 			if (increment != 0.0f) {
 				// "Unlocked" movement defaults to XY axis.
@@ -1041,8 +1051,6 @@ namespace se::cs::dialog::render_window {
 	//
 	// Patch: Extend Render Window message handling.
 	//
-
-	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
 
 	NI::Texture* getLandscapeTextureUnderCursor() {
 		auto rendererController = RenderController::get();
@@ -1423,7 +1431,7 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void showContextAwareActionMenu(HWND hWndRenderWindow) {
+	void showContextAwareActionMenu(HWND hWndRenderWindow, std::optional<LRESULT>& overrideDialogResult) {
 		auto menu = CreatePopupMenu();
 		if (menu == NULL) {
 			return;
@@ -1948,7 +1956,93 @@ namespace se::cs::dialog::render_window {
 
 		// We also stole paint stuff, so repaint.
 		SendMessage(hWndRenderWindow, WM_PAINT, 0, 0);
-		PatchDialogProc_OverrideResult = TRUE;
+		overrideDialogResult = TRUE;
+	}
+
+	namespace grid {
+		static void update() {
+			// Angle snapping is not currently not implemented for legacy rotation mode.
+			bool useWorldAxisRotation = settings.render_window.use_world_axis_rotations_by_default;
+			if (!useWorldAxisRotation && gIsRotating::get()) {
+				return;
+			}
+
+			// Grid snapping is not currently not implemented for legacy movement mode.
+			bool useLegacyObjectMovement = settings.render_window.use_legacy_object_movement;
+			if (useLegacyObjectMovement && gIsTranslating::get()) {
+				return;
+			}
+
+			auto widgets = SceneGraphController::get()->getWidgets();
+			if (!widgets) {
+				return;
+			}
+
+			auto target = SelectionData::get()->getLastTarget();
+			if (!target) {
+				return;
+			}
+
+			auto sceneNode = target->reference->sceneNode;
+			
+			if (gIsRotating::get()) {
+				widgets->updateAngleGuideGeometry(
+					sceneNode->worldBoundRadius,
+					gSnapAngleInDegrees::get()
+				);
+				widgets->updateAngleGuidePosition(
+					sceneNode->localTranslate,
+					gIsHoldingX::get(),
+					gIsHoldingY::get(),
+					gIsHoldingZ::get(),
+					gSnapAngleInDegrees::get()
+				);
+			}
+			else {
+				widgets->updateGridGeometry(
+					sceneNode->worldBoundRadius,
+					gSnapGrid::get()
+				);
+				widgets->updateGridPosition(
+					sceneNode->localTranslate,
+					gIsHoldingX::get(),
+					gIsHoldingY::get(),
+					gIsHoldingZ::get(),
+					gSnapGrid::get()
+				);
+			}
+
+			widgets->showGrid();
+
+			gRenderNextFrame::set(true);
+		}
+
+		static void hide() {
+			auto widgets = SceneGraphController::get()->getWidgets();
+			if (widgets->isGridShown()) {
+				widgets->hideGrid();
+				gRenderNextFrame::set(true);
+			}
+		}
+
+		static int prevStep(std::vector<int>& steps, int current) {
+			for (auto i = steps.size() - 1; i; --i) {
+				if (steps[i] < current) {
+					return steps[i];
+				}
+			}
+			return steps[0];
+		}
+
+		static int nextStep(std::vector<int>& steps, int current) {
+			for (auto i = 0; i < steps.size(); ++i) {
+				if (steps[i] > current) {
+					return steps[i];
+				}
+			}
+			return steps[steps.size() - 1];
+		}
+
 	}
 
 	void PatchDialogProc_BeforeMouseMove(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -1961,32 +2055,70 @@ namespace se::cs::dialog::render_window {
 		movementContext.reset();
 	}
 
-	void PatchDialogProc_BeforeLMouseButtonUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeLMouseButtonUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
 		// Prevent selection changes during object rotation mode. Prevents non-undoable changes, and a crash if the selection becomes empty.
 		if (gIsRotating::get()) {
-			PatchDialogProc_OverrideResult = FALSE;
+			overrideDialogResult = FALSE;
 		}
 	}
 
-	void PatchDialogProc_BeforeLMouseDoubleClick(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeLMouseDoubleClick(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
 		// Prevent opening details dialog during object rotation mode.
 		if (gIsRotating::get()) {
-			PatchDialogProc_OverrideResult = FALSE;
+			overrideDialogResult = FALSE;
 		}
 	}
 
-	void PatchDialogProc_BeforeRMouseButtonDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeRMouseButtonDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
 		constexpr auto comboPickLandscapeTexture = MK_CONTROL | MK_RBUTTON;
 		if ((wParam & comboPickLandscapeTexture) == comboPickLandscapeTexture) {
 			if (PickLandscapeTexture(hWnd)) {
-				PatchDialogProc_OverrideResult = TRUE;
+				overrideDialogResult = TRUE;
 			}
 		}
 	}
 
-	void PatchDialogProc_BeforeSetCameraPosition(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeMouseWheel(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+		using windows::isControlDown;
+		using windows::isRightMouseDown;
+
+		if (isControlDown()) {
+			// Allows Control+MouseWheel to adjust grid snap setting.
+			// Set override flag so we don't also modify camera zoom.
+			overrideDialogResult = TRUE;
+
+			short delta = HIWORD(wParam);
+			
+			if (gIsRotating::get()) {
+				auto& steps = settings.render_window.angle_steps;
+				if (steps.size() == 0) {
+					return;
+				}
+
+				auto current = gSnapAngleInDegrees::get();
+				gSnapAngleInDegrees::set(
+					delta > 0 ? grid::prevStep(steps, current) : grid::nextStep(steps, current)
+				);
+			}
+			else {
+				auto& steps = settings.render_window.grid_steps;
+				if (steps.size() == 0) {
+					return;
+				}
+
+				auto current = gSnapGrid::get();
+				gSnapGrid::set(
+					delta > 0 ? grid::nextStep(steps, current) : grid::prevStep(steps, current)
+				);
+			}
+
+			grid::update();
+		}
+	}
+
+	void PatchDialogProc_BeforeSetCameraPosition(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
 		if (RenderController::get()->node == nullptr) {
-			PatchDialogProc_OverrideResult = FALSE;
+			overrideDialogResult = FALSE;
 		}
 	}
 
@@ -1998,6 +2130,8 @@ namespace se::cs::dialog::render_window {
 	}
 
 	void PatchDialogProc_AfterLMouseButtonUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		grid::hide();
+
 		// see: Patch_ReplaceScalingLogic
 		if (selectionNeedsScaleUpdate) {
 			selectionNeedsScaleUpdate = false;
@@ -2007,11 +2141,24 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void PatchDialogProc_BeforeKeyDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		auto editorWindow = landscape_edit_settings_window::gWindowHandle::get();
-		if (!editorWindow) {
-			return;
+	void PatchDialogProc_AfterRMouseButtonDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		using windows::isControlDown;
+
+		if (isControlDown()) {
+			grid::update();
 		}
+	}
+
+	void PatchDialogProc_AfterRMouseButtonUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		using windows::isControlDown;
+
+		if (isControlDown()) {
+			grid::hide();
+		}
+	}
+
+	void PatchDialogProc_BeforeKeyDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+		using windows::isControlDown;
 
 		// Decode parameters.
 		auto vkCode = LOWORD(wParam);
@@ -2025,42 +2172,94 @@ namespace se::cs::dialog::render_window {
 		auto repeatCount = LOWORD(lParam);
 		auto isKeyReleased = (keyFlags & KF_UP) == KF_UP;
 
-		using namespace landscape_edit_settings_window;
+
+		auto landscapeEditWindow = landscape_edit_settings_window::gWindowHandle::get();
 
 		switch (wParam) {
 		case VK_OEM_4: // [
-			decrementEditRadius();
-			PatchDialogProc_OverrideResult = TRUE;
+			if (landscapeEditWindow) {
+				landscape_edit_settings_window::decrementEditRadius();
+				overrideDialogResult = TRUE;
+			}
 			break;
 		case VK_OEM_6: // ]
-			incrementEditRadius();
-			PatchDialogProc_OverrideResult = TRUE;
+			if (landscapeEditWindow) {
+				landscape_edit_settings_window::incrementEditRadius();
+				overrideDialogResult = TRUE;
+			}
 			break;
 		case 'F':
-			if (!wasKeyDown) {
-				setFlattenLandscapeVertices(!getFlattenLandscapeVertices());
+			if (landscapeEditWindow) {
+				if (!wasKeyDown) {
+					landscape_edit_settings_window::setFlattenLandscapeVertices(!landscape_edit_settings_window::getFlattenLandscapeVertices());
+				}
+				overrideDialogResult = TRUE;
 			}
-			PatchDialogProc_OverrideResult = TRUE;
 			break;
 		case 'S':
-			if (!wasKeyDown) {
-				setSoftenLandscapeVertices(!getSoftenLandscapeVertices());
+			if (landscapeEditWindow) {
+				if (!wasKeyDown) {
+					landscape_edit_settings_window::setSoftenLandscapeVertices(!landscape_edit_settings_window::getSoftenLandscapeVertices());
+				}
+				overrideDialogResult = TRUE;
 			}
-			PatchDialogProc_OverrideResult = TRUE;
 			break;
 		case 'O':
-			if (!wasKeyDown) {
-				setEditLandscapeColor(!getEditLandscapeColor());
+			if (landscapeEditWindow) {
+				if (!wasKeyDown) {
+					landscape_edit_settings_window::setEditLandscapeColor(!landscape_edit_settings_window::getEditLandscapeColor());
+				}
+				overrideDialogResult = TRUE;
 			}
-			PatchDialogProc_OverrideResult = TRUE;
 			break;
+		case 'X':
+			// If we are modifying an object, prevent the default cut function from happening.
+			if (isModifyingObject()) {
+				resetCumulativeRotationValues();
+				gIsHoldingX::set(true);
+				overrideDialogResult = TRUE;
+			}
+			break;
+		case 'Y':
+			// If we are modifying an object, prevent the default redo function from happening.
+			if (isModifyingObject()) {
+				resetCumulativeRotationValues();
+				gIsHoldingY::set(true);
+				overrideDialogResult = TRUE;
+			}
+			break;
+		case 'Z':
+			// If we are modifying an object, prevent the default undo function from happening.
+			if (isModifyingObject()) {
+				resetCumulativeRotationValues();
+				gIsHoldingZ::set(true);
+				overrideDialogResult = TRUE;
+			}
+			break;
+		}
+
+		// Handle pressing a new axis key while we were already in grid/angle snapping mode.
+		if (!wasKeyDown && isControlDown() && isModifyingObject()) {
+			switch (wParam) {
+			case 'X':
+			case 'Y':
+			case 'Z':
+				grid::update();
+				break;
+			}
 		}
 	}
 
-	void PatchDialogProc_AfterKeyDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterKeyDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
 		switch (wParam) {
 		case 'Q':
-			showContextAwareActionMenu(hWnd);
+			showContextAwareActionMenu(hWnd, overrideDialogResult);
+			break;
+		case VK_CONTROL:
+			auto wasKeyDown = (HIWORD(lParam) & KF_REPEAT) == KF_REPEAT;
+			if (!wasKeyDown && (gIsTranslating::get() || gIsRotating::get())) {
+				grid::update();
+			}
 			break;
 		}
 	}
@@ -2073,6 +2272,15 @@ namespace se::cs::dialog::render_window {
 			movementContext.reset();
 			gRenderNextFrame::set(true);
 		}
+		
+		// If we released an X/Y/Z key update the grid to show the right angle.
+		if (widgets->isGridShown()) {
+			grid::update();
+		}
+	}
+
+	void PatchDialogProc_AfterKeyUp_Control(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		grid::hide();
 	}
 
 	void PatchDialogProc_AfterKeyUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -2082,6 +2290,9 @@ namespace se::cs::dialog::render_window {
 		case 'Z':
 			PatchDialogProc_AfterKeyUp_XYZ(hWnd, msg, wParam, lParam);
 			break;
+		case VK_CONTROL:
+			PatchDialogProc_AfterKeyUp_Control(hWnd, msg, wParam, lParam);
+			break;
 		}
 	}
 
@@ -2090,37 +2301,42 @@ namespace se::cs::dialog::render_window {
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		PatchDialogProc_OverrideResult.reset();
+		std::optional<LRESULT> overrideResult;
 
 		switch (msg) {
 		case WM_MOUSEMOVE:
 			PatchDialogProc_BeforeMouseMove(hWnd, msg, wParam, lParam);
+			lastCursorPosX = LOWORD(lParam);
+			lastCursorPosY = HIWORD(lParam);
+			break;
+		case WM_MOUSEWHEEL:
+			PatchDialogProc_BeforeMouseWheel(hWnd, msg, wParam, lParam, overrideResult);
 			break;
 		case WM_LBUTTONDOWN:
 			PatchDialogProc_BeforeLMouseButtonDown(hWnd, msg, wParam, lParam);
 			break;
 		case WM_LBUTTONUP:
-			PatchDialogProc_BeforeLMouseButtonUp(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeLMouseButtonUp(hWnd, msg, wParam, lParam, overrideResult);
 			break;
 		case WM_LBUTTONDBLCLK:
-			PatchDialogProc_BeforeLMouseDoubleClick(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeLMouseDoubleClick(hWnd, msg, wParam, lParam, overrideResult);
 			break;
 		case WM_RBUTTONDOWN:
-			PatchDialogProc_BeforeRMouseButtonDown(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeRMouseButtonDown(hWnd, msg, wParam, lParam, overrideResult);
 			break;
 		case WM_KEYDOWN:
-			PatchDialogProc_BeforeKeyDown(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeKeyDown(hWnd, msg, wParam, lParam, overrideResult);
 			break;
 		case CustomWindowMessage::SetCameraPosition:
-			PatchDialogProc_BeforeSetCameraPosition(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeSetCameraPosition(hWnd, msg, wParam, lParam, overrideResult);
 			break;
 		case WM_TIMER:
 			PatchDialogProc_BeforeTimer(hWnd, msg, wParam, lParam);
 			break;
 		}
 
-		if (PatchDialogProc_OverrideResult) {
-			return PatchDialogProc_OverrideResult.value();
+		if (overrideResult) {
+			return overrideResult.value();
 		}
 
 		// Call original function.
@@ -2129,7 +2345,7 @@ namespace se::cs::dialog::render_window {
 
 		switch (msg) {
 		case WM_KEYDOWN:
-			PatchDialogProc_AfterKeyDown(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterKeyDown(hWnd, msg, wParam, lParam, overrideResult);
 			break;
 		case WM_KEYUP:
 			PatchDialogProc_AfterKeyUp(hWnd, msg, wParam, lParam);
@@ -2137,9 +2353,15 @@ namespace se::cs::dialog::render_window {
 		case WM_LBUTTONUP:
 			PatchDialogProc_AfterLMouseButtonUp(hWnd, msg, wParam, lParam);
 			break;
+		case WM_RBUTTONDOWN:
+			PatchDialogProc_AfterRMouseButtonDown(hWnd, msg, wParam, lParam);
+			break;
+		case WM_RBUTTONUP:
+			PatchDialogProc_AfterRMouseButtonUp(hWnd, msg, wParam, lParam);
+			break;
 		}
 
-		return PatchDialogProc_OverrideResult.value_or(vanillaResult);
+		return overrideResult.value_or(vanillaResult);
 	}
 
 	//
@@ -2211,5 +2433,9 @@ namespace se::cs::dialog::render_window {
 		// Patch: Customize render window update rate.
 		const auto limitTimeInMS = (BYTE)std::floor(1.0f / float(settings.render_window.fps_limit) * 1000.0f);
 		writeValueEnforced<BYTE>(0x45BF58 + 0x1, 40u, limitTimeInMS);
+
+		// Patch: Extend the selection widget to a full NiNode on references.
+		genJumpEnforced(0x40235B, 0x540D50, &Reference::createSelectionWidget);
+
 	}
 }

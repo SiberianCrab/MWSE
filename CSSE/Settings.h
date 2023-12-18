@@ -45,6 +45,8 @@ namespace se::cs {
 			float fov = 53.1301024f;
 			int multisamples = 0;
 			int fps_limit = 60;
+			std::vector<int> grid_steps = { 8, 16, 32, 64, 128, 256, 512 };
+			std::vector<int> angle_steps = { 5, 15, 30, 45, 90 };
 
 			void from_toml(const toml::value& v);
 			toml::value into_toml() const;

@@ -113,6 +113,8 @@ namespace se::cs {
 		use_legacy_grid_snap = toml::find_or(v, "use_legacy_grid_snap", use_legacy_grid_snap);
 		use_legacy_object_movement = toml::find_or(v, "use_legacy_object_movement", use_legacy_object_movement);
 		use_world_axis_rotations_by_default = toml::find_or(v, "use_world_axis_rotations_by_default", use_world_axis_rotations_by_default);
+		grid_steps = toml::find_or(v, "grid_steps", grid_steps);
+		angle_steps = toml::find_or(v, "angle_steps", angle_steps);
 	}
 
 	toml::value Settings_t::RenderWindowSettings::into_toml() const {
@@ -126,6 +128,8 @@ namespace se::cs {
 				{ "use_legacy_grid_snap", use_legacy_grid_snap },
 				{ "use_legacy_object_movement", use_legacy_object_movement },
 				{ "use_world_axis_rotations_by_default", use_world_axis_rotations_by_default },
+				{ "grid_steps", grid_steps },
+				{ "angle_steps", angle_steps },
 			}
 		);
 	}
