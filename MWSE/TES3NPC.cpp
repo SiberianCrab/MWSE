@@ -162,11 +162,11 @@ namespace TES3 {
 	}
 
 	unsigned char NPCInstance::getReputation() {
-		return baseNPC->reputation;
+		return reputation;
 	}
 
 	void NPCInstance::setReputation(unsigned char value) {
-		baseNPC->reputation = value;
+		reputation = value;
 	}
 
 	short NPCInstance::getBaseDisposition() {

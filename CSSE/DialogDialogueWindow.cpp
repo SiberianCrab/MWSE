@@ -18,6 +18,8 @@
 
 #include "WindowMain.h"
 
+#include "DialogProcContext.h"
+
 namespace se::cs::dialog::dialogue_window {
 	constexpr auto ENABLE_ALL_OPTIMIZATIONS = true;
 	constexpr auto LOG_PERFORMANCE_RESULTS = false;
@@ -59,12 +61,12 @@ namespace se::cs::dialog::dialogue_window {
 			return;
 		}
 
-		auto hTabControl = GetDlgItem(hWnd, CONTROL_ID_TOPIC_TABS);
+		const auto hTabControl = GetDlgItem(hWnd, CONTROL_ID_TOPIC_TABS);
 		if (hTabControl == NULL) {
 			return;
 		}
 
-		unsigned int index = (unsigned int)type;
+		const auto index = (unsigned int)type;
 
 		// Note: This is currently being relied on to always call the UI update code for above filter changes.
 		// If optimizing this function to just use TabCtrl_SetCurSel, be sure to modify the focusDialogue function.
@@ -83,7 +85,7 @@ namespace se::cs::dialog::dialogue_window {
 			return false;
 		}
 
-		auto userData = reinterpret_cast<DialogueWindowData*>(GetWindowLongA(hWnd, GWL_USERDATA));
+		const auto userData = reinterpret_cast<DialogueWindowData*>(GetWindowLongA(hWnd, GWL_USERDATA));
 
 		// If the dialog isn't modified and we're filtered to it, make sure it still shows.
 		if (!dialogue->getModified() && userData->modeShowModifiedOnly) {
@@ -464,7 +466,7 @@ namespace se::cs::dialog::dialogue_window {
 
 	auto initializationTimer = std::chrono::high_resolution_clock::now();
 
-	void PatchDialogProc_BeforeInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeInitialize(DialogProcContext& context) {
 		using winui::GetStyle;
 		using winui::SetStyle;
 		using winui::ResizeAndCenterWindow;
@@ -476,6 +478,7 @@ namespace se::cs::dialog::dialogue_window {
 
 		// Disable redraw.
 		if constexpr (ENABLE_ALL_OPTIMIZATIONS) {
+			const auto hWnd = context.getWindowHandle();
 			SendMessageA(GetDlgItem(hWnd, CONTROL_ID_FILTER_FOR_COMBO), WM_SETREDRAW, FALSE, NULL);
 			SendMessageA(GetDlgItem(hWnd, CONTROL_ID_TOPIC_LIST), WM_SETREDRAW, FALSE, NULL);
 			SendMessageA(GetDlgItem(hWnd, CONTROL_ID_INFO_LIST), WM_SETREDRAW, FALSE, NULL);
@@ -493,9 +496,9 @@ namespace se::cs::dialog::dialogue_window {
 		}
 	}
 
-	void PatchDialogProc_BeforeDestroy(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeDestroy(DialogProcContext& context) {
 		// Save column info.
-		saveInfoColumnWidths(hWnd);
+		saveInfoColumnWidths(context.getWindowHandle());
 	}
 
 	//Font 8
@@ -505,15 +508,15 @@ namespace se::cs::dialog::dialogue_window {
 	constexpr auto MIN_WIDTH = 1240u;
 	constexpr auto MIN_HEIGHT = 820u;
 
-	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		const auto info = (LPMINMAXINFO)lParam;
+	void PatchDialogProc_GetMinMaxInfo(DialogProcContext& context) {
+		const auto info = context.getMinMaxInfo();
 		info->ptMinTrackSize.x = MIN_WIDTH;
 		info->ptMinTrackSize.y = MIN_HEIGHT;
 
 		forcedReturnType = 0;
 	}
 
-	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterInitialize(DialogProcContext& context) {
 		using se::cs::winui::AddStyles;
 		using se::cs::winui::GetRectHeight;
 		using se::cs::winui::GetRectWidth;
@@ -522,6 +525,7 @@ namespace se::cs::dialog::dialogue_window {
 		using se::cs::winui::SetWindowIdByValue;
 
 		// Restore column widths.
+		const auto hWnd = context.getWindowHandle();
 		restoreInfoColumnWidths(hWnd);
 
 		// Reenable redraw.
@@ -607,8 +611,9 @@ namespace se::cs::dialog::dialogue_window {
 		}
 	}
 
-	void PatchDialogProc_AfterNotify_CustomDraw(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		LPNMLVCUSTOMDRAW lplvcd = (LPNMLVCUSTOMDRAW)lParam;
+	void PatchDialogProc_AfterNotify_CustomDraw(DialogProcContext& context) {
+		const auto hWnd = context.getWindowHandle();
+		const auto lplvcd = context.getNotificationCustomDraw();
 
 		const auto idFrom = lplvcd->nmcd.hdr.idFrom;
 		if (settings.dialogue_window.highlight_modified_items && idFrom == CONTROL_ID_TOPIC_LIST || idFrom == CONTROL_ID_INFO_LIST) {
@@ -634,7 +639,8 @@ namespace se::cs::dialog::dialogue_window {
 		}
 	}
 
-	void PatchDialogProc_AfterNotify_TabControl_SelectionChanged(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterNotify_TabControl_SelectionChanged(DialogProcContext& context) {
+		const auto hWnd = context.getWindowHandle();
 		auto userData = (DialogueWindowData*)GetWindowLongA(hWnd, GWL_USERDATA);
 
 		auto hDlgConditionSexStatic = GetDlgItem(hWnd, CONTROL_ID_CONDITION_SEX_STATIC);
@@ -660,15 +666,15 @@ namespace se::cs::dialog::dialogue_window {
 		}
 	}
 
-	void PatchDialogProc_AfterNotify(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		const auto param = (LPNMHDR)lParam;
+	void PatchDialogProc_AfterNotify(DialogProcContext& context) {
+		const auto param = context.getNotificationData();
 
 		switch (param->code) {
 		case NM_CUSTOMDRAW:
-			PatchDialogProc_AfterNotify_CustomDraw(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterNotify_CustomDraw(context);
 			break;
 		case TCN_SELCHANGE:
-			PatchDialogProc_AfterNotify_TabControl_SelectionChanged(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterNotify_TabControl_SelectionChanged(context);
 			break;
 		}
 	}
@@ -754,12 +760,14 @@ namespace se::cs::dialog::dialogue_window {
 
 #define ResizeFunctionConditionHelper(hParent, i, x, y) ResizeFunctionCondition(hParent, CONTROL_ID_CONDITION_FUNCTION##i##_TYPE_COMBO, CONTROL_ID_CONDITION_FUNCTION##i##_VARIABLE_COMBO, CONTROL_ID_CONDITION_FUNCTION##i##_CONDITION_COMBO, CONTROL_ID_CONDITION_FUNCTION##i##_VALUE_EDIT, x, y);
 
-	void PatchDialogProc_BeforeSize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeSize(DialogProcContext& context) {
 		using namespace ResizeConstants;
 		using winui::GetRectHeight;
 		using winui::GetRectWidth;
 		using winui::TabCtrl_GetInteriorRect;
 
+		const auto hWnd = context.getWindowHandle();
+		const auto lParam = context.getLParam();
 		const auto clientWidth = LOWORD(lParam);
 		const auto clientHeight = HIWORD(lParam);
 
@@ -782,6 +790,7 @@ namespace se::cs::dialog::dialogue_window {
 			TabCtrl_GetInteriorRect(hDlgTopicTabs, &tempRect);
 			MoveWindow(hDlgTopicList, tempRect.left, tempRect.top, GetRectWidth(&tempRect), GetRectHeight(&tempRect), FALSE);
 			ListView_SetColumnWidth(hDlgTopicList, 0, GetRectWidth(&tempRect) - GetSystemMetrics(SM_CXVSCROLL) - BASIC_PADDING * 2);
+
 			currentY += topicsAreaSize + BASIC_PADDING + BIG_PADDING;
 
 			// Filter For static
@@ -986,8 +995,10 @@ namespace se::cs::dialog::dialogue_window {
 		forcedReturnType = TRUE;
 	}
 
-	void PatchDialogProc_BeforeCommand(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeCommand(DialogProcContext& context) {
+		const auto hWnd = context.getWindowHandle();
 		auto userData = (DialogueWindowData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto wParam = context.getWParam();
 		const auto command = HIWORD(wParam);
 		const auto id = LOWORD(wParam);
 		switch (command) {
@@ -1081,44 +1092,46 @@ namespace se::cs::dialog::dialogue_window {
 		forcedReturnType = FALSE;
 	}
 
-	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar(HWND hWnd, UINT msg, WPARAM wParam, NMLVDISPINFOA* lParam) {
-		const auto info = reinterpret_cast<DialogueInfo*>(lParam->item.lParam);
-		const auto conditionIndex = lParam->item.iSubItem - 6;
+	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar(DialogProcContext& context) {
+		const auto displayInfo = context.getNotificationListViewDisplayInfo();
+		const auto info = reinterpret_cast<DialogueInfo*>(displayInfo->item.lParam);
+		const auto conditionIndex = displayInfo->item.iSubItem - 6;
 		const auto condition = &info->conditions[conditionIndex];
 
 		switch (condition->type) {
 		case DialogueInfo::Condition::TypeFunction:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Function(lParam, info, condition);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Function(displayInfo, info, condition);
 			break;
 		case DialogueInfo::Condition::TypeGlobal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(lParam, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeLocal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(lParam, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeJournal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_ObjectDialogue(lParam, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_ObjectDialogue(displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeItem:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(lParam, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeDead:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(lParam, info, condition, false, "dead");
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, false, "dead");
 			break;
 		case DialogueInfo::Condition::TypeNotID:
 		case DialogueInfo::Condition::TypeNotFaction:
 		case DialogueInfo::Condition::TypeNotClass:
 		case DialogueInfo::Condition::TypeNotRace:
 		case DialogueInfo::Condition::TypeNotCell:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(lParam, info, condition, true);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, true);
 			break;
 		case DialogueInfo::Condition::TypeNotLocal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(lParam, info, condition, true);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(displayInfo, info, condition, true);
 			break;
 		}
 	}
 
-	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo(HWND hWnd, UINT msg, WPARAM wParam, NMLVDISPINFOA* lParam) {
+	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo(DialogProcContext& context) {
+		const auto lParam = context.getNotificationListViewDisplayInfo();
 		switch (lParam->item.iSubItem) {
 		case 6:
 		case 7:
@@ -1126,70 +1139,71 @@ namespace se::cs::dialog::dialogue_window {
 		case 9:
 		case 10:
 		case 11:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar(context);
 			break;
 		}
 	}
 
-	void PatchDialogProc_BeforeNotify_InfoList(HWND hWnd, UINT msg, WPARAM wParam, NMHDR* lParam) {
+	void PatchDialogProc_BeforeNotify_InfoList(DialogProcContext& context) {
+		const auto lParam = context.getNotificationData();
 		switch (lParam->code) {
 		case LVN_GETDISPINFO:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo(hWnd, msg, wParam, (NMLVDISPINFOA*)lParam);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo(context);
 			break;
 		}
 	}
 
-	void PatchDialogProc_BeforeNotify(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		auto message = reinterpret_cast<NMHDR*>(lParam);
+	void PatchDialogProc_BeforeNotify(DialogProcContext& context) {
+		auto message = context.getNotificationData();
 		switch (message->idFrom) {
 		case CONTROL_ID_INFO_LIST:
-			PatchDialogProc_BeforeNotify_InfoList(hWnd, msg, wParam, message);
+			PatchDialogProc_BeforeNotify_InfoList(context);
 			break;
 		}
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		forcedReturnType = {};
+		DialogProcContext context(hWnd, msg, wParam, lParam, 0x4EAEA0);
 
 		switch (msg) {
 		case WM_INITDIALOG:
-			PatchDialogProc_BeforeInitialize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeInitialize(context);
 			break;
 		case WM_DESTROY:
-			PatchDialogProc_BeforeDestroy(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeDestroy(context);
 			break;
 		case WM_SIZE:
-			PatchDialogProc_BeforeSize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeSize(context);
 			break;
 		case WM_COMMAND:
-			PatchDialogProc_BeforeCommand(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeCommand(context);
 			break;
 		case WM_NOTIFY:
-			PatchDialogProc_BeforeNotify(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeNotify(context);
 			break;
 		}
 
-		if (forcedReturnType) {
-			return forcedReturnType.value();
+		// Call original function, or return early if we already have a result.
+		if (context.hasResult()) {
+			return context.getResult();
 		}
-
-		// Call original function.
-		const auto CS_RenderWindowDialogProc = reinterpret_cast<WNDPROC>(0x4EAEA0);
-		const auto vanillaResult = CS_RenderWindowDialogProc(hWnd, msg, wParam, lParam);
+		else {
+			context.callOriginalFunction();
+		}
 
 		switch (msg) {
 		case WM_GETMINMAXINFO:
-			PatchDialogProc_GetMinMaxInfo(hWnd, msg, wParam, lParam);
+			PatchDialogProc_GetMinMaxInfo(context);
 			break;
 		case WM_INITDIALOG:
-			PatchDialogProc_AfterInitialize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterInitialize(context);
 			break;
 		case WM_NOTIFY:
-			PatchDialogProc_AfterNotify(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterNotify(context);
 			break;
 		}
 
-		return forcedReturnType.value_or(vanillaResult);
+		return context.getResult();
 	}
 
 	void installPatches() {

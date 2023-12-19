@@ -126,6 +126,9 @@
     <ClCompile Include="CSDialogue.cpp">
       <Filter>Source Files\CS</Filter>
     </ClCompile>
+    <ClCompile Include="DialogProcContext.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CSSE.def">
@@ -421,6 +424,9 @@
     </ClInclude>
     <ClInclude Include="MetadataUtil.h">
       <Filter>Header Files\Metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogProcContext.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

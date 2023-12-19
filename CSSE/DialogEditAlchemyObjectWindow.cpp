@@ -6,6 +6,8 @@
 
 #include "MemoryUtil.h"
 
+#include "DialogProcContext.h"
+
 namespace se::cs::dialog::edit_alchemy_object_window {
 
 	//
@@ -19,19 +21,16 @@ namespace se::cs::dialog::edit_alchemy_object_window {
 	// Extended window messages.
 	//
 
-	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
-
-	std::optional<LRESULT> messageResult;
-
 	std::chrono::high_resolution_clock::time_point initializationTimer;
 
-	void PatchDialogProc_BeforeInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeInitialize(DialogProcContext& context) {
 		if constexpr (LOG_PERFORMANCE_RESULTS) {
 			initializationTimer = std::chrono::high_resolution_clock::now();
 		}
 
 		// Optimize redraws.
 		if constexpr (ENABLE_ALL_OPTIMIZATIONS) {
+			const auto hWnd = context.getWindowHandle();
 			SendDlgItemMessageA(hWnd, CONTROL_ID_EFFECT1_EFFECT_COMBO, WM_SETREDRAW, FALSE, NULL);
 			SendDlgItemMessageA(hWnd, CONTROL_ID_EFFECT1_EFFECT_VAR_COMBO, WM_SETREDRAW, FALSE, NULL);
 			SendDlgItemMessageA(hWnd, CONTROL_ID_EFFECT2_EFFECT_COMBO, WM_SETREDRAW, FALSE, NULL);
@@ -52,9 +51,10 @@ namespace se::cs::dialog::edit_alchemy_object_window {
 		}
 	}
 
-	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterInitialize(DialogProcContext& context) {
 		// Restore redraws.
 		if constexpr (ENABLE_ALL_OPTIMIZATIONS) {
+			const auto hWnd = context.getWindowHandle();
 			SendDlgItemMessageA(hWnd, CONTROL_ID_EFFECT1_EFFECT_COMBO, WM_SETREDRAW, TRUE, NULL);
 			SendDlgItemMessageA(hWnd, CONTROL_ID_EFFECT1_EFFECT_VAR_COMBO, WM_SETREDRAW, TRUE, NULL);
 			SendDlgItemMessageA(hWnd, CONTROL_ID_EFFECT2_EFFECT_COMBO, WM_SETREDRAW, TRUE, NULL);
@@ -104,37 +104,32 @@ namespace se::cs::dialog::edit_alchemy_object_window {
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		PatchDialogProc_OverrideResult.reset();
-		messageResult = {};
+		DialogProcContext context(hWnd, msg, wParam, lParam, 0x434940);
 
 		switch (msg) {
 		case WM_INITDIALOG:
-			PatchDialogProc_BeforeInitialize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeInitialize(context);
 			break;
 		}
 
-		if (messageResult) {
-			return messageResult.value();
+		// Call original function, or return early if we already have a result.
+		if (context.hasResult()) {
+			return context.getResult();
 		}
-
-		if (PatchDialogProc_OverrideResult) {
-			return PatchDialogProc_OverrideResult.value();
+		else {
+			context.callOriginalFunction();
 		}
-
-		// Call original function.
-		const auto CS_AlchemyObjectDialogProc = reinterpret_cast<WNDPROC>(0x434940);
-		auto vanillaResult = CS_AlchemyObjectDialogProc(hWnd, msg, wParam, lParam);
 
 		switch (msg) {
 		case WM_INITDIALOG:
-			PatchDialogProc_AfterInitialize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterInitialize(context);
 			break;
 		case WM_MOVE:
 			PatchDialogProc_AfterMove(hWnd, msg, wParam, lParam);
 			break;
 		}
 
-		return PatchDialogProc_OverrideResult.value_or(vanillaResult);
+		return context.getResult();
 	}
 
 	//

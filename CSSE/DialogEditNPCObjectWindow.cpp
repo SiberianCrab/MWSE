@@ -6,6 +6,8 @@
 
 #include "MemoryUtil.h"
 
+#include "DialogProcContext.h"
+
 namespace se::cs::dialog::edit_npc_object_window {
 
 	//
@@ -19,48 +21,39 @@ namespace se::cs::dialog::edit_npc_object_window {
 	// Extended window messages.
 	//
 
-	static std::optional<LRESULT> PatchDialogProc_OverrideResult = {};
-
-	std::optional<LRESULT> messageResult;
-
 	std::chrono::high_resolution_clock::time_point initializationTimer;
 
-	void PatchDialogProc_BeforeInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void setRedrawOnExpensiveWindows(HWND hWnd, bool redraw) {
+		if constexpr (!ENABLE_ALL_OPTIMIZATIONS) {
+			return;
+		}
+
+		const auto wParam = redraw ? TRUE : FALSE;
+		SendDlgItemMessageA(hWnd, CONTROL_ID_BLOOD_COMBO, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_CLASS_COMBO, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_DETAILS_LIST, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_FACTION_COMBO, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_FACTION_RANK_COMBO, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_HAIR_LIST, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_HEAD_LIST, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_RACE_COMBO, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_SCRIPT_COMBO, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_SCRIPT_COMBO, WM_SETREDRAW, wParam, NULL);
+		SendDlgItemMessageA(hWnd, CONTROL_ID_SKILLS_LIST, WM_SETREDRAW, wParam, NULL);
+	}
+
+	void PatchDialogProc_BeforeInitialize(DialogProcContext& context) {
 		if constexpr (LOG_PERFORMANCE_RESULTS) {
 			initializationTimer = std::chrono::high_resolution_clock::now();
 		}
 
 		// Optimize redraws.
-		if constexpr (ENABLE_ALL_OPTIMIZATIONS) {
-			SendDlgItemMessageA(hWnd, CONTROL_ID_BLOOD_COMBO, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_CLASS_COMBO, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_DETAILS_LIST, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_FACTION_COMBO, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_FACTION_RANK_COMBO, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_HAIR_LIST, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_HEAD_LIST, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_RACE_COMBO, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_SCRIPT_COMBO, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_SCRIPT_COMBO, WM_SETREDRAW, FALSE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_SKILLS_LIST, WM_SETREDRAW, FALSE, NULL);
-		}
+		setRedrawOnExpensiveWindows(context.getWindowHandle(), false);
 	}
 
-	void PatchDialogProc_AfterInitialize(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterInitialize(DialogProcContext& context) {
 		// Restore redraws.
-		if constexpr (ENABLE_ALL_OPTIMIZATIONS) {
-			SendDlgItemMessageA(hWnd, CONTROL_ID_BLOOD_COMBO, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_CLASS_COMBO, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_DETAILS_LIST, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_FACTION_COMBO, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_FACTION_RANK_COMBO, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_HAIR_LIST, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_HEAD_LIST, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_RACE_COMBO, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_SCRIPT_COMBO, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_SCRIPT_COMBO, WM_SETREDRAW, TRUE, NULL);
-			SendDlgItemMessageA(hWnd, CONTROL_ID_SKILLS_LIST, WM_SETREDRAW, TRUE, NULL);
-		}
+		setRedrawOnExpensiveWindows(context.getWindowHandle(), true);
 
 		if constexpr (LOG_PERFORMANCE_RESULTS) {
 			auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
@@ -92,37 +85,32 @@ namespace se::cs::dialog::edit_npc_object_window {
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		PatchDialogProc_OverrideResult.reset();
-		messageResult = {};
+		DialogProcContext context(hWnd, msg, wParam, lParam, 0x423060);
 
 		switch (msg) {
 		case WM_INITDIALOG:
-			PatchDialogProc_BeforeInitialize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeInitialize(context);
 			break;
 		}
 
-		if (messageResult) {
-			return messageResult.value();
+		// Call original function, or return early if we already have a result.
+		if (context.hasResult()) {
+			return context.getResult();
 		}
-
-		if (PatchDialogProc_OverrideResult) {
-			return PatchDialogProc_OverrideResult.value();
+		else {
+			context.callOriginalFunction();
 		}
-
-		// Call original function.
-		const auto CS_NPCObjectDialogProc = reinterpret_cast<WNDPROC>(0x423060);
-		const auto vanillaResult = CS_NPCObjectDialogProc(hWnd, msg, wParam, lParam);
 
 		switch (msg) {
 		case WM_INITDIALOG:
-			PatchDialogProc_AfterInitialize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterInitialize(context);
 			break;
 		case WM_MOVE:
 			PatchDialogProc_AfterMove(hWnd, msg, wParam, lParam);
 			break;
 		}
 
-		return PatchDialogProc_OverrideResult.value_or(vanillaResult);
+		return context.getResult();
 	}
 
 	//

@@ -11,6 +11,8 @@
 #include "StringUtil.h"
 #include "WinUIUtil.h"
 
+#include "DialogProcContext.h"
+
 namespace se::cs::dialog::script_list_window {
 
 	static std::string currentSearchText;
@@ -131,15 +133,16 @@ namespace se::cs::dialog::script_list_window {
 
 	}
 
-	void CALLBACK PatchDialogProc_BeforeSize(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void CALLBACK PatchDialogProc_BeforeSize(DialogProcContext& context) {
 		using namespace ResizeConstants;
 
 		//
 		// Set UI layout.
 		//
 
-		const auto mainWidth = LOWORD(lParam);
-		const auto mainHeight = HIWORD(lParam);
+		const auto hDlg = context.getWindowHandle();
+		const auto mainWidth = context.getSizeX();
+		const auto mainHeight = context.getSizeY();
 
 		// Scripts list section.
 		{
@@ -173,7 +176,8 @@ namespace se::cs::dialog::script_list_window {
 		RedrawWindow(hDlg, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
 
-	void CALLBACK PatchDialogProc_AfterCreate(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void CALLBACK PatchDialogProc_AfterCreate(DialogProcContext& context) {
+		const auto hWnd = context.getWindowHandle();
 		auto hInstance = (HINSTANCE)GetWindowLongA(hWnd, GWLP_HINSTANCE);
 
 		// Ensure our custom filter box is added.
@@ -217,9 +221,10 @@ namespace se::cs::dialog::script_list_window {
 
 	}
 
-	void CALLBACK PatchDialogProc_BeforeCommand(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		const auto command = HIWORD(wParam);
-		const auto id = LOWORD(wParam);
+	void PatchDialogProc_BeforeCommand(DialogProcContext& context) {
+		const auto hWnd = context.getWindowHandle();
+		const auto command = context.getCommandNotificationCode();
+		const auto id = context.getCommandControlIdentifier();
 
 		switch (command) {
 		case BN_CLICKED:
@@ -255,31 +260,37 @@ namespace se::cs::dialog::script_list_window {
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		DialogProcContext context(hWnd, msg, wParam, lParam, 0x42DBD0);
+
 		// Handle pre-patches.
 		switch (msg) {
 		case WM_COMMAND:
-			PatchDialogProc_BeforeCommand(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeCommand(context);
 			break;
 		case WM_SIZE:
-			PatchDialogProc_BeforeSize(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeSize(context);
 			return FALSE;
 		}
 
-		// Call original function.
-		const auto CS_ScriptListDialogProc = reinterpret_cast<WNDPROC>(0x42DBD0);
-		auto result = CS_ScriptListDialogProc(hWnd, msg, wParam, lParam);
+		// Call original function, or return early if we already have a result.
+		if (context.hasResult()) {
+			return context.getResult();
+		}
+		else {
+			context.callOriginalFunction();
+		}
 
 		// Handle post-patches.
 		switch (msg) {
 		case WM_INITDIALOG:
-			PatchDialogProc_AfterCreate(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterCreate(context);
 			break;
 		case WM_GETMINMAXINFO:
 			PatchDialogProc_GetMinMaxInfo(hWnd, msg, wParam, lParam);
 			break;
 		}
 
-		return result;
+		return context.getResult();
 	}
 
 	void installPatches() {

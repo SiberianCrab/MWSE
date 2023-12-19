@@ -29,6 +29,8 @@
 
 #include "DialogLandscapeEditSettingsWindow.h"
 
+#include "DialogProcContext.h"
+
 namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
@@ -1431,7 +1433,7 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void showContextAwareActionMenu(HWND hWndRenderWindow, std::optional<LRESULT>& overrideDialogResult) {
+	void showContextAwareActionMenu(DialogProcContext& context) {
 		auto menu = CreatePopupMenu();
 		if (menu == NULL) {
 			return;
@@ -1840,6 +1842,7 @@ namespace se::cs::dialog::render_window {
 		MSG msg;
 		PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE);
 
+		const auto hWndRenderWindow = context.getWindowHandle();
 		auto result = TrackPopupMenuEx(menu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD | TPM_LEFTBUTTON | TPM_NOANIMATION | TPM_VERTICAL, p.x, p.y, hWndRenderWindow, NULL);
 		
 		switch (result) {
@@ -1956,7 +1959,7 @@ namespace se::cs::dialog::render_window {
 
 		// We also stole paint stuff, so repaint.
 		SendMessage(hWndRenderWindow, WM_PAINT, 0, 0);
-		overrideDialogResult = TRUE;
+		context.setResult(TRUE);
 	}
 
 	namespace grid {
@@ -2025,70 +2028,72 @@ namespace se::cs::dialog::render_window {
 			}
 		}
 
-		static int prevStep(std::vector<int>& steps, int current) {
-			for (auto i = steps.size() - 1; i; --i) {
-				if (steps[i] < current) {
-					return steps[i];
+		static int prevStep(const std::vector<int>& steps, int current) {
+			for (auto itt = steps.rbegin(); itt != steps.rend(); ++itt) {
+				const auto& step = *itt;
+				if (step < current) {
+					return step;
 				}
 			}
-			return steps[0];
+			return steps.front();
 		}
 
-		static int nextStep(std::vector<int>& steps, int current) {
-			for (auto i = 0; i < steps.size(); ++i) {
-				if (steps[i] > current) {
-					return steps[i];
+		static int nextStep(const std::vector<int>& steps, int current) {
+			for (const auto step : steps) {
+				if (step > current) {
+					return step;
 				}
 			}
-			return steps[steps.size() - 1];
+			return steps.back();
 		}
 
 	}
 
-	void PatchDialogProc_BeforeMouseMove(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeMouseMove(DialogProcContext& context) {
 		// Cache cursor position.
-		lastCursorPosX = LOWORD(lParam);
-		lastCursorPosY = HIWORD(lParam);
+		lastCursorPosX = context.getMouseMoveX();
+		lastCursorPosY = context.getMouseMoveY();
 	}
 
-	void PatchDialogProc_BeforeLMouseButtonDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeLMouseButtonDown(DialogProcContext& context) {
 		movementContext.reset();
 	}
 
-	void PatchDialogProc_BeforeLMouseButtonUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+	void PatchDialogProc_BeforeLMouseButtonUp(DialogProcContext& context) {
 		// Prevent selection changes during object rotation mode. Prevents non-undoable changes, and a crash if the selection becomes empty.
 		if (gIsRotating::get()) {
-			overrideDialogResult = FALSE;
+			context.setResult(FALSE);
 		}
 	}
 
-	void PatchDialogProc_BeforeLMouseDoubleClick(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+	void PatchDialogProc_BeforeLMouseDoubleClick(DialogProcContext& context) {
 		// Prevent opening details dialog during object rotation mode.
 		if (gIsRotating::get()) {
-			overrideDialogResult = FALSE;
+			context.setResult(FALSE);
 		}
 	}
 
-	void PatchDialogProc_BeforeRMouseButtonDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+	void PatchDialogProc_BeforeRMouseButtonDown(DialogProcContext& context) {
 		constexpr auto comboPickLandscapeTexture = MK_CONTROL | MK_RBUTTON;
-		if ((wParam & comboPickLandscapeTexture) == comboPickLandscapeTexture) {
-			if (PickLandscapeTexture(hWnd)) {
-				overrideDialogResult = TRUE;
+		const auto controlState = context.getWParam();
+		if ((controlState & comboPickLandscapeTexture) == comboPickLandscapeTexture) {
+			if (PickLandscapeTexture(context.getWindowHandle())) {
+				context.setResult(TRUE);
 			}
 		}
 	}
 
-	void PatchDialogProc_BeforeMouseWheel(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+	void PatchDialogProc_BeforeMouseWheel(DialogProcContext& context) {
 		using windows::isControlDown;
 		using windows::isRightMouseDown;
 
 		if (isControlDown()) {
 			// Allows Control+MouseWheel to adjust grid snap setting.
 			// Set override flag so we don't also modify camera zoom.
-			overrideDialogResult = TRUE;
+			context.setResult(TRUE);
 
-			short delta = HIWORD(wParam);
-			
+			const auto delta = context.getMouseWheelDelta();
+
 			if (gIsRotating::get()) {
 				auto& steps = settings.render_window.angle_steps;
 				if (steps.size() == 0) {
@@ -2116,20 +2121,20 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void PatchDialogProc_BeforeSetCameraPosition(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+	void PatchDialogProc_BeforeSetCameraPosition(DialogProcContext& context) {
 		if (RenderController::get()->node == nullptr) {
-			overrideDialogResult = FALSE;
+			context.setResult(FALSE);
 		}
 	}
 
-	void PatchDialogProc_BeforeTimer(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_BeforeTimer(DialogProcContext& context) {
 		// Fixup window capture if we've lost it when panning.
 		if (gIsPanning::get() && GetCapture() != gRenderWindowHandle::get()) {
 			SetCapture(gRenderWindowHandle::get());
 		}
 	}
 
-	void PatchDialogProc_AfterLMouseButtonUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterLMouseButtonUp(DialogProcContext& context) {
 		grid::hide();
 
 		// see: Patch_ReplaceScalingLogic
@@ -2141,7 +2146,7 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void PatchDialogProc_AfterRMouseButtonDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterRMouseButtonDown(DialogProcContext& context) {
 		using windows::isControlDown;
 
 		if (isControlDown()) {
@@ -2149,7 +2154,7 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void PatchDialogProc_AfterRMouseButtonUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterRMouseButtonUp(DialogProcContext& context) {
 		using windows::isControlDown;
 
 		if (isControlDown()) {
@@ -2157,59 +2162,46 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void PatchDialogProc_BeforeKeyDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
+	void PatchDialogProc_BeforeKeyDown(DialogProcContext& context) {
 		using windows::isControlDown;
-
-		// Decode parameters.
-		auto vkCode = LOWORD(wParam);
-		auto keyFlags = HIWORD(lParam);
-		auto scanCode = WORD(LOBYTE(keyFlags));
-		auto isExtendedKey = (keyFlags & KF_EXTENDED) == KF_EXTENDED;
-		if (isExtendedKey) {
-			scanCode = MAKEWORD(scanCode, 0xE0);
-		}
-		auto wasKeyDown = (keyFlags & KF_REPEAT) == KF_REPEAT;
-		auto repeatCount = LOWORD(lParam);
-		auto isKeyReleased = (keyFlags & KF_UP) == KF_UP;
-
 
 		auto landscapeEditWindow = landscape_edit_settings_window::gWindowHandle::get();
 
-		switch (wParam) {
+		switch (context.getKeyVirtualCode()) {
 		case VK_OEM_4: // [
 			if (landscapeEditWindow) {
 				landscape_edit_settings_window::decrementEditRadius();
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		case VK_OEM_6: // ]
 			if (landscapeEditWindow) {
 				landscape_edit_settings_window::incrementEditRadius();
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		case 'F':
 			if (landscapeEditWindow) {
-				if (!wasKeyDown) {
+				if (!context.getKeyWasDown()) {
 					landscape_edit_settings_window::setFlattenLandscapeVertices(!landscape_edit_settings_window::getFlattenLandscapeVertices());
 				}
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		case 'S':
 			if (landscapeEditWindow) {
-				if (!wasKeyDown) {
+				if (!context.getKeyWasDown()) {
 					landscape_edit_settings_window::setSoftenLandscapeVertices(!landscape_edit_settings_window::getSoftenLandscapeVertices());
 				}
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		case 'O':
 			if (landscapeEditWindow) {
-				if (!wasKeyDown) {
+				if (!context.getKeyWasDown()) {
 					landscape_edit_settings_window::setEditLandscapeColor(!landscape_edit_settings_window::getEditLandscapeColor());
 				}
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		case 'X':
@@ -2217,7 +2209,7 @@ namespace se::cs::dialog::render_window {
 			if (isModifyingObject()) {
 				resetCumulativeRotationValues();
 				gIsHoldingX::set(true);
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		case 'Y':
@@ -2225,7 +2217,7 @@ namespace se::cs::dialog::render_window {
 			if (isModifyingObject()) {
 				resetCumulativeRotationValues();
 				gIsHoldingY::set(true);
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		case 'Z':
@@ -2233,14 +2225,14 @@ namespace se::cs::dialog::render_window {
 			if (isModifyingObject()) {
 				resetCumulativeRotationValues();
 				gIsHoldingZ::set(true);
-				overrideDialogResult = TRUE;
+				context.setResult(TRUE);
 			}
 			break;
 		}
 
 		// Handle pressing a new axis key while we were already in grid/angle snapping mode.
-		if (!wasKeyDown && isControlDown() && isModifyingObject()) {
-			switch (wParam) {
+		if (!context.getKeyWasDown() && isControlDown() && isModifyingObject()) {
+			switch (context.getKeyVirtualCode()) {
 			case 'X':
 			case 'Y':
 			case 'Z':
@@ -2250,21 +2242,20 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
-	void PatchDialogProc_AfterKeyDown(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, std::optional<LRESULT>& overrideDialogResult) {
-		switch (wParam) {
+	void PatchDialogProc_AfterKeyDown(DialogProcContext& context) {
+		switch (context.getKeyVirtualCode()) {
 		case 'Q':
-			showContextAwareActionMenu(hWnd, overrideDialogResult);
+			showContextAwareActionMenu(context);
 			break;
 		case VK_CONTROL:
-			auto wasKeyDown = (HIWORD(lParam) & KF_REPEAT) == KF_REPEAT;
-			if (!wasKeyDown && (gIsTranslating::get() || gIsRotating::get())) {
+			if (!context.getKeyWasDown() && (gIsTranslating::get() || gIsRotating::get())) {
 				grid::update();
 			}
 			break;
 		}
 	}
 
-	void PatchDialogProc_AfterKeyUp_XYZ(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterKeyUp_XYZ(DialogProcContext& context) {
 		// Hide widgets if they are no longer needed.
 		auto widgets = SceneGraphController::get()->getWidgets();
 		if (!isHoldingAxisKey() && widgets->isShown()) {
@@ -2272,26 +2263,26 @@ namespace se::cs::dialog::render_window {
 			movementContext.reset();
 			gRenderNextFrame::set(true);
 		}
-		
+
 		// If we released an X/Y/Z key update the grid to show the right angle.
 		if (widgets->isGridShown()) {
 			grid::update();
 		}
 	}
 
-	void PatchDialogProc_AfterKeyUp_Control(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void PatchDialogProc_AfterKeyUp_Control(DialogProcContext& context) {
 		grid::hide();
 	}
 
-	void PatchDialogProc_AfterKeyUp(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		switch (wParam) {
+	void PatchDialogProc_AfterKeyUp(DialogProcContext& context) {
+		switch (context.getKeyVirtualCode()) {
 		case 'X':
 		case 'Y':
 		case 'Z':
-			PatchDialogProc_AfterKeyUp_XYZ(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterKeyUp_XYZ(context);
 			break;
 		case VK_CONTROL:
-			PatchDialogProc_AfterKeyUp_Control(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterKeyUp_Control(context);
 			break;
 		}
 	}
@@ -2301,67 +2292,65 @@ namespace se::cs::dialog::render_window {
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		std::optional<LRESULT> overrideResult;
+		DialogProcContext context(hWnd, msg, wParam, lParam, 0x45A3F0);
 
 		switch (msg) {
 		case WM_MOUSEMOVE:
-			PatchDialogProc_BeforeMouseMove(hWnd, msg, wParam, lParam);
-			lastCursorPosX = LOWORD(lParam);
-			lastCursorPosY = HIWORD(lParam);
+			PatchDialogProc_BeforeMouseMove(context);
 			break;
 		case WM_MOUSEWHEEL:
-			PatchDialogProc_BeforeMouseWheel(hWnd, msg, wParam, lParam, overrideResult);
+			PatchDialogProc_BeforeMouseWheel(context);
 			break;
 		case WM_LBUTTONDOWN:
-			PatchDialogProc_BeforeLMouseButtonDown(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeLMouseButtonDown(context);
 			break;
 		case WM_LBUTTONUP:
-			PatchDialogProc_BeforeLMouseButtonUp(hWnd, msg, wParam, lParam, overrideResult);
+			PatchDialogProc_BeforeLMouseButtonUp(context);
 			break;
 		case WM_LBUTTONDBLCLK:
-			PatchDialogProc_BeforeLMouseDoubleClick(hWnd, msg, wParam, lParam, overrideResult);
+			PatchDialogProc_BeforeLMouseDoubleClick(context);
 			break;
 		case WM_RBUTTONDOWN:
-			PatchDialogProc_BeforeRMouseButtonDown(hWnd, msg, wParam, lParam, overrideResult);
+			PatchDialogProc_BeforeRMouseButtonDown(context);
 			break;
 		case WM_KEYDOWN:
-			PatchDialogProc_BeforeKeyDown(hWnd, msg, wParam, lParam, overrideResult);
+			PatchDialogProc_BeforeKeyDown(context);
 			break;
 		case CustomWindowMessage::SetCameraPosition:
-			PatchDialogProc_BeforeSetCameraPosition(hWnd, msg, wParam, lParam, overrideResult);
+			PatchDialogProc_BeforeSetCameraPosition(context);
 			break;
 		case WM_TIMER:
-			PatchDialogProc_BeforeTimer(hWnd, msg, wParam, lParam);
+			PatchDialogProc_BeforeTimer(context);
 			break;
 		}
 
-		if (overrideResult) {
-			return overrideResult.value();
+		// Call original function, or return early if we already have a result.
+		if (context.hasResult()) {
+			return context.getResult();
 		}
-
-		// Call original function.
-		const auto CS_RenderWindowDialogProc = reinterpret_cast<WNDPROC>(0x45A3F0);
-		auto vanillaResult = CS_RenderWindowDialogProc(hWnd, msg, wParam, lParam);
+		else {
+			context.callOriginalFunction();
+		}
 
 		switch (msg) {
 		case WM_KEYDOWN:
-			PatchDialogProc_AfterKeyDown(hWnd, msg, wParam, lParam, overrideResult);
+			PatchDialogProc_AfterKeyDown(context);
 			break;
 		case WM_KEYUP:
-			PatchDialogProc_AfterKeyUp(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterKeyUp(context);
 			break;
 		case WM_LBUTTONUP:
-			PatchDialogProc_AfterLMouseButtonUp(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterLMouseButtonUp(context);
 			break;
 		case WM_RBUTTONDOWN:
-			PatchDialogProc_AfterRMouseButtonDown(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterRMouseButtonDown(context);
 			break;
 		case WM_RBUTTONUP:
-			PatchDialogProc_AfterRMouseButtonUp(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterRMouseButtonUp(context);
 			break;
 		}
 
-		return overrideResult.value_or(vanillaResult);
+		return context.getResult();
 	}
 
 	//
