@@ -81,7 +81,7 @@ namespace se::cs::dialog::edit_enchantment_object_window {
 
 		// Get the current window size
 		RECT rect;
-		GetWindowRect(hWnd, &rect);
+		GetWindowRect(context.getWindowHandle(), &rect);
 
 		const auto width = rect.right - rect.left;
 		const auto height = rect.bottom - rect.top;
@@ -90,17 +90,14 @@ namespace se::cs::dialog::edit_enchantment_object_window {
 		const auto x = settings.enchantment_object_window.x_position;
 		const auto y = settings.enchantment_object_window.y_position;
 
-		MoveWindow(hWnd, x, y, width, height, FALSE);
-		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+		MoveWindow(context.getWindowHandle(), x, y, width, height, FALSE);
+		RedrawWindow(context.getWindowHandle(), NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
 
 	// Saving window coords if user move it.
-	void PatchDialogProc_AfterMove(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		int short xPos = LOWORD(lParam);
-		int short yPos = HIWORD(lParam);
-
-		settings.enchantment_object_window.x_position = xPos - 3;
-		settings.enchantment_object_window.y_position = yPos - 26;
+	void PatchDialogProc_AfterMove(DialogProcContext& context) {
+		settings.enchantment_object_window.x_position = context.getMovedX() - 3;
+		settings.enchantment_object_window.y_position = context.getMovedY() - 26;
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -125,7 +122,7 @@ namespace se::cs::dialog::edit_enchantment_object_window {
 			PatchDialogProc_AfterInitialize(context);
 			break;
 		case WM_MOVE:
-			PatchDialogProc_AfterMove(hWnd, msg, wParam, lParam);
+			PatchDialogProc_AfterMove(context);
 			break;
 		}
 
