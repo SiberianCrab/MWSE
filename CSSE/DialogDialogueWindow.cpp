@@ -462,8 +462,6 @@ namespace se::cs::dialog::dialogue_window {
 	// Patch: Extend Render Window message handling.
 	//
 
-	std::optional<LRESULT> forcedReturnType = {};
-
 	auto initializationTimer = std::chrono::high_resolution_clock::now();
 
 	void PatchDialogProc_BeforeInitialize(DialogProcContext& context) {
@@ -513,7 +511,7 @@ namespace se::cs::dialog::dialogue_window {
 		info->ptMinTrackSize.x = MIN_WIDTH;
 		info->ptMinTrackSize.y = MIN_HEIGHT;
 
-		forcedReturnType = 0;
+		context.setResult(0);
 	}
 
 	void PatchDialogProc_AfterInitialize(DialogProcContext& context) {
@@ -635,7 +633,7 @@ namespace se::cs::dialog::dialogue_window {
 					}
 				}
 			}
-			forcedReturnType = TRUE;
+			context.setResult(TRUE);
 		}
 	}
 
@@ -992,7 +990,7 @@ namespace se::cs::dialog::dialogue_window {
 			settings.dialogue_window.size = winSize;
 		}
 
-		forcedReturnType = TRUE;
+		context.setResult(TRUE);
 	}
 
 	void PatchDialogProc_BeforeCommand(DialogProcContext& context) {
@@ -1042,9 +1040,9 @@ namespace se::cs::dialog::dialogue_window {
 		return compareOp;
 	}
 
-	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition, bool invert, const char* wrapper = nullptr) {
+	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(DialogProcContext& context, NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition, bool invert, const char* wrapper = nullptr) {
 		if (condition->compareValue.object == nullptr) {
-			forcedReturnType = FALSE;
+			context.setResult(FALSE);
 			return;
 		}
 
@@ -1058,12 +1056,12 @@ namespace se::cs::dialog::dialogue_window {
 			sprintf_s(displayInfo->item.pszText, displayInfo->item.cchTextMax, "%s %s %d", id, compare, (int)condition->value);
 		}
 
-		forcedReturnType = FALSE;
+		context.setResult(FALSE);
 	}
 
-	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_ObjectDialogue(NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition, bool invert) {
+	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_ObjectDialogue(DialogProcContext& context, NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition, bool invert) {
 		if (condition->compareValue.dialogue == nullptr || condition->compareValue.dialogue->id == nullptr) {
-			forcedReturnType = FALSE;
+			context.setResult(FALSE);
 			return;
 		}
 
@@ -1072,24 +1070,24 @@ namespace se::cs::dialog::dialogue_window {
 
 		sprintf_s(displayInfo->item.pszText, displayInfo->item.cchTextMax, "%s %s %d", id, compare, (int)condition->value);
 
-		forcedReturnType = FALSE;
+		context.setResult(FALSE);
 	}
 
-	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition, bool invert) {
+	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(DialogProcContext& context, NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition, bool invert) {
 		const auto compare = invert ? compareText[GetInverseCompareOperator(condition->compareOp)] : compareText[condition->compareOp];
 
 		sprintf_s(displayInfo->item.pszText, displayInfo->item.cchTextMax, "%s %s %d", condition->compareValue.string, compare, (int)condition->value);
 
-		forcedReturnType = FALSE;
+		context.setResult(FALSE);
 	}
 
-	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Function(NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition) {
+	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Function(DialogProcContext& context, NMLVDISPINFOA* displayInfo, DialogueInfo* info, DialogueInfo::Condition* condition) {
 		const auto function = functionNames[condition->compareValue.integer];
 		const auto compare = compareText[condition->compareOp];
 
 		sprintf_s(displayInfo->item.pszText, displayInfo->item.cchTextMax, "%s %s %d", function, compare, (int)condition->value);
 
-		forcedReturnType = FALSE;
+		context.setResult(FALSE);
 	}
 
 	void PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar(DialogProcContext& context) {
@@ -1100,32 +1098,32 @@ namespace se::cs::dialog::dialogue_window {
 
 		switch (condition->type) {
 		case DialogueInfo::Condition::TypeFunction:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Function(displayInfo, info, condition);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Function(context, displayInfo, info, condition);
 			break;
 		case DialogueInfo::Condition::TypeGlobal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(context, displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeLocal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(displayInfo, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(context, displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeJournal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_ObjectDialogue(displayInfo, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_ObjectDialogue(context, displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeItem:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, false);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(context, displayInfo, info, condition, false);
 			break;
 		case DialogueInfo::Condition::TypeDead:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, false, "dead");
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(context, displayInfo, info, condition, false, "dead");
 			break;
 		case DialogueInfo::Condition::TypeNotID:
 		case DialogueInfo::Condition::TypeNotFaction:
 		case DialogueInfo::Condition::TypeNotClass:
 		case DialogueInfo::Condition::TypeNotRace:
 		case DialogueInfo::Condition::TypeNotCell:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(displayInfo, info, condition, true);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_Object(context, displayInfo, info, condition, true);
 			break;
 		case DialogueInfo::Condition::TypeNotLocal:
-			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(displayInfo, info, condition, true);
+			PatchDialogProc_BeforeNotify_InfoList_GetDisplayInfo_FunVar_String(context, displayInfo, info, condition, true);
 			break;
 		}
 	}
