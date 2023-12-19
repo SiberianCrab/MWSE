@@ -176,6 +176,7 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClCompile Include="DialogLandscapeEditSettingsWindow.cpp" />
     <ClCompile Include="DialogPreviewWindow.cpp" />
     <ClCompile Include="DialogReferenceData.cpp" />
+	<ClCompile Include="DialogProcContext.cpp" />
     <ClCompile Include="DialogScriptEditorWindow.cpp" />
     <ClCompile Include="DialogScriptListWindow.cpp" />
     <ClCompile Include="DialogTextSearchWindow.cpp" />
@@ -231,6 +232,7 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClInclude Include="DialogAboutCSSE.h" />
     <ClInclude Include="DialogActorAIWindow.h" />
     <ClInclude Include="DialogCSSESettings.h" />
+	<ClInclude Include="DialogProcContext.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MetadataUtil.h" />
     <ClInclude Include="ModMetadata.h" />
