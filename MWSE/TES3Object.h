@@ -149,7 +149,7 @@ namespace TES3 {
 		Sound * (__thiscall * getSound)(const Object*); // 0x50
 		char * (__thiscall * getRaceID)(const Object*); // 0x54
 		char * (__thiscall * getClassID)(const Object*); // 0x58
-		char * (__thiscall * getBirthsignID)(const Object*); // 0x5C
+		char * (__thiscall * getFactionID)(const Object*); // 0x5C
 		Race * (__thiscall * getRace)(const Object*); // 0x60
 		Class * (__thiscall * getClass)(const Object*); // 0x64
 		Faction * (__thiscall * getFaction)(const Object*); // 0x68
@@ -310,7 +310,7 @@ namespace TES3 {
 		Sound * getSound() const;
 		char * getRaceID() const;
 		char * getClassID() const;
-		char * getBirthsignID() const;
+		char * getFactionID() const;
 		Race * getRace() const;
 		Class * getClass() const;
 		Faction * getFaction() const;

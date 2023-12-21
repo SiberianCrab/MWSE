@@ -2211,6 +2211,10 @@ namespace se::cs::dialog::render_window {
 				gIsHoldingX::set(true);
 				context.setResult(TRUE);
 			}
+			// Prevent attempting to cut when there's nothing selected.
+			else if (isControlDown() && SelectionData::get()->firstTarget == nullptr) {
+				context.setResult(TRUE);
+			}
 			break;
 		case 'Y':
 			// If we are modifying an object, prevent the default redo function from happening.

@@ -151,7 +151,7 @@ namespace TES3 {
 		void (__thiscall* decideActionAI)(MobileActor*); // 0xA8
 		bool (__thiscall* is3rdPerson)(MobileActor*); // 0xAC
 		void (__thiscall* changeWerewolf)(MobileActor*, bool); // 0xB0
-		void (__thiscall* calculateWalkSpeed)(MobileActor*); // 0xB4
+		float (__thiscall* calculateWalkSpeed)(MobileActor*); // 0xB4
 		void (__thiscall* onDeath)(MobileActor*); // 0xB8
 		int (__thiscall* getWeaponAttackMin)(MobileActor*); // 0xBC
 		int (__thiscall* getWeaponAttackMax)(MobileActor*); // 0xC0

@@ -969,6 +969,18 @@ namespace se::cs::window::main {
 		}
 	}
 
+	void PatchDialogProc_AfterInitialize(DialogProcContext& context) {
+		const auto hWnd = context.getWindowHandle();
+		auto statusWindow = FindWindowEx(hWnd, NULL, "msctls_statusbar32", NULL);
+
+		if (!statusWindow) {
+			return;
+		}
+
+		int partsRightEdgePositions[4] = { 220, 330, 800, -1 };
+		SendMessage(statusWindow, SB_SETPARTS, (WPARAM)4, (LPARAM)partsRightEdgePositions);
+	}
+
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		DialogProcContext context(hWnd, msg, wParam, lParam, 0x444590);
 
@@ -1005,6 +1017,9 @@ namespace se::cs::window::main {
 			break;
 		case WM_SAVE:
 			PatchDialogProc_AfterSave(context);
+			break;
+		case WM_FINISH_INITIALIZATION:
+			PatchDialogProc_AfterInitialize(context);
 			break;
 		}
 

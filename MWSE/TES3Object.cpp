@@ -490,8 +490,8 @@ namespace TES3 {
 		return vTable.object->getClassID(this);
 	}
 
-	char* Object::getBirthsignID() const {
-		return vTable.object->getBirthsignID(this);
+	char* Object::getFactionID() const {
+		return vTable.object->getFactionID(this);
 	}
 
 	Race* Object::getRace() const {
