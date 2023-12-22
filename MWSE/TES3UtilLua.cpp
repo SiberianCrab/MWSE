@@ -5947,6 +5947,49 @@ namespace mwse::lua {
 		return TES3::UI::findMenu("MenuContents") == nullptr;
 	}
 
+	bool payMerchant(sol::optional<sol::table> params) {
+		auto mobile = getOptionalParamMobileActor(params, "merchant");
+		if (!mobile) {
+			throw std::runtime_error("Invalid 'merchant' parameter provided.");
+		}
+		auto costParam = getOptionalParam<int>(params, "cost");
+		if (!costParam) {
+			throw std::runtime_error("Invalid 'cost' parameter provided.");
+		}
+
+		auto worldController = TES3::WorldController::get();
+		auto macp = worldController->getMobilePlayer();
+		int playerGold = macp->getGold();
+		int cost = costParam.value();
+
+		bool success = false;
+		if (cost > 0 && cost <= playerGold) {
+			success = true;
+		}
+		else if (cost < 0 && (-cost) <= mobile->barterGold) {
+			success = true;
+		}
+
+		if (success) {
+			// Transfer gold.
+			macp->modGold(-cost);
+			mobile->barterGold += cost;
+
+			// Extend refresh timeout for barterGold refresh system. This prevents the change from being overwritten immediately.
+			auto hourStamp = worldController->gvarDaysPassed->value * 24 + worldController->gvarGameHour->value;
+			if (mobile->actionData.lastBarterHoursPassed == 0) {
+				mobile->actionData.lastBarterHoursPassed = hourStamp;
+			}
+			else {
+				auto resetDelay = int(TES3::DataHandler::get()->nonDynamicData->GMSTs[TES3::GMST::fBarterGoldResetDelay]->value.asFloat);
+				if (hourStamp >= mobile->actionData.lastBarterHoursPassed + resetDelay) {
+					mobile->actionData.lastBarterHoursPassed = hourStamp;
+				}
+			}
+		}
+		return success;
+	}
+
 	void bindTES3Util() {
 		auto stateHandle = LuaManager::getInstance().getThreadSafeStateHandle();
 		auto& state = stateHandle.state;
@@ -6089,6 +6132,7 @@ namespace mwse::lua {
 		tes3["messageBox"] = messageBox;
 		tes3["modStatistic"] = modStatistic;
 		tes3["newGame"] = newGame;
+		tes3["payMerchant"] = payMerchant;
 		tes3["persuade"] = persuade;
 		tes3["playAnimation"] = playAnimation;
 		tes3["playItemPickupSound"] = playItemPickupSound;

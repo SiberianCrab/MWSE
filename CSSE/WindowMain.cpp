@@ -12,6 +12,7 @@
 #include "CSGameFile.h"
 #include "CSGameSetting.h"
 #include "CSRecordHandler.h"
+#include "CSReference.h"
 #include "CSScript.h"
 
 #include "NICamera.h"
@@ -39,8 +40,8 @@ namespace se::cs::window::main {
 	struct ObjectEditLParam {
 		ObjectType::ObjectType objectType; // 0x0
 		BaseObject* object; // 0x4
-		int unknown_0x8;
-		int unknown_0xC;
+		Reference* reference; // 0x8
+		Reference::ReferenceData* referenceData; // 0xC
 	};
 
 	HWND showComboBasedEditWindow(const BaseObject* object, HWND hWnd, LPCSTR lpTemplateName, DLGPROC dlgProc, int comboBoxId) {
@@ -307,9 +308,19 @@ namespace se::cs::window::main {
 	}
 
 	HWND showDefaultObjectEditWindow(BaseObject* object) {
+		Reference* reference = nullptr;
+		if (object->objectType == ObjectType::Reference) {
+			reference = static_cast<Reference*>(object);
+			object = reference->baseObject;
+		}
+
 		ObjectEditLParam lParam = {};
 		lParam.objectType = object->objectType;
 		lParam.object = object;
+		lParam.reference = reference;
+		if (reference) {
+			lParam.referenceData = &reference->referenceData;
+		}
 
 		DLGPROC proc = (DLGPROC)0x402F9A;
 		switch (object->objectType) {

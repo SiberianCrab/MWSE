@@ -572,12 +572,11 @@ namespace TES3::UI {
 		return getServiceActor();
 	}
 
-	const auto TES3_MobileMobile_ModGoldHeld = reinterpret_cast<void(__thiscall*)(MobileActor*, int)>(0x52B480);
-	void __fastcall patchSpellmakingMenuRemoveNoCost(MobileActor* self, DWORD _EDX_, int goldDelta) {
+	void __fastcall patchSpellmakingMenuRemoveNoCost(MobilePlayer* self, DWORD _EDX_, int goldDelta) {
 		if (goldDelta == 0) {
 			return;
 		}
-		TES3_MobileMobile_ModGoldHeld(self, goldDelta);
+		self->modGold(goldDelta);
 	}
 
 	Element* __cdecl patchSpellmakingMenuExitMenuModeIfNoDialogMenu(TES3::UI::UI_ID dialogMenuId) {
