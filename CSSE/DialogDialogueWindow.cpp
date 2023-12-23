@@ -879,7 +879,7 @@ namespace se::cs::dialog::dialogue_window {
 			const auto currentX = WINDOW_EDGE_PADDING;
 			auto currentY = WINDOW_EDGE_PADDING;
 
-			constexpr auto FILTER_FOR_AREA_SIZE = STATIC_HEIGHT + COMBO_HEIGHT + BIG_BUTTON_HEIGHT + BASIC_PADDING + WINDOW_EDGE_PADDING;
+			constexpr auto FILTER_FOR_AREA_SIZE = STATIC_HEIGHT + COMBO_HEIGHT * 2 + BIG_BUTTON_HEIGHT + BASIC_PADDING * 2 + WINDOW_EDGE_PADDING;
 
 			// Dialogue type tabs
 			const auto topicsAreaSize = clientHeight - FILTER_FOR_AREA_SIZE - BASIC_PADDING * 2 - WINDOW_EDGE_PADDING * 2;
