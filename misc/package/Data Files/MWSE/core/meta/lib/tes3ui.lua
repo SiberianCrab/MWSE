@@ -403,3 +403,6 @@ function tes3ui.updateInventoryTiles() end
 --- Forces the game to update the spellmaking menu GUI.
 function tes3ui.updateSpellmakingMenu() end
 
+--- Force-refreshes the stats pane to account for changed values.
+function tes3ui.updateStatsPane() end
+

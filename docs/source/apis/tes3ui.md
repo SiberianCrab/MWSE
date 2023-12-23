@@ -1060,3 +1060,14 @@ Forces the game to update the spellmaking menu GUI.
 tes3ui.updateSpellmakingMenu()
 ```
 
+***
+
+### `tes3ui.updateStatsPane`
+<div class="search_terms" style="display: none">updatestatspane, statspane</div>
+
+Force-refreshes the stats pane to account for changed values.
+
+```lua
+tes3ui.updateStatsPane()
+```
+

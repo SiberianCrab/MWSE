@@ -7,6 +7,8 @@
 #include "CSObject.h"
 #include "CSRecordHandler.h"
 #include "CSScript.h"
+#include "CSActor.h"
+#include "CSReference.h"
 
 #include "LogUtil.h"
 #include "StringUtil.h"
@@ -17,6 +19,7 @@
 #include "EditBasicExtended.h"
 
 #include "WindowMain.h"
+#include "DialogRenderWindow.h"
 
 #include "DialogProcContext.h"
 
@@ -37,10 +40,12 @@ namespace se::cs::dialog::dialogue_window {
 			return;
 		}
 
+		userData->cellFilterMode = DialogueWindowData::CellFilterMode::UseCellReference;
 		userData->modeShowModifiedOnly = false;
 
 		Button_SetCheck(GetDlgItem(hWnd, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON), BST_UNCHECKED);
 		ComboBox_SetCurSel(GetDlgItem(hWnd, CONTROL_ID_FILTER_FOR_COMBO), 0);
+		ComboBox_SetCurSel(GetDlgItem(hWnd, CONTROL_ID_FILTER_CELL_SETTING_COMBO), 0);
 
 		redisplayAllData(hWnd);
 	}
@@ -53,6 +58,20 @@ namespace se::cs::dialog::dialogue_window {
 		}
 
 		return CreateDialogParamA(window::main::hInstance::get(), (LPSTR)DIALOG_ID, window::main::ghWnd::get(), (DLGPROC)0x401334, (LPARAM)filter);
+	}
+
+	HWND getActiveDialogueWindow() {
+		// Get the currently active window.
+		const auto hWndFocused = GetFocus();
+		if (hWndFocused) {
+			char buffer[64] = {};
+			if (GetClassName(hWndFocused, buffer, sizeof(buffer)) && strncmp(buffer, "Dialog", 64) == 0) {
+				return hWndFocused;
+			}
+		}
+
+		// Fall back to the last created window.
+		return ghWnd::get();
 	}
 
 	void selectTab(DialogueType type) {
@@ -450,10 +469,81 @@ namespace se::cs::dialog::dialogue_window {
 	}
 
 	//
+	// Patch: Change behavior of cell filtering.
+	//
+
+	__declspec(naked) void PatchFilterCellBehavior_Setup() {
+		__asm {
+			mov ecx, esi;	// Size: 0x2
+			mov edx, ebp;	// Size: 0x2
+			nop;			// Size: 0x5, will be a call.
+			nop;
+			nop;
+			nop;
+			nop;
+			test al, al;	// Size: 0x2
+		}
+	}
+	constexpr auto PatchFilterCellBehavior_SetupSize = 0xBu;
+
+	bool FilterWithReferenceCell(DialogueInfo* info, Actor* filterActor) {
+		const auto reference = DataHandler::get()->recordHandler->getReference(filterActor);
+		if (reference == nullptr) {
+			return false;
+		}
+
+		const auto referenceCell = reference->getCell();
+		if (referenceCell == nullptr) {
+			return false;
+		}
+
+		const std::string_view referenceCellId = referenceCell->getObjectID();
+		const std::string_view filterCellId = info->filterCell->getObjectID();
+		if (_strnicmp(referenceCellId.data(), filterCellId.data(), filterCellId.size())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	bool FilterWithRenderWindowCell(DialogueInfo* info, Actor* filterActor) {
+		const auto currentCell = render_window::gCurrentCell::get();
+		if (currentCell == nullptr) {
+			return false;
+		}
+
+		const std::string_view currentCellId = currentCell->getObjectID();
+		const std::string_view filterCellId = info->filterCell->getObjectID();
+		if (_strnicmp(currentCellId.data(), filterCellId.data(), filterCellId.size())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	bool __fastcall PatchFilterCellBehavior(DialogueInfo* info, Actor* filterActor) {
+		const auto hWnd = getActiveDialogueWindow();
+		const auto userData = reinterpret_cast<DialogueWindowData*>(GetWindowLongA(hWnd, GWL_USERDATA));
+		const auto filterMode = userData ? userData->cellFilterMode : DialogueWindowData::CellFilterMode::UseCellReference;
+
+		switch (filterMode) {
+		case DialogueWindowData::CellFilterMode::UseCellReference:
+			return FilterWithReferenceCell(info, filterActor);
+		case DialogueWindowData::CellFilterMode::UseRenderWindowCell:
+			return FilterWithRenderWindowCell(info, filterActor);
+		case DialogueWindowData::CellFilterMode::IgnoreCellFilter:
+			return true;
+		}
+
+		return true;
+	}
+
+	//
 	// Patch: Extend structure of the dialogue window user data.
 	//
 
 	LONG __stdcall SetExtendedUserData(HWND hWnd, int nIndex, DialogueWindowData* userData) {
+		userData->cellFilterMode = DialogueWindowData::CellFilterMode::UseCellReference;
 		userData->modeShowModifiedOnly = false;
 		return SetWindowLongA(hWnd, nIndex, (LONG)userData);
 	}
@@ -581,6 +671,19 @@ namespace se::cs::dialog::dialogue_window {
 		// Add custom controls.
 		auto hInstance = (HINSTANCE)GetWindowLongA(hWnd, GWLP_HINSTANCE);
 		auto font = SendMessageA(hWnd, WM_GETFONT, FALSE, FALSE);
+
+		//constexpr auto hDlgFilterCellStyles = WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST | CBS_HASSTRINGS;
+		constexpr auto hDlgFilterCellStyles = CBS_DROPDOWNLIST | CBS_SORT | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_TABSTOP;
+		//constexpr auto hDlgFilterCellExtendedStlyes = WS_EX_LEFT | WS_EX_LTRREADING | WS_EX_RIGHTSCROLLBAR | WS_EX_NOPARENTNOTIFY;
+		constexpr auto hDlgFilterCellExtendedStlyes = NULL;
+		const auto hDlgFilterCell = CreateWindowExA(hDlgFilterCellExtendedStlyes, WC_COMBOBOXA, NULL, hDlgFilterCellStyles, 0, 0, 300, 100, hWnd, (HMENU)CONTROL_ID_FILTER_CELL_SETTING_COMBO, hInstance, NULL);
+		SendMessageA(hDlgFilterCell, EM_SETEXTENDEDSTYLE, hDlgFilterCellExtendedStlyes, hDlgFilterCellExtendedStlyes);
+		SendMessageA(hDlgFilterCell, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
+		ComboBox_AddString(hDlgFilterCell, "Filter with first reference's cell");
+		ComboBox_AddString(hDlgFilterCell, "Filter with render window cell");
+		ComboBox_AddString(hDlgFilterCell, "Ignore cell filter");
+		ComboBox_SetCurSel(hDlgFilterCell, 0);
+		ComboBox_SetMinVisible(hDlgFilterCell, 3);
 
 		auto hDlgShowModifiedOnly = CreateWindowExA(NULL, WC_BUTTON, "Show modified only", BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_CHILD | WS_VISIBLE | WS_GROUP, 0, 0, 0, 0, hWnd, (HMENU)CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON, hInstance, NULL);
 		SendMessageA(hDlgShowModifiedOnly, WM_SETFONT, font, MAKELPARAM(TRUE, FALSE));
@@ -801,6 +904,11 @@ namespace se::cs::dialog::dialogue_window {
 			MoveWindow(hDlgFilterForCombo, currentX, currentY, LEFT_SECTION_WIDTH, COMBO_HEIGHT, FALSE);
 			currentY += COMBO_HEIGHT + BIG_PADDING;
 
+			// Cell filter setting combo
+			auto hFilterCellSetting = GetDlgItem(hWnd, CONTROL_ID_FILTER_CELL_SETTING_COMBO);
+			MoveWindow(hFilterCellSetting, currentX, currentY, LEFT_SECTION_WIDTH, COMBO_HEIGHT, FALSE);
+			currentY += COMBO_HEIGHT + BASIC_PADDING;
+
 			// Show modified only button
 			auto hShowModifiedButton = GetDlgItem(hWnd, CONTROL_ID_SHOW_MODIFIED_ONLY_BUTTON);
 			MoveWindow(hShowModifiedButton, currentX, currentY, LEFT_SECTION_WIDTH, BIG_BUTTON_HEIGHT, FALSE);
@@ -993,6 +1101,12 @@ namespace se::cs::dialog::dialogue_window {
 		context.setResult(TRUE);
 	}
 
+	void OnCellFilterChanged(HWND hWnd, HWND comboBox) {
+		const auto userData = (DialogueWindowData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		userData->cellFilterMode = (DialogueWindowData::CellFilterMode)ComboBox_GetCurSel(comboBox);
+		redisplayAllData(hWnd);
+	}
+
 	void PatchDialogProc_BeforeCommand(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
 		auto userData = (DialogueWindowData*)GetWindowLongA(hWnd, GWL_USERDATA);
@@ -1012,6 +1126,13 @@ namespace se::cs::dialog::dialogue_window {
 			switch (id) {
 			case CONTROL_ID_CURRENT_TEXT_EDIT:
 				OnCurrentTextEditChanged(hWnd);
+				break;
+			}
+			break;
+		case CBN_SELCHANGE:
+			switch (id) {
+			case CONTROL_ID_FILTER_CELL_SETTING_COMBO:
+				OnCellFilterChanged(hWnd, (HWND)context.getLParam());
 				break;
 			}
 			break;
@@ -1245,6 +1366,12 @@ namespace se::cs::dialog::dialogue_window {
 
 		// Patch: Allow filtering of topic list.
 		genCallEnforced(0x4E7143, 0x404160, reinterpret_cast<DWORD>(PatchTopicListAddItem));
+
+		// Patch: Change behavior of cell filtering.
+		genNOPUnprotected(0x4F1D25, 0x4F1DA6 - 0x4F1D25);
+		writePatchCodeUnprotected(0x4F1D25, (BYTE*)PatchFilterCellBehavior_Setup, PatchFilterCellBehavior_SetupSize);
+		writeValueEnforced<BYTE>(0x4F1DA6, 0x74, 0x75);
+		genCallUnprotected(0x4F1D25 + 0x4, reinterpret_cast<DWORD>(PatchFilterCellBehavior));
 
 		// Patch: Extend structure of the dialogue window user data.
 		writeValueEnforced<BYTE>(0x4EBFF4 + 0x1, sizeof(DialogueWindowData_Vanilla), sizeof(DialogueWindowData));

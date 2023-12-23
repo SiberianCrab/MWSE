@@ -1,5 +1,7 @@
 #include "CSDialogueInfo.h"
 
+#include "CSActor.h"
+#include "CSCell.h"
 #include "CSDataHandler.h"
 #include "CSDialogue.h"
 #include "CSRecordHandler.h"

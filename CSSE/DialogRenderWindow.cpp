@@ -56,8 +56,6 @@ namespace se::cs::dialog::render_window {
 
 	using gRenderWindowPick = memory::ExternalGlobal<NI::Pick, 0x6CF528>;
 
-	using gCurrentCell = memory::ExternalGlobal<Cell*, 0x6CF7B8>;
-
 	using gIsTranslating = memory::ExternalGlobal<bool, 0x6CF782>;
 	using gIsRotating = memory::ExternalGlobal<bool, 0x6CF783>;
 	using gIsHoldingV = memory::ExternalGlobal<bool, 0x6CF789>;

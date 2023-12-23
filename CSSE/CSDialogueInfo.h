@@ -55,12 +55,12 @@ namespace se::cs {
 		Condition conditions[6]; // 0x20
 		const char* text; // 0x80
 		const char* resultsText; // 0x84
-		BaseObject* filterActor; // 0x88
-		BaseObject* filterRace; // 0x8C
-		BaseObject* filterClass; // 0x90
-		BaseObject* filterFaction; // 0x94
-		BaseObject* filterCell; // 0x98
-		BaseObject* filterPlayerFaction; // 0x9C
+		Actor* filterActor; // 0x88
+		Race* filterRace; // 0x8C
+		Class* filterClass; // 0x90
+		Faction* filterFaction; // 0x94
+		Cell* filterCell; // 0x98
+		Faction* filterPlayerFaction; // 0x9C
 		const char* soundId; // 0xA0
 
 		Dialogue* getDialogue() const;

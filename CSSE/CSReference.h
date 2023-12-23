@@ -75,6 +75,8 @@ namespace se::cs {
 		bool createSelectionWidget(NI::Vector3 boundsMin, NI::Vector3 boundsMax);
 		void setSelectionWidgetEnabled(int flag);
 		bool hasActiveSelectionWidget() const;
+
+		Cell* getCell() const;
 	};
 	static_assert(sizeof(Reference) == 0x78, "TES3::Reference failed size validation");
 }

@@ -440,6 +440,7 @@ namespace mwse::lua {
 		tes3ui["updateInventorySelectTiles"] = TES3::UI::updateInventorySelectTiles_lua;
 		tes3ui["updateInventoryTiles"] = TES3::UI::updateInventoryMenuTiles;
 		tes3ui["updateSpellmakingMenu"] = TES3::UI::updateSpellmakingMenu;
+		tes3ui["updateStatsPane"] = TES3::UI::updateStatsPane;
 
 		// Internal mwse functions.
 		state["mwse"]["copyLuaCallbacks"] = copyLuaCallbacks;

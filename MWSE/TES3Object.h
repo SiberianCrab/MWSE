@@ -162,7 +162,7 @@ namespace TES3 {
 		int (__thiscall * getReputation)(const Object*); // 0x84
 		int (__thiscall * setReputation)(Object*, int); // 0x88
 		int (__thiscall * getDispositionRaw)(const Object*); // 0x8C
-		signed char(__thiscall * modFactionIndex)(Object*, signed char); // 0x90
+		int (__thiscall * modReputation)(Object*, int); // 0x90
 		int (__thiscall * getType)(const Object*); // 0x94
 		char * (__thiscall * getTypeName)(const Object*); // 0x98
 		float (__thiscall * getWeight)(const Object*); // 0x9C
@@ -322,7 +322,7 @@ namespace TES3 {
 		int getReputation() const;
 		int setReputation(int);
 		int getDispositionRaw() const;
-		signed char modFactionIndex(signed char);
+		int modReputation(int);
 		int getType() const;
 		char * getTypeName() const;
 		float getWeight() const;

@@ -538,8 +538,8 @@ namespace TES3 {
 		return vTable.object->getDispositionRaw(this);
 	}
 
-	signed char Object::modFactionIndex(signed char value) {
-		return vTable.object->modFactionIndex(this, value);
+	int Object::modReputation(int value) {
+		return vTable.object->modReputation(this, value);
 	}
 
 	int Object::getType() const {
