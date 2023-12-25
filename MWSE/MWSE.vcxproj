@@ -288,6 +288,7 @@
     <ClInclude Include="NIStream.h" />
     <ClInclude Include="NITimeController.h" />
     <ClInclude Include="NITimeControllerLua.h" />
+    <ClInclude Include="NILinesLua.h" />
     <ClInclude Include="NITriShapeLua.h" />
     <ClInclude Include="TES3AIData.h" />
     <ClInclude Include="TES3AILua.h" />
@@ -731,7 +732,6 @@
     <ClCompile Include="NIGeometryDataLua.cpp" />
     <ClCompile Include="NIKeyframeController.cpp" />
     <ClCompile Include="NIKeyframeManager.cpp" />
-    <ClCompile Include="NILinesData.cpp" />
     <ClCompile Include="NILookAtController.cpp" />
     <ClCompile Include="NIParticleModifier.cpp" />
     <ClCompile Include="NIParticles.cpp" />
@@ -758,6 +758,8 @@
     <ClCompile Include="NITriangle.cpp" />
     <ClCompile Include="NITriBasedGeometry.cpp" />
     <ClCompile Include="NITriBasedGeometryData.cpp" />
+    <ClCompile Include="NILines.cpp" />
+    <ClCompile Include="NILinesData.cpp" />
     <ClCompile Include="NITriShape.cpp" />
     <ClCompile Include="NITriShapeData.cpp" />
     <ClCompile Include="NIUVController.cpp" />
@@ -819,6 +821,7 @@
     <ClCompile Include="NISwitchNodeLua.cpp" />
     <ClCompile Include="NITexture.cpp" />
     <ClCompile Include="NITimeControllerLua.cpp" />
+    <ClCompile Include="NILinesLua.cpp" />
     <ClCompile Include="NITriShapeLua.cpp" />
     <ClCompile Include="NIUtil.cpp" />
     <ClCompile Include="PatchUtil.cpp" />

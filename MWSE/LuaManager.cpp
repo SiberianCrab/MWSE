@@ -172,6 +172,7 @@
 #include "NIExtraDataLua.h"
 #include "NIGeometryDataLua.h"
 #include "NILightLua.h"
+#include "NILinesLua.h"
 #include "NINodeLua.h"
 #include "NIObjectLua.h"
 #include "NIParticlesLua.h"
@@ -560,6 +561,7 @@ namespace mwse::lua {
 		bindNIGeometryData();
 		bindNINode();
 		bindNIObject();
+		bindNILines();
 		bindNILight();
 		bindNIParticles();
 		bindNIPick();
