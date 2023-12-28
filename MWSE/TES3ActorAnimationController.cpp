@@ -63,7 +63,7 @@ namespace TES3 {
 		{
 			return 1.0;
 		}
-		
+
 		return std::clamp(mobileActor->actionData.swingTimer / (maxAttackTiming - startTime), 0.0f, 1.0f);
 	}
 
@@ -130,7 +130,7 @@ namespace TES3 {
 		}
 		// Fall back to chameleon, based on magnitude.
 		else if (chameleon > 0) {
-			setOpacity(std::clamp(1.0f - (float(chameleon) / 100.0f), 0.25f, 75.0f));
+			setOpacity(std::clamp(1.0f - (float(chameleon) / 100.0f), 0.25f, 0.75f));
 		}
 		// If all else fails we go for no Opacity.
 		else {

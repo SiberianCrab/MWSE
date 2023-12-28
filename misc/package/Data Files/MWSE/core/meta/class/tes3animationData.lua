@@ -8,7 +8,7 @@
 --- @class tes3animationData
 --- @field actorNode niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode 
 --- @field animationGroups table<tes3.animationGroup, tes3animationGroup> *Read-only*. A table of the animation group objects, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
---- @field animationGroupSoundgenCounts table<tes3.animationGroup, number> *Read-only*. The number of sound generators for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
+--- @field animationGroupSoundGenCounts table<tes3.animationGroup, number> *Read-only*. The number of sound generators for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
 --- @field animGroupLayerIndicies table<tes3.animationGroup, tes3.activeBodyPartLayer> *Read-only*. The layer from which each of the actor's animation groups come, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
 --- @field approxRootTravelSpeeds table<tes3.animationGroup, number> *Read-only*. The approximate root node travel speed for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
 --- @field blinkMorphEndTime number Blink animation end time for `headMorphTiming`. Timing is specific to the current head model.
@@ -19,7 +19,7 @@
 --- @field currentAnimGroupLayers number[] *Read-only*. 
 --- @field currentAnimGroups number[] *Read-only*. The currently playing [animation group](https://mwse.github.io/MWSE/references/animation-groups/), on each of the [body sections](https://mwse.github.io/MWSE/references/animation-body-sections/).
 --- @field currentNodeIndices number[] *Read-only*. 
---- @field currentSoundgenIndices number[] *Read-only*. The index of the currently used sound generator for each of the [body sections](https://mwse.github.io/MWSE/references/animation-body-sections/).
+--- @field currentSoundGenIndices number[] *Read-only*. The index of the currently used sound generator for each of the [body sections](https://mwse.github.io/MWSE/references/animation-body-sections/).
 --- @field deltaTime number The time in seconds since the last update.
 --- @field flags number 
 --- @field hasOverrideAnimations boolean *Read-only*. True if the actor has some custom animations in the override layer. For example, drumming or sitting. These are assigned in the Construction Set or using [tes3.loadAnimation](https://mwse.github.io/MWSE/apis/tes3/#tes3loadanimation).

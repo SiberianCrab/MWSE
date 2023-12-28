@@ -189,23 +189,37 @@ namespace TES3 {
 
 		sol::table getMagicEffects_lua(sol::this_state ts);
 
+		bool objectExists(const std::string_view& id);
+
 		// Wrapper around resolveObject that enforces type.
 		template <typename T>
-		T * resolveObjectByType(const char* id, ObjectType::ObjectType type = ObjectType::Invalid) {
-			TES3::BaseObject* potentialResult = resolveObject(id);
-			if (!potentialResult) {
-				return nullptr;
-			}
-			else if (type != 0 && potentialResult->objectType != type) {
+		T* resolveObjectByType(const std::string_view& id) {
+			const auto potentialResult = resolveObject(id.data());
+			if (potentialResult == nullptr) {
 				return nullptr;
 			}
 
-			return static_cast<T*>(potentialResult);
-		}
-
-		template <typename T>
-		T* resolveObjectByType(const std::string& id, ObjectType::ObjectType type = ObjectType::Invalid) {
-			return resolveObjectByType<T>(id.c_str(), type);
+			if constexpr (std::is_same<T, TES3::BaseObject>::value) {
+				return potentialResult;
+			}
+			else if constexpr (std::is_same<T, TES3::Object>::value) {
+				// TODO: This needs some kind of solution to ensure that it is the right derived type. We have no RTTI.
+				return static_cast<Object*>(potentialResult);
+			}
+			else if constexpr (std::is_same<T, TES3::PhysicalObject>::value) {
+				// TODO: This needs some kind of solution to ensure that it is the right derived type. We have no RTTI.
+				return static_cast<PhysicalObject*>(potentialResult);
+			}
+			else if constexpr (std::is_same<T, TES3::Actor>::value) {
+				return potentialResult->isActor() ? static_cast<Actor*>(potentialResult) : nullptr;
+			}
+			else if constexpr (std::is_same<T, TES3::Item>::value) {
+				return potentialResult->isItem() ? static_cast<Item*>(potentialResult) : nullptr;
+			}
+			else {
+				static_assert(T::OBJECT_TYPE != TES3::ObjectType::Invalid, "Call to get object type that doesn't have a defined static object type.");
+				return potentialResult->objectType == T::OBJECT_TYPE ? static_cast<T*>(potentialResult) : nullptr;
+			}
 		}
 	};
 	static_assert(sizeof(NonDynamicData) == 0xB3AC, "TES3::NonDynamicData failed size validation");

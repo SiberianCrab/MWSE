@@ -900,6 +900,16 @@ Direct access to the actor's current movement flags, showing if the actor is run
 
 ***
 
+### `isSliding`
+
+Direct access to the actor's current movement flags, showing if the actor is sliding off a steep surface.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `isSneaking`
 <div class="search_terms" style="display: none">issneaking, sneaking</div>
 

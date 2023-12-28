@@ -776,7 +776,7 @@ namespace TES3 {
 			!getMovementFlagSwimming() &&
 			!getMovementFlagFlying() &&
 			(allowMidairJumping || (!getMovementFlagJumping() && !getMovementFlagFalling())) &&
-			(!getMobileActorMovementFlag(ActorMovement::Unknown) || thisFrameDeltaPosition.length() <= 0.0099999998);
+			(!getMovementFlagSliding() || thisFrameDeltaPosition.length() <= 0.0099999998);
 	}
 
 	bool MobileActor::canJump_lua() const {
@@ -1049,7 +1049,7 @@ namespace TES3 {
 	void MobileActor::setIsWerewolf(bool set) {
 		setMobileActorFlag(TES3::MobileActorFlag::Werewolf, set);
 	}
-	
+
 	void MobileActor::changeWerewolfState(bool isWerewolf) {
 		vTable.mobileActor->changeWerewolf(this, isWerewolf);
 	}
@@ -1866,6 +1866,14 @@ namespace TES3 {
 
 	void MobileActor::setMovementFlagRunning(bool value) {
 		setMobileActorMovementFlag(TES3::ActorMovement::Running, value);
+	}
+
+	bool MobileActor::getMovementFlagSliding() const {
+		return getMobileActorMovementFlag(ActorMovement::Sliding);
+	}
+
+	void MobileActor::setMovementFlagSliding(bool value) {
+		setMobileActorMovementFlag(TES3::ActorMovement::Sliding, value);
 	}
 
 	bool MobileActor::getMovementFlagSneaking() const {

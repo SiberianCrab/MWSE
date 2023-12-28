@@ -29,27 +29,14 @@ namespace mwse::lua {
 
 		{
 			// Start our usertype.
-			auto usertypeDefinition = state.new_usertype<TES3::AnimationData::SoundGenKey>("tes3animationDataSoundGenKey");
-			usertypeDefinition["new"] = sol::no_constructor;
-
-			// Basic property bindings.
-			usertypeDefinition["pitch"] = &TES3::AnimationData::SoundGenKey::pitch;
-			usertypeDefinition["sound"] = &TES3::AnimationData::SoundGenKey::sound;
-			usertypeDefinition["startFrame"] = &TES3::AnimationData::SoundGenKey::startFrame;
-			usertypeDefinition["startTime"] = &TES3::AnimationData::SoundGenKey::startTime;
-			usertypeDefinition["volume"] = &TES3::AnimationData::SoundGenKey::volume;
-		}
-
-		{
-			// Start our usertype.
 			auto usertypeDefinition = state.new_usertype<TES3::AnimationData>("tes3animationData");
 			usertypeDefinition["new"] = sol::no_constructor;
 
 			// Basic property bindings.
 			usertypeDefinition["actorNode"] = &TES3::AnimationData::actorNode;
 			usertypeDefinition["animationGroups"] = sol::readonly_property(&TES3::AnimationData::getAnimationGroups);
-			usertypeDefinition["animationGroupSoundgenCounts"] = sol::readonly_property(&TES3::AnimationData::getAnimationGroupSoundgenCounts);
-			//usertypeDefinition["animationGroupSoundgens"] = sol::readonly_property(&TES3::AnimationData::getAnimationGroupSoundgens);
+			usertypeDefinition["animationGroupSoundGenCounts"] = sol::readonly_property(&TES3::AnimationData::getAnimationGroupSoundGenCounts);
+			//usertypeDefinition["animationGroupSoundGens"] = sol::readonly_property(&TES3::AnimationData::getAnimationGroupSoundGens);
 			usertypeDefinition["animGroupLayerIndicies"] = sol::readonly_property(&TES3::AnimationData::getAnimGroupLayerIndicies);
 			usertypeDefinition["approxRootTravelSpeeds"] = sol::readonly_property(&TES3::AnimationData::getApproxRootTravelSpeeds);
 			usertypeDefinition["blinkMorphEndTime"] = sol::readonly_property(&TES3::AnimationData::blinkMorphEndTime);
@@ -58,7 +45,7 @@ namespace mwse::lua {
 			usertypeDefinition["currentAnimGroupLayers"] = sol::readonly_property(&TES3::AnimationData::getCurrentAnimGroupLayers);
 			usertypeDefinition["currentAnimGroups"] = sol::readonly_property(&TES3::AnimationData::getCurrentAnimGroups);
 			usertypeDefinition["currentNodeIndices"] = sol::readonly_property(&TES3::AnimationData::getCurrentNodeIndices);
-			usertypeDefinition["currentSoundgenIndices"] = sol::readonly_property(&TES3::AnimationData::getCurrentSoundgenIndices);
+			usertypeDefinition["currentSoundGenIndices"] = sol::readonly_property(&TES3::AnimationData::getCurrentSoundGenIndices);
 			usertypeDefinition["deltaTime"] = &TES3::AnimationData::deltaTime;
 			usertypeDefinition["flags"] = &TES3::AnimationData::flags;
 			usertypeDefinition["hasOverrideAnimations"] = sol::readonly_property(&TES3::AnimationData::hasOverrideAnimations);

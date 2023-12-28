@@ -16,6 +16,7 @@
 
 #include "TES3Util.h"
 
+#include "TES3Actor.h"
 #include "TES3Alchemy.h"
 #include "TES3Cell.h"
 #include "TES3DialogueInfo.h"
@@ -469,6 +470,10 @@ namespace TES3 {
 			results[itt.second->id + 1] = itt.second;
 		}
 		return results;
+	}
+
+	bool NonDynamicData::objectExists(const std::string_view& id) {
+		return resolveObject(id.data()) != nullptr;
 	}
 
 	//

@@ -30,6 +30,7 @@
     <ClInclude Include="NIAnimationKey.h" />
     <ClInclude Include="NIPathController.h" />
     <ClInclude Include="NISortAdjustNode.h" />
+    <ClInclude Include="TES3AnimationGroupLua.h" />
     <ClInclude Include="TES3DialogueFilterContext.h" />
     <ClInclude Include="TES3LandLua.h" />
     <ClInclude Include="LuaActiveMagicEffectIconsUpdatedEvent.h" />
@@ -771,6 +772,7 @@
     <ClCompile Include="TES3ActorAnimationControllerLua.cpp" />
     <ClCompile Include="TES3AnimationDataLua.cpp" />
     <ClCompile Include="TES3AnimationGroup.cpp" />
+    <ClCompile Include="TES3AnimationGroupLua.cpp" />
     <ClCompile Include="TES3Apparatus.cpp" />
     <ClCompile Include="TES3Archive.cpp" />
     <ClCompile Include="TES3ArchiveLua.cpp" />

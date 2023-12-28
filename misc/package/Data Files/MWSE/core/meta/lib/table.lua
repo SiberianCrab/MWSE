@@ -97,8 +97,8 @@ function table.invert(t) end
 function table.keys(t, sort) end
 
 --- This creates a pre-sized table. This is useful for big tables if the final table size is known and automatic table resizing is too expensive.
---- @param narray number A hint for how many elements the table will have as a sequence.
---- @param nhash number A hint for how many other elements the table will have.
+--- @param narray number A hint for how many elements the array part of the table will have. Allocates fields for [0, narray].
+--- @param nhash number A hint for how many elements the hash part of the table will have.
 --- @return table newTable The pre-sized table that was created.
 function table.new(narray, nhash) end
 

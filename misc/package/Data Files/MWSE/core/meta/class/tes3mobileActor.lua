@@ -89,6 +89,7 @@
 --- @field isPlayerHidden boolean Direct access to the actor's flag showing the player was hidden on the last detection check.
 --- @field isReadyingWeapon boolean *Read-only*. If `true`, the actor is drawing or sheathing their weapon.
 --- @field isRunning boolean Direct access to the actor's current movement flags, showing if the actor is running.
+--- @field isSliding boolean Direct access to the actor's current movement flags, showing if the actor is sliding off a steep surface.
 --- @field isSneaking boolean Direct access to the actor's current movement flags, showing if the actor is sneaking.
 --- @field isSwimming boolean Direct access to the actor's current movement flags, showing if the actor is swimming.
 --- @field isTurningLeft boolean Direct access to the actor's current movement flags, showing if the actor is turning left.

@@ -3,7 +3,7 @@
 
 --- @meta
 --- A game object which contains information that map actor sounds to animations.
---- @class tes3animationDataSoundGenKey
+--- @class tes3animationGroupSoundGenKey
 --- @field pitch number The pitch of the sound.
 --- @field sound tes3sound The sound played at this sound generator key.
 --- @field startFrame number The starting frame of animation at which the sound plays.

@@ -457,6 +457,8 @@ namespace TES3 {
 		void setMovementFlagRight(bool value);
 		bool getMovementFlagRunning() const;
 		void setMovementFlagRunning(bool value);
+		bool getMovementFlagSliding() const;
+		void setMovementFlagSliding(bool value);
 		bool getMovementFlagSneaking() const;
 		void setMovementFlagSneaking(bool value);
 		bool getMovementFlagFalling() const;

@@ -61,7 +61,7 @@
 #include "TES3MobileCreature.h"
 #include "TES3MobilePlayer.h"
 #include "TES3NPC.h"
-#include "TES3PlayerAnimationController.h" 
+#include "TES3PlayerAnimationController.h"
 #include "TES3Race.h"
 #include "TES3Reference.h"
 #include "TES3Region.h"
@@ -482,7 +482,7 @@ namespace mwse::lua {
 			// Set up our event callback.
 			LuaManager::getInstance().setButtonPressedCallback(params["callback"]);
 
-			// Temporary hook into the function that creates message boxes. 
+			// Temporary hook into the function that creates message boxes.
 			reinterpret_cast<void(__cdecl*)(const char*, ...)>(0x5F1AA0)(message.c_str(), buttonTextStruct, NULL);
 			return TES3::UI::findMenu("MenuMessage");
 		}
@@ -643,7 +643,7 @@ namespace mwse::lua {
 
 	TES3::SoundGenerator* getSoundGenerator(std::string creatureId, unsigned int type) {
 		auto nonDynamicData = TES3::DataHandler::get()->nonDynamicData;
-		auto creature = nonDynamicData->resolveObjectByType<TES3::Creature>(creatureId, TES3::ObjectType::Creature);
+		auto creature = nonDynamicData->resolveObjectByType<TES3::Creature>(creatureId);
 		if (creature == nullptr) {
 			return nullptr;
 		}
@@ -3318,7 +3318,7 @@ namespace mwse::lua {
 		auto playerMobile = worldController->getMobilePlayer();
 		if (mobile == playerMobile) {
 			if (getOptionalParam<bool>(params, "playSound", true)) {
-				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Down);
+				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Up);
 			}
 
 			if (getOptionalParam<bool>(params, "showMessage", false)) {
@@ -3493,9 +3493,9 @@ namespace mwse::lua {
 		// Play the relevant sound.
 		auto worldController = TES3::WorldController::get();
 		auto playerMobile = worldController->getMobilePlayer();
-		if (playerMobile && getOptionalParam<bool>(params, "playSound", true)) {
+		if (mobile == playerMobile && getOptionalParam<bool>(params, "playSound", true)) {
 			if (mobile == playerMobile) {
-				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Up);
+				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Down);
 			}
 		}
 
@@ -3728,10 +3728,10 @@ namespace mwse::lua {
 		// Play the relevant sound.
 		if (playerMobile && getOptionalParam<bool>(params, "playSound", true)) {
 			if (toMobile == playerMobile) {
-				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Down);
+				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Up);
 			}
 			else if (fromMobile == playerMobile) {
-				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Up);
+				worldController->playItemUpDownSound(item, TES3::ItemSoundState::Down);
 			}
 		}
 
@@ -4369,6 +4369,23 @@ namespace mwse::lua {
 		}
 	}
 
+	void setExpelled(sol::table params) {
+		TES3::Faction* faction = getOptionalParamObject<TES3::Faction>(params, "faction");
+		if (faction == nullptr) {
+			throw std::invalid_argument("Invalid 'faction' parameter provided");
+		}
+
+		if (getOptionalParam<bool>(params, "expelled", true)) {
+			faction->setPlayerExpelled(true);
+			std::string message = TES3::DataHandler::get()->nonDynamicData->GMSTs[TES3::GMST::sExpelledMessage]->value.asString;
+			message.append(faction->getName());
+			TES3::UI::showMessageBox(message.c_str(), nullptr, true);
+		}
+		else {
+			faction->setPlayerExpelled(false);
+		}
+	}
+
 	sol::optional<std::tuple<unsigned char, unsigned char, unsigned char>> getCurrentAnimationGroups(sol::table params) {
 		TES3::Reference* reference = getOptionalParamExecutionReference(params);
 		if (reference == nullptr) {
@@ -4615,7 +4632,7 @@ namespace mwse::lua {
 		sol::state_view state = thisState;
 		sol::table result = state.create_table();
 		for (size_t i = 0; i < animGroup->actionCount; ++i, noteLabel += 8) {
-			result[*noteLabel] = animGroup->actionTimes[i];
+			result[*noteLabel] = animGroup->actionTimings[i];
 		}
 		return result;
 	}
@@ -5499,7 +5516,7 @@ namespace mwse::lua {
 			throw std::invalid_argument("Invalid positional params provided. Must provided two references or two positions/heights.");
 		}
 
-		// 
+		//
 		sol::optional<TES3::Vector3> position2;
 		float height1, height2;
 
@@ -6161,6 +6178,7 @@ namespace mwse::lua {
 		tes3["setAnimationTiming"] = setAnimationTiming;
 		tes3["setDestination"] = setDestination;
 		tes3["setEnabled"] = setEnabled;
+		tes3["setExpelled"] = setExpelled;
 		tes3["setGlobal"] = setGlobal;
 		tes3["setItemIsStolen"] = setItemIsStolen;
 		tes3["setJournalIndex"] = setJournalIndex;

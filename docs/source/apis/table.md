@@ -287,8 +287,8 @@ local newTable = table.new(narray, nhash)
 
 **Parameters**:
 
-* `narray` (number): A hint for how many elements the table will have as a sequence.
-* `nhash` (number): A hint for how many other elements the table will have.
+* `narray` (number): A hint for how many elements the array part of the table will have. Allocates fields for [0, narray].
+* `nhash` (number): A hint for how many elements the hash part of the table will have.
 
 **Returns**:
 

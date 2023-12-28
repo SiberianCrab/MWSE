@@ -2,6 +2,7 @@
 
 #include "TES3Defines.h"
 #include "TES3Vectors.h"
+#include "TES3AnimationGroup.h"
 
 #include "NIDefines.h"
 #include "NIPointer.h"
@@ -17,18 +18,6 @@ namespace TES3 {
 			~SequenceGroup() = delete;
 		};
 		static_assert(sizeof(SequenceGroup) == 0xC, "TES3::AnimationAttachment::SequenceGroup failed size validation");
-
-		struct SoundGenKey {
-			int startFrame;
-			float startTime;
-			unsigned char volume;
-			float pitch;
-			Sound* sound;
-
-			SoundGenKey() = delete;
-			~SoundGenKey() = delete;
-		};
-		static_assert(sizeof(SoundGenKey) == 0x14, "TES3::AnimationAttachment::SoundGenKey failed size validation");
 
 		NI::Node * actorNode; // 0x0
 		NI::Node * modelRootNode; // 0x4
@@ -65,9 +54,9 @@ namespace TES3 {
 		unsigned short patchedCastSpeed; // 0x4D6 (8.8 fixed point format)
 		float movementSpeed; // 0x4D8
 		float weaponSpeed; // 0x4DC
-		int currentSoundgenIndices[3]; // 0x4E0
-		unsigned char animationGroupSoundgenCounts[150]; // 0x4EC
-		SoundGenKey** animationGroupSoundgens[150]; // 0x584
+		int currentSoundGenIndices[3]; // 0x4E0
+		unsigned char animationGroupSoundGenCounts[150]; // 0x4EC
+		AnimationGroup::SoundGenKey** animationGroupSoundGens[150]; // 0x584
 		unsigned char nextAnimGroup; // 0x7DC
 		int nextLoopCounts; // 0x7E0
 
@@ -105,9 +94,9 @@ namespace TES3 {
 		std::reference_wrapper<decltype(currentAnimGroupLayer)> getCurrentAnimGroupLayers();
 		std::reference_wrapper<decltype(animGroupLayerIndex)> getAnimGroupLayerIndicies();
 		std::reference_wrapper<decltype(approxRootTravelSpeed)> getApproxRootTravelSpeeds();
-		std::reference_wrapper<decltype(currentSoundgenIndices)> getCurrentSoundgenIndices();
-		std::reference_wrapper<decltype(animationGroupSoundgenCounts)> getAnimationGroupSoundgenCounts();
-		std::reference_wrapper<decltype(animationGroupSoundgens)> getAnimationGroupSoundgens();
+		std::reference_wrapper<decltype(currentSoundGenIndices)> getCurrentSoundGenIndices();
+		std::reference_wrapper<decltype(animationGroupSoundGenCounts)> getAnimationGroupSoundGenCounts();
+		std::reference_wrapper<decltype(animationGroupSoundGens)> getAnimationGroupSoundGens();
 
 	};
 	static_assert(sizeof(AnimationData) == 0x7E4, "TES3::AnimationData failed size validation");

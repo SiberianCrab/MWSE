@@ -30,11 +30,11 @@ Animations are divided into three layers. The layer 0 is the base layer containi
 
 **Returns**:
 
-* `result` (table&lt;[tes3.animationGroup](../references/animation-groups.md), tes3animationGroup&gt;)
+* `result` (table&lt;[tes3.animationGroup](../references/animation-groups.md), [tes3animationGroup](../types/tes3animationGroup.md)&gt;)
 
 ***
 
-### `animationGroupSoundgenCounts`
+### `animationGroupSoundGenCounts`
 <div class="search_terms" style="display: none">animationgroupsoundgencounts</div>
 
 *Read-only*. The number of sound generators for each of the animation groups, indexed by the [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) namespace.
@@ -135,7 +135,7 @@ It functions slightly differently to the other animation speed multipliers. It i
 
 ***
 
-### `currentSoundgenIndices`
+### `currentSoundGenIndices`
 <div class="search_terms" style="display: none">currentsoundgenindices</div>
 
 *Read-only*. The index of the currently used sound generator for each of the [body sections](https://mwse.github.io/MWSE/references/animation-body-sections/).

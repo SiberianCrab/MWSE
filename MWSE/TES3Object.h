@@ -219,6 +219,8 @@ namespace TES3 {
 		unsigned int objectFlags; // 0x8
 		GameFile * sourceMod; // 0xC
 
+		static constexpr auto OBJECT_TYPE = ObjectType::Invalid;
+
 		//
 		// Basic operators.
 		//

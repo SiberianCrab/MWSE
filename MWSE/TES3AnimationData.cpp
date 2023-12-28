@@ -131,15 +131,15 @@ namespace TES3 {
 		return std::ref(approxRootTravelSpeed);
 	}
 
-	std::reference_wrapper<decltype(AnimationData::currentSoundgenIndices)> AnimationData::getCurrentSoundgenIndices() {
-		return std::ref(currentSoundgenIndices);
+	std::reference_wrapper<decltype(AnimationData::currentSoundGenIndices)> AnimationData::getCurrentSoundGenIndices() {
+		return std::ref(currentSoundGenIndices);
 	}
 
-	std::reference_wrapper<decltype(AnimationData::animationGroupSoundgenCounts)> AnimationData::getAnimationGroupSoundgenCounts() {
-		return std::ref(animationGroupSoundgenCounts);
+	std::reference_wrapper<decltype(AnimationData::animationGroupSoundGenCounts)> AnimationData::getAnimationGroupSoundGenCounts() {
+		return std::ref(animationGroupSoundGenCounts);
 	}
 
-	std::reference_wrapper<decltype(AnimationData::animationGroupSoundgens)> AnimationData::getAnimationGroupSoundgens() {
-		return std::ref(animationGroupSoundgens);
+	std::reference_wrapper<decltype(AnimationData::animationGroupSoundGens)> AnimationData::getAnimationGroupSoundGens() {
+		return std::ref(animationGroupSoundGens);
 	}
 }

@@ -46,7 +46,7 @@ One of the core game objects.
 ### `tes3.installDirectory`
 <div class="search_terms" style="display: none">installdirectory</div>
 
-The currently executed root Morrowind installation path.
+The currently executed root Morrowind installation path (The folder containing Morrowind.exe).
 
 **Returns**:
 
@@ -4401,6 +4401,23 @@ local success = tes3.setEnabled({ reference = ..., toggle = ..., enabled = ... }
 
 ***
 
+### `tes3.setExpelled`
+<div class="search_terms" style="display: none">setexpelled, expelled</div>
+
+This function can expel and undo expelled state for the player in the given faction.
+
+```lua
+tes3.setExpelled({ faction = ..., expelled = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `faction` ([tes3faction](../../types/tes3faction)): The faction the player will be expelled from.
+	* `expelled` (boolean): *Default*: `true`. Passing `false` will make the player regain membership.
+
+***
+
 ### `tes3.setGlobal`
 <div class="search_terms" style="display: none">setglobal, global</div>
 
@@ -4915,6 +4932,69 @@ local was3rdPerson = tes3.togglePOV()
 **Returns**:
 
 * `was3rdPerson` (boolean)
+
+***
+
+### `tes3.transferInventory`
+<div class="search_terms" style="display: none">transferinventory</div>
+
+Moves all the items in one reference's inventory to another. Both `to` and `from` objects will be cloned. The function will update the GUI for the `to` and `from` references. This function preserves the `tes3itemData` of the transferred items and handles leveled lists. The function can do either partial or complete transfer. Limiting transfer by capacity only works for containers, other actors can get over-encumbered after this operation.
+
+```lua
+local transferred = tes3.transferInventory({ from = ..., to = ..., filter = ..., playSound = ..., limitCapacity = ..., completeTransfer = ..., reevaluateEquipment = ..., equipProjectiles = ..., checkCrime = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `from` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): Who to take items from.
+	* `to` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): Who to give items to.
+	* `filter` (fun(item: [tes3item](../types/tes3item.md), itemData: [tes3itemData](../types/tes3itemData.md)): boolean): *Optional*. You can pass a filter function to only transfer certain type of items. The `filter` function is called for each item in the `from`'s inventory. Note that not all the items may have itemData.
+	* `playSound` (boolean): *Default*: `true`. If false, the up/down sound won't be played.
+	* `limitCapacity` (boolean): *Default*: `true`. If false, items can be placed into containers that shouldn't normally be allowed. This includes organic containers and containers that are full. If this argument is set to `true` the whole `from`'s inventory might not fit into the destination inventory. In that case, partial transfer is made.
+	* `completeTransfer` (boolean): *Default*: `false`. Use this to disable partial transfers. If `limitCapacity` is set to true, passing `completeTransfer = true` will only transfer the items from one inventory to the other if and only if all the items can fit inside the destination inventory. This argument only works if `limitCapacity` is `true`.
+	* `reevaluateEquipment` (boolean): *Default*: `true`. If true, and the if in the transferred items are armor, clothing, or weapon items, the actors will reevaluate their equipment choices to see if the new items are worth equipping. This does not affect the player.
+	* `equipProjectiles` (boolean): *Default*: `true`. If true, and the `to` reference has the same projectile already equipped, the stacks will be merged.
+	* `checkCrime` (boolean): *Default*: `false`. If true, and the `to` reference is the player, the function will check if the player has access to the `from` reference's inventory. If not, appropriate crime reactions will be triggered.
+
+**Returns**:
+
+* `transferred` (boolean): Returns `true` if at least one item was transferred. If both `limitCapacity` and `completeTransfer` were passed as `true` the function returns `true` if the whole inventory was successfully transferred.
+
+??? example "Example: Transfering target's weapons to the player's inventory"
+
+	```lua
+	
+	-- Pressing i key while looking at a container, NPC or creature
+	-- will transfer the target's weapons to the player.
+	
+	---@param e keyDownEventData
+	local function onKeyDown(e)
+		local target = tes3.getPlayerTarget()
+		if not target then
+			tes3.messageBox("No target!")
+			return
+		end
+	
+		tes3.transferInventory({
+			from = target,
+			to = tes3.player,
+			---@param item tes3item
+			---@param itemData tes3itemData?
+			---@return boolean
+			filter = function(item, itemData)
+				-- You can use the itemData to filter more specifically
+				if item.objectType == tes3.objectType.weapon then
+					return true
+				end
+				return false
+			end,
+			limitCapacity = false,
+		})
+	end
+	event.register(tes3.event.keyDown, onKeyDown, { filter = tes3.scanCode.i })
+
+	```
 
 ***
 

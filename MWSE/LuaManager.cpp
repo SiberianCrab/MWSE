@@ -93,6 +93,7 @@
 #include "TES3AILua.h"
 #include "TES3AlchemyLua.h"
 #include "TES3AnimationDataLua.h"
+#include "TES3AnimationGroupLua.h"
 #include "TES3ApparatusLua.h"
 #include "TES3ArchiveLua.h"
 #include "TES3ArmorLua.h"
@@ -478,6 +479,7 @@ namespace mwse::lua {
 		bindTES3AI();
 		bindTES3Alchemy();
 		bindTES3AnimationData();
+		bindTES3AnimationGroup();
 		bindTES3Apparatus();
 		bindTES3Archive();
 		bindTES3Armor();
