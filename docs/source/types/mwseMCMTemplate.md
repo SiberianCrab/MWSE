@@ -168,7 +168,10 @@ The name field is the mod name, used to register the MCM, and is displayed in th
 ### `onClose`
 <div class="search_terms" style="display: none">onclose</div>
 
-A function which will be called when the menu is closed. Useful for saving variables, such as TableVariable.
+A function which will be called when the menu is closed. Useful for saving your config after exiting the MCM.
+
+Use `template:saveOnClose(configFilename, configTable)` to assign a simple save function to onClose. If you want to do more on closing, assign a custom function to `onClose` and call `mwse.saveConfig(configFilename, configTable)` when you want to save.
+
 
 **Returns**:
 

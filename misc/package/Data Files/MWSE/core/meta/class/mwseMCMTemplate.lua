@@ -9,7 +9,10 @@
 --- @field elements mwseMCMTemplateElements This dictionary-style table holds all the UI elements of the Template, for easy access.
 --- @field headerImagePath string|nil The path to the header image. It's relative to `Data Files/`. The image must have power-of-2 dimensions (i.e. 16, 32, 64, 128, 256, 512, 1024, etc.).
 --- @field name string The name field is the mod name, used to register the MCM, and is displayed in the mod list on the lefthand pane.
---- @field onClose nil|fun(modConfigContainer: tes3uiElement) A function which will be called when the menu is closed. Useful for saving variables, such as TableVariable.
+--- @field onClose nil|fun(modConfigContainer: tes3uiElement) A function which will be called when the menu is closed. Useful for saving your config after exiting the MCM.
+--- 
+--- Use `template:saveOnClose(configFilename, configTable)` to assign a simple save function to onClose. If you want to do more on closing, assign a custom function to `onClose` and call `mwse.saveConfig(configFilename, configTable)` when you want to save.
+--- 
 --- @field onSearch nil|fun(searchText: string): boolean A custom search handler function. This function should return true if this mod Template should show up in search results for given `searchText`.
 --- @field pages mwseMCMExclusionsPage[]|mwseMCMFilterPage[]|mwseMCMMouseOverPage[]|mwseMCMPage[]|mwseMCMSideBarPage[] Pages in this Template.
 mwseMCMTemplate = {}

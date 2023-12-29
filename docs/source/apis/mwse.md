@@ -346,21 +346,17 @@ mwse.registerModConfig(name, { onCreate = ..., onSearch = ..., onClose = ... })
 ### `mwse.saveConfig`
 <div class="search_terms" style="display: none">saveconfig</div>
 
-Saves a config table to Data Files\\MWSE\\config\\{fileName}.json.
+Saves a config table to Data Files\\MWSE\\config\\{fileName}.json. The config is converted to JSON during saving.
 
 ```lua
-local result = mwse.saveConfig(fileName, object, config)
+mwse.saveConfig(fileName, config, jsonOptions)
 ```
 
 **Parameters**:
 
-* `fileName` (string)
-* `object` (unknown)
-* `config` (table): *Optional*.
-
-**Returns**:
-
-* `result` (table)
+* `fileName` (string): Usually named after your mod.
+* `config` (table): The config table to save.
+* `jsonOptions` (table): *Optional*. Used to optionally pass encoding options to the dkjson encoder.
 
 ***
 

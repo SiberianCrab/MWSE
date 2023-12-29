@@ -4413,7 +4413,7 @@ tes3.setExpelled({ faction = ..., expelled = ... })
 **Parameters**:
 
 * `params` (table)
-	* `faction` ([tes3faction](../../types/tes3faction)): The faction the player will be expelled from.
+	* `faction` ([tes3faction](../types/tes3faction.md)): The faction the player will be expelled from.
 	* `expelled` (boolean): *Default*: `true`. Passing `false` will make the player regain membership.
 
 ***

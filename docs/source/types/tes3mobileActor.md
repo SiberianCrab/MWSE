@@ -901,6 +901,7 @@ Direct access to the actor's current movement flags, showing if the actor is run
 ***
 
 ### `isSliding`
+<div class="search_terms" style="display: none">issliding, sliding</div>
 
 Direct access to the actor's current movement flags, showing if the actor is sliding off a steep surface.
 
