@@ -17,7 +17,7 @@ The dialogue this `dialogueEnvironmentCreated` event was triggered from.
 
 **Returns**:
 
-* `result` ([tes3dialogue](../../types/tes3dialogue))
+* `result` ([tes3dialogue](../types/tes3dialogue.md))
 
 ***
 
@@ -28,7 +28,7 @@ The dialogue info this `dialogueEnvironmentCreated` event was triggered from.
 
 **Returns**:
 
-* `result` ([tes3dialogue](../../types/tes3dialogue))
+* `result` ([tes3dialogue](../types/tes3dialogue.md))
 
 ***
 
@@ -50,5 +50,5 @@ The script target reference. That's the NPC or creature the player is speaking w
 
 **Returns**:
 
-* `result` ([tes3reference](../../types/tes3reference))
+* `result` ([tes3reference](../types/tes3reference.md))
 

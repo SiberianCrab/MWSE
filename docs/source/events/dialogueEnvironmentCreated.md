@@ -22,5 +22,5 @@ event.register(tes3.event.dialogueEnvironmentCreated, dialogueEnvironmentCreated
 
 ## Event Data
 
-* `environment` ([mwseDialogueEnvironment](../../types/mwseDialogueEnvironment)): *Read-only*. The lua environment for the dialogue scripting. Any data added to it will be available as global variables to dialogue scripts.
+* `environment` ([mwseDialogueEnvironment](../types/mwseDialogueEnvironment.md)): *Read-only*. The lua environment for the dialogue scripting. Any data added to it will be available as global variables to dialogue scripts.
 

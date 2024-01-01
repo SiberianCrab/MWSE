@@ -2,7 +2,7 @@
 -- More information: https://github.com/MWSE/MWSE/tree/master/docs
 
 --- @meta
---- A game object that astores animation group data from loaded keyframe data.
+--- A game object that stores animation group data from loaded keyframe data. This includes action and sound timing. Animation groups belonging to the same animation file are linked together.
 --- @class tes3animationGroup
 --- @field actionCount number *Read-only*. The number of action note keys.
 --- @field actionFrames number[] *Read-only*. The action frame numbers array. The available action indexes depend on the purpose of the animation group.

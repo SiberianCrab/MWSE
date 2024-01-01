@@ -6,7 +6,7 @@
 	More information: https://github.com/MWSE/MWSE/tree/master/docs
 -->
 
-A game object that astores animation group data from loaded keyframe data.
+A game object that stores animation group data from loaded keyframe data. This includes action and sound timing. Animation groups belonging to the same animation file are linked together.
 
 ## Properties
 
