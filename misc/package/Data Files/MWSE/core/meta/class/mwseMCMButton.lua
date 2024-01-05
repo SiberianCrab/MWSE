@@ -61,7 +61,7 @@ function mwseMCMButton:makeComponent(parentBlock) end
 --- `componentType`: string? — *Optional*. No description yet available.
 --- 
 --- `parentComponent`: mwseMCMActiveInfo|mwseMCMButton|mwseMCMCategory|mwseMCMComponent|mwseMCMCycleButton|mwseMCMDecimalSlider|mwseMCMDropdown|mwseMCMExclusionsPage|mwseMCMFilterPage|mwseMCMHyperlink|mwseMCMInfo|mwseMCMKeyBinder|mwseMCMMouseOverInfo|mwseMCMMouseOverPage|mwseMCMOnOffButton|mwseMCMPage|mwseMCMParagraphField|mwseMCMSetting|mwseMCMSideBarPage|mwseMCMSideBySideBlock|mwseMCMSlider|mwseMCMTemplate|mwseMCMTextField|mwseMCMYesNoButton|nil — *Optional*. No description yet available.
---- @return mwseMCMButton|mwseMCMKeyBinder|mwseMCMOnOffButton|mwseMCMYesNoButton button No description yet available.
+--- @return mwseMCMButton|mwseMCMCycleButton|mwseMCMKeyBinder|mwseMCMOnOffButton|mwseMCMYesNoButton button No description yet available.
 function mwseMCMButton:new(data) end
 
 ---Table parameter definitions for `mwseMCMButton.new`.

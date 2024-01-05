@@ -10,7 +10,7 @@
 --- The warnings arise because each field set here is also 'set' in the annotations in the core\meta\ folder.
 --- @diagnostic disable: duplicate-set-field
 
-local Parent = require("mcm.components.settings.Setting")
+local Parent = require("mcm.components.settings.Slider")
 
 --- @class mwseMCMDecimalSlider
 local DecimalSlider = Parent:new()
@@ -83,18 +83,6 @@ function DecimalSlider:update()
 	Parent.update(self)
 end
 
---- @param element tes3uiElement
-function DecimalSlider:registerSliderElement(element)
-	-- click
-	element:register(tes3.uiEvent.mouseClick, function(e)
-		self:update()
-	end)
-	-- drag
-	element:register(tes3.uiEvent.mouseRelease, function(e)
-		self:update()
-	end)
-end
-
 function DecimalSlider:enable()
 	Parent.enable(self)
 	if self.variable.value then
@@ -113,56 +101,6 @@ function DecimalSlider:enable()
 	self.elements.slider:register(tes3.uiEvent.partScrollBarChanged, function(e)
 		self:updateValueLabel()
 	end)
-end
-
-function DecimalSlider:disable()
-	Parent.disable(self)
-
-	self.elements.slider.children[2].children[1].visible = false
-end
-
--- UI creation functions
-
---- @param parentBlock tes3uiElement
-function DecimalSlider:createOuterContainer(parentBlock)
-	Parent.createOuterContainer(self, parentBlock)
-	self.elements.outerContainer.widthProportional = 1.0
-	self.elements.outerContainer.borderRight = self.indent
-	self.elements.outerContainer.flowDirection = tes3.flowDirection.topToBottom
-end
-
---- @param parentBlock tes3uiElement
-function DecimalSlider:createLabel(parentBlock)
-	Parent.createLabel(self, parentBlock)
-	self:updateValueLabel()
-end
-
---- @param parentBlock tes3uiElement
-function DecimalSlider:makeComponent(parentBlock)
-	local sliderBlock = parentBlock:createBlock()
-	sliderBlock.flowDirection = tes3.flowDirection.leftToRight
-	sliderBlock.autoHeight = true
-	sliderBlock.widthProportional = 1.0
-	local range = self.max - self.min
-	local slider = sliderBlock:createSlider({ current = 0, max = range })
-	slider.widthProportional = 1.0
-
-	-- Set custom values from setting data
-	slider.widget.step = self.step
-	slider.widget.jump = self.jump
-
-	self.elements.slider = slider
-	self.elements.sliderBlock = sliderBlock
-
-	-- add mouseovers
-	table.insert(self.mouseOvers, sliderBlock)
-	-- Add every piece of the slider to the mouseOvers
-	for _, sliderElement in ipairs(slider.children) do
-		table.insert(self.mouseOvers, sliderElement)
-		for _, innerElement in ipairs(sliderElement.children) do
-			table.insert(self.mouseOvers, innerElement)
-		end
-	end
 end
 
 return DecimalSlider

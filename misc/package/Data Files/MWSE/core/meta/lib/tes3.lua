@@ -113,6 +113,8 @@ function tes3.addItemData(params) end
 --- @field updateGUI boolean? *Default*: `true`. If false, the player or contents menu won't be updated.
 
 --- This function creates a new journal entry. It can be called once the world controller is loaded.
+--- 
+--- The text uses the same HTML-style formatting as books, which has different layout to regular dialogue. Use `<BR>` for line breaks that can span pages instead of `\\n`.
 --- @param params tes3.addJournalEntry.params This table accepts the following values:
 --- 
 --- `text`: string — The text of the new Journal entry.

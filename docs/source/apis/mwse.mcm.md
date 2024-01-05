@@ -177,7 +177,7 @@ local button = mwse.mcm.createCycleButton(parent, { label = ..., description = .
 * `data` (table): *Optional*.
 	* `label` (string): *Optional*. Text shown next to the button.
 	* `description` (string): *Optional*. If in a [Sidebar Page](../types/mwseMCMSideBarPage.md), the description will be shown on mouseover.
-	* `options` ([mwseMCMDropdownOption](../types/mwseMCMDropdownOption.md)[]): This table holds the text and variable value for each of the cycle button's options.
+	* `options` ([tes3uiCycleButtonOption](../types/tes3uiCycleButtonOption.md)[]): This table holds the text and variable value for each of the cycle button's options.
 	* `leftSide ` (boolean): *Default*: `true`. If true, the button will be created on the left and label on the right.
 	* `variable` ([mwseMCMVariable](../types/mwseMCMVariable.md), [mwseMCMSettingNewVariable](../types/mwseMCMSettingNewVariable.md)): A variable for this cycle button.
 	* `defaultSetting` (unknown): *Optional*. If `defaultSetting` wasn't passed in the `variable` table, can be passed here. The new variable will be initialized to this value.

@@ -101,10 +101,13 @@ namespace TES3 {
 				// Reset timing to the start of the current action.
 				timing[i] = animationGroups[group]->actionTimings[currentActionIndices[i]];
 
-				if (currentAnimGroupLayer[i] != animGroupLayerIndices[group]) {
-					manager->deactivateSequence(sequenceGroup[currentAnimGroupLayer[i]]);
-					manager->activateSequence(sequenceGroup[animGroupLayerIndices[group]]);
-					currentAnimGroupLayer[i] = animGroupLayerIndices[group];
+				int currentLayer = currentAnimGroupLayer[i], newLayer = animGroupLayerIndices[group];
+				if (currentLayer != newLayer) {
+					if (currentLayer != -1) {
+						manager->deactivateSequence(sequenceGroup[currentLayer]);
+					}
+					manager->activateSequence(sequenceGroup[newLayer]);
+					currentAnimGroupLayer[i] = newLayer;
 				}
 			}
 		}

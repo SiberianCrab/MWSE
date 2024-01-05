@@ -226,6 +226,8 @@ local createdData = tes3.addItemData({ to = ..., item = ..., updateGUI = ... })
 
 This function creates a new journal entry. It can be called once the world controller is loaded.
 
+The text uses the same HTML-style formatting as books, which has different layout to regular dialogue. Use `<BR>` for line breaks that can span pages instead of `\\n`.
+
 ```lua
 tes3.addJournalEntry({ text = ..., showMessage = ... })
 ```

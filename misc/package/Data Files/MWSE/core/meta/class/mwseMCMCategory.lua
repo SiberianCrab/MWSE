@@ -83,7 +83,7 @@ function mwseMCMCategory:createActiveInfo(data) end
 --- `childSpacing`: integer? — *Optional*. The bottom border size in pixels. Used on all the child components.
 --- 
 --- `postCreate`: nil|fun(self: mwseMCMButton) — *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
---- @return mwseMCMButton|mwseMCMKeyBinder|mwseMCMOnOffButton|mwseMCMYesNoButton button No description yet available.
+--- @return mwseMCMButton|mwseMCMCycleButton|mwseMCMKeyBinder|mwseMCMOnOffButton|mwseMCMYesNoButton button No description yet available.
 function mwseMCMCategory:createButton(data) end
 
 ---Table parameter definitions for `mwseMCMCategory.createButton`.
@@ -150,7 +150,7 @@ function mwseMCMCategory:createContentsContainer(parentBlock) end
 --- 
 --- `description`: string? — *Optional*. If in a [Sidebar Page](../types/mwseMCMSideBarPage.md), the description will be shown on mouseover.
 --- 
---- `options`: mwseMCMDropdownOption[] — This table holds the text and variable value for each of the cycle button's options.
+--- `options`: tes3uiCycleButtonOption[] — This table holds the text and variable value for each of the cycle button's options.
 --- 
 --- `leftSide `: boolean? — *Default*: `true`. If true, the button will be created on the left and label on the right.
 --- 
@@ -182,7 +182,7 @@ function mwseMCMCategory:createCycleButton(data) end
 --- @class mwseMCMCategory.createCycleButton.data
 --- @field label string? *Optional*. Text shown next to the button.
 --- @field description string? *Optional*. If in a [Sidebar Page](../types/mwseMCMSideBarPage.md), the description will be shown on mouseover.
---- @field options mwseMCMDropdownOption[] This table holds the text and variable value for each of the cycle button's options.
+--- @field options tes3uiCycleButtonOption[] This table holds the text and variable value for each of the cycle button's options.
 --- @field leftSide  boolean? *Default*: `true`. If true, the button will be created on the left and label on the right.
 --- @field variable mwseMCMConfigVariable|mwseMCMCustomVariable|mwseMCMGlobal|mwseMCMGlobalBoolean|mwseMCMPlayerData|mwseMCMTableVariable|mwseMCMVariable|mwseMCMSettingNewVariable A variable for this cycle button.
 --- @field defaultSetting unknown? *Optional*. If `defaultSetting` wasn't passed in the `variable` table, can be passed here. The new variable will be initialized to this value.
@@ -673,7 +673,7 @@ function mwseMCMCategory:createSideBySideBlock(data) end
 --- `childSpacing`: integer? — *Optional*. The bottom border size in pixels. Used on all the child components.
 --- 
 --- `postCreate`: nil|fun(self: mwseMCMSlider) — *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
---- @return mwseMCMSlider slider No description yet available.
+--- @return mwseMCMDecimalSlider|mwseMCMSlider slider No description yet available.
 function mwseMCMCategory:createSlider(data) end
 
 ---Table parameter definitions for `mwseMCMCategory.createSlider`.

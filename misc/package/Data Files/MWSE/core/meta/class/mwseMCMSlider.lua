@@ -62,7 +62,7 @@ function mwseMCMSlider:makeComponent(parentBlock) end
 --- `componentType`: string? — *Optional*. No description yet available.
 --- 
 --- `parentComponent`: mwseMCMActiveInfo|mwseMCMButton|mwseMCMCategory|mwseMCMComponent|mwseMCMCycleButton|mwseMCMDecimalSlider|mwseMCMDropdown|mwseMCMExclusionsPage|mwseMCMFilterPage|mwseMCMHyperlink|mwseMCMInfo|mwseMCMKeyBinder|mwseMCMMouseOverInfo|mwseMCMMouseOverPage|mwseMCMOnOffButton|mwseMCMPage|mwseMCMParagraphField|mwseMCMSetting|mwseMCMSideBarPage|mwseMCMSideBySideBlock|mwseMCMSlider|mwseMCMTemplate|mwseMCMTextField|mwseMCMYesNoButton|nil — *Optional*. No description yet available.
---- @return mwseMCMSlider slider No description yet available.
+--- @return mwseMCMDecimalSlider|mwseMCMSlider slider No description yet available.
 function mwseMCMSlider:new(data) end
 
 ---Table parameter definitions for `mwseMCMSlider.new`.

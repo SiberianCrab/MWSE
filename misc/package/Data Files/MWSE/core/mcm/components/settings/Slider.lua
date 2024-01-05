@@ -87,9 +87,7 @@ end
 --- @param parentBlock tes3uiElement
 function Slider:createOuterContainer(parentBlock)
 	Parent.createOuterContainer(self, parentBlock)
-	self.elements.outerContainer.widthProportional = 1.0
 	self.elements.outerContainer.borderRight = self.indent -- * 2
-	self.elements.outerContainer.flowDirection = "top_to_bottom"
 end
 
 --- @param parentBlock tes3uiElement

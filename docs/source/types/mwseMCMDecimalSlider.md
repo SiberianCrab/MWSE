@@ -8,7 +8,7 @@
 
 A slider for setting decimal values at given number of decimal places.
 
-This type inherits the following: [mwseMCMSetting](../types/mwseMCMSetting.md), [mwseMCMComponent](../types/mwseMCMComponent.md)
+This type inherits the following: [mwseMCMSlider](../types/mwseMCMSlider.md), [mwseMCMSetting](../types/mwseMCMSetting.md), [mwseMCMComponent](../types/mwseMCMComponent.md)
 ## Properties
 
 ### `callback`
@@ -157,7 +157,7 @@ How far the slider jumps when you click an area inside the slider. Default is `0
 ### `label`
 <div class="search_terms" style="display: none">label</div>
 
-The text of the component. Not all component types have a label.
+Text shown above the slider. If left as a normal string, it will be shown in the form: [`label`]: [`self.variable.value`]. If the string contains a '%s' format operator, the value will be formatted into it.
 
 **Returns**:
 

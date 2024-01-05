@@ -3,7 +3,7 @@
 
 --- @meta
 --- A slider for setting decimal values at given number of decimal places.
---- @class mwseMCMDecimalSlider : mwseMCMSetting, mwseMCMComponent
+--- @class mwseMCMDecimalSlider : mwseMCMSlider, mwseMCMSetting, mwseMCMComponent
 --- @field decimalPlaces integer The number of decimal places of precision. Must be a positive integer. Default is `2`.
 --- @field elements mwseMCMSliderElements This dictionary-style table holds all the UI elements of the Slider, for easy access.
 --- @field jump number How far the slider jumps when you click an area inside the slider. Default is `0.05`.
