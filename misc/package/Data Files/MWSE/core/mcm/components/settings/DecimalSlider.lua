@@ -11,6 +11,7 @@
 --- @diagnostic disable: duplicate-set-field
 
 local Parent = require("mcm.components.settings.Slider")
+local Setting = require("mcm.components.settings.Setting")
 
 --- @class mwseMCMDecimalSlider
 local DecimalSlider = Parent:new()
@@ -80,7 +81,9 @@ end
 function DecimalSlider:update()
 	local newValue = (self.elements.slider.widget.current + self.min) / 10 ^ self.decimalPlaces
 	self.variable.value = newValue
-	Parent.update(self)
+	
+	-- Bypass Slider:update to avoid overwriting the variable with an unscaled value.
+	Setting.update(self)
 end
 
 function DecimalSlider:enable()
