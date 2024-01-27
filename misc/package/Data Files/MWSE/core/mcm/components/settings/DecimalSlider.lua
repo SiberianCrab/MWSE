@@ -29,37 +29,14 @@ end
 --- @param data mwseMCMDecimalSlider.new.data?
 --- @return mwseMCMDecimalSlider slider
 function DecimalSlider:new(data)
-	local t = data or {}
-	t.max = t.max or self.max
-	t.min = t.min or self.min
-	t.step = t.step or self.step
-	t.jump = t.jump or self.jump
-	t.decimalPlaces = t.decimalPlaces or self.decimalPlaces
-
-	assert(isPositiveInteger(t.decimalPlaces), "Invalid 'decimalPlaces' parameter provided. It must be an integer greater than 0.")
-
-	t.max  = t.max  * 10 ^ t.decimalPlaces
-	t.min  = t.min  * 10 ^ t.decimalPlaces
-	t.step = t.step * 10 ^ t.decimalPlaces
-	t.jump = t.jump * 10 ^ t.decimalPlaces
-
-	if data and data.variable then
-		-- create setting variable
-		t.variable.defaultSetting = t.variable.defaultSetting or t.defaultSetting
-		local typePath = ("mcm.variables." .. t.variable.class)
-		t.variable = require(typePath):new(t.variable)
+	-- make sure `decimalPlaces` is ok, then do parent behavior
+	if data and data.decimalPlaces ~= nil then
+		assert(isPositiveInteger(data.decimalPlaces), "Invalid 'decimalPlaces' parameter provided. It must be a positive whole number.")
 	end
-
-	if t.parentComponent then
-		t.indent = t.parentComponent.childIndent or t.indent
-		t.paddingBottom = t.parentComponent.childSpacing or t.paddingBottom
-	end
-
-	setmetatable(t, self)
-	self.__index = self
-	--- @cast t mwseMCMDecimalSlider
-	return t
+	---@diagnostic disable-next-line: param-type-mismatch, return-type-mismatch
+	return Parent.new(self, data) -- the `__index` metamethod will make the `min`, `max`, etc fields default to the values specified above.
 end
+
 
 function DecimalSlider:updateValueLabel()
 	local newValue = 0
@@ -104,6 +81,34 @@ function DecimalSlider:enable()
 	self.elements.slider:register(tes3.uiEvent.partScrollBarChanged, function(e)
 		self:updateValueLabel()
 	end)
+end
+
+--- @param parentBlock tes3uiElement
+function DecimalSlider:makeComponent(parentBlock)
+	local sliderBlock = parentBlock:createBlock()
+	sliderBlock.flowDirection = "left_to_right"
+	sliderBlock.autoHeight = true
+	sliderBlock.widthProportional = 1.0
+	local range = (self.max - self.min) * 10 ^ self.decimalPlaces
+	local slider = sliderBlock:createSlider({ current = 0, max = range })
+	slider.widthProportional = 1.0
+
+	-- Set custom values from setting data
+	slider.widget.step = self.step * 10 ^ self.decimalPlaces
+	slider.widget.jump = self.jump * 10 ^ self.decimalPlaces
+
+	self.elements.slider = slider
+	self.elements.sliderBlock = sliderBlock
+
+	-- add mouseovers
+	table.insert(self.mouseOvers, sliderBlock)
+	-- Add every piece of the slider to the mouseOvers
+	for _, sliderElement in ipairs(slider.children) do
+		table.insert(self.mouseOvers, sliderElement)
+		for _, innerElement in ipairs(sliderElement.children) do
+			table.insert(self.mouseOvers, innerElement)
+		end
+	end
 end
 
 return DecimalSlider
