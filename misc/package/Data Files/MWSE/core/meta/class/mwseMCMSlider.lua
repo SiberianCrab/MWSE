@@ -16,6 +16,14 @@ mwseMCMSlider = {}
 --- @param parentBlock tes3uiElement No description yet available.
 function mwseMCMSlider:createContentsContainer(parentBlock) end
 
+--- Reads the current variable value and scales it to the value range used by the underlying `tes3uiSlider` widget.
+--- @return integer value No description yet available.
+function mwseMCMSlider:getCurrentWidgetValue() end
+
+--- Reads the current value of the underlying `tes3uiSlider` widget and scales it to the value range used by the variable.
+--- @return number value No description yet available.
+function mwseMCMSlider:getNewValue() end
+
 --- This method creates the sliderBlock and slider UI elements of the Slider.
 --- @param parentBlock tes3uiElement No description yet available.
 function mwseMCMSlider:makeComponent(parentBlock) end
@@ -91,6 +99,16 @@ function mwseMCMSlider:new(data) end
 --- This registers event handlers for `tes3.uiEvent.mouseClick` and `tes3.uiEvent.mouseRelease` that call `self:update()`.
 --- @param element tes3uiElement No description yet available.
 function mwseMCMSlider:registerSliderElement(element) end
+
+--- Scales given `value` from the variable range to the range used by the underlying `tes3uiSlider` widget. The method on the base MCM Slider component doesn't apply any scale, but the child components may use this to implement scaling.
+--- @param value number No description yet available.
+--- @return number scaledValue No description yet available.
+function mwseMCMSlider:scaleToSliderRange(value) end
+
+--- Scales given `value` from the underlying `tes3uiSlider` widget's range to the range used by the variable. The method on the base MCM Slider component doesn't apply any scale, but the child components may use this to implement scaling.
+--- @param value number No description yet available.
+--- @return number scaledValue No description yet available.
+function mwseMCMSlider:scaleToVariableRange(value) end
 
 --- Updates the variable's value to the current value of the slider element. Calls the Slider's callback method and if `restartRequired` is set to true, notifies the player to restart the game.
 function mwseMCMSlider:update() end

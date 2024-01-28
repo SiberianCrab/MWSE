@@ -509,6 +509,36 @@ local component = myObject:getComponent({ class = ..., label = ..., indent = ...
 
 ***
 
+### `getCurrentWidgetValue`
+<div class="search_terms" style="display: none">getcurrentwidgetvalue, currentwidgetvalue</div>
+
+Reads the current variable value and scales it to the value range used by the underlying `tes3uiSlider` widget.
+
+```lua
+local value = myObject:getCurrentWidgetValue()
+```
+
+**Returns**:
+
+* `value` (integer)
+
+***
+
+### `getNewValue`
+<div class="search_terms" style="display: none">getnewvalue, newvalue</div>
+
+Reads the current value of the underlying `tes3uiSlider` widget and scales it to the value range used by the variable.
+
+```lua
+local value = myObject:getNewValue()
+```
+
+**Returns**:
+
+* `value` (number)
+
+***
+
 ### `makeComponent`
 <div class="search_terms" style="display: none">makecomponent</div>
 
@@ -624,6 +654,44 @@ myObject:registerSliderElement(element)
 **Parameters**:
 
 * `element` ([tes3uiElement](../types/tes3uiElement.md))
+
+***
+
+### `scaleToSliderRange`
+<div class="search_terms" style="display: none">scaletosliderrange</div>
+
+Scales given `value` from the variable range to the range used by the underlying `tes3uiSlider` widget. The method on the base MCM Slider component doesn't apply any scale, but the child components may use this to implement scaling.
+
+```lua
+local scaledValue = myObject:scaleToSliderRange(value)
+```
+
+**Parameters**:
+
+* `value` (number)
+
+**Returns**:
+
+* `scaledValue` (number)
+
+***
+
+### `scaleToVariableRange`
+<div class="search_terms" style="display: none">scaletovariablerange</div>
+
+Scales given `value` from the underlying `tes3uiSlider` widget's range to the range used by the variable. The method on the base MCM Slider component doesn't apply any scale, but the child components may use this to implement scaling.
+
+```lua
+local scaledValue = myObject:scaleToVariableRange(value)
+```
+
+**Parameters**:
+
+* `value` (number)
+
+**Returns**:
+
+* `scaledValue` (number)
 
 ***
 

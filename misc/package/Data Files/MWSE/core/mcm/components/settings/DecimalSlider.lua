@@ -11,7 +11,6 @@
 --- @diagnostic disable: duplicate-set-field
 
 local Parent = require("mcm.components.settings.Slider")
-local Setting = require("mcm.components.settings.Setting")
 
 --- @class mwseMCMDecimalSlider
 local DecimalSlider = Parent:new()
@@ -37,13 +36,20 @@ function DecimalSlider:new(data)
 	return Parent.new(self, data) -- the `__index` metamethod will make the `min`, `max`, etc fields default to the values specified above.
 end
 
+function DecimalSlider:scaleToSliderRange(value)
+	return value * 10 ^ self.decimalPlaces
+end
+
+function DecimalSlider:scaleToVariableRange(value)
+	return value / 10 ^ self.decimalPlaces
+end
 
 function DecimalSlider:updateValueLabel()
 	local newValue = 0
 	local labelText = ""
 
 	if self.elements.slider then
-		newValue = (self.elements.slider.widget.current + self.min) / 10 ^ self.decimalPlaces
+		newValue = self:getNewValue()
 	end
 
 	if string.find(self.label, "%", 1, true) then
@@ -53,62 +59,6 @@ function DecimalSlider:updateValueLabel()
 	end
 
 	self.elements.label.text = labelText
-end
-
-function DecimalSlider:update()
-	local newValue = (self.elements.slider.widget.current + self.min) / 10 ^ self.decimalPlaces
-	self.variable.value = newValue
-	
-	-- Bypass Slider:update to avoid overwriting the variable with an unscaled value.
-	Setting.update(self)
-end
-
-function DecimalSlider:enable()
-	Parent.enable(self)
-	if self.variable.value then
-		self.elements.slider.widget.current = (self.variable.value * 10 ^ self.decimalPlaces) - self.min
-		self:updateValueLabel()
-	end
-	-- Register slider elements so that the value only updates when the mouse is released
-	for _, sliderElement in ipairs(self.elements.slider.children) do
-		self:registerSliderElement(sliderElement)
-		for _, innerElement in ipairs(sliderElement.children) do
-			self:registerSliderElement(innerElement)
-		end
-	end
-
-	-- But we want the label to update in real time so you can see where it's going to end up
-	self.elements.slider:register(tes3.uiEvent.partScrollBarChanged, function(e)
-		self:updateValueLabel()
-	end)
-end
-
---- @param parentBlock tes3uiElement
-function DecimalSlider:makeComponent(parentBlock)
-	local sliderBlock = parentBlock:createBlock()
-	sliderBlock.flowDirection = "left_to_right"
-	sliderBlock.autoHeight = true
-	sliderBlock.widthProportional = 1.0
-	local range = (self.max - self.min) * 10 ^ self.decimalPlaces
-	local slider = sliderBlock:createSlider({ current = 0, max = range })
-	slider.widthProportional = 1.0
-
-	-- Set custom values from setting data
-	slider.widget.step = self.step * 10 ^ self.decimalPlaces
-	slider.widget.jump = self.jump * 10 ^ self.decimalPlaces
-
-	self.elements.slider = slider
-	self.elements.sliderBlock = sliderBlock
-
-	-- add mouseovers
-	table.insert(self.mouseOvers, sliderBlock)
-	-- Add every piece of the slider to the mouseOvers
-	for _, sliderElement in ipairs(slider.children) do
-		table.insert(self.mouseOvers, sliderElement)
-		for _, innerElement in ipairs(sliderElement.children) do
-			table.insert(self.mouseOvers, innerElement)
-		end
-	end
 end
 
 return DecimalSlider
