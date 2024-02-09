@@ -887,6 +887,31 @@ local wasShown = tes3ui.showJournal()
 
 ***
 
+### `tes3ui.showMagicSelectMenu`
+<div class="search_terms" style="display: none">showmagicselectmenu, magicselectmenu</div>
+
+This function opens the magic select menu, which lets the player select a spell or enchanted item. This is originally used by the quick key menu. The spells or enchanted items are taken from the player's spell list and inventory. The selected spell or item can be retrieved in the function assigned to `callback`.
+
+```lua
+tes3ui.showMagicSelectMenu({ title = ..., selectSpells = ..., selectPowers = ..., selectEnchanted = ..., callback = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `title` (string): The text used for the title of the magic select menu.
+	* `selectSpells` (boolean): *Default*: `true`. If spells are included in the selection list.
+	* `selectPowers` (boolean): *Default*: `true`. If powers are included in the selection list.
+	* `selectEnchanted` (boolean): *Default*: `true`. If enchanted items are included in the selection list.
+	* `callback` (function): *Optional*. A function which will be called once the magic select menu has been closed, including when no item has been selected. A table `callbackParams` will be passed to this function.
+		- `callbackParams` (table)
+			- `spell` ([tes3spell](https://mwse.github.io/MWSE/types/tes3spell/)): The spell or power that has been selected. Can be `nil`.
+			- `item` ([tes3item](https://mwse.github.io/MWSE/types/tes3item/)): The enchanted item that has been selected. The actual magic will be `item.enchantment`. Can be `nil`.
+			- `itemData` ([tes3itemData](https://mwse.github.io/MWSE/types/tes3itemData/)): The item data of the enchanted item that has been selected. Fully recharged items may not have itemData. Can be `nil`.
+
+
+***
+
 ### `tes3ui.showMessageMenu`
 <div class="search_terms" style="display: none">showmessagemenu, messagemenu</div>
 

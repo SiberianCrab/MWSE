@@ -3580,7 +3580,7 @@ tes3.modStatistic({ reference = ..., attribute = ..., skill = ..., name = ..., b
 	* `reference` ([tes3mobileActor](../types/tes3mobileActor.md), [tes3reference](../types/tes3reference.md), string)
 	* `attribute` ([tes3.attribute](../references/attributes.md)): *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
 	* `skill` ([tes3.skill](../references/skills.md)): *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
-	* `name` (string): *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
+	* `name` (string): *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka, fatigue or encumbrance.
 	* `base` (number): *Optional*. If set, the base value will be modified.
 	* `current` (number): *Optional*. If set, the current value will be modified.
 	* `value` (number): *Optional*. If set, both the base and current value will be modified.
@@ -4612,7 +4612,7 @@ tes3.setStatistic({ reference = ..., attribute = ..., skill = ..., name = ..., b
 	* `reference` ([tes3mobileActor](../types/tes3mobileActor.md), [tes3reference](../types/tes3reference.md), string)
 	* `attribute` ([tes3.attribute](../references/attributes.md), integer): *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
 	* `skill` ([tes3.skill](../references/skills.md), integer): *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
-	* `name` (string): *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
+	* `name` (string): *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka, fatigue or encumbrance.
 	* `base` (number): *Optional*. If set, the base value will be set.
 	* `current` (number): *Optional*. If set, the current value will be set.
 	* `value` (number): *Optional*. If set, both the base and current value will be set.

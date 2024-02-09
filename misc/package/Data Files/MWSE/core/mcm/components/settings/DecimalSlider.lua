@@ -20,45 +20,19 @@ DecimalSlider.step = 0.01
 DecimalSlider.jump = 0.05
 DecimalSlider.decimalPlaces = 2
 
---- @param number number
-local function isPositiveInteger(number)
-	return (number % 1 == 0) and (number > 0)
-end
 
 --- @param data mwseMCMDecimalSlider.new.data?
 --- @return mwseMCMDecimalSlider slider
 function DecimalSlider:new(data)
 	-- make sure `decimalPlaces` is ok, then do parent behavior
 	if data and data.decimalPlaces ~= nil then
-		assert(isPositiveInteger(data.decimalPlaces), "Invalid 'decimalPlaces' parameter provided. It must be a positive whole number.")
+		assert(
+			data.decimalPlaces % 1 == 0 and data.decimalPlaces >= 0, 
+			"Invalid 'decimalPlaces' parameter provided. It must be a positive whole number."
+		)
 	end
 	---@diagnostic disable-next-line: param-type-mismatch, return-type-mismatch
 	return Parent.new(self, data) -- the `__index` metamethod will make the `min`, `max`, etc fields default to the values specified above.
-end
-
-function DecimalSlider:scaleToSliderRange(value)
-	return value * 10 ^ self.decimalPlaces
-end
-
-function DecimalSlider:scaleToVariableRange(value)
-	return value / 10 ^ self.decimalPlaces
-end
-
-function DecimalSlider:updateValueLabel()
-	local newValue = 0
-	local labelText = ""
-
-	if self.elements.slider then
-		newValue = self:getNewValue()
-	end
-
-	if string.find(self.label, "%", 1, true) then
-		labelText = string.format(self.label, newValue)
-	else
-		labelText = self.label .. string.format(string.format(": %%.%uf", self.decimalPlaces), newValue)
-	end
-
-	self.elements.label.text = labelText
 end
 
 return DecimalSlider

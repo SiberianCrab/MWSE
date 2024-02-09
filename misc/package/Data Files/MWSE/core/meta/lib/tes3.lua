@@ -1742,7 +1742,7 @@ function tes3.messageBox(messageOrParams, ...) end
 --- 
 --- `skill`: tes3.skill? — *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
 --- 
---- `name`: string? — *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
+--- `name`: string? — *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka, fatigue or encumbrance.
 --- 
 --- `base`: number? — *Optional*. If set, the base value will be modified.
 --- 
@@ -1760,7 +1760,7 @@ function tes3.modStatistic(params) end
 --- @field reference tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string No description yet available.
 --- @field attribute tes3.attribute? *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
 --- @field skill tes3.skill? *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
---- @field name string? *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
+--- @field name string? *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka, fatigue or encumbrance.
 --- @field base number? *Optional*. If set, the base value will be modified.
 --- @field current number? *Optional*. If set, the current value will be modified.
 --- @field value number? *Optional*. If set, both the base and current value will be modified.
@@ -2548,7 +2548,7 @@ function tes3.setSourceless(object, sourceless) end
 --- 
 --- `skill`: tes3.skill|integer|nil — *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
 --- 
---- `name`: string? — *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
+--- `name`: string? — *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka, fatigue or encumbrance.
 --- 
 --- `base`: number? — *Optional*. If set, the base value will be set.
 --- 
@@ -2564,7 +2564,7 @@ function tes3.setStatistic(params) end
 --- @field reference tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string No description yet available.
 --- @field attribute tes3.attribute|integer|nil *Optional*. The attribute to set. Uses a value from [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/)
 --- @field skill tes3.skill|integer|nil *Optional*. The skill to set. Uses a value from [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/)
---- @field name string? *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka or fatigue.
+--- @field name string? *Optional*. The property name of the statistic to set. The names can be taken from the properties of `tes3mobileNPC` or `tes3mobileCreature`. Useful for specifying health, magicka, fatigue or encumbrance.
 --- @field base number? *Optional*. If set, the base value will be set.
 --- @field current number? *Optional*. If set, the current value will be set.
 --- @field value number? *Optional*. If set, both the base and current value will be set.
