@@ -75,20 +75,19 @@ function Slider:convertToVariableValue(widgetValue)
 	return (widgetValue - a) / C				-- `returnVal == widgetValue + 10`
 end
 
+function Slider:convertToLabelValue(variableValue)
+	return self.decimalPlaces == 0 and variableValue
+		or string.format(table.concat{"%.", self.decimalPlaces, "f"}, variableValue)
+end
 
 function Slider:updateValueLabel()
-	local labelElement = self.elements.label
+
+	local value = self:convertToLabelValue(self.variable.value)
 
 	if string.find(self.label, "%s", nil, true) then
-		labelElement.text = self.label:format(self.variable.value)
+		self.elements.label.text = self.label:format(value)
 	else
-		local s = "%s: %i"
-		-- only include decimal places when we're supposed to
-		if self.decimalPlaces > 0 then
-			-- this will simplify to "%s: %.1f" (in the case where `decimalPlaces` == 1)
-			s = string.format("%%s: %%.%uf", self.decimalPlaces)
-		end
-		labelElement.text = s:format(self.label, self.variable.value)
+		self.elements.label.text = string.format("%s: %s", self.label, value)
 	end
 end
 

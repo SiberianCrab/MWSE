@@ -13,6 +13,15 @@
 --- @field step number How far the slider moves when you press the arrows. Default is `1`.
 mwseMCMSlider = {}
 
+--- This function specifies how values stored in the `variable` field should correspond to values displayed in the slider label.
+--- The default behavior is to consistently format decimal places (i.e., if `decimalPlaces == 2`, make sure two decimal places are shown.)
+--- This can be overwritten in the `createNewSlider` method, allowing for custom formatting of variable values.
+---
+--- [Examples available in online documentation](https://mwse.github.io/MWSE/types/mwseMCMSlider/#converttolabelvalue).
+--- @param variableValue number No description yet available.
+--- @return number|string labelValue No description yet available.
+function mwseMCMSlider:convertToLabelValue(variableValue) end
+
 --- This function specifies how values stored in the slider widget should correspond to values stored in the `variable` field.
 --- 		
 --- This conversion is necessary because the widget can only store whole numbers, and the range of allowed values must start at 0, while the corresponding `variable` can store decimal numbers and the range can start at any number.

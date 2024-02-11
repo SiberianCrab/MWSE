@@ -8,15 +8,16 @@
 --- The warnings arise because each field set here is also 'set' in the annotations in the core\meta\ folder.
 --- @diagnostic disable: duplicate-set-field
 
+
+
 local Parent = require("mcm.components.settings.Button")
+
 
 --- @class mwseMCMYesNoButton
 local YesNoButton = Parent:new()
-YesNoButton.defaultSetting = false
 
-function YesNoButton:getText()
-	local text = (self.variable.value and tes3.findGMST(tes3.gmst.sYes).value or tes3.findGMST(tes3.gmst.sNo).value)
-	return text --[[@as string]]
+function YesNoButton:convertToLabelValue(variableValue)
+	return variableValue and self.sYes or self.sNo
 end
 
 function YesNoButton:press()
@@ -26,4 +27,6 @@ function YesNoButton:press()
 	self:update()
 end
 
+
 return YesNoButton
+

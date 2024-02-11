@@ -117,7 +117,7 @@ local variable = mwse.mcm.createConfigVariable({ id = ..., path = ..., defaultSe
 	* `numbersOnly` (boolean): *Default*: `false`. If true, only numbers will be allowed for this variable in TextFields.
 	* `restartRequired` (boolean): *Default*: `false`. If true, updating the setting containing this variable will notify the player to restart the game.
 	* `restartRequiredMessage` (string): *Optional*.  The default text is a localized version of: "The game must be restarted before this change will come into effect.".
-	* `converter` (fun(newValue: ): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
+	* `converter` (fun(newValue): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
 
 **Returns**:
 
@@ -144,7 +144,7 @@ local variable = mwse.mcm.createCustom({ id = ..., getter = ..., setter = ..., i
 	* `numbersOnly` (boolean): *Default*: `false`. If true, only numbers will be allowed for this variable in TextFields.
 	* `restartRequired` (boolean): *Default*: `false`. If true, updating the setting containing this variable will notify the player to restart the game.
 	* `restartRequiredMessage` (string): *Optional*.  The default text is a localized version of: "The game must be restarted before this change will come into effect.".
-	* `converter` (fun(newValue: ): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
+	* `converter` (fun(newValue): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
 
 **Returns**:
 
@@ -213,7 +213,7 @@ The same is done by this function if you pass both `parent` and `data` arguments
 
 
 ```lua
-local slider = mwse.mcm.createDecimalSlider(parent, { label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., postCreate = ... })
+local slider = mwse.mcm.createDecimalSlider(parent, { label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., convertToLabelValue = ..., postCreate = ... })
 ```
 
 **Parameters**:
@@ -237,6 +237,7 @@ local slider = mwse.mcm.createDecimalSlider(parent, { label = ..., variable = ..
 	* `childIndent` (integer): *Optional*. The left padding size in pixels. Used on all the child components.
 	* `paddingBottom` (integer): *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
 	* `childSpacing` (integer): *Optional*. The bottom border size in pixels. Used on all the child components.
+	* `convertToLabelValue` (fun(self: [mwseMCMDecimalSlider](../types/mwseMCMDecimalSlider.md), variableValue: number): number, string): *Optional*. Define a custom formatting function for displaying variable values.
 	* `postCreate` (fun(self: [mwseMCMDecimalSlider](../types/mwseMCMDecimalSlider.md))): *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 
 **Returns**:
@@ -306,7 +307,7 @@ local variable = mwse.mcm.createGlobal({ id = ..., numbersOnly = ..., converter 
 * `variable` (table, string): If passing only a string, it will be used as variable's id.
 	* `id` (string): The id of the Morrowind Global.
 	* `numbersOnly` (boolean): *Default*: `false`. If true, only numbers will be allowed for this variable in TextFields.
-	* `converter` (fun(newValue: ): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
+	* `converter` (fun(newValue): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
 
 **Returns**:
 
@@ -609,7 +610,7 @@ The same is done by this function if you pass both `parent` and `data` arguments
 
 
 ```lua
-local slider = mwse.mcm.createPercentageSlider(parent, { label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., postCreate = ... })
+local slider = mwse.mcm.createPercentageSlider(parent, { label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., convertToLabelValue = ..., postCreate = ... })
 ```
 
 **Parameters**:
@@ -633,6 +634,7 @@ local slider = mwse.mcm.createPercentageSlider(parent, { label = ..., variable =
 	* `childIndent` (integer): *Optional*. The left padding size in pixels. Used on all the child components.
 	* `paddingBottom` (integer): *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
 	* `childSpacing` (integer): *Optional*. The bottom border size in pixels. Used on all the child components.
+	* `convertToLabelValue` (fun(self: [mwseMCMPercentageSlider](../types/mwseMCMPercentageSlider.md), variableValue: number): number, string): *Optional*. Define a custom formatting function for displaying variable values.
 	* `postCreate` (fun(self: [mwseMCMPercentageSlider](../types/mwseMCMPercentageSlider.md))): *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 
 **Returns**:
@@ -658,7 +660,7 @@ local variable = mwse.mcm.createPlayerData({ id = ..., path = ..., defaultSettin
 	* `defaultSetting` (unknown): *Optional*. If `id` does not exist in the `tes3.player.data` field, it will be initialized to this value. It's best to initialize this yourself though, as this will not create the value until you've entered the MCM.
 	* `restartRequired` (boolean): *Default*: `false`. If true, updating the setting containing this variable will notify the player to restart the game.
 	* `restartRequiredMessage` (string): *Optional*.  The default text is a localized version of: "The game must be restarted before this change will come into effect.".
-	* `converter` (fun(newValue: ): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
+	* `converter` (fun(newValue): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
 
 **Returns**:
 
@@ -682,7 +684,7 @@ The same is done by this function if you pass both `parent` and `data` arguments
 
 
 ```lua
-local slider = mwse.mcm.createSlider(parent, { label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., postCreate = ... })
+local slider = mwse.mcm.createSlider(parent, { label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., convertToLabelValue = ..., postCreate = ... })
 ```
 
 **Parameters**:
@@ -706,11 +708,64 @@ local slider = mwse.mcm.createSlider(parent, { label = ..., variable = ..., defa
 	* `childIndent` (integer): *Optional*. The left padding size in pixels. Used on all the child components.
 	* `paddingBottom` (integer): *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
 	* `childSpacing` (integer): *Optional*. The bottom border size in pixels. Used on all the child components.
+	* `convertToLabelValue` (fun(self: [mwseMCMSlider](../types/mwseMCMSlider.md), variableValue: number): number, string): *Optional*. Define a custom formatting function for displaying variable values.
 	* `postCreate` (fun(self: [mwseMCMSlider](../types/mwseMCMSlider.md))): *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 
 **Returns**:
 
 * `slider` ([mwseMCMSlider](../types/mwseMCMSlider.md))
+
+??? example "Example: DistanceSlider"
+
+	The following example shows how the `convertToLabelValue` parameter can be used to create a slider for a config setting that handles distances. The config setting will be stored using game units, but the displayed value will be in real-world units. Recall that 1 game unit corresponds to 22.1 feet, and 1 foot is 0.3048 meters.
+
+	```lua
+	mwse.mcm.createSlider{
+	    parent = myPage,
+	    label = "My distance slider",
+	    variable = mwse.mcm.createTableVariable{id = "distance", config = myConfig},
+	    convertToValueLabel = function(self, variableValue)
+	        local feet = variableValue / 22.1
+		    local meters = 0.3048 * feet
+	        if self.decimalPlaces == 0 then
+	            return string.format("%i ft (%.2f m)", feet, meters)
+	        end
+	        return string.format(
+	            -- if `decimalPlaces == 1, then this string will simplify to 
+	            -- "%.1f ft (%.3f m)"
+	            string.format("%%.%uf ft (%%.%uf m)", self.decimalPlaces, self.decimalPlaces + 2),
+	            feet, meters
+	        )
+	    end,
+	
+	    max = 22.1 * 10,    -- max is 10 feet
+	    step = 22.1,        -- increment by 1 foot 
+	    jump = 22.1 * 5,
+	}
+
+	```
+
+??? example "Example: SkillSlider"
+
+	Here is an (admittedly less practical) example to help highlight the different ways `convertToLabelValue` can be used. In this example, it will be used to create a slider that stores a `tes3.skill` constant in the config, and then displays the name of the corresponding skill.
+
+	```lua
+	mwse.mcm.createSlider{
+	    parent = myPage,
+	    label = "My skill slider",
+	    variable = mwse.mcm.createTableVariable{id = "skillId", config = myConfig},
+	    convertToValueLabel = function(self, variableValue)
+	        local skillName = tes3.getSkillName(math.round(variableValue))
+	        if skillName then 
+	            return skillName
+	        end
+	        return "N/A"
+	    end,
+	
+	    max = 26 -- there are 27 skills and indexing starts at 0
+	}
+
+	```
 
 ***
 
@@ -732,7 +787,7 @@ local variable = mwse.mcm.createTableVariable({ id = ..., table = ..., defaultSe
 	* `inGameOnly` (boolean): *Default*: `false`. If true, the setting containing this variable will be disabled if the game is on main menu.
 	* `restartRequired` (boolean): *Default*: `false`. If true, updating the setting containing this variable will notify the player to restart the game.
 	* `restartRequiredMessage` (string): *Optional*.  The default text is a localized version of: "The game must be restarted before this change will come into effect.".
-	* `converter` (fun(newValue: ): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
+	* `converter` (fun(newValue): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
 
 **Returns**:
 
@@ -837,7 +892,7 @@ local variable = mwse.mcm.createVariable({ id = ..., inGameOnly = ..., numbersOn
 	* `numbersOnly` (boolean): *Default*: `false`. If true, only numbers will be allowed for this variable in TextFields.
 	* `restartRequired` (boolean): *Default*: `false`. If true, updating the setting containing this variable will notify the player to restart the game.
 	* `restartRequiredMessage` (string): *Optional*.  The default text is a localized version of: "The game must be restarted before this change will come into effect.".
-	* `converter` (fun(newValue: ): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
+	* `converter` (fun(newValue): unknown): *Optional*. This function is called when the value of the variable is changed. The function can modify the new value before it is saved.
 
 **Returns**:
 

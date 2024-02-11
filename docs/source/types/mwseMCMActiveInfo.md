@@ -242,10 +242,32 @@ Set to the value of `sNo` GMST.
 
 ***
 
+### `sOff`
+<div class="search_terms" style="display: none">soff</div>
+
+Set to the value of `sOff` GMST.
+
+**Returns**:
+
+* `result` (string)
+
+***
+
 ### `sOK`
 <div class="search_terms" style="display: none">sok</div>
 
 Set to the value of `sOK` GMST.
+
+**Returns**:
+
+* `result` (string)
+
+***
+
+### `sOn`
+<div class="search_terms" style="display: none">son</div>
+
+Set to the value of `sOn` GMST.
 
 **Returns**:
 
@@ -331,6 +353,25 @@ local result = myObject:checkDisabled()
 **Returns**:
 
 * `result` (boolean)
+
+***
+
+### `convertToLabelValue`
+<div class="search_terms" style="display: none">converttolabelvalue</div>
+
+This function specifies how values stored in the `variable` field should correspond to values displayed by this setting.
+
+```lua
+local labelValue = myObject:convertToLabelValue(variableValue)
+```
+
+**Parameters**:
+
+* `variableValue` (number)
+
+**Returns**:
+
+* `labelValue` (number, string)
 
 ***
 

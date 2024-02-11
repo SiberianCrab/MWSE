@@ -286,10 +286,32 @@ Set to the value of `sNo` GMST.
 
 ***
 
+### `sOff`
+<div class="search_terms" style="display: none">soff</div>
+
+Set to the value of `sOff` GMST.
+
+**Returns**:
+
+* `result` (string)
+
+***
+
 ### `sOK`
 <div class="search_terms" style="display: none">sok</div>
 
 Set to the value of `sOK` GMST.
+
+**Returns**:
+
+* `result` (string)
+
+***
+
+### `sOn`
+<div class="search_terms" style="display: none">son</div>
+
+Set to the value of `sOn` GMST.
 
 **Returns**:
 
@@ -353,6 +375,79 @@ local result = myObject:checkDisabled()
 **Returns**:
 
 * `result` (boolean)
+
+***
+
+### `convertToLabelValue`
+<div class="search_terms" style="display: none">converttolabelvalue</div>
+
+This function specifies how values stored in the `variable` field should correspond to values displayed in the slider label.
+The default behavior is to consistently format decimal places (i.e., if `decimalPlaces == 2`, make sure two decimal places are shown.)
+This can be overwritten in the `createNewSlider` method, allowing for custom formatting of variable values.
+
+```lua
+local labelValue = myObject:convertToLabelValue(variableValue)
+```
+
+**Parameters**:
+
+* `variableValue` (number)
+
+**Returns**:
+
+* `labelValue` (number, string)
+
+??? example "Example: DistanceSlider"
+
+	The following example shows how the `convertToLabelValue` parameter can be used to create a slider for a config setting that handles distances. The config setting will be stored using game units, but the displayed value will be in real-world units. Recall that 1 game unit corresponds to 22.1 feet, and 1 foot is 0.3048 meters.
+
+	```lua
+	mwse.mcm.createSlider{
+	    parent = myPage,
+	    label = "My distance slider",
+	    variable = mwse.mcm.createTableVariable{id = "distance", config = myConfig},
+	    convertToValueLabel = function(self, variableValue)
+	        local feet = variableValue / 22.1
+		    local meters = 0.3048 * feet
+	        if self.decimalPlaces == 0 then
+	            return string.format("%i ft (%.2f m)", feet, meters)
+	        end
+	        return string.format(
+	            -- if `decimalPlaces == 1, then this string will simplify to 
+	            -- "%.1f ft (%.3f m)"
+	            string.format("%%.%uf ft (%%.%uf m)", self.decimalPlaces, self.decimalPlaces + 2),
+	            feet, meters
+	        )
+	    end,
+	
+	    max = 22.1 * 10,    -- max is 10 feet
+	    step = 22.1,        -- increment by 1 foot 
+	    jump = 22.1 * 5,
+	}
+
+	```
+
+??? example "Example: SkillSlider"
+
+	Here is an (admittedly less practical) example to help highlight the different ways `convertToLabelValue` can be used. In this example, it will be used to create a slider that stores a `tes3.skill` constant in the config, and then displays the name of the corresponding skill.
+
+	```lua
+	mwse.mcm.createSlider{
+	    parent = myPage,
+	    label = "My skill slider",
+	    variable = mwse.mcm.createTableVariable{id = "skillId", config = myConfig},
+	    convertToValueLabel = function(self, variableValue)
+	        local skillName = tes3.getSkillName(math.round(variableValue))
+	        if skillName then 
+	            return skillName
+	        end
+	        return "N/A"
+	    end,
+	
+	    max = 26 -- there are 27 skills and indexing starts at 0
+	}
+
+	```
 
 ***
 

@@ -50,7 +50,9 @@
 --- @field postCreate nil|fun(self: mwseMCMComponent) Custom formatting function to make adjustments to any element saved in `self.elements`.
 --- @field sCancel string Set to the value of `sCancel` GMST.
 --- @field sNo string Set to the value of `sNo` GMST.
+--- @field sOff string Set to the value of `sOff` GMST.
 --- @field sOK string Set to the value of `sOK` GMST.
+--- @field sOn string Set to the value of `sOn` GMST.
 --- @field sYes string Set to the value of `sYes` GMST.
 mwseMCMComponent = {}
 

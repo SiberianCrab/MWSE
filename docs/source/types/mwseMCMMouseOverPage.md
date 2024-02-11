@@ -220,10 +220,32 @@ Set to the value of `sNo` GMST.
 
 ***
 
+### `sOff`
+<div class="search_terms" style="display: none">soff</div>
+
+Set to the value of `sOff` GMST.
+
+**Returns**:
+
+* `result` (string)
+
+***
+
 ### `sOK`
 <div class="search_terms" style="display: none">sok</div>
 
 Set to the value of `sOK` GMST.
+
+**Returns**:
+
+* `result` (string)
+
+***
+
+### `sOn`
+<div class="search_terms" style="display: none">son</div>
+
+Set to the value of `sOn` GMST.
 
 **Returns**:
 
@@ -441,7 +463,7 @@ local button = myObject:createCycleButton({ label = ..., description = ..., opti
 Creates a new nested DecimalSlider.
 
 ```lua
-local slider = myObject:createDecimalSlider({ label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., postCreate = ... })
+local slider = myObject:createDecimalSlider({ label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., convertToLabelValue = ..., postCreate = ... })
 ```
 
 **Parameters**:
@@ -464,6 +486,7 @@ local slider = myObject:createDecimalSlider({ label = ..., variable = ..., defau
 	* `childIndent` (integer): *Optional*. The left padding size in pixels. Used on all the child components.
 	* `paddingBottom` (integer): *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
 	* `childSpacing` (integer): *Optional*. The bottom border size in pixels. Used on all the child components.
+	* `convertToLabelValue` (fun(self: [mwseMCMDecimalSlider](../types/mwseMCMDecimalSlider.md), variableValue: number): number, string): *Optional*. Define a custom formatting function for displaying variable values.
 	* `postCreate` (fun(self: [mwseMCMDecimalSlider](../types/mwseMCMDecimalSlider.md))): *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 
 **Returns**:
@@ -784,7 +807,7 @@ local paragraphField = myObject:createParagraphField({ label = ..., buttonText =
 Creates a new nested `PercentageSlider`.
 
 ```lua
-local slider = myObject:createPercentageSlider({ label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., postCreate = ... })
+local slider = myObject:createPercentageSlider({ label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., convertToLabelValue = ..., postCreate = ... })
 ```
 
 **Parameters**:
@@ -807,6 +830,7 @@ local slider = myObject:createPercentageSlider({ label = ..., variable = ..., de
 	* `childIndent` (integer): *Optional*. The left padding size in pixels. Used on all the child components.
 	* `paddingBottom` (integer): *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
 	* `childSpacing` (integer): *Optional*. The bottom border size in pixels. Used on all the child components.
+	* `convertToLabelValue` (fun(self: [mwseMCMPercentageSlider](../types/mwseMCMPercentageSlider.md), variableValue: number): number, string): *Optional*. Define a custom formatting function for displaying variable values.
 	* `postCreate` (fun(self: [mwseMCMPercentageSlider](../types/mwseMCMPercentageSlider.md))): *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 
 **Returns**:
@@ -849,7 +873,7 @@ local category = myObject:createSideBySideBlock({ label = ..., description = ...
 Creates a new nested Slider.
 
 ```lua
-local slider = myObject:createSlider({ label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., postCreate = ... })
+local slider = myObject:createSlider({ label = ..., variable = ..., defaultSetting = ..., min = ..., max = ..., step = ..., jump = ..., decimalPlaces = ..., description = ..., callback = ..., inGameOnly = ..., restartRequired = ..., restartRequiredMessage = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., convertToLabelValue = ..., postCreate = ... })
 ```
 
 **Parameters**:
@@ -872,11 +896,64 @@ local slider = myObject:createSlider({ label = ..., variable = ..., defaultSetti
 	* `childIndent` (integer): *Optional*. The left padding size in pixels. Used on all the child components.
 	* `paddingBottom` (integer): *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
 	* `childSpacing` (integer): *Optional*. The bottom border size in pixels. Used on all the child components.
+	* `convertToLabelValue` (fun(self: [mwseMCMSlider](../types/mwseMCMSlider.md), variableValue: number): number, string): *Optional*. Define a custom formatting function for displaying variable values.
 	* `postCreate` (fun(self: [mwseMCMSlider](../types/mwseMCMSlider.md))): *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 
 **Returns**:
 
 * `slider` ([mwseMCMSlider](../types/mwseMCMSlider.md))
+
+??? example "Example: DistanceSlider"
+
+	The following example shows how the `convertToLabelValue` parameter can be used to create a slider for a config setting that handles distances. The config setting will be stored using game units, but the displayed value will be in real-world units. Recall that 1 game unit corresponds to 22.1 feet, and 1 foot is 0.3048 meters.
+
+	```lua
+	mwse.mcm.createSlider{
+	    parent = myPage,
+	    label = "My distance slider",
+	    variable = mwse.mcm.createTableVariable{id = "distance", config = myConfig},
+	    convertToValueLabel = function(self, variableValue)
+	        local feet = variableValue / 22.1
+		    local meters = 0.3048 * feet
+	        if self.decimalPlaces == 0 then
+	            return string.format("%i ft (%.2f m)", feet, meters)
+	        end
+	        return string.format(
+	            -- if `decimalPlaces == 1, then this string will simplify to 
+	            -- "%.1f ft (%.3f m)"
+	            string.format("%%.%uf ft (%%.%uf m)", self.decimalPlaces, self.decimalPlaces + 2),
+	            feet, meters
+	        )
+	    end,
+	
+	    max = 22.1 * 10,    -- max is 10 feet
+	    step = 22.1,        -- increment by 1 foot 
+	    jump = 22.1 * 5,
+	}
+
+	```
+
+??? example "Example: SkillSlider"
+
+	Here is an (admittedly less practical) example to help highlight the different ways `convertToLabelValue` can be used. In this example, it will be used to create a slider that stores a `tes3.skill` constant in the config, and then displays the name of the corresponding skill.
+
+	```lua
+	mwse.mcm.createSlider{
+	    parent = myPage,
+	    label = "My skill slider",
+	    variable = mwse.mcm.createTableVariable{id = "skillId", config = myConfig},
+	    convertToValueLabel = function(self, variableValue)
+	        local skillName = tes3.getSkillName(math.round(variableValue))
+	        if skillName then 
+	            return skillName
+	        end
+	        return "N/A"
+	    end,
+	
+	    max = 26 -- there are 27 skills and indexing starts at 0
+	}
+
+	```
 
 ***
 

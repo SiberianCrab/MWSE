@@ -8,7 +8,7 @@ local Parent = require("mcm.components.settings.TextField")
 local ParagraphField = Parent:new()
 
 function ParagraphField:enable()
-	self.elements.inputField.text = self.variable.value
+	self.elements.inputField.text = self:convertToLabelValue(self.variable.value)
 
 	--- @param element tes3uiElement
 	local function registerAcquireText(element)
