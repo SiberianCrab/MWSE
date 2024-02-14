@@ -2,7 +2,7 @@ mwse.mcm.createSlider{
     parent = myPage,
     label = "My distance slider",
     variable = mwse.mcm.createTableVariable{id = "distance", config = myConfig},
-    convertToValueLabel = function(self, variableValue)
+    convertToLabelValue = function(self, variableValue)
         local feet = variableValue / 22.1
 	    local meters = 0.3048 * feet
         if self.decimalPlaces == 0 then

@@ -115,7 +115,8 @@ The left padding size in pixels. Only used if the `childIndent` isn't set on the
 ### `inGameOnly`
 <div class="search_terms" style="display: none">ingameonly</div>
 
-Used only on components without a variable. For components with a variable, the variable's `inGameOnly` field is used. For more info see [checkDisabled](./mwseMCMComponent.md#checkdisabled).
+If `true`, then this component, as well as any nested components, will only be shown when in game. i.e., after a save has been loaded.
+If `false` or `nil`, then this component will be hidden if all subcomponents are disabled (e.g., if all subcomponents have `inGameOnly == true` and a save hasn't been loaded).
 
 **Returns**:
 
@@ -977,7 +978,7 @@ local slider = myObject:createSlider({ label = ..., variable = ..., defaultSetti
 	    parent = myPage,
 	    label = "My distance slider",
 	    variable = mwse.mcm.createTableVariable{id = "distance", config = myConfig},
-	    convertToValueLabel = function(self, variableValue)
+	    convertToLabelValue = function(self, variableValue)
 	        local feet = variableValue / 22.1
 		    local meters = 0.3048 * feet
 	        if self.decimalPlaces == 0 then
@@ -1007,7 +1008,7 @@ local slider = myObject:createSlider({ label = ..., variable = ..., defaultSetti
 	    parent = myPage,
 	    label = "My skill slider",
 	    variable = mwse.mcm.createTableVariable{id = "skillId", config = myConfig},
-	    convertToValueLabel = function(self, variableValue)
+	    convertToLabelValue = function(self, variableValue)
 	        local skillName = tes3.getSkillName(math.round(variableValue))
 	        if skillName then 
 	            return skillName

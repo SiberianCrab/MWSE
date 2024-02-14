@@ -83,6 +83,8 @@ function mwseMCMSlider:makeComponent(parentBlock) end
 --- 
 --- `childSpacing`: integer? — *Optional*. The bottom border size in pixels. Used on all the child components.
 --- 
+--- `convertToLabelValue`: nil|fun(self: mwseMCMSlider, variableValue: number): number|string — *Optional*. Define a custom formatting function for displaying variable values.
+--- 
 --- `postCreate`: nil|fun(self: mwseMCMSlider) — *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 --- 
 --- `class`: string? — *Optional*. No description yet available.
@@ -112,6 +114,7 @@ function mwseMCMSlider:new(data) end
 --- @field childIndent integer? *Optional*. The left padding size in pixels. Used on all the child components.
 --- @field paddingBottom integer? *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
 --- @field childSpacing integer? *Optional*. The bottom border size in pixels. Used on all the child components.
+--- @field convertToLabelValue nil|fun(self: mwseMCMSlider, variableValue: number): number|string *Optional*. Define a custom formatting function for displaying variable values.
 --- @field postCreate nil|fun(self: mwseMCMSlider) *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
 --- @field class string? *Optional*. No description yet available.
 --- @field componentType string? *Optional*. No description yet available.

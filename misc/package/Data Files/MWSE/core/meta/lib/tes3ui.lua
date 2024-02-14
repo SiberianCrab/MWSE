@@ -335,6 +335,8 @@ function tes3ui.showMagicSelectMenu(params) end
 --- 
 --- `id`: string? — *Default*: `MenuMessage`. The menu ID of the message menu.
 --- 
+--- `leaveMenuMode`: boolean? — *Default*: `true`. Determines if menu mode should be exited after a choice is made. By default it will exit menu mode, for backwards compatibility with existing mods.
+--- 
 --- `buttons`: tes3ui.showMessageMenu.params.button[] — **Required** The list of buttons.
 --- 
 --- `callbackParams`: table? — *Optional*. The table of parameters to pass to the callback functions.
@@ -359,6 +361,7 @@ function tes3ui.showMessageMenu(params) end
 ---Table parameter definitions for `tes3ui.showMessageMenu`.
 --- @class tes3ui.showMessageMenu.params
 --- @field id string? *Default*: `MenuMessage`. The menu ID of the message menu.
+--- @field leaveMenuMode boolean? *Default*: `true`. Determines if menu mode should be exited after a choice is made. By default it will exit menu mode, for backwards compatibility with existing mods.
 --- @field buttons tes3ui.showMessageMenu.params.button[] **Required** The list of buttons.
 --- @field callbackParams table? *Optional*. The table of parameters to pass to the callback functions.
 --- @field cancels boolean? *Default*: `false`. When set to true, a cancel button is automatically added to the buttom of the list, even when paginated.

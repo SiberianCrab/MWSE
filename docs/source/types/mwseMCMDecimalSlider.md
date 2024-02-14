@@ -124,18 +124,7 @@ The left padding size in pixels. Only used if the `childIndent` isn't set on the
 ### `inGameOnly`
 <div class="search_terms" style="display: none">ingameonly</div>
 
-Used only on components without a variable. For components with a variable, the variable's `inGameOnly` field is used. For more info see [checkDisabled](./mwseMCMComponent.md#checkdisabled).
-
-**Returns**:
-
-* `result` (boolean)
-
-***
-
-### `inGameOnly `
-<div class="search_terms" style="display: none">ingameonly </div>
-
-If true, the setting is disabled while the game is on main menu.
+If true, the setting is disabled while the game is on main menu. If this is enabled, it will override the value of the `inGameOnly` parameter on this setting's `variable`.
 
 **Returns**:
 
@@ -406,7 +395,7 @@ local labelValue = myObject:convertToLabelValue(variableValue)
 	    parent = myPage,
 	    label = "My distance slider",
 	    variable = mwse.mcm.createTableVariable{id = "distance", config = myConfig},
-	    convertToValueLabel = function(self, variableValue)
+	    convertToLabelValue = function(self, variableValue)
 	        local feet = variableValue / 22.1
 		    local meters = 0.3048 * feet
 	        if self.decimalPlaces == 0 then
@@ -436,7 +425,7 @@ local labelValue = myObject:convertToLabelValue(variableValue)
 	    parent = myPage,
 	    label = "My skill slider",
 	    variable = mwse.mcm.createTableVariable{id = "skillId", config = myConfig},
-	    convertToValueLabel = function(self, variableValue)
+	    convertToLabelValue = function(self, variableValue)
 	        local skillName = tes3.getSkillName(math.round(variableValue))
 	        if skillName then 
 	            return skillName

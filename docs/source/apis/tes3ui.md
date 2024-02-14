@@ -906,13 +906,14 @@ tes3ui.showMagicSelectMenu({ title = ..., selectSpells = ..., selectPowers = ...
 Displays a message box. This may be a simple toast-style message, or a box with choice buttons.
 
 ```lua
-tes3ui.showMessageMenu({ id = ..., buttons = ..., callbackParams = ..., cancels = ..., cancelText = ..., cancelCallback = ..., header = ..., message = ..., customBlock = ..., page = ..., pageSize = ... })
+tes3ui.showMessageMenu({ id = ..., leaveMenuMode = ..., buttons = ..., callbackParams = ..., cancels = ..., cancelText = ..., cancelCallback = ..., header = ..., message = ..., customBlock = ..., page = ..., pageSize = ... })
 ```
 
 **Parameters**:
 
 * `params` (table)
 	* `id` (string): *Default*: `MenuMessage`. The menu ID of the message menu.
+	* `leaveMenuMode` (boolean): *Default*: `true`. Determines if menu mode should be exited after a choice is made. By default it will exit menu mode, for backwards compatibility with existing mods.
 	* `buttons` ([tes3ui.showMessageMenu.params.button](../types/tes3ui.showMessageMenu.params.button.md)[]): **Required** The list of buttons.
 	* `callbackParams` (table): *Optional*. The table of parameters to pass to the callback functions.
 	* `cancels` (boolean): *Default*: `false`. When set to true, a cancel button is automatically added to the buttom of the list, even when paginated.
