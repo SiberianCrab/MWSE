@@ -55,14 +55,14 @@ The following fields are available:
     The following fields are available:
 
     * `lua-mod` - The path to the main.lua associated with this mod. For example, if your main.lua file is located in `"Data Files\MWSE\mods\g7\myMod\main.lua"`, then this field should be set to `"g7.myMod"`.
-    * `load-order` - The priority for when this mod is loaded. Lower numbers are loaded first.
+    * `load-priority` - The priority for when this mod is loaded. Lower numbers are loaded first.
     * `wait-until-initialize` - Whether to wait until the game has initialized before loading this mod.
 
     Example:
     ```toml
         [tools.mwse]
         lua-mod = "mer.myMod"
-        load-order = 100
+        load-priority = 100
         wait-until-initialize = true
     ```
 
@@ -239,7 +239,7 @@ version = "7.8.9"
 # MWSE specific information about this mod
 [tools.mwse]
 lua-mod = "mer.myMod"
-load-order = 100
+load-priority = 100
 wait-until-initialized = true
 
 # Dependencies are checked on `initialized` and warn the player if any are missing

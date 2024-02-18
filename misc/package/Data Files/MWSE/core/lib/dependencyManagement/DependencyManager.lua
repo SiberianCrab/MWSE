@@ -11,7 +11,7 @@ local util = require("dependencyManagement.util")
 
 ---@class MWSE.Metadata.Tools.MWSE
 ---@field lua-mod string The path to the main.lua associated with this mod
----@field load-order number The priority for when this mod is loaded. Lower numbers are loaded first.
+---@field load-priority number The priority for when this mod is loaded. Lower numbers are loaded first.
 ---@field wait-until-initialize boolean Whether to wait until the game has initialized before loading this mod.
 
 ---@class MWSE.Metadata.Tools
