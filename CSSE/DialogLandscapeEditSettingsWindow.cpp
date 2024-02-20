@@ -9,7 +9,13 @@
 #include "CSRecordHandler.h"
 #include "CSRegion.h"
 
+#include "NILines.h"
+
 #include "DialogProcContext.h"
+
+#include "DialogRenderWindow.h"
+
+#include "Settings.h"
 
 namespace se::cs::dialog::landscape_edit_settings_window {
 	constexpr auto MIN_WIDTH = 430u;
@@ -25,6 +31,38 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 	}
 
 	using gLandscapeEditFlags = memory::ExternalGlobal<unsigned int, 0x6CE9C8>;
+
+	using gLandscapeEditDisc = memory::ExternalGlobal<NI::Lines*, 0x6CF4B4>;
+
+	void updateLandscapeCircleWidget() {
+		const auto widget = gLandscapeEditDisc::get();
+		if (!widget) {
+			return;
+		}
+
+		const auto vertexColorProp = widget->getVertexColorProperty();
+		if (!vertexColorProp) {
+			return;
+		}
+
+		NI::PackedColor color = settings.landscape_window.edit_circle_vertex;
+		if (getFlattenLandscapeVertices()) {
+			color = settings.landscape_window.edit_circle_flatten_vertex;
+		}
+		else if (getSoftenLandscapeVertices()) {
+			color = settings.landscape_window.edit_circle_soften_vertex;
+		}
+		else if (getEditLandscapeColor()) {
+			color = settings.landscape_window.edit_circle_color_vertex;
+		}
+
+		const auto modelData = widget->getModelData();
+		for (auto i = 0u; i < modelData->getActiveVertexCount(); ++i) {
+			modelData->color[i] = color;
+		}
+
+		render_window::renderNextFrame();
+	}
 
 	bool getLandscapeEditFlag(LandscapeEditFlag::LandscapeEditFlag flag) {
 		return gLandscapeEditFlags::get() & flag;
@@ -60,6 +98,8 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			EnableWindow(GetDlgItem(hWnd, CONTROL_ID_FLATTEN_VERTICES_CHECKBOX), TRUE);
 			EnableWindow(GetDlgItem(hWnd, CONTROL_ID_SOFTEN_VERTICES_CHECKBOX), TRUE);
 		}
+
+		updateLandscapeCircleWidget();
 	}
 
 	bool getFlattenLandscapeVertices() {
@@ -76,6 +116,8 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			setSoftenLandscapeVertices(false);
 			setEditLandscapeColor(false);
 		}
+
+		updateLandscapeCircleWidget();
 	}
 
 	bool getSoftenLandscapeVertices() {
@@ -92,6 +134,8 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			setFlattenLandscapeVertices(false);
 			setEditLandscapeColor(false);
 		}
+
+		updateLandscapeCircleWidget();
 	}
 
 	LandTexture* getSelectedTexture() {
@@ -258,11 +302,28 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		const auto hWnd = context.getWindowHandle();
 		const auto code = context.getCommandNotificationCode();
 		const auto id = context.getCommandControlIdentifier();
-		switch (code) {
-		case BN_CLICKED:
-			switch (id) {
-			case CONTROL_ID_SHOW_PREVIEW_TEXTURE_BUTTON:
+		switch (id) {
+		case CONTROL_ID_SHOW_PREVIEW_TEXTURE_BUTTON:
+			switch (code) {
+			case BN_CLICKED:
 				togglePreviewTextureShown(hWnd, id);
+				break;
+			}
+			break;
+		}
+	}
+
+	void PatchDialogProc_AfterCommand(DialogProcContext& context) {
+		const auto hWnd = context.getWindowHandle();
+		const auto code = context.getCommandNotificationCode();
+		const auto id = context.getCommandControlIdentifier();
+		switch (id) {
+		case CONTROL_ID_FLATTEN_VERTICES_CHECKBOX:
+		case CONTROL_ID_SOFTEN_VERTICES_CHECKBOX:
+		case CONTROL_ID_EDIT_COLORS_CHECKBOX:
+			switch (code) {
+			case BN_CLICKED:
+				updateLandscapeCircleWidget();
 				break;
 			}
 			break;
@@ -629,6 +690,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			break;
 		case WM_COMMAND:
 			PatchDialogProc_BeforeCommand(context);
+			break;
 		}
 
 		// Call original function, or return early if we already have a result.
@@ -640,6 +702,9 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		}
 
 		switch (msg) {
+		case WM_COMMAND:
+			PatchDialogProc_AfterCommand(context);
+			break;
 		case WM_DESTROY:
 			PatchDialogProc_AfterDestroy(context);
 			break;

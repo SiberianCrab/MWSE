@@ -66,7 +66,11 @@ namespace se::cs::dialog::render_window {
 	using gIsScaling = memory::ExternalGlobal<bool, 0x6CF785>;
 	using gIsPanning = memory::ExternalGlobal<bool, 0x6CF78A>;
 
-	using gRenderNextFrame = memory::ExternalGlobal<bool, 0x6CF78D>;
+	void renderNextFrame() {
+		using gRenderNextFrame = memory::ExternalGlobal<bool, 0x6CF78D>;
+		gRenderNextFrame::set(true);
+
+	}
 
 	namespace RenderControlFlags {
 		enum RenderControlFlags : DWORD {
@@ -2017,14 +2021,14 @@ namespace se::cs::dialog::render_window {
 
 			widgets->showGrid();
 
-			gRenderNextFrame::set(true);
+			renderNextFrame();
 		}
 
 		static void hide() {
 			auto widgets = SceneGraphController::get()->getWidgets();
 			if (widgets->isGridShown()) {
 				widgets->hideGrid();
-				gRenderNextFrame::set(true);
+				renderNextFrame();
 			}
 		}
 
@@ -2333,7 +2337,7 @@ namespace se::cs::dialog::render_window {
 		if (!isHoldingAxisKey() && widgets->isShown()) {
 			widgets->hide();
 			movementContext.reset();
-			gRenderNextFrame::set(true);
+			renderNextFrame();
 		}
 
 		// If we released an X/Y/Z key update the grid to show the right angle.
