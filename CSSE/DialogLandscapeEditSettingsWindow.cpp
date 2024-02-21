@@ -9,13 +9,9 @@
 #include "CSRecordHandler.h"
 #include "CSRegion.h"
 
-#include "NILines.h"
-
 #include "DialogProcContext.h"
 
 #include "DialogRenderWindow.h"
-
-#include "Settings.h"
 
 namespace se::cs::dialog::landscape_edit_settings_window {
 	constexpr auto MIN_WIDTH = 430u;
@@ -31,38 +27,6 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 	}
 
 	using gLandscapeEditFlags = memory::ExternalGlobal<unsigned int, 0x6CE9C8>;
-
-	using gLandscapeEditDisc = memory::ExternalGlobal<NI::Lines*, 0x6CF4B4>;
-
-	void updateLandscapeCircleWidget() {
-		const auto widget = gLandscapeEditDisc::get();
-		if (!widget) {
-			return;
-		}
-
-		const auto vertexColorProp = widget->getVertexColorProperty();
-		if (!vertexColorProp) {
-			return;
-		}
-
-		NI::PackedColor color = settings.landscape_window.edit_circle_vertex;
-		if (getFlattenLandscapeVertices()) {
-			color = settings.landscape_window.edit_circle_flatten_vertex;
-		}
-		else if (getSoftenLandscapeVertices()) {
-			color = settings.landscape_window.edit_circle_soften_vertex;
-		}
-		else if (getEditLandscapeColor()) {
-			color = settings.landscape_window.edit_circle_color_vertex;
-		}
-
-		const auto modelData = widget->getModelData();
-		for (auto i = 0u; i < modelData->getActiveVertexCount(); ++i) {
-			modelData->color[i] = color;
-		}
-
-		render_window::renderNextFrame();
-	}
 
 	bool getLandscapeEditFlag(LandscapeEditFlag::LandscapeEditFlag flag) {
 		return gLandscapeEditFlags::get() & flag;
@@ -99,7 +63,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			EnableWindow(GetDlgItem(hWnd, CONTROL_ID_SOFTEN_VERTICES_CHECKBOX), TRUE);
 		}
 
-		updateLandscapeCircleWidget();
+		render_window::updateLandscapeCircleWidget();
 	}
 
 	bool getFlattenLandscapeVertices() {
@@ -117,7 +81,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			setEditLandscapeColor(false);
 		}
 
-		updateLandscapeCircleWidget();
+		render_window::updateLandscapeCircleWidget();
 	}
 
 	bool getSoftenLandscapeVertices() {
@@ -135,7 +99,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 			setEditLandscapeColor(false);
 		}
 
-		updateLandscapeCircleWidget();
+		render_window::updateLandscapeCircleWidget();
 	}
 
 	LandTexture* getSelectedTexture() {
@@ -198,7 +162,6 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 
 		return false;
 	}
-
 
 	bool incrementEditRadius() {
 		auto hWnd = gWindowHandle::get();
@@ -323,7 +286,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		case CONTROL_ID_EDIT_COLORS_CHECKBOX:
 			switch (code) {
 			case BN_CLICKED:
-				updateLandscapeCircleWidget();
+				render_window::updateLandscapeCircleWidget();
 				break;
 			}
 			break;

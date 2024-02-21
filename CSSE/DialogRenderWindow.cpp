@@ -13,6 +13,7 @@
 #include "NIMatrix33.h"
 #include "NINode.h"
 #include "NIPick.h"
+#include "NILines.h"
 
 #include "CSCell.h"
 #include "CSDataHandler.h"
@@ -69,7 +70,38 @@ namespace se::cs::dialog::render_window {
 	void renderNextFrame() {
 		using gRenderNextFrame = memory::ExternalGlobal<bool, 0x6CF78D>;
 		gRenderNextFrame::set(true);
+	}
 
+	using gLandscapeEditDisc = memory::ExternalGlobal<NI::Lines*, 0x6CF4B4>;
+
+	void updateLandscapeCircleWidget() {
+		const auto widget = gLandscapeEditDisc::get();
+		if (!widget) {
+			return;
+		}
+
+		const auto vertexColorProp = widget->getVertexColorProperty();
+		if (!vertexColorProp) {
+			return;
+		}
+
+		NI::PackedColor color = settings.landscape_window.edit_circle_vertex;
+		if (landscape_edit_settings_window::getFlattenLandscapeVertices()) {
+			color = settings.landscape_window.edit_circle_flatten_vertex;
+		}
+		else if (landscape_edit_settings_window::getSoftenLandscapeVertices()) {
+			color = settings.landscape_window.edit_circle_soften_vertex;
+		}
+		else if (landscape_edit_settings_window::getEditLandscapeColor()) {
+			color = settings.landscape_window.edit_circle_color_vertex;
+		}
+
+		const auto modelData = widget->getModelData();
+		for (auto i = 0u; i < modelData->getActiveVertexCount(); ++i) {
+			modelData->color[i] = color;
+		}
+
+		renderNextFrame();
 	}
 
 	namespace RenderControlFlags {
@@ -2363,8 +2395,13 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
+	void PatchDialogProc_AfterRefreshLandDisc(DialogProcContext& context) {
+		updateLandscapeCircleWidget();
+	}
+
 	namespace CustomWindowMessage {
 		constexpr UINT SetCameraPosition = 0x40Eu;
+		constexpr UINT RefreshLandscapeEditDisc = 0x417u;
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -2423,6 +2460,9 @@ namespace se::cs::dialog::render_window {
 			break;
 		case WM_RBUTTONUP:
 			PatchDialogProc_AfterRMouseButtonUp(context);
+			break;
+		case CustomWindowMessage::RefreshLandscapeEditDisc:
+			PatchDialogProc_AfterRefreshLandDisc(context);
 			break;
 		}
 
