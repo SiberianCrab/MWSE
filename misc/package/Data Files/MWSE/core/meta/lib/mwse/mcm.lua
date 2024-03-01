@@ -263,6 +263,7 @@ function mwse.mcm.createCycleButton(parent, data) end
 --- 
 --- The same is done by this function if you pass both `parent` and `data` arguments.
 --- 
+--- @deprecated
 --- @param parent tes3uiElement|mwse.mcm.createDecimalSlider.data The UI element inside which the new DecimalSlider will be created.
 --- @param data mwse.mcm.createDecimalSlider.data? This table accepts the following values:
 --- 
@@ -932,7 +933,7 @@ function mwse.mcm.createPlayerData(variable) end
 --- `convertToLabelValue`: nil|fun(self: mwseMCMSlider, variableValue: number): number|string — *Optional*. Define a custom formatting function for displaying variable values.
 --- 
 --- `postCreate`: nil|fun(self: mwseMCMSlider) — *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
---- @return mwseMCMDecimalSlider|mwseMCMPercentageSlider|mwseMCMSlider slider No description yet available.
+--- @return mwseMCMPercentageSlider|mwseMCMSlider slider No description yet available.
 function mwse.mcm.createSlider(parent, data) end
 
 ---Table parameter definitions for `mwse.mcm.createSlider`.
