@@ -3,12 +3,7 @@
 
 	Part of the MWSE Project. This module is responsible for creating a uniform UI that mods can
 	extend to provide a single place for users to configure their mods.
-]]--
-
--- make config directory if it doesnt exist
-if not lfs.directoryexists("Data Files\\MWSE\\config\\core") then
-	lfs.mkdir("Data Files\\MWSE\\config\\core")
-end
+]]
 
 --- Storage for mod config packages.
 --- @type table<string, mwseModConfig>
@@ -26,15 +21,38 @@ local previousModConfigSelector = nil
 --- @type tes3uiElement?
 local modConfigContainer = nil
 
--- Expose the mcm API.
+--- @type table
+local config = mwse.loadConfig("MWSE.MCM", {
+	favorites = {},
+})
 
+-- Try to migrate over existing favorites.
+if (table.empty(config.favorites) and lfs.fileexists("config\\core\\MCM Favorite Mods.json")) then
+	-- Migrate over the contents of the old file, and overwrite 
+	config.favorites = json.loadfile("config\\core\\MCM Favorite Mods")
+
+	-- Delete old file (and directory if it is empty).
+	os.remove("config\\core\\MCM Favorite Mods.json")
+	lfs.rmdir("config\\core", false)
+end
+
+-- Convert array-style favorites list to the newer dictionary format.
+if (#config.favorites > 0) then
+	local newFavorites = {}
+	for _, favorite in ipairs(config.favorites) do
+		newFavorites[favorite] = true
+	end
+	config.favorites = newFavorites
+end
+
+-- Expose the mcm API.
 mwse.mcm = require("mcm.mcm")
 mwse.mcm.i18n = mwse.loadTranslations("mcm")
 
 -- credit to Pherim for the default icons
 local favoriteIcons = {
 	idle = "textures/mwse/menu_modconfig_favorite_idle.dds",
-	-- hover over a favorite to remove it 
+	-- hover over a favorite to remove it
 	over = "textures/mwse/menu_modconfig_favorite_over.dds",
 	pressed = "textures/mwse/menu_modconfig_favorite_pressed.dds",
 	-- id = "FavoriteButton"
@@ -42,11 +60,34 @@ local favoriteIcons = {
 
 local nonFavoriteIcons = {
 	idle = "textures/mwse/menu_modconfig_nonfavorite_idle.dds",
-	-- hover over a favorite to remove it 
+	-- hover over a favorite to remove it
 	over = "textures/mwse/menu_modconfig_nonfavorite_over.dds",
 	pressed = "textures/mwse/menu_modconfig_nonfavorite_pressed.dds",
 }
 
+--- Checks to see if a mod is favorited.
+--- @param mod string The name of the mod to check the state of.
+--- @return boolean isFavorite If true, the mod will be favorited.
+local function isFavorite(mod)
+	return config.favorites[mod] == true
+end
+
+--- Sets a mod favorite status.
+--- @param mod string The name of the mod to set the state of.
+--- @param favorited boolean
+local function setFavorite(mod, favorited)
+	if (favorited) then
+		config.favorites[mod] = true
+	else
+		config.favorites[mod] = nil
+	end
+end
+
+--- Toggles the favorited state of a mod.
+--- @param mod string The name of the mod to toggle favoriting for.
+local function toggleFavorited(mod)
+	setFavorite(mod, not isFavorite(mod))
+end
 
 --- sort the given packages
 ---@param a mwseModConfig
@@ -55,10 +96,10 @@ local nonFavoriteIcons = {
 local function sortPackages(a, b)
 	-- check if `a` and `b` have different "favorite" statuses
 	-- `not a.favorite ~= not b.favorite` handles the case when `a.favorite == nil` and `b.favorite == false`
-	if not a.favorite ~= not b.favorite then
+	if not isFavorite(a.name) ~= not isFavorite(b.name) then
 		-- `true` if `a` is favorited and `b` isn't (so `a < b`)
 		-- `false` if `b` is favorited and `a` isn't (so `b < a`)
-		return a.favorite == true
+		return isFavorite(a.name)
 	end
 	return a.name:lower() < b.name:lower()
 end
@@ -72,30 +113,9 @@ local function updateFavoriteImageButton(imageButton, favorite)
 	imageButton.children[3].contentPath = iconTable.pressed
 end
 
-local function loadFavoriteData()
-	local data = json.loadfile("config\\core\\MCM Favorite Mods")
-	-- why am i not storing favorite mods as a set? 
-	for _, modName in pairs(data) do
-		if configMods[modName] then
-			configMods[modName].favorite = true
-		end
-	end
-	for _, package in pairs(configMods) do
-		package.favorite = package.favorite or false -- make sure it's not `nil`
-	end
+local function saveConfig()
+	mwse.saveConfig("MWSE.MCM", config)
 end
-
-local function saveFavoriteMods()
-	local favoriteModNames = {}
-	for _, package in pairs(configMods) do
-		if package.favorite then
-			table.insert(favoriteModNames, package.name)
-		end
-	end
-	json.savefile("config\\core\\MCM Favorite Mods", favoriteModNames)
-end
-
-
 
 --- Callback for when a mod name has been clicked in the left pane.
 --- @param e tes3uiEventData
@@ -144,7 +164,7 @@ local function onClickCloseButton(e)
 	event.unregister("keyDown", onClickCloseButton, { filter = tes3.scanCode.escape })
 
 	-- save the list of favorites
-	saveFavoriteMods()
+	saveConfig()
 
 	-- If we have a current mod, fire its close event.
 	if (currentModConfig and currentModConfig.onClose) then
@@ -171,22 +191,19 @@ end
 --- Callback for when the favorite button has been clicked.
 --- @param e tes3uiEventData
 local function onClickFavoriteButton(e)
-
-
 	-- `source` is the button, which is right of the mod name, so we need to up and then down-left
 	local package = configMods[e.source.parent.children[1].text]
-	package.favorite = not package.favorite
-	
-	updateFavoriteImageButton(e.source, package.favorite)
+	toggleFavorited(package.name)
+	updateFavoriteImageButton(e.source, isFavorite(package.name))
 
 	local menu = tes3ui.findMenu("MWSE:ModConfigMenu")
 	if not menu then return end
 	local modList = menu:findChild("ModList")
 	local modListContents = modList and modList:getContentElement()
-	
-	if not modListContents then 
+
+	if not modListContents then
 		mwse.log("error! modListContents not found.")
-		return 
+		return
 	end
 
 	modListContents:sortChildren(function(a, b)
@@ -263,7 +280,6 @@ local function onClickModConfigButton()
 
 	local menu = tes3ui.findMenu("MWSE:ModConfigMenu")
 	if (not menu) then
-
 		-- Create the main menu frame.
 		menu = tes3ui.createMenu({ id = "MWSE:ModConfigMenu", dragFrame = true })
 		menu.text = mwse.mcm.i18n("Mod Configuration")
@@ -323,7 +339,7 @@ local function onClickModConfigButton()
 		local configModsList = {} --- @type mwseModConfig[]
 		for _, package in pairs(configMods) do
 			if not package.hidden then
-				table.insert(configModsList, package) 
+				table.insert(configModsList, package)
 			end
 		end
 
@@ -337,7 +353,7 @@ local function onClickModConfigButton()
 			entryBlock.flowDirection = tes3.flowDirection.leftToRight
 			entryBlock.autoHeight = true
 			entryBlock.autoWidth = true
-			
+
 			entryBlock.widthProportional = 1.0
 			entryBlock.childAlignY = 0.5
 
@@ -348,10 +364,10 @@ local function onClickModConfigButton()
 			modNameButton.borderRight = 16
 			modNameButton.heightProportional = 1
 
-			local iconTable = package.favorite and favoriteIcons or nonFavoriteIcons
+			local iconTable = isFavorite(package.name) and favoriteIcons or nonFavoriteIcons
 
 			local imageButton = entryBlock:createImageButton(iconTable)
-			updateFavoriteImageButton(imageButton, package.favorite)
+			updateFavoriteImageButton(imageButton, isFavorite(package.name))
 			imageButton.childAlignY = 0.5
 			imageButton.absolutePosAlignX = .97
 			-- imageButton.absolutePosAlignY = 1.0
@@ -499,6 +515,5 @@ end
 --- Set this up to run before most other initialized callbacks.
 local function onInitialized()
 	event.trigger("modConfigReady")
-	loadFavoriteData() -- only need to do it once when the game loads
 end
 event.register("initialized", onInitialized, { priority = 100 })
