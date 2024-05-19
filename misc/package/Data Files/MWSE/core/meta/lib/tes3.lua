@@ -2094,11 +2094,11 @@ function tes3.removeVisualEffect(params) end
 --- 
 --- `source`: tes3.compilerSource? — *Default*: `tes3.compilerSource.default`. The compilation source to use.
 --- 
---- `command`: string — The script text to compile and run.
+--- `command`: string? — *Optional*. The script text to compile and run.
 --- 
 --- `variables`: tes3scriptVariables? — *Optional*. If a reference is provided, the reference's variables will be used.
 --- 
---- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — The reference to target for execution.
+--- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string|nil — *Optional*. The reference to target for execution.
 --- 
 --- `dialogue`: tes3dialogue|string|nil — *Optional*. If compiling for dialogue context, the dialogue associated with the script.
 --- 
@@ -2110,9 +2110,9 @@ function tes3.runLegacyScript(params) end
 --- @class tes3.runLegacyScript.params
 --- @field script tes3script|string|nil *Default*: `tes3.worldController.scriptCompileAndRun`. The base script to base the execution from.
 --- @field source tes3.compilerSource? *Default*: `tes3.compilerSource.default`. The compilation source to use.
---- @field command string The script text to compile and run.
+--- @field command string? *Optional*. The script text to compile and run.
 --- @field variables tes3scriptVariables? *Optional*. If a reference is provided, the reference's variables will be used.
---- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string The reference to target for execution.
+--- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string|nil *Optional*. The reference to target for execution.
 --- @field dialogue tes3dialogue|string|nil *Optional*. If compiling for dialogue context, the dialogue associated with the script.
 --- @field info tes3dialogueInfo? *Optional*. The info associated with the dialogue.
 

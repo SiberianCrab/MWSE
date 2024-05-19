@@ -4143,9 +4143,9 @@ local executed = tes3.runLegacyScript({ script = ..., source = ..., command = ..
 * `params` (table)
 	* `script` ([tes3script](../types/tes3script.md), string): *Default*: `tes3.worldController.scriptCompileAndRun`. The base script to base the execution from.
 	* `source` ([tes3.compilerSource](../references/compiler-sources.md)): *Default*: `tes3.compilerSource.default`. The compilation source to use.
-	* `command` (string): The script text to compile and run.
+	* `command` (string): *Optional*. The script text to compile and run.
 	* `variables` (tes3scriptVariables): *Optional*. If a reference is provided, the reference's variables will be used.
-	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): The reference to target for execution.
+	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): *Optional*. The reference to target for execution.
 	* `dialogue` ([tes3dialogue](../types/tes3dialogue.md), string): *Optional*. If compiling for dialogue context, the dialogue associated with the script.
 	* `info` ([tes3dialogueInfo](../types/tes3dialogueInfo.md)): *Optional*. The info associated with the dialogue.
 

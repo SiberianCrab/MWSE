@@ -54,7 +54,7 @@ local executed = mwscript.addItem({ reference = ..., item = ..., count = ... })
 ### `mwscript.addSoulGem`
 <div class="search_terms" style="display: none">addsoulgem, soulgem</div>
 
-use [`tes3.addItem()`](https://mwse.github.io/MWSE/apis/tes3/#tes3additem) with the `soul` parameter instead. Wrapper for the `AddSoulGem` mwscript function.
+Use [`tes3.addItem()`](https://mwse.github.io/MWSE/apis/tes3/#tes3additem) with the `soul` parameter instead. Wrapper for the `AddSoulGem` mwscript function.
 
 ```lua
 local executed = mwscript.addSoulGem({ reference = ..., creature = ..., soulgem = ... })

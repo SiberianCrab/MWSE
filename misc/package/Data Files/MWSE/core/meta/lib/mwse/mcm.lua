@@ -1205,7 +1205,7 @@ function mwse.mcm.register(template) end
 --- @param template table No description yet available.
 function mwse.mcm.registerMCM(template) end
 
---- This function check whether a certain key combination is currently pressed. It will only check ctrl, shift and alt modifier keys, matching the KeyBinder. It doesn't check mouse.
+--- This function checks whether a certain key combination is currently pressed. It will only check ctrl, shift and alt modifier keys. It doesn't check mouse.
 --- @param keybind mwseKeyCombo|mwseKeyMouseCombo No description yet available.
 --- @return boolean pressed No description yet available.
 function mwse.mcm.testKeyBind(keybind) end

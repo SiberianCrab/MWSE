@@ -939,7 +939,7 @@ mwse.mcm.register(template)
 ### `mwse.mcm.testKeyBind`
 <div class="search_terms" style="display: none">testkeybind, keybind</div>
 
-This function check whether a certain key combination is currently pressed. It will only check ctrl, shift and alt modifier keys, matching the KeyBinder. It doesn't check mouse.
+This function checks whether a certain key combination is currently pressed. It will only check ctrl, shift and alt modifier keys. It doesn't check mouse.
 
 ```lua
 local pressed = mwse.mcm.testKeyBind(keybind)
