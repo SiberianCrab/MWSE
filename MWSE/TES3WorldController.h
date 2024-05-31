@@ -450,6 +450,9 @@ namespace TES3 {
 		bool getLevitationDisabled() const;
 		void setLevitationDisabled(bool disable);
 
+		// This puts the next music track into the game's thread-safe string buffer.
+		bool selectNextMusicTrack(MusicSituation situation) const;
+
 		//
 		// Custom functions.
 		//

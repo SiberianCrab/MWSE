@@ -1142,6 +1142,13 @@ function tes3.getJournalIndex(params) end
 --- @class tes3.getJournalIndex.params
 --- @field id tes3dialogue|string No description yet available.
 
+--- Gets the name of a corresponding `tes3.scanCode`, using the appropriate GMSTs. The `keyName` returned by this function is the same `keyName` that would be used in the in-game Controls menu.
+--- 
+--- For example, `tes3.getKeyName(tes3.scanCode.b)` will return `"B"`, and `tes3.getKeyName(tes3.scanCode.rshift)` will return `"Right Shift"`.
+--- @param keyCode tes3.scanCode No description yet available.
+--- @return string|nil keyName A string representation of the given `keyCode`.
+function tes3.getKeyName(keyCode) end
+
 --- Returns how many times the player killed an actor. If no actor is specified, total number of kills player commited will be returned.
 --- @param params tes3.getKillCount.params? This table accepts the following values:
 --- 
@@ -2646,6 +2653,29 @@ function tes3.skipAnimationFrame(params) end
 --- @class tes3.skipAnimationFrame.params
 --- @field reference tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string The reference whose animation frame will be skipped.
 
+--- This function interrupts the current music to play a random new combat or explore track, as appropriate. The selected music track can be read from the audio controller's `.nextMusicFilePath` field.
+--- @param params tes3.skipToNextMusicTrack.params This table accepts the following values:
+--- 
+--- `path`: string — Path to the music file, relative to Data Files/music/.
+--- 
+--- `situation`: tes3.musicSituation? — *Optional*. Determines what kind of gameplay situation the music should activate for. By default, the function will determine the right solution based on the player's combat state. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
+--- 
+--- `crossfade`: number? — *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
+--- 
+--- `volume`: number? — *Optional*. The volume at which the music will play. If no volume is provided, the user's volume setting will be used.
+--- 
+--- `force`: boolean? — *Default*: `false`. If true, normally uninterruptible music will be overwritten to instead play the new track.
+--- @return boolean musicTrackQueued No description yet available.
+function tes3.skipToNextMusicTrack(params) end
+
+---Table parameter definitions for `tes3.skipToNextMusicTrack`.
+--- @class tes3.skipToNextMusicTrack.params
+--- @field path string Path to the music file, relative to Data Files/music/.
+--- @field situation tes3.musicSituation? *Optional*. Determines what kind of gameplay situation the music should activate for. By default, the function will determine the right solution based on the player's combat state. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
+--- @field crossfade number? *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
+--- @field volume number? *Optional*. The volume at which the music will play. If no volume is provided, the user's volume setting will be used.
+--- @field force boolean? *Default*: `false`. If true, normally uninterruptible music will be overwritten to instead play the new track.
+
 --- This function interrupts the current music to play the specified music track.
 --- @param params tes3.streamMusic.params This table accepts the following values:
 --- 
@@ -2654,6 +2684,8 @@ function tes3.skipAnimationFrame(params) end
 --- `situation`: tes3.musicSituation? — *Default*: `tes3.musicSituation.uninterruptible`. Determines what kind of gameplay situation the music should stay active for. Explore music plays during non-combat, and ends when combat starts. Combat music starts during combat, and ends when combat ends. Uninterruptible music always plays, ending only when the track does. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- 
 --- `crossfade`: number? — *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
+--- 
+--- `volume`: number? — *Optional*. The volume at which the music will play. If no volume is provided, the user's volume setting will be used.
 --- @return boolean executed No description yet available.
 function tes3.streamMusic(params) end
 
@@ -2662,6 +2694,7 @@ function tes3.streamMusic(params) end
 --- @field path string Path to the music file, relative to Data Files/music/.
 --- @field situation tes3.musicSituation? *Default*: `tes3.musicSituation.uninterruptible`. Determines what kind of gameplay situation the music should stay active for. Explore music plays during non-combat, and ends when combat starts. Combat music starts during combat, and ends when combat ends. Uninterruptible music always plays, ending only when the track does. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- @field crossfade number? *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
+--- @field volume number? *Optional*. The volume at which the music will play. If no volume is provided, the user's volume setting will be used.
 
 --- Simulates tapping a keyboard key.
 --- @param keyCode tes3.scanCode Maps to values in [`tes3.scanCode`](https://mwse.github.io/MWSE/references/scan-codes/) namespace.

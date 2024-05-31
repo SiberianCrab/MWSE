@@ -874,7 +874,7 @@ No description yet available.
 ### `hasVampirism`
 <div class="search_terms" style="display: none">hasvampirism, vampirism</div>
 
-*Read-only*. True if the actor has a vampirism effect.
+*Read-only*. True if the actor has a vampirism effect. Checks if the actor has an active vampirism magic effect. This is the same method used in the engine to determine if an NPC has a vampire head model, or can use a vampire dialogue response.
 
 **Returns**:
 
