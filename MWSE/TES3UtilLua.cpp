@@ -2191,6 +2191,15 @@ namespace mwse::lua {
 		}
 	}
 
+	bool getLegacyScriptRunning(sol::table params) {
+		auto script = getOptionalParamScript(params, "script");
+		if (script == nullptr) {
+			return false;
+		}
+
+		return TES3::WorldController::get()->isGlobalScriptRunning(script);
+	}
+
 	bool runLegacyScript(sol::table params) {
 		TES3::Script* script = getOptionalParamScript(params, "script");
 		if (script == nullptr) {
@@ -2231,6 +2240,15 @@ namespace mwse::lua {
 		TES3::DataHandler::suppressThreadLoad = false;
 
 		return true;
+	}
+
+	void stopLegacyScript(sol::table params) {
+		const auto script = getOptionalParamScript(params, "script");
+		if (script == nullptr) {
+			throw std::runtime_error("Invalid 'script' parameter provided.");
+		}
+
+		TES3::WorldController::get()->stopGlobalScript(script);
 	}
 
 	bool force1stPerson() {
@@ -6136,6 +6154,7 @@ namespace mwse::lua {
 		tes3["getLanguage"] = getLanguage;
 		tes3["getLanguageCode"] = getLanguageCode;
 		tes3["getLastExteriorPosition"] = getLastExteriorPosition;
+		tes3["getLegacyScriptRunning"] = getLegacyScriptRunning;
 		tes3["getLocked"] = getLocked;
 		tes3["getLockLevel"] = getLockLevel;
 		tes3["getMagicEffect"] = getMagicEffect;
@@ -6235,6 +6254,7 @@ namespace mwse::lua {
 		tes3["showRestMenu"] = showRestMenu;
 		tes3["showSpellmakingMenu"] = showSpellmakingMenu;
 		tes3["skipAnimationFrame"] = skipAnimationFrame;
+		tes3["stopLegacyScript"] = stopLegacyScript;
 		tes3["skipToNextMusicTrack"] = skipToNextMusicTrack;
 		tes3["streamMusic"] = streamMusic;
 		tes3["tapKey"] = tapKey;

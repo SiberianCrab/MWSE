@@ -2306,6 +2306,26 @@ local vector3 = tes3.getLastExteriorPosition()
 
 ***
 
+### `tes3.getLegacyScriptRunning`
+<div class="search_terms" style="display: none">getlegacyscriptrunning, legacyscriptrunning</div>
+
+This function returns true if a mwscript is currently running. Only checks global scripts.
+
+```lua
+local isRunning = tes3.getLegacyScriptRunning({ script = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `script` ([tes3script](../types/tes3script.md), string): The script to check for.
+
+**Returns**:
+
+* `isRunning` (boolean)
+
+***
+
 ### `tes3.getLocked`
 <div class="search_terms" style="display: none">getlocked, locked</div>
 
@@ -4854,13 +4874,12 @@ tes3.skipAnimationFrame({ reference = ... })
 This function interrupts the current music to play a random new combat or explore track, as appropriate. The selected music track can be read from the audio controller's `.nextMusicFilePath` field.
 
 ```lua
-local musicTrackQueued = tes3.skipToNextMusicTrack({ path = ..., situation = ..., crossfade = ..., volume = ..., force = ... })
+local musicTrackQueued = tes3.skipToNextMusicTrack({ situation = ..., crossfade = ..., volume = ..., force = ... })
 ```
 
 **Parameters**:
 
 * `params` (table)
-	* `path` (string): Path to the music file, relative to Data Files/music/.
 	* `situation` ([tes3.musicSituation](../references/music-situations.md)): *Optional*. Determines what kind of gameplay situation the music should activate for. By default, the function will determine the right solution based on the player's combat state. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 	* `crossfade` (number): *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
 	* `volume` (number): *Optional*. The volume at which the music will play. If no volume is provided, the user's volume setting will be used.
@@ -4869,6 +4888,22 @@ local musicTrackQueued = tes3.skipToNextMusicTrack({ path = ..., situation = ...
 **Returns**:
 
 * `musicTrackQueued` (boolean)
+
+***
+
+### `tes3.stopLegacyScript`
+<div class="search_terms" style="display: none">stoplegacyscript</div>
+
+This function stops a global mwscript.
+
+```lua
+tes3.stopLegacyScript({ script = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `script` ([tes3script](../types/tes3script.md), string): The script to stop.
 
 ***
 

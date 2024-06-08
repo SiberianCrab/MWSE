@@ -1176,6 +1176,17 @@ function tes3.getLanguageCode() end
 --- @return tes3vector3 vector3 No description yet available.
 function tes3.getLastExteriorPosition() end
 
+--- This function returns true if a mwscript is currently running. Only checks global scripts.
+--- @param params tes3.getLegacyScriptRunning.params This table accepts the following values:
+--- 
+--- `script`: tes3script|string — The script to check for.
+--- @return boolean isRunning No description yet available.
+function tes3.getLegacyScriptRunning(params) end
+
+---Table parameter definitions for `tes3.getLegacyScriptRunning`.
+--- @class tes3.getLegacyScriptRunning.params
+--- @field script tes3script|string The script to check for.
+
 --- Determines if a given reference is a locked door or container.
 --- @param params tes3.getLocked.params This table accepts the following values:
 --- 
@@ -2656,8 +2667,6 @@ function tes3.skipAnimationFrame(params) end
 --- This function interrupts the current music to play a random new combat or explore track, as appropriate. The selected music track can be read from the audio controller's `.nextMusicFilePath` field.
 --- @param params tes3.skipToNextMusicTrack.params This table accepts the following values:
 --- 
---- `path`: string — Path to the music file, relative to Data Files/music/.
---- 
 --- `situation`: tes3.musicSituation? — *Optional*. Determines what kind of gameplay situation the music should activate for. By default, the function will determine the right solution based on the player's combat state. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- 
 --- `crossfade`: number? — *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
@@ -2670,11 +2679,20 @@ function tes3.skipToNextMusicTrack(params) end
 
 ---Table parameter definitions for `tes3.skipToNextMusicTrack`.
 --- @class tes3.skipToNextMusicTrack.params
---- @field path string Path to the music file, relative to Data Files/music/.
 --- @field situation tes3.musicSituation? *Optional*. Determines what kind of gameplay situation the music should activate for. By default, the function will determine the right solution based on the player's combat state. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- @field crossfade number? *Default*: `1.0`. The duration in seconds of the crossfade from the old to the new track. The default is 1.0.
 --- @field volume number? *Optional*. The volume at which the music will play. If no volume is provided, the user's volume setting will be used.
 --- @field force boolean? *Default*: `false`. If true, normally uninterruptible music will be overwritten to instead play the new track.
+
+--- This function stops a global mwscript.
+--- @param params tes3.stopLegacyScript.params This table accepts the following values:
+--- 
+--- `script`: tes3script|string — The script to stop.
+function tes3.stopLegacyScript(params) end
+
+---Table parameter definitions for `tes3.stopLegacyScript`.
+--- @class tes3.stopLegacyScript.params
+--- @field script tes3script|string The script to stop.
 
 --- This function interrupts the current music to play the specified music track.
 --- @param params tes3.streamMusic.params This table accepts the following values:
