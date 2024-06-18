@@ -447,7 +447,7 @@ local result = myObject:getAutoCalcMagickaCost()
 Gets the first index of an effect ID in the spell effect table. Returns `-1` if provided effect doesn't exist in the spell
 
 ```lua
-local result = myObject:getFirstIndexOfEffect(effectId)
+local index = myObject:getFirstIndexOfEffect(effectId)
 ```
 
 **Parameters**:
@@ -456,7 +456,7 @@ local result = myObject:getFirstIndexOfEffect(effectId)
 
 **Returns**:
 
-* `result` (integer)
+* `index` (integer): Returns 0-based index. Because Lua's arrays are 1-based, to index the spell's `effects` array with the return value add 1.
 
 ***
 

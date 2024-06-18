@@ -349,7 +349,7 @@ namespace mwse::lua {
 		if (mobilePlayer) {
 			if (soundPath) {
 				bool isVoiceover = getOptionalParam<bool>(params, "isVoiceover", false);
-				TES3::DataHandler::get()->addTemporySound(soundPath, reference, loop ? TES3::SoundPlayFlags::Loop : 0, int(volume), pitch, isVoiceover, sound);
+				TES3::DataHandler::get()->addTemporarySound(soundPath, reference, loop ? TES3::SoundPlayFlags::Loop : 0, int(volume), pitch, isVoiceover, sound);
 				return true;
 			}
 			else if (sound) {
@@ -4203,7 +4203,7 @@ namespace mwse::lua {
 		}
 
 		// Play the related sound.
-		dataHandler->addTemporySound(path, reference, 0, int(volume), pitch, true);
+		dataHandler->addTemporarySound(path, reference, 0, int(volume), pitch, true);
 	}
 
 	bool hasOwnershipAccess(sol::table params) {

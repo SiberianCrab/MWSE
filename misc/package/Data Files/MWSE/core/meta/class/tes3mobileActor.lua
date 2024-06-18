@@ -31,6 +31,9 @@
 --- @field attackBonus number Direct access to the actor's attack bonus effect attribute.
 --- @field attacked boolean *Read-only*. Friendly access to the actor's flag that controls if the actor has been attacked.
 --- @field attributes tes3statistic[]|tes3statisticSkill[] *Read-only*. Access to a table of 8 [`tes3statistic`](https://mwse.github.io/MWSE/types/tes3statistic/) objects for the actor's attributes. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
+--- 
+--- !!! note
+--- 	This array is 1-indexed. The array indices correspond to the [tes3.attribute](https://mwse.github.io/MWSE/references/attributes/) table plus 1 to account for Lua's 1-based array indexing. In other words `myMobile.attributes[tes3.attribute.strength + 1]` returns the `tes3statistic` object corresponding to strength.
 --- @field barterGold number The current amount of gold that the actor has access to for bartering.
 --- 
 --- Barter gold is reset on talking to an actor if fBarterGoldResetDelay hours have passed since the last transaction. The base value is held in `tes3npc.barterGold`, which is the base object and not an instance.

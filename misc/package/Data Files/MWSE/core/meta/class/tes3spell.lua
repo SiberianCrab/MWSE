@@ -65,7 +65,7 @@ function tes3spell:getAutoCalcMagickaCost() end
 
 --- Gets the first index of an effect ID in the spell effect table. Returns `-1` if provided effect doesn't exist in the spell
 --- @param effectId tes3.effect|integer A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
---- @return integer result No description yet available.
+--- @return integer index Returns 0-based index. Because Lua's arrays are 1-based, to index the spell's `effects` array with the return value add 1.
 function tes3spell:getFirstIndexOfEffect(effectId) end
 
 --- Returns the effect of the spell that a given actor is least proficient with.

@@ -21,6 +21,7 @@
 #include "LuaPlayItemSoundEvent.h"
 #include "LuaMusicSelectTrackEvent.h"
 #include "LuaSimulatedEvent.h"
+#include "LuaStartGlobalScriptEvent.h"
 
 #include "LuaManager.h"
 
@@ -487,9 +488,49 @@ namespace TES3 {
 		TES3_WorldController_processGlobalScripts(this);
 	}
 
-	const auto TES3_WorldController_addGlobalScript = reinterpret_cast<void(__thiscall*)(WorldController*, Script*, const Reference*)>(0x40FA80);
-	void WorldController::startGlobalScript(Script* script, const Reference* reference) {
+	const auto TES3_WorldController_addGlobalScript = reinterpret_cast<void(__thiscall*)(WorldController*, Script*, Reference*)>(0x40FA80);
+	void WorldController::startGlobalScript(Script* script, Reference* reference) {
+		if (isGlobalScriptRunning(script)) {
+			return;
+		}
+
+		// Allow event overrides.
+		if (mwse::lua::event::StartGlobalScriptEvent::getEventEnabled()) {
+			auto& luaManager = mwse::lua::LuaManager::getInstance();
+			auto stateHandle = luaManager.getThreadSafeStateHandle();
+			sol::table result = stateHandle.triggerEvent(new mwse::lua::event::StartGlobalScriptEvent(script, reference));
+			if (result.valid() && result.get_or("block", false)) {
+				return;
+			}
+		}
+
 		TES3_WorldController_addGlobalScript(this, script, reference);
+	}
+
+	const auto TES3_WorldController_addGlobalScriptBySourceID = reinterpret_cast<void(__thiscall*)(WorldController*, Script*, unsigned int)>(0x40FA80);
+	void WorldController::startGlobalScriptBySourceID(Script* script, unsigned int sourceID) {
+		if (isGlobalScriptRunning(script)) {
+			return;
+		}
+
+		// Convert the source ID to a reference.
+		Reference* reference = nullptr;
+		constexpr auto invalid_id = std::numeric_limits<unsigned int>::max();
+		if (sourceID != invalid_id) {
+			reference = DataHandler::get()->nonDynamicData->resolveReferenceBySourceID(sourceID);
+		}
+
+		// Allow event overrides.
+		if (mwse::lua::event::StartGlobalScriptEvent::getEventEnabled()) {
+			auto& luaManager = mwse::lua::LuaManager::getInstance();
+			auto stateHandle = luaManager.getThreadSafeStateHandle();
+			sol::table result = stateHandle.triggerEvent(new mwse::lua::event::StartGlobalScriptEvent(script, reference));
+			if (result.valid() && result.get_or("block", false)) {
+				return;
+			}
+		}
+
+		TES3_WorldController_addGlobalScriptBySourceID(this, script, sourceID);
 	}
 
 	const auto TES3_WorldController_removeGlobalScript = reinterpret_cast<void(__thiscall*)(WorldController*, Script*)>(0x40FB00);

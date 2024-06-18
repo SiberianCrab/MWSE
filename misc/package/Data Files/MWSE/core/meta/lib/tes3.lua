@@ -3982,6 +3982,7 @@ tes3.event = require("tes3.event")
 ---| `tes3.event.spellResist`
 ---| `tes3.event.spellResisted`
 ---| `tes3.event.spellTick`
+---| `tes3.event.startGlobalScript`
 ---| `tes3.event.topicAdded`
 ---| `tes3.event.trapDisarm`
 ---| `tes3.event.uiActivated`
@@ -5560,6 +5561,7 @@ tes3.inventoryTileType = require("tes3.inventoryTileType")
 tes3.itemSoundState = require("tes3.itemSoundState")
 
 --- @alias tes3.itemSoundState
+---| `tes3.itemSoundState.consume`
 ---| `tes3.itemSoundState.direct`
 ---| `tes3.itemSoundState.down`
 ---| `tes3.itemSoundState.up`
