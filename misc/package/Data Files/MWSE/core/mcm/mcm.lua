@@ -145,7 +145,7 @@ setmetatable(mcm, {__index = function(_, key)
 	if key:sub(1, strLengthCreate) ~= "create" then return end
 
 	local className = key:sub(strLengthCreate + 1)
-	
+
 	-- First check if it's a component.
 	local componentClass = fileUtils.getComponentClass(className)
 	if componentClass then
@@ -165,7 +165,11 @@ setmetatable(mcm, {__index = function(_, key)
 			if not data then
 				data = { label = "---"}
 			elseif type(data) == "string" then
-				data = { label = data}
+				if componentClass.componentType == "Template" then
+					data = { name = data }
+				else
+					data = { label = data}
+				end
 			end
 
 			local component = componentClass:new(data)
@@ -180,9 +184,15 @@ setmetatable(mcm, {__index = function(_, key)
 	-- Now check if it's a variable.
 	local variableClass = fileUtils.getVariableClass(className)
 	if variableClass then
-		
+
 		-- Store the function so we don't have to recreate it every time.
 		mcm[key] = function(param1, param2)
+			-- Some mods call this function as if it were a method using colon.
+			-- Log a warning, but provide backwards compatibility.
+			if param2 then
+				mwse.log("[mwse.mcm Error]: Calling mwse.mcm API function with a colon (:) instead of a dot (.).\n%s",
+					debug.traceback())
+			end
 			return variableClass:new(param2 or param1)
 		end
 		return mcm[key]

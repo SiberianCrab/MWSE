@@ -30,6 +30,7 @@ for filePath, dir, fileName in lfs.walkdir("data files\\mwse\\core\\mcm\\compone
 	componentPaths[className] = luaPath
 end
 -- Add backwards compatibility by redirecting old component names to new ones.
+componentPaths.template = componentPaths.Template
 componentPaths.HyperLink = componentPaths.Hyperlink
 componentPaths.SidebarPage = componentPaths.SideBarPage
 
