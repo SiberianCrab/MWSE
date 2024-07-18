@@ -7,6 +7,12 @@
 --- @field options tes3uiCycleButtonOption[] This table holds the text and variable value for each of the cycle button's options.
 mwseMCMCycleButton = {}
 
+--- This function specifies how values stored in the `variable` field should correspond to values displayed by this CycleButton.
+--- The default behavior is to return the `text` of the [`mwseMCMCycleButton`](./mwseMCMCycleButton.md) with a given `variableValue`.
+--- @param variableValue any The value of a [`mwseMCMCycleButton`](./mwseMCMCycleButton.md) stored in `self.options`.
+--- @return string labelValue The label of the corresponding [`mwseMCMCycleButton`](./mwseMCMCycleButton.md).
+function mwseMCMCycleButton:convertToLabelValue(variableValue) end
+
 --- This method is unused in cycle button setting.
 function mwseMCMCycleButton:getText() end
 

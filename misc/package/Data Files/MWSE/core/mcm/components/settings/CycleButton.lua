@@ -56,6 +56,14 @@ function CycleButton:disable()
 	self.elements.label.color = tes3ui.getPalette("disabled_color")
 end
 
+function CycleButton:convertToLabelValue(variableValue)
+	for _, option in ipairs(self.options) do
+		if option.value == variableValue then
+			return option.text
+		end
+	end
+end
+
 function CycleButton:getText() end
 
 function CycleButton:setText() end

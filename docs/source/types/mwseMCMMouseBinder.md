@@ -112,6 +112,39 @@ The type of this component.
 
 ***
 
+### `config`
+<div class="search_terms" style="display: none">config</div>
+
+The config to use when creating a [`mwseMCMTableVariable`](./mwseMCMTableVariable.md) for this `Setting`. If provided, it will override the config stored in `parentComponent`. Otherwise, the value in `parentComponent` will be used.
+
+**Returns**:
+
+* `result` (table, nil)
+
+***
+
+### `configKey`
+<div class="search_terms" style="display: none">configkey</div>
+
+The `configKey` used to create a new [`mwseMCMTableVariable`](./mwseMCMTableVariable.md). If this is provided, along with a `config` (which may be inherited from the `parentComponent`), then a new [`mwseMCMTableVariable`](./mwseMCMTableVariable.md) variable will be created for this setting.
+
+**Returns**:
+
+* `result` (string, number, nil)
+
+***
+
+### `converter`
+<div class="search_terms" style="display: none">converter</div>
+
+A converter to use for this component's `variable`.
+
+**Returns**:
+
+* `result` ((fun(newValue: unknown): unknown), nil)
+
+***
+
 ### `createContentsContainer`
 <div class="search_terms" style="display: none">createcontentscontainer, contentscontainer</div>
 
@@ -120,6 +153,28 @@ This method creates the contents of a component. Not every component implements 
 **Returns**:
 
 * `result` (nil, fun(self: [mwseMCMComponent](../types/mwseMCMComponent.md), outerContainer: [tes3uiElement](../types/tes3uiElement.md)))
+
+***
+
+### `defaultConfig`
+<div class="search_terms" style="display: none">defaultconfig</div>
+
+The `defaultConfig` to use when creating a [`mwseMCMTableVariable`](./mwseMCMTableVariable.md) for this `Setting`. If provided, it will override the `defaultConfig` stored in `parentComponent`. Otherwise, the value in `parentComponent` will be used.
+
+**Returns**:
+
+* `result` (table, nil)
+
+***
+
+### `defaultSetting`
+<div class="search_terms" style="display: none">defaultsetting</div>
+
+If `defaultSetting` wasn't passed in the `variable` table, can be passed here. The new variable will be initialized to this value. If not provided, then the value in `defaultConfig` will be used, if possible.
+
+**Returns**:
+
+* `result` (unknown, nil)
 
 ***
 
@@ -307,6 +362,17 @@ Set to the value of `sCancel` GMST.
 **Returns**:
 
 * `result` (string)
+
+***
+
+### `showDefaultSetting`
+<div class="search_terms" style="display: none">showdefaultsetting, defaultsetting</div>
+
+If true, then the `defaultSetting` of this setting's `variable` will be shown below its description.
+
+**Returns**:
+
+* `result` (boolean)
 
 ***
 
@@ -554,58 +620,6 @@ local result = myObject:getComboString(keyCombo)
 
 ***
 
-### `getComponent`
-<div class="search_terms" style="display: none">getcomponent, component</div>
-
-Creates a new Component of given class or returns the given Component.
-
-```lua
-local component = myObject:getComponent({ class = ..., label = ..., indent = ..., childIndent = ..., paddingBottom = ..., childSpacing = ..., inGameOnly = ..., postCreate = ..., parentComponent = ... })
-```
-
-**Parameters**:
-
-* `componentData` ([mwseMCMComponent](../types/mwseMCMComponent.md), table)
-	* `class` (string): The component type to get. On of the following:
-		- `"Template"`
-		- `"ExclusionsPage"`
-		- `"FilterPage"`
-		- `"MouseOverPage"`
-		- `"Page"`
-		- `"SideBarPage"`
-		- `"Category"`
-		- `"SideBySideBlock"`
-		- `"ActiveInfo"`
-		- `"Hyperlink"`
-		- `"Info"`
-		- `"MouseOverInfo"`
-		- `"Setting"`
-		- `"Button"`
-		- `"OnOffButton"`
-		- `"YesNoButton"`
-		- `"CycleButton"`
-		- `"KeyBinder"`
-		- `"Dropdown"`
-		- `"TextField"`
-		- `"ParagraphField"`
-		- `"Slider"`
-		- `"DecimalSlider"`
-		- `"PercentageSlider"`
-	* `label` (string): *Optional*. The label text to set for the new component. Not all component types have a label.
-	* `indent` (integer): *Default*: `12`. The left padding size in pixels. Only used if the `childIndent` isn't set on the parent component.
-	* `childIndent` (integer): *Optional*. The left padding size in pixels. Used on all the child components.
-	* `paddingBottom` (integer): *Default*: `4`. The bottom border size in pixels. Only used if the `childSpacing` is unset on the parent component.
-	* `childSpacing` (integer): *Optional*. The bottom border size in pixels. Used on all the child components.
-	* `inGameOnly` (boolean): *Default*: `false`.
-	* `postCreate` (fun(self: [mwseMCMComponent](../types/mwseMCMComponent.md))): *Optional*. Can define a custom formatting function to make adjustments to any element saved in `self.elements`.
-	* `parentComponent` ([mwseMCMComponent](../types/mwseMCMComponent.md)): *Optional*.
-
-**Returns**:
-
-* `component` ([mwseMCMComponent](../types/mwseMCMComponent.md))
-
-***
-
 ### `getHelpText`
 <div class="search_terms" style="display: none">gethelptext, helptext</div>
 
@@ -637,6 +651,23 @@ local keyCombo = myObject:getKeyComboFromEventData(e)
 **Returns**:
 
 * `keyCombo` ([mwseKeyMouseCombo](../types/mwseKeyMouseCombo.md))
+
+***
+
+### `getMouseOverText`
+<div class="search_terms" style="display: none">getmouseovertext, mouseovertext</div>
+
+Retrieves the text that this setting should display in any related [`mouseOverInfo`s](./mwseMCMMouseOverInfo.md). This method currently utilized to display this component's description whenever the component is in a [`SideBarPage`](./mwseMCMSideBarPage.md). If this `Setting` has `showDefaultSetting == true`, then this method will also include the current `defaultSetting`.
+
+Primarily intended for internal use.
+
+```lua
+local text = myObject:getMouseOverText()
+```
+
+**Returns**:
+
+* `text` (string, nil): The text to display. Returning `nil` means that the `mouseOverInfo` should display text from a different source. e.g. from the `description` of the relevant [`SideBarPage`](./mwseMCMSideBarPage.md).
 
 ***
 

@@ -78,9 +78,13 @@ function SideBarPage:createRightColumn(parentBlock)
 	self.elements.mouseOver = mouseOver
 
 	--- event to hide default and show mouseover
-	--- @param component mwseMCMComponent
-	local function doMouseOver(component)
-		if component.description then
+	--- @param e {component: mwseMCMComponent}
+	local function doMouseOver(e)
+		local component = e.component
+		-- This results in `component:getMouseOverText()` getting called twice
+		-- per mouseover update. Not sure of a nice way around that.
+		-- This should be fine for most implementations of `convertToLabelValue`.
+		if component:getMouseOverText() ~= nil then
 			mouseOver.elements.outerContainer.visible = true
 			defaultView.visible = false
 		end

@@ -212,6 +212,7 @@
 #include "LuaCalcSpellmakingPriceEvent.h"
 #include "LuaCalcSpellmakingSpellPointCostEvent.h"
 #include "LuaCalcSpellPriceEvent.h"
+#include "LuaCalcTouchSpellConeEvent.h"
 #include "LuaCalcTrainingPriceEvent.h"
 #include "LuaCalcTravelPriceEvent.h"
 #include "LuaCellChangedEvent.h"
@@ -4425,15 +4426,47 @@ namespace mwse::lua {
 	}
 
 	// Override of touch magic hit cone check. Saves data to be used in generic hit cone check later.
-	TES3::MobileActor* PatchCombatTouchMagicHitDetection(TES3::MobileActor* attacker) {
+	TES3::MobileActor* __stdcall PatchCombatTouchMagicHitDetection2(TES3::MobileActor* attacker, TES3::MagicSourceInstance* sourceInstance) {
 		auto ndd = TES3::DataHandler::get()->nonDynamicData;
-		attackReach_saved = ndd->GMSTs[TES3::GMST::fCombatDistance]->value.asFloat;
-		fCombatAngleXY_saved = ndd->GMSTs[TES3::GMST::fCombatAngleXY]->value.asFloat;
-		fCombatAngleZ_saved = ndd->GMSTs[TES3::GMST::fCombatAngleZ]->value.asFloat;
+		float attackReach = ndd->GMSTs[TES3::GMST::fCombatDistance]->value.asFloat;
+		float fCombatAngleXY = ndd->GMSTs[TES3::GMST::fCombatAngleXY]->value.asFloat;
+		float fCombatAngleZ = ndd->GMSTs[TES3::GMST::fCombatAngleZ]->value.asFloat;
+
+		// Fire event.
+		if (event::CalcTouchSpellConeEvent::getEventEnabled()) {
+			const double radiansToDegrees = 57.29577951308232;
+			double degreesXY = radiansToDegrees * std::asin(fCombatAngleXY);
+			double degreesZ = radiansToDegrees * std::asin(fCombatAngleZ);
+
+			auto stateHandle = mwse::lua::LuaManager::getInstance().getThreadSafeStateHandle();
+			sol::object response = stateHandle.triggerEvent(new event::CalcTouchSpellConeEvent(attacker, sourceInstance, attackReach, degreesXY, degreesZ));
+			if (response.get_type() == sol::type::table) {
+				sol::table eventData = response;
+				attackReach = eventData["reach"];
+				degreesXY = eventData["angleXY"];
+				degreesZ = eventData["angleZ"];
+				fCombatAngleXY = float(std::sin(std::min(90.0, degreesXY) / radiansToDegrees));
+				fCombatAngleZ = float(std::sin(std::min(90.0, degreesZ) / radiansToDegrees));
+			}
+		}
+
+		// Save values for use in cone test function.
+		attackReach_saved = attackReach;
+		fCombatAngleXY_saved = fCombatAngleXY;
+		fCombatAngleZ_saved = fCombatAngleZ;
 
 		// Call original function.
 		const auto TES3_CombatTouchMagicHitDetection = reinterpret_cast<TES3::MobileActor* (__cdecl*)(TES3::MobileActor*)>(0x554C30);
 		return TES3_CombatTouchMagicHitDetection(attacker);
+	}
+
+	__declspec(naked) TES3::MobileActor* PatchCombatTouchMagicHitDetection() {
+		__asm {
+			push esi	// magicSourceInstance
+			push ecx	// attacker mobile
+			call PatchCombatTouchMagicHitDetection2
+			ret
+		}
 	}
 
 	// Generic hit cone check overrides.
