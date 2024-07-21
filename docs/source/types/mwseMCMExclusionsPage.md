@@ -310,6 +310,17 @@ The page's label will only be created if set to true.
 
 ***
 
+### `showReset`
+<div class="search_terms" style="display: none">showreset, reset</div>
+
+When set to true, the Page will have a Reset button. Clicking on it will set the `variable.value` of all the setting on the page to their respective `defaultSetting` values.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `sNo`
 <div class="search_terms" style="display: none">sno</div>
 
@@ -1052,6 +1063,36 @@ local slider = myObject:createPercentageSlider({ label = ..., variable = ..., co
 
 ***
 
+### `createResetButton`
+<div class="search_terms" style="display: none">createresetbutton, resetbutton</div>
+
+Creates the Page's Reset button.
+
+```lua
+myObject:createResetButton(parentBlock)
+```
+
+**Parameters**:
+
+* `parentBlock` ([tes3uiElement](../types/tes3uiElement.md))
+
+***
+
+### `createResetButtonContainer`
+<div class="search_terms" style="display: none">createresetbuttoncontainer, resetbuttoncontainer</div>
+
+Creates parent UI element for the Page's Reset button.
+
+```lua
+myObject:createResetButtonContainer(parentBlock)
+```
+
+**Parameters**:
+
+* `parentBlock` ([tes3uiElement](../types/tes3uiElement.md))
+
+***
+
 ### `createSearchBar`
 <div class="search_terms" style="display: none">createsearchbar, searchbar</div>
 
@@ -1487,6 +1528,17 @@ This method clears inputted text from both search bars.
 
 ```lua
 myObject:resetSearchBars()
+```
+
+***
+
+### `resetToDefault`
+<div class="search_terms" style="display: none">resettodefault</div>
+
+This method will reset the settings to the default value for all the nested components in this Category.
+
+```lua
+myObject:resetToDefault()
 ```
 
 ***

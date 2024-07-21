@@ -31,6 +31,11 @@ function Dropdown:getOption(optionValue)
 	end
 end
 
+function Dropdown:setVariableValue(newValue)
+	local option = self:getOption(newValue)
+	self:selectOption(option)
+end
+
 function Dropdown:enable()
 	Parent.enable(self)
 

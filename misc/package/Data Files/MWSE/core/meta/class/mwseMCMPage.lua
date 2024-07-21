@@ -7,11 +7,21 @@
 --- The default page is a simple container, it is recommended you use the [SideBarPage](./mwseMCMSideBarPage.md) for basic settings.
 --- @class mwseMCMPage : mwseMCMCategory, mwseMCMComponent
 --- @field componentType "Page" The type of this component.
+--- @field elements mwseMCMPageElements This dictionary-style table holds all the UI elements of the Page, for easy access.
 --- @field label string The label field is displayed in the tab for that page at the top of the menu. Defaults to: "Page {number}".
 --- @field noScroll boolean When set to true, the page will not have a scrollbar. Particularly useful if you want to use a [ParagraphField](./mwseMCMParagraphField.md), which is not compatible with scroll panes.
 --- @field showHeader boolean The page's label will only be created if set to true.
+--- @field showReset boolean When set to true, the Page will have a Reset button. Clicking on it will set the `variable.value` of all the setting on the page to their respective `defaultSetting` values.
 --- @field tabUID integer The unique UI identifier for the tab button that opens this page. To be used with [findChild](https://mwse.github.io/MWSE/types/tes3uiElement/#findchild) or [tes3ui.findMenu](https://mwse.github.io/MWSE/apis/tes3ui/#tes3uifindmenu).
 mwseMCMPage = {}
+
+--- Creates the Page's Reset button.
+--- @param parentBlock tes3uiElement No description yet available.
+function mwseMCMPage:createResetButton(parentBlock) end
+
+--- Creates parent UI element for the Page's Reset button.
+--- @param parentBlock tes3uiElement No description yet available.
+function mwseMCMPage:createResetButtonContainer(parentBlock) end
 
 --- Creates a new Page.
 --- @param data mwseMCMPage.new.data? This table accepts the following values:

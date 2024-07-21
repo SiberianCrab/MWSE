@@ -116,6 +116,13 @@ function mwseMCMSetting:new(data) end
 --- @field componentType string? *Optional*. No description yet available.
 --- @field parentComponent mwseMCMActiveInfo|mwseMCMBinder|mwseMCMButton|mwseMCMCategory|mwseMCMComponent|mwseMCMCycleButton|mwseMCMDropdown|mwseMCMExclusionsPage|mwseMCMFilterPage|mwseMCMHyperlink|mwseMCMInfo|mwseMCMKeyBinder|mwseMCMMouseBinder|mwseMCMMouseOverInfo|mwseMCMMouseOverPage|mwseMCMOnOffButton|mwseMCMPage|mwseMCMParagraphField|mwseMCMPercentageSlider|mwseMCMSetting|mwseMCMSideBarPage|mwseMCMSideBySideBlock|mwseMCMSlider|mwseMCMTemplate|mwseMCMTextField|mwseMCMYesNoButton|nil *Optional*. No description yet available.
 
+--- This method will reset the `variable.value` to the default value.
+function mwseMCMSetting:resetToDefault() end
+
+--- Changes the Setting's `variable.value` to the given value, updates the Setting's label and widget if needed, and calls `self:update`.
+--- @param newValue unknown No description yet available.
+function mwseMCMSetting:setVariableValue(newValue) end
+
 --- Calls the Setting's callback method and if `restartRequired` is set to true, notifies the player to restart the game.
 function mwseMCMSetting:update() end
 

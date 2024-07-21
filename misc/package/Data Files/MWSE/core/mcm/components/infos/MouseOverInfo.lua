@@ -21,7 +21,7 @@ function MouseOverInfo:updateInfo(component)
 
 	-- If component has a description, update mouseOver
 	-- Or return to original text on mouseLeave
-	local newText = component and component:getMouseOverText() or self.text or "" 
+	local newText = component and component:getMouseOverText() or self.text or ""
 	self.elements.info.text = newText
 	self:update()
 end
@@ -30,7 +30,7 @@ end
 function MouseOverInfo:makeComponent(parentBlock)
 	Parent.makeComponent(self, parentBlock)
 
-	--- @param e {component: mwseMCMMouseOverInfo}
+	--- @param e { component: mwseMCMMouseOverInfo }
 	local function updateInfo(e)
 		self:updateInfo(e.component)
 	end
@@ -38,7 +38,7 @@ function MouseOverInfo:makeComponent(parentBlock)
 	-- Register events
 	event.register(self.triggerOn, updateInfo)
 	event.register(self.triggerOff, updateInfo)
-	parentBlock:register("destroy", function()
+	parentBlock:register(tes3.uiEvent.destroy, function()
 		event.unregister(self.triggerOn, updateInfo)
 		event.unregister(self.triggerOff, updateInfo)
 	end)

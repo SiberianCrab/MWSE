@@ -1243,6 +1243,17 @@ myObject:registerMouseOverElements(mouseOverList)
 
 ***
 
+### `resetToDefault`
+<div class="search_terms" style="display: none">resettodefault</div>
+
+This method will reset the settings to the default value for all the nested components in this Category.
+
+```lua
+myObject:resetToDefault()
+```
+
+***
+
 ### `update`
 <div class="search_terms" style="display: none">update</div>
 

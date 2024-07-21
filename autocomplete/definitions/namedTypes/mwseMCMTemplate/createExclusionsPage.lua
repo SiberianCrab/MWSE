@@ -6,6 +6,7 @@ return {
 		type = "table",
 		tableParams = {
 			{ name = "showHeader", type = "boolean", optional = true, default = false, description = "The page's label will only be created if set to true." },
+			{ name = "showReset", type = "boolean", optional = true, default = false, description = "When set to true, the ExclusionsPage will have a Reset button. Clicking on it will set the `variable.value` to the `variable.defaultSetting` value." },
 			{ name = "label", type = "string", description = "The label field is displayed in the tab for that page at the top of the menu. Defaults to: \"Page {number}\"." },
 			{ name = "variable", type = "mwseMCMVariable|mwseMCMSettingNewVariable", optional = true, description = "The Variable used to store blocked list entries." },
 			{ name = "config", type = "table", optional = true, default = "`parentComponent.config`",

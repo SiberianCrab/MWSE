@@ -79,6 +79,16 @@ local function getSortedObjectList(params)
 	return list
 end
 
+function ExclusionsPage:resetToDefault()
+	if self.variable.defaultSetting == nil then
+		return
+	end
+	-- Make sure we copy defaultSetting so that self.variable.value doesn't become the reference to this table.
+	self.variable.value = table.copy(self.variable.defaultSetting)
+	self.elements.outerContainer.parent:destroyChildren()
+	self:create(self.elements.outerContainer.parent)
+end
+
 function ExclusionsPage:resetSearchBars()
 	self.elements.searchBarInput.rightList.text = ""
 	self.elements.searchBarInput.leftList.text = ""
@@ -308,6 +318,21 @@ function ExclusionsPage:createSearchBar(parentBlock, listName)
 end
 
 --- @param parentBlock tes3uiElement
+function ExclusionsPage:createResetButtonContainer(parentBlock)
+	local grow = parentBlock:createBlock({ id = tes3ui.registerID("Reset_LeftGrow") })
+	grow.autoWidth = true
+	grow.autoHeight = true
+
+	local resetContainer = parentBlock:createBlock({ id = tes3ui.registerID("Reset_InnerContainer") })
+	resetContainer.flowDirection = tes3.flowDirection.leftToRight
+	resetContainer.autoWidth = true
+	resetContainer.autoHeight = true
+	resetContainer.widthProportional = 1.0
+	resetContainer.childAlignX = 1.0
+	self.elements.resetContainer = resetContainer
+end
+
+--- @param parentBlock tes3uiElement
 function ExclusionsPage:createFiltersSection(parentBlock)
 
 	local block = parentBlock:createBlock{}
@@ -400,6 +425,11 @@ function ExclusionsPage:createList(parentBlock, listId)
 	list.heightProportional = 1.0
 	list.paddingLeft = 8
 	self.elements[listId] = list
+
+	if self.showReset and listId == "leftList" then
+		self:createResetButtonContainer(block)
+		self:createResetButton(self.elements.resetContainer)
+	end
 
 end
 

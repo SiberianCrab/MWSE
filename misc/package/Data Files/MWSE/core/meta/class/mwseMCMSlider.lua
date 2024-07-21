@@ -136,6 +136,10 @@ function mwseMCMSlider:new(data) end
 --- @param element tes3uiElement No description yet available.
 function mwseMCMSlider:registerSliderElement(element) end
 
+--- Changes the Slider's `variable.value` to the given value, updates the Slider's label and widget, and calls `self:update`.
+--- @param newValue number No description yet available.
+function mwseMCMSlider:setVariableValue(newValue) end
+
 --- Calls `updateVariableValue`, then calls the Slider's `callback` method (if it exists). Then notifies the player to restart the game if `restartRequired == true`.
 function mwseMCMSlider:update() end
 

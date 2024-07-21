@@ -61,18 +61,25 @@ function Category:new(data)
 	return t
 end
 
+
+function Category:resetToDefault()
+	for _, component in ipairs(self.components) do
+		component:resetToDefault()
+	end
+end
+
 function Category:disable()
 	Parent.disable(self)
 	for _, element in ipairs(self.elements.subcomponentsContainer.children) do
 		if element.color then
-			element.color = tes3ui.getPalette("disabled_color")
+			element.color = tes3ui.getPalette(tes3.palette.disabledColor)
 		end
 	end
 end
 
 function Category:enable()
 	if self.elements.label then
-		self.elements.label.color = tes3ui.getPalette("header_color")
+		self.elements.label.color = tes3ui.getPalette(tes3.palette.headerColor)
 	end
 end
 
@@ -108,7 +115,7 @@ end
 --- @param parentBlock tes3uiElement
 function Category:createSubcomponentsContainer(parentBlock)
 	local subcomponentsContainer = parentBlock:createBlock({ id = tes3ui.registerID("Category_ContentsContainer") })
-	subcomponentsContainer.flowDirection = "top_to_bottom"
+	subcomponentsContainer.flowDirection = tes3.flowDirection.topToBottom
 	subcomponentsContainer.widthProportional = parentBlock.widthProportional
 	subcomponentsContainer.heightProportional = parentBlock.heightProportional
 	subcomponentsContainer.autoHeight = parentBlock.autoHeight

@@ -39,7 +39,7 @@
 --- @field componentType string For mwseMCMComponent this is set to `"Component"`.
 --- @field createContentsContainer nil|fun(self: mwseMCMComponent, outerContainer: tes3uiElement) This method creates the contents of a component. Not every component implements this method.
 --- @field description string|nil If in a [Sidebar Page](./mwseMCMSideBarPage.md), the description will be shown on mouseover.
---- @field elements mwseMCMButtonElements|mwseMCMCategoryElements|mwseMCMComponentElements|mwseMCMDropdownElements|mwseMCMExclusionsPageElements|mwseMCMFilterPageElements|mwseMCMInfoElements|mwseMCMMouseOverPageElements|mwseMCMParagraphFieldElements|mwseMCMSideBarPageElements|mwseMCMSliderElements|mwseMCMTemplateElements|mwseMCMTextFieldElements This dictionary holds all the UI elements of the Component, for easy access.
+--- @field elements mwseMCMButtonElements|mwseMCMCategoryElements|mwseMCMComponentElements|mwseMCMDropdownElements|mwseMCMExclusionsPageElements|mwseMCMFilterPageElements|mwseMCMInfoElements|mwseMCMMouseOverPageElements|mwseMCMPageElements|mwseMCMParagraphFieldElements|mwseMCMSideBarPageElements|mwseMCMSliderElements|mwseMCMTemplateElements|mwseMCMTextFieldElements This dictionary holds all the UI elements of the Component, for easy access.
 --- @field indent integer The left padding size in pixels. Only used if the `childIndent` isn't set on the parent component.
 --- @field inGameOnly boolean If true, then this component will be disabled when on the main menu.
 --- @field label string The text of the component. Not all component types have a label.

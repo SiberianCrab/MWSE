@@ -35,6 +35,18 @@ function Setting:insertMouseovers(element)
 	end
 end
 
+function Setting:setVariableValue(newValue)
+	self.variable.value = newValue
+	self:update()
+end
+
+function Setting:resetToDefault()
+	local variable = self.variable
+	if variable and variable.defaultSetting ~= nil then
+		self:setVariableValue(variable.defaultSetting)
+	end
+end
+
 function Setting:update()
 	if self.restartRequired then
 
