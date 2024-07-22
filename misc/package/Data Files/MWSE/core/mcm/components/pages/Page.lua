@@ -117,8 +117,6 @@ function Page:createContentsContainer(parentBlock)
 	end
 end
 
-local scrollPaneId = tes3ui.registerID("PartScrollPane_pane")
-
 --- @param parentBlock tes3uiElement
 function Page:createOuterContainer(parentBlock)
 	local border
@@ -135,9 +133,6 @@ function Page:createOuterContainer(parentBlock)
 		border = parentBlock:createVerticalScrollPane({ id = tes3ui.registerID("Page_ScrollPane") })
 		border.heightProportional = 1.0
 		border.widthProportional = 1.0
-
-		local pane = border:findChild(scrollPaneId)
-		pane.heightProportional = 1.0
 	end
 
 	local outerContainer = border:createBlock({ id = tes3ui.registerID("Page_OuterContainer") })
