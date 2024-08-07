@@ -509,6 +509,40 @@ namespace se::cs {
 			CS_RecordHandler_LoadFiles(recordHandler);
 			metadata::reloadModMetadata();
 		}
+
+		//
+		// Patch: Redirect from help file to a conversion website
+		//
+
+		BOOL __stdcall OverrideWinHelpA(HWND hWndMain, LPCSTR lpszHelp, UINT uCommand, ULONG_PTR dwData) {
+			if (!string::equal(lpszHelp, "TES Construction Set.HLP")) {
+				return WinHelpA(hWndMain, lpszHelp, uCommand, dwData);
+			}
+
+			// The CS only ever calls with two commands: FINDER and CONTEXT. The FINDER isn't even aware to the window it is on.
+			switch (uCommand) {
+			case HELP_FINDER:
+				// Displays the Help Topics dialog box.
+				ShellExecuteA(0, 0, "https://tes3cs-manual.vercel.app/", 0, 0, SW_SHOW);
+				return TRUE;
+			case HELP_CONTEXT:
+				// Displays the topic identified by the specified context identifier defined in the [MAP] section of the .hpj file.
+				// Only two of these are ever called: 0x5DC and 0x3E8
+				switch (dwData) {
+				case 0x5DCu: // Functions
+					ShellExecuteA(0, 0, "https://tes3cs-manual.vercel.app/gameplay/scripting/functions/", 0, 0, SW_SHOW);
+					return TRUE;
+				case 0x3E8u: // Commands
+					ShellExecuteA(0, 0, "https://tes3cs-manual.vercel.app/gameplay/scripting/commands/", 0, 0, SW_SHOW);
+					return TRUE;
+				}
+				break;
+			}
+
+			// Fall back to default behavior.
+			return WinHelpA(hWndMain, lpszHelp, uCommand, dwData);
+		}
+
 	}
 
 	CSSE application;
@@ -651,6 +685,9 @@ namespace se::cs {
 
 		// Patch: Load mod metadata with mod data.
 		genJumpEnforced(0x40178A, 0x501500, reinterpret_cast<DWORD>(patch::PatchOnLoadFiles));
+
+		// Patch: Redirect away from the help file, which is no longer supported by Windows.
+		writeDoubleWordUnprotected(0x6D9ECC, reinterpret_cast<DWORD>(&patch::OverrideWinHelpA));
 
 		// Install all our sectioned patches.
 		window::main::installPatches();

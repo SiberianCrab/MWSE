@@ -54,7 +54,7 @@ end
 
 -- Expose the mcm API.
 mwse.mcm = require("mcm.mcm")
-mwse.mcm.i18n = mwse.loadTranslations("mcm")
+mwse.mcm.i18n = mwse.loadTranslations("..")
 
 -- credit to Pherim and MelchiorDahrk for the default icons
 local favoriteIcons = {

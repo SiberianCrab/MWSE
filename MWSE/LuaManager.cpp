@@ -87,6 +87,8 @@
 #include "StringUtilLua.h"
 #include "TES3UtilLua.h"
 
+#include "yamlloader.hpp"
+
 #include "TES3ActionDataLua.h"
 #include "TES3ActivatorLua.h"
 #include "TES3ActorAnimationControllerLua.h"
@@ -473,6 +475,10 @@ namespace mwse::lua {
 		luaState["math"]["fhuge"] = std::numeric_limits<float>::max();
 		luaState["math"]["epsilon"] = std::numeric_limits<double>::epsilon();
 		luaState["math"]["fepsilon"] = std::numeric_limits<float>::epsilon();
+
+		// Evil YAML support.
+		luaState.create_named_table("yaml");
+		luaState["yaml"]["decode"] = OpenMW::LuaUtil::loadYaml;
 
 		// Bind TES3 data types.
 		bindTES3ActionData();
