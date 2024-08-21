@@ -32,6 +32,11 @@ function math.isclose(a, b, absoluteTolerance, relativeTolerance) end
 --- @return number result No description yet available.
 function math.lerp(v0, v1, t) end
 
+--- Returns the next power of 2 that is equal to, or greater than, value.
+--- @param value number No description yet available.
+--- @return integer result No description yet available.
+function math.nextPowerOfTwo(value) end
+
 --- Returns a value, scaled from expected values [lowIn, highIn] to [lowOut, highOut].
 --- 
 --- For example, a value of 7 remapped from [0,10] to [0,100] would be 70.

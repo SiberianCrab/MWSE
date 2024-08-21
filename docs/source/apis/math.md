@@ -120,6 +120,25 @@ local result = math.lerp(v0, v1, t)
 
 ***
 
+### `math.nextPowerOfTwo`
+<div class="search_terms" style="display: none">nextpoweroftwo</div>
+
+Returns the next power of 2 that is equal to, or greater than, value.
+
+```lua
+local result = math.nextPowerOfTwo(value)
+```
+
+**Parameters**:
+
+* `value` (number)
+
+**Returns**:
+
+* `result` (integer)
+
+***
+
 ### `math.remap`
 <div class="search_terms" style="display: none">remap</div>
 
