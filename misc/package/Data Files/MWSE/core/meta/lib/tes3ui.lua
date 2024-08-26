@@ -222,6 +222,34 @@ function tes3ui.setConsoleReference(reference) end
 --- @param text string No description yet available.
 function tes3ui.showBookMenu(text) end
 
+--- Creates a menu with a color picker. To read the color the user picked, pass a `closeCallback`.
+--- @param params tes3ui.showColorPickerMenu.params This table accepts the following values:
+--- 
+--- `id`: string|integer|nil — *Default*: `MenuColorPicker`. The menu ID of the color picker menu.
+--- 
+--- `closeCallback`: nil|fun(selectedColor: mwseColorTable, selectedAlpha: number|nil) — *Optional*. Called when the menu was closed. It gets passed the selected color and alpha values.
+--- 
+--- `initialColor`: mwseColorTable — The initial color for the picker.
+--- 
+--- `alpha`: boolean? — *Default*: `false`. If `true` the picker will also allow picking an alpha value.
+--- 
+--- `initialAlpha`: number? — *Default*: `1`. The initial alpha value.
+--- 
+--- `leaveMenuMode`: boolean? — *Default*: `false`. Determines if menu mode should be exited after a choice is made.
+--- 
+--- `heading`: string? — *Default*: `Color Picker Menu`. The title of the opened menu. The default message is localized to the current locale.
+function tes3ui.showColorPickerMenu(params) end
+
+---Table parameter definitions for `tes3ui.showColorPickerMenu`.
+--- @class tes3ui.showColorPickerMenu.params
+--- @field id string|integer|nil *Default*: `MenuColorPicker`. The menu ID of the color picker menu.
+--- @field closeCallback nil|fun(selectedColor: mwseColorTable, selectedAlpha: number|nil) *Optional*. Called when the menu was closed. It gets passed the selected color and alpha values.
+--- @field initialColor mwseColorTable The initial color for the picker.
+--- @field alpha boolean? *Default*: `false`. If `true` the picker will also allow picking an alpha value.
+--- @field initialAlpha number? *Default*: `1`. The initial alpha value.
+--- @field leaveMenuMode boolean? *Default*: `false`. Determines if menu mode should be exited after a choice is made.
+--- @field heading string? *Default*: `Color Picker Menu`. The title of the opened menu. The default message is localized to the current locale.
+
 --- This function creates a dialogue message. The message can have three styles. The style `2` makes a selectable text. That way by calling this function multiple time you can create a selection of responses.
 --- @param params tes3ui.showDialogueMessage.params This table accepts the following values:
 --- 

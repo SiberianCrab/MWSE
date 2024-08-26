@@ -28,6 +28,7 @@ mouseStillOver           | `"mouseStillOver"`
 mouseStillPressed        | `"mouseStillPressed"`
 mouseStillPressedOutside | `"mouseStillPressedOutside"`
 partScrollBarChanged     | `"PartScrollBar_changed"`
+colorChanged             | `"colorChanged"`
 preUpdate                | `"preUpdate"`
 unfocus                  | `"unfocus"`
 update                   | `"update"`

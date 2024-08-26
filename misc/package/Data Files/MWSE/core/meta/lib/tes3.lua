@@ -6358,6 +6358,7 @@ tes3.uiElementType = require("tes3.uiElementType")
 tes3.uiEvent = require("tes3.uiEvent")
 
 --- @alias tes3.uiEvent
+---| `tes3.uiEvent.colorChanged`
 ---| `tes3.uiEvent.destroy`
 ---| `tes3.uiEvent.focus`
 ---| `tes3.uiEvent.help`

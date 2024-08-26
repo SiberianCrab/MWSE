@@ -733,6 +733,73 @@ local result = myObject:createButton({ id = ..., text = ... })
 
 ***
 
+### `createColorPicker`
+<div class="search_terms" style="display: none">createcolorpicker, colorpicker</div>
+
+Creates a color picker widget.
+
+Color picker specific properties can be accessed through the `widget` property. The widget type for color pickers is [`tes3uiColorPicker`](https://mwse.github.io/MWSE/types/tes3uiColorPicker/).
+
+```lua
+local result = myObject:createColorPicker({ id = ..., initialColor = ..., alpha = ..., initialAlpha = ..., vertical = ..., showDataRow = ..., showSaturationSlider = ..., showSaturationPicker = ..., height = ..., mainWidth = ..., hueWidth = ..., showPreviews = ..., showOriginal = ..., previewHeight = ..., previewWidth = ... })
+```
+
+**Parameters**:
+
+* `params` (table): *Optional*.
+	* `id` (string, integer): *Optional*. An identifier to help find this element later.
+	* `initialColor` ([mwseColorTable](../types/mwseColorTable.md)): *Default*: `{ r = 1.0, g = 1.0, b = 1.0 }`. The initial color for the picker.
+	* `alpha` (boolean): *Default*: `false`. If `true` the picker will also allow picking an alpha value.
+	* `initialAlpha` (number): *Default*: `1`. The initial alpha value.
+	* `vertical` (boolean): *Default*: `false`. If `true`, saturation, hue and alpha bars and color previews are created in the second row below the main picker. If `false` they are created in the same row as the main picker.
+	* `showDataRow` (boolean): *Default*: `true`. If `true` the picker will have a text input below the main picker for changing the current hexadecimal RGB(A) value.
+	* `showSaturationSlider` (boolean): *Default*: `true`. If `true` the picker will have a slider below the main picker that moves current selection horizontally (in the saturation axis).
+	* `showSaturationPicker` (boolean): *Default*: `true`. If `true` the picker will have an additional bar for changing saturation of the currently selected color.
+	* `height` (integer): *Default*: `256`. The height of the main, hue, and optionally alpha and saturation, pickers.
+	* `mainWidth` (integer): *Default*: `256`. The width of the main picker.
+	* `hueWidth` (integer): *Default*: `32`. The width of pickers for hue, and optionally alpha and saturation.
+	* `showPreviews` (boolean): *Default*: `true`. If `false` the picker won't have any color preview widgets.
+	* `showOriginal` (boolean): *Default*: `true`. If `true` the picker will have a preview widget that shows original color below the currently picked color. Clicking on the original color will reset current color to original color.
+	* `previewHeight` (integer): *Default*: `64`. If color picker has color previews, this will be the height of individual preview image.
+	* `previewWidth` (integer): *Default*: `64`. If color picker has color previews, this will be the width of individual preview image.
+
+**Returns**:
+
+* `result` ([tes3uiElement](../types/tes3uiElement.md))
+
+***
+
+### `createColorPreview`
+<div class="search_terms" style="display: none">createcolorpreview, colorpreview</div>
+
+Creates a color preview widget. It's made of a rect element of provided color and an image. The image shows current RGBA color over the checkered background.
+
+Color preview specific properties can be accessed through the `widget` property. The widget type for color previews is [`tes3uiColorPreview`](https://mwse.github.io/MWSE/types/tes3uiColorPreview/).
+
+```lua
+local result = myObject:createColorPreview({ id = ..., color = ..., hasAlphaPreview = ..., alpha = ..., width = ..., height = ..., flowDirection = ..., checkerSize = ..., lightGray = ..., darkGray = ... })
+```
+
+**Parameters**:
+
+* `params` (table): *Optional*.
+	* `id` (string, integer): *Optional*. An identifier to help find this element later.
+	* `color` ([mwseColorTable](../types/mwseColorTable.md), ffiImagePixel): *Default*: `{ r = 1.0, g = 1.0, b = 1.0 }`. The color of the preview.
+	* `hasAlphaPreview` (boolean): *Default*: `true`. If `true`, the color preview in addition to colored rect also has an image that shows current color over a checkered background.
+	* `alpha` (number): *Default*: `1`. The alpha value of the preview.
+	* `width` (integer): *Default*: `64`. The width of the individual preview element.
+	* `height` (integer): *Default*: `64`. The height of the individual preview element.
+	* `flowDirection` ([tes3.flowDirection](../references/flow-directions.md)): *Default*: `tes3.flowDirection.leftToRight`. Determines if the color preview is horizontal or vertical.
+	* `checkerSize` (integer): *Default*: `16`. The size of individual square in the color preview image in pixels.
+	* `lightGray` ([mwseColorTable](../types/mwseColorTable.md)): *Default*: `{ r = 0.7, g = 0.7, b = 0.7 }`. The color of lighter squares in the color preview image.
+	* `darkGray` ([mwseColorTable](../types/mwseColorTable.md)): *Default*: `{ r = 0.5, g = 0.5, b = 0.5 }`. The color of darker squares in the color preview image.
+
+**Returns**:
+
+* `result` ([tes3uiElement](../types/tes3uiElement.md))
+
+***
+
 ### `createCycleButton`
 <div class="search_terms" style="display: none">createcyclebutton, cyclebutton</div>
 
@@ -1485,6 +1552,9 @@ Widget-specific events:
 		Triggers after the text has been cleared by the user in text input widgets that have `placeholderText` set.
 	* **textUpdated**
 		Triggers after the text of the text input has changed.
+* Color Picker:
+	* **colorChanged**
+		Triggers after new color was chosen in the color picker.
 ***
 
 #### Event forwarding

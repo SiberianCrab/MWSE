@@ -91,7 +91,7 @@
 --- @field texture niSourceTexture The underlying texture for the element. This assumes that the element is of an element type. Setting this value will change the element to an image type. Texture dimensions must be powers of 2.
 --- @field type tes3.uiElementType *Read-only*. The type of content this `tes3uiElement` represents. This is an expanded set of the options available from the `contentType` property. Maps to values in [`tes3.uiElementType`](https://mwse.github.io/MWSE/references/tes3uiElement-types/).
 --- @field visible boolean Controls if the element is visible.
---- @field widget tes3uiButton|tes3uiCycleButton|tes3uiFillBar|tes3uiHyperlink|tes3uiParagraphInput|tes3uiScrollPane|tes3uiSlider|tes3uiTextInput|tes3uiTextSelect|nil Access to element specific properties. This will be `nil` if there are no element specific properties. See the return types and the create* functions for more details.
+--- @field widget tes3uiButton|tes3uiColorPicker|tes3uiColorPreview|tes3uiCycleButton|tes3uiFillBar|tes3uiHyperlink|tes3uiParagraphInput|tes3uiScrollPane|tes3uiSlider|tes3uiTextInput|tes3uiTextSelect|nil Access to element specific properties. This will be `nil` if there are no element specific properties. See the return types and the create* functions for more details.
 --- @field width integer The element's width in pixels.
 --- @field widthProportional number Sets element dimensions using a proportional sizer. The sizer starts with the parent dimension in the flow direction, subtracts any fixed dimension children leaving the proportional sizer space. Each proportionally sized element then gets an equal division of the space, multiplied by this member. Values above 1.0 are permissible.
 --- 
@@ -145,6 +145,101 @@ function tes3uiElement:createButton(params) end
 --- @class tes3uiElement.createButton.params
 --- @field id string|number|nil *Optional*. An identifier to help find this element later.
 --- @field text string? *Optional*. The text to add to the button. It will highlight on mouseover like a text select widget.
+
+--- Creates a color picker widget.
+--- 
+--- Color picker specific properties can be accessed through the `widget` property. The widget type for color pickers is [`tes3uiColorPicker`](https://mwse.github.io/MWSE/types/tes3uiColorPicker/).
+--- @param params tes3uiElement.createColorPicker.params? This table accepts the following values:
+--- 
+--- `id`: string|integer|nil — *Optional*. An identifier to help find this element later.
+--- 
+--- `initialColor`: mwseColorTable? — *Default*: `{ r = 1.0, g = 1.0, b = 1.0 }`. The initial color for the picker.
+--- 
+--- `alpha`: boolean? — *Default*: `false`. If `true` the picker will also allow picking an alpha value.
+--- 
+--- `initialAlpha`: number? — *Default*: `1`. The initial alpha value.
+--- 
+--- `vertical`: boolean? — *Default*: `false`. If `true`, saturation, hue and alpha bars and color previews are created in the second row below the main picker. If `false` they are created in the same row as the main picker.
+--- 
+--- `showDataRow`: boolean? — *Default*: `true`. If `true` the picker will have a text input below the main picker for changing the current hexadecimal RGB(A) value.
+--- 
+--- `showSaturationSlider`: boolean? — *Default*: `true`. If `true` the picker will have a slider below the main picker that moves current selection horizontally (in the saturation axis).
+--- 
+--- `showSaturationPicker`: boolean? — *Default*: `true`. If `true` the picker will have an additional bar for changing saturation of the currently selected color.
+--- 
+--- `height`: integer? — *Default*: `256`. The height of the main, hue, and optionally alpha and saturation, pickers.
+--- 
+--- `mainWidth`: integer? — *Default*: `256`. The width of the main picker.
+--- 
+--- `hueWidth`: integer? — *Default*: `32`. The width of pickers for hue, and optionally alpha and saturation.
+--- 
+--- `showPreviews`: boolean? — *Default*: `true`. If `false` the picker won't have any color preview widgets.
+--- 
+--- `showOriginal`: boolean? — *Default*: `true`. If `true` the picker will have a preview widget that shows original color below the currently picked color. Clicking on the original color will reset current color to original color.
+--- 
+--- `previewHeight`: integer? — *Default*: `64`. If color picker has color previews, this will be the height of individual preview image.
+--- 
+--- `previewWidth`: integer? — *Default*: `64`. If color picker has color previews, this will be the width of individual preview image.
+--- @return tes3uiElement result No description yet available.
+function tes3uiElement:createColorPicker(params) end
+
+---Table parameter definitions for `tes3uiElement.createColorPicker`.
+--- @class tes3uiElement.createColorPicker.params
+--- @field id string|integer|nil *Optional*. An identifier to help find this element later.
+--- @field initialColor mwseColorTable? *Default*: `{ r = 1.0, g = 1.0, b = 1.0 }`. The initial color for the picker.
+--- @field alpha boolean? *Default*: `false`. If `true` the picker will also allow picking an alpha value.
+--- @field initialAlpha number? *Default*: `1`. The initial alpha value.
+--- @field vertical boolean? *Default*: `false`. If `true`, saturation, hue and alpha bars and color previews are created in the second row below the main picker. If `false` they are created in the same row as the main picker.
+--- @field showDataRow boolean? *Default*: `true`. If `true` the picker will have a text input below the main picker for changing the current hexadecimal RGB(A) value.
+--- @field showSaturationSlider boolean? *Default*: `true`. If `true` the picker will have a slider below the main picker that moves current selection horizontally (in the saturation axis).
+--- @field showSaturationPicker boolean? *Default*: `true`. If `true` the picker will have an additional bar for changing saturation of the currently selected color.
+--- @field height integer? *Default*: `256`. The height of the main, hue, and optionally alpha and saturation, pickers.
+--- @field mainWidth integer? *Default*: `256`. The width of the main picker.
+--- @field hueWidth integer? *Default*: `32`. The width of pickers for hue, and optionally alpha and saturation.
+--- @field showPreviews boolean? *Default*: `true`. If `false` the picker won't have any color preview widgets.
+--- @field showOriginal boolean? *Default*: `true`. If `true` the picker will have a preview widget that shows original color below the currently picked color. Clicking on the original color will reset current color to original color.
+--- @field previewHeight integer? *Default*: `64`. If color picker has color previews, this will be the height of individual preview image.
+--- @field previewWidth integer? *Default*: `64`. If color picker has color previews, this will be the width of individual preview image.
+
+--- Creates a color preview widget. It's made of a rect element of provided color and an image. The image shows current RGBA color over the checkered background.
+--- 
+--- Color preview specific properties can be accessed through the `widget` property. The widget type for color previews is [`tes3uiColorPreview`](https://mwse.github.io/MWSE/types/tes3uiColorPreview/).
+--- @param params tes3uiElement.createColorPreview.params? This table accepts the following values:
+--- 
+--- `id`: string|integer|nil — *Optional*. An identifier to help find this element later.
+--- 
+--- `color`: mwseColorTable|ffiImagePixel|nil — *Default*: `{ r = 1.0, g = 1.0, b = 1.0 }`. The color of the preview.
+--- 
+--- `hasAlphaPreview`: boolean? — *Default*: `true`. If `true`, the color preview in addition to colored rect also has an image that shows current color over a checkered background.
+--- 
+--- `alpha`: number? — *Default*: `1`. The alpha value of the preview.
+--- 
+--- `width`: integer? — *Default*: `64`. The width of the individual preview element.
+--- 
+--- `height`: integer? — *Default*: `64`. The height of the individual preview element.
+--- 
+--- `flowDirection`: tes3.flowDirection? — *Default*: `tes3.flowDirection.leftToRight`. Determines if the color preview is horizontal or vertical.
+--- 
+--- `checkerSize`: integer? — *Default*: `16`. The size of individual square in the color preview image in pixels.
+--- 
+--- `lightGray`: mwseColorTable? — *Default*: `{ r = 0.7, g = 0.7, b = 0.7 }`. The color of lighter squares in the color preview image.
+--- 
+--- `darkGray`: mwseColorTable? — *Default*: `{ r = 0.5, g = 0.5, b = 0.5 }`. The color of darker squares in the color preview image.
+--- @return tes3uiElement result No description yet available.
+function tes3uiElement:createColorPreview(params) end
+
+---Table parameter definitions for `tes3uiElement.createColorPreview`.
+--- @class tes3uiElement.createColorPreview.params
+--- @field id string|integer|nil *Optional*. An identifier to help find this element later.
+--- @field color mwseColorTable|ffiImagePixel|nil *Default*: `{ r = 1.0, g = 1.0, b = 1.0 }`. The color of the preview.
+--- @field hasAlphaPreview boolean? *Default*: `true`. If `true`, the color preview in addition to colored rect also has an image that shows current color over a checkered background.
+--- @field alpha number? *Default*: `1`. The alpha value of the preview.
+--- @field width integer? *Default*: `64`. The width of the individual preview element.
+--- @field height integer? *Default*: `64`. The height of the individual preview element.
+--- @field flowDirection tes3.flowDirection? *Default*: `tes3.flowDirection.leftToRight`. Determines if the color preview is horizontal or vertical.
+--- @field checkerSize integer? *Default*: `16`. The size of individual square in the color preview image in pixels.
+--- @field lightGray mwseColorTable? *Default*: `{ r = 0.7, g = 0.7, b = 0.7 }`. The color of lighter squares in the color preview image.
+--- @field darkGray mwseColorTable? *Default*: `{ r = 0.5, g = 0.5, b = 0.5 }`. The color of darker squares in the color preview image.
 
 --- Creates a clickable button, whose text changes linearly through options as it is clicked. Register the `valueChanged` event for when the option is cycled or changed via script.
 --- 
@@ -600,6 +695,9 @@ function tes3uiElement:move(params) end
 --- 		Triggers after the text has been cleared by the user in text input widgets that have `placeholderText` set.
 --- 	* **textUpdated**
 --- 		Triggers after the text of the text input has changed.
+--- * Color Picker:
+--- 	* **colorChanged**
+--- 		Triggers after new color was chosen in the color picker.
 --- ***
 --- 
 --- #### Event forwarding

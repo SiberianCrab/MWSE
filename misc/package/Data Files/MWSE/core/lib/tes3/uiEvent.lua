@@ -20,4 +20,5 @@ return {
 	update = "update",
 	destroy = "destroy",
 	partScrollBarChanged = "PartScrollBar_changed",
+	colorChanged = "colorChanged",
 }

@@ -699,6 +699,28 @@ tes3ui.showBookMenu(text)
 
 ***
 
+### `tes3ui.showColorPickerMenu`
+<div class="search_terms" style="display: none">showcolorpickermenu, colorpickermenu</div>
+
+Creates a menu with a color picker. To read the color the user picked, pass a `closeCallback`.
+
+```lua
+tes3ui.showColorPickerMenu({ id = ..., closeCallback = ..., initialColor = ..., alpha = ..., initialAlpha = ..., leaveMenuMode = ..., heading = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `id` (string, integer): *Default*: `MenuColorPicker`. The menu ID of the color picker menu.
+	* `closeCallback` (fun(selectedColor: [mwseColorTable](../types/mwseColorTable.md), selectedAlpha: number|nil)): *Optional*. Called when the menu was closed. It gets passed the selected color and alpha values.
+	* `initialColor` ([mwseColorTable](../types/mwseColorTable.md)): The initial color for the picker.
+	* `alpha` (boolean): *Default*: `false`. If `true` the picker will also allow picking an alpha value.
+	* `initialAlpha` (number): *Default*: `1`. The initial alpha value.
+	* `leaveMenuMode` (boolean): *Default*: `false`. Determines if menu mode should be exited after a choice is made.
+	* `heading` (string): *Default*: `Color Picker Menu`. The title of the opened menu. The default message is localized to the current locale.
+
+***
+
 ### `tes3ui.showDialogueMessage`
 <div class="search_terms" style="display: none">showdialoguemessage, dialoguemessage</div>
 
