@@ -216,7 +216,7 @@ namespace TES3 {
 			// Custom resurrect logic that revives with minimal state changes.
 			actionData.animStateAttack = AttackAnimationState::Idle;
 			actionData.aiBehaviorState = 0;
-			actionData.currentAnimGroup = 0xFF;
+			actionData.animGroupCurrentAction = 0xFF;
 			actorFlags &= ~(MobileActorFlag::SpellReadied | MobileActorFlag::WeaponDrawn);
 			movementFlags = 0;
 
@@ -1391,7 +1391,7 @@ namespace TES3 {
 		}
 
 		auto animState = actionData.animStateAttack;
-		auto animGroup = actionData.currentAnimGroup;
+		auto animGroup = actionData.animGroupCurrentAction;
 		const unsigned char Hit1 = 0x13, SwimHit3 = 0x1A;
 
 		if (animState == AttackAnimationState::Idle

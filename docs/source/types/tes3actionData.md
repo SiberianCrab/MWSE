@@ -43,10 +43,21 @@ When attacking, this value represents how much the weapon has been pulled back. 
 
 ***
 
+### `attackWasBlocked`
+<div class="search_terms" style="display: none">attackwasblocked</div>
+
+A flag that indicates if an attack failed its block check on the initial attack swing, and should be blocked if it connects. May be modified before the strike hits to cause the attack to be blocked. This flag negates damage even if no shield is equipped, so you should check if a shield is present before setting it.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `blockingState`
 <div class="search_terms" style="display: none">blockingstate</div>
 
-A state index that indicates an actor's blocking state. It is zero when not blocking and non-zero when blocking. A value of 1 indicates a state transition from non-blocking to blocking, while a value of 2 means blocking is active (where the block animation is currently playing and should not be interrupted).
+A state index that indicates an actor's blocking state. It is zero when not blocking and non-zero when blocking. A value of 1 indicates a state transition from non-blocking to blocking, while a value of 2 means blocking is active (where the block animation is currently playing and should not be interrupted). The action simulation will reset the value to 0 at the end of a block animation.
 
 **Returns**:
 
@@ -84,6 +95,17 @@ A 16-bit hourstamp of the last time a merchant's barter gold was at its base lev
 **Returns**:
 
 * `result` (number)
+
+***
+
+### `lastPositionBeforeCombat`
+<div class="search_terms" style="display: none">lastpositionbeforecombat</div>
+
+When an actor enters combat, the last position is stored here so that they can navigate back after combat.
+
+**Returns**:
+
+* `result` ([tes3vector3](../types/tes3vector3.md))
 
 ***
 
