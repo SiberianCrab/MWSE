@@ -62,6 +62,7 @@ namespace se::string {
 	}
 
 	inline void to_lower(std::string& s) {
-		std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c, std::locale("en_US.UTF-8")); });
+		thread_local const std::locale loc("en_US.UTF-8");
+		std::transform(s.begin(), s.end(), s.begin(), [&](unsigned char c) { return std::tolower(c, loc); });
 	}
 }
