@@ -3,6 +3,8 @@
 
 --- @meta
 --- A substructure of mobile actors that provides information about the current or previous action.
+---
+--- [Examples available in online documentation](https://mwse.github.io/MWSE/types/tes3actionData).
 --- @class tes3actionData
 --- @field aiBehaviorState tes3.aiBehaviorState The behavior state. This maps to values in [`tes3.aiBehaviorState`](https://mwse.github.io/MWSE/references/ai-behavior-states/) namespace.
 --- @field animationAttackState tes3.animationState The actor's animation state. Maps to values in [`tes3.animationState`](https://mwse.github.io/MWSE/references/animation-states/) namespace.
