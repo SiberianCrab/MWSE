@@ -15,6 +15,7 @@
 #include "WinUIUtil.h"
 
 #include "Settings.h"
+#include "RR_Settings.h"
 
 #include "EditBasicExtended.h"
 
@@ -626,12 +627,8 @@ namespace se::cs::dialog::dialogue_window {
 		saveInfoColumnWidths(context.getWindowHandle());
 	}
 
-	//Font 8
-  //constexpr auto MIN_WIDTH = 1130u;//CSSE = 1113u
-  //constexpr auto MIN_HEIGHT = 640u;//CSSE = 700u
-	//Font10
-	constexpr auto MIN_WIDTH = 1240u;
-	constexpr auto MIN_HEIGHT = 820u;
+	constexpr auto MIN_WIDTH = DialogDialogueWindow_MIN_WIDTH;
+	constexpr auto MIN_HEIGHT = DialogDialogueWindow_MIN_HEIGHT;
 
 	void PatchDialogProc_GetMinMaxInfo(DialogProcContext& context) {
 		const auto info = context.getMinMaxInfo();
@@ -818,23 +815,15 @@ namespace se::cs::dialog::dialogue_window {
 	}
 
 	namespace ResizeConstants {
-		//Font 08
-		//constexpr auto STATIC_HEIGHT = 13; //CSSE = 13
-		//constexpr auto LEFT_SECTION_WIDTH = 250; //Ширина секции с топиками и фильтрами; CSSE = 250
-		//constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 150; //ширина нижней правой секции Shared By и ниже; CSSE = 150
-		//constexpr auto CONDITION_STATIC_WIDTH = 66; //CSSE = 55
-		//constexpr auto BOTTOM_SECTION_HEIGHT = 400; //CSSE = 500
-		//constexpr auto TEXT_COUNTER_WIDTH = 30;
-		//Font 10
-		constexpr auto STATIC_HEIGHT = 16;
-		constexpr auto LEFT_SECTION_WIDTH = 298;
-		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = 200;
-		constexpr auto CONDITION_STATIC_WIDTH = 80;
-		constexpr auto BOTTOM_SECTION_HEIGHT = 500;
-		constexpr auto TEXT_COUNTER_WIDTH = 32;
-		//Font 12
 
-		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8; //CSSE = 21
+		constexpr auto STATIC_HEIGHT = Window_08_10_STATIC_HEIGHT;
+		constexpr auto LEFT_SECTION_WIDTH = DialogDialogueWindow_LEFT_SECTION_WIDTH; //Ширина секции с топиками и фильтрами
+		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = DialogDialogueWindow_BOTTOM_RIGHT_SECTION_WIDTH; //ширина нижней правой секции 'Shared By' и ниже
+		constexpr auto CONDITION_STATIC_WIDTH = DialogDialogueWindow_CONDITION_STATIC_WIDTH;
+		constexpr auto BOTTOM_SECTION_HEIGHT = DialogDialogueWindow_BOTTOM_SECTION_HEIGHT;
+		constexpr auto TEXT_COUNTER_WIDTH = DialogDialogueWindow_TEXT_COUNTER_WIDTH;
+
+		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto BIG_PADDING = 6;
 		constexpr auto WINDOW_EDGE_PADDING = 10;

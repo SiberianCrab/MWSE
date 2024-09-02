@@ -6,6 +6,7 @@
 #include "WinUIUtil.h"
 
 #include "Settings.h"
+#include "RR_Settings.h"
 
 namespace se::cs::dialog::script_editor_window {
 
@@ -18,11 +19,7 @@ namespace se::cs::dialog::script_editor_window {
 		format.cbSize = sizeof(CHARFORMATA);
 		format.dwMask = CFM_EFFECTS | CFM_FACE | CFM_SIZE;
 		format.dwEffects = 0;
-	//Font 08
-	    //format.yHeight = 20 * settings.script_editor.font_size;//CSSE = 20
-	//Font 10
-		format.yHeight = 22 * settings.script_editor.font_size;
-	//Font 12
+		format.yHeight = DialogScriptEditorWindow_FONT_SIZE * settings.script_editor.font_size;
 
 		SendMessageA(hWnd, EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&format);
 	}

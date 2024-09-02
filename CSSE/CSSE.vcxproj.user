@@ -12,5 +12,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <RESOURCE_FILE>CSSE.rc</RESOURCE_FILE>
+    <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
 </Project>

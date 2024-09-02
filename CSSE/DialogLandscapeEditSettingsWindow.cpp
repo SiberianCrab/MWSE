@@ -5,6 +5,8 @@
 #include "WinUIUtil.h"
 
 #include "Settings.h"
+#include "RR_Settings.h"
+
 #include "CSDataHandler.h"
 #include "CSRecordHandler.h"
 #include "CSRegion.h"
@@ -385,11 +387,8 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 	}
 
 	namespace ResizeConstants {
-		// Font 08 - Vanilla
-		//constexpr auto STATIC_HEIGHT = 13;
-		// Font 10
-		constexpr auto STATIC_HEIGHT = 16;
-		// Font 12
+
+		constexpr auto STATIC_HEIGHT = Window_08_10_STATIC_HEIGHT;
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
