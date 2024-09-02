@@ -52,7 +52,9 @@
 --- @field effectAttributes number[] *Read-only*. Access to a table of 24 numbers for the actor's effect attributes. In order those are: `attackBonus`, `sanctuary`, `resistMagicka`, `resistFire`, `resistFrost`, `resistShock`, `resistCommonDisease`, `resistBlightDisease`, `resistCorprus`, `resistPoison`, `resistParalysis`, `chameleon`, `resistNormalWeapons`, `waterBreathing`, `waterWalking`, `swiftSwim`, `jump`, `levitate`, `shield`, `sound`, `silence`, `blind`, `paralyze`, and `invisibility`. Each of those can be accessed individually. For example, `tes3mobileActor.chameleon`.
 --- @field encumbrance tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's encumbrance statistic. When modifying this value, prefer to use `tes3.modStatistic` or `tes3.setStatistic` to also update the UI immediately.
 --- @field endurance tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's endurance attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
---- @field facing number *Read-only*. The facing of the actor, in radians. It corresponds to the `mobile.reference.orientation.z`. Facing of 0 corresponds to the in game North, facing of PI corresponds to the game South. It's in clockwise direction.
+--- @field facing number *Read-only*. The facing of the actor, in radians. Facing is defined like a compass heading, positive values are clockwise and North (+Y axis) is zero, while facing of PI corresponds to South (-Y axis).
+--- 
+--- It's the same as `mobile.reference.orientation.z`.
 --- @field fatigue tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's fatigue statistic. When modifying this value, prefer to use `tes3.modStatistic` or `tes3.setStatistic` to also update the UI immediately.
 --- @field fight number The actor's fight AI value.
 --- @field flee number The actor's flee AI value.

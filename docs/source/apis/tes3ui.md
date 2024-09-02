@@ -476,7 +476,7 @@ local width, height = tes3ui.getViewportSize()
 ### `tes3ui.leaveMenuMode`
 <div class="search_terms" style="display: none">leavemenumode</div>
 
-Requests menu mode be deactivated on a menu with a given id.
+Requests menu mode be deactivated. Menu mode can't be deactivated if a modal menu is open.
 
 ```lua
 local result = tes3ui.leaveMenuMode()

@@ -337,7 +337,7 @@ namespace TES3 {
 		float getWidth() const;
 		float getHeight() const;
 
-		bool wearItem(Object* item, ItemData* itemData, bool selectBestCondition, bool selectWorstCondition, bool useEvents);
+		bool wearItem(Object* item, ItemData* itemData, bool addItem, bool unknown, bool useEvents);
 		bool equipItem(Object* item, ItemData* itemData = nullptr, bool addItem = false, bool selectBestCondition = false, bool selectWorstCondition = false, bool useEvents = false);
 		bool equip_lua(sol::object arg);
 		bool unequip_lua(sol::table args);

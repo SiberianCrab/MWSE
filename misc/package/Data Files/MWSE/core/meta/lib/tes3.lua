@@ -3968,6 +3968,8 @@ tes3.event = require("tes3.event")
 ---| `tes3.event.magicCasted`
 ---| `tes3.event.magicEffectRemoved`
 ---| `tes3.event.magicEffectsResolved`
+---| `tes3.event.magicReflect`
+---| `tes3.event.magicReflected`
 ---| `tes3.event.magicSelectionChanged`
 ---| `tes3.event.menuEnter`
 ---| `tes3.event.menuExit`
@@ -6378,8 +6380,11 @@ tes3.uiEvent = require("tes3.uiEvent")
 ---| `tes3.uiEvent.mouseStillPressedOutside`
 ---| `tes3.uiEvent.partScrollBarChanged`
 ---| `tes3.uiEvent.preUpdate`
+---| `tes3.uiEvent.textCleared`
+---| `tes3.uiEvent.textUpdated`
 ---| `tes3.uiEvent.unfocus`
 ---| `tes3.uiEvent.update`
+---| `tes3.uiEvent.valueChanged`
 
 tes3.uiProperty = require("tes3.uiProperty")
 

@@ -166,7 +166,7 @@ function tes3ui.getViewportScale() end
 --- @return number height The scaled height of the viewport.
 function tes3ui.getViewportSize() end
 
---- Requests menu mode be deactivated on a menu with a given id.
+--- Requests menu mode be deactivated. Menu mode can't be deactivated if a modal menu is open.
 --- @return boolean result No description yet available.
 function tes3ui.leaveMenuMode() end
 

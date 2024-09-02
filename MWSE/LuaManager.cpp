@@ -248,6 +248,8 @@
 #include "LuaLoadedGameEvent.h"
 #include "LuaMagicCastedEvent.h"
 #include "LuaMagicEffectRemovedEvent.h"
+#include "LuaMagicReflectEvent.h"
+#include "LuaMagicReflectedEvent.h"
 #include "LuaMenuStateEvent.h"
 #include "LuaMobileObjectActivatedEvent.h"
 #include "LuaMobileObjectDeactivatedEvent.h"
@@ -4612,6 +4614,78 @@ namespace mwse::lua {
 	const size_t patchConsumeItemSwallowArgs_size = 2;
 
 	//
+	// Patch: Magic reflect events.
+	//
+	
+	const auto vfxReflectPtr = reinterpret_cast<TES3::PhysicalObject**>(0x7CF110);
+
+	bool __stdcall OnMagicReflect2(TES3::MagicSourceInstance* sourceInstance, TES3::Reference* hitReference, TES3::ActiveMagicEffect* reflectEffect) {
+		float reflectChance = float(reflectEffect->unresistedMagnitude);
+
+		// Allow event overrides.
+		if (mwse::lua::event::MagicReflectEvent::getEventEnabled()) {
+			auto& luaManager = mwse::lua::LuaManager::getInstance();
+			auto stateHandle = luaManager.getThreadSafeStateHandle();
+			sol::table result = stateHandle.triggerEvent(new mwse::lua::event::MagicReflectEvent(sourceInstance, hitReference, reflectEffect, reflectChance));
+			if (result.valid()) {
+				if (result.get_or("block", false)) {
+					return false;
+				}
+				reflectChance = result["reflectChance"];
+			}
+		}
+
+		// Return true if the magic was reflected.
+		int roll = tes3::rand() % 100;
+		bool success = roll < reflectChance;
+
+		if (success) {
+			if (mwse::lua::event::MagicReflectedEvent::getEventEnabled()) {
+				auto& luaManager = mwse::lua::LuaManager::getInstance();
+				auto stateHandle = luaManager.getThreadSafeStateHandle();
+				stateHandle.triggerEvent(new mwse::lua::event::MagicReflectedEvent(sourceInstance, hitReference, reflectEffect));
+			}
+		}
+		return success;
+	}
+
+	__declspec(naked) bool OnMagicReflect() {
+		__asm {
+			lea eax, [edi + 8]		// lea eax, [edi + ActiveMagicEffectNode.data]
+			push eax				// push activeMagicEffect
+			push ebp				// push hitReference
+			push ebx				// push magicSourceInstance
+			call OnMagicReflect2
+			ret
+		}
+	}
+
+	__declspec(naked) bool patchMagicReflect() {
+		// This patch alters the last stage of the reflect magic mechanic, so that all other tests run first.
+		// It also avoids conflicting with the magic effects flag patch at 0x516F06.
+		__asm {
+			call OnMagicReflect		// Replace with call to correct address
+			test al, al
+			jz $ + 0x97				// Skip reflect if event blocked or roll fails
+
+			// Original code, relocated
+			__asm _emit 0xA1 __asm _emit 0x10  __asm _emit 0xF1 __asm _emit 0x7C __asm _emit 0x00	// mov eax, global_vfx_reflect (the assembler won't output it correctly)
+			test eax, eax
+			__asm _emit 0x74 __asm _emit 0x1B	// jz short $+0x1D (the assembler won't output short jumps)
+
+			push 0
+			push esi
+			push eax
+			push 0
+			push ebp
+			push 0
+			push 0
+			push 0
+		}
+	}
+	const size_t patchMagicReflect_size = 0x23;
+
+	//
 	//
 	//
 
@@ -5028,7 +5102,12 @@ namespace mwse::lua {
 		genCallEnforced(0x515AEF, 0x55C9D0, reinterpret_cast<DWORD>(OnMagicEffectRemoved)); // Magic Source Instance: Process
 		genCallEnforced(0x518FCC, 0x55C9D0, reinterpret_cast<DWORD>(OnMagicEffectRemoved)); // Magic Source Instance: Spell Effect Event
 
-		// Event: Absorb magic
+		// Event: Reflect magic
+		genNOPUnprotected(0x516EA0, 0x1C);
+		writePatchCodeUnprotected(0x516F17, (BYTE*)&patchMagicReflect, patchMagicReflect_size);
+		genCallUnprotected(0x516F17, reinterpret_cast<DWORD>(OnMagicReflect));
+
+		// Event: Absorbed magic
 		auto onAbsorbedMagic = &TES3::MagicSourceInstance::onAbsorbedMagic;
 		genCallEnforced(0x51783E, 0x519900, *reinterpret_cast<DWORD*>(&onAbsorbedMagic));
 		genCallEnforced(0x5178E9, 0x519900, *reinterpret_cast<DWORD*>(&onAbsorbedMagic));
