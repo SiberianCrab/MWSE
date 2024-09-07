@@ -10,7 +10,7 @@
 --- @field enchantment tes3enchantment The enchantment used by the object.
 --- @field flags number Access to the weapon flag bitfield. Known flags can be accessed via other weapon properties.
 --- @field hasDurability boolean *Read-only*. Whether the weapon type has durability. Thrown weapons and ammunition are used once fired, and therefore do not use durability.
---- @field icon string The path to the object's icon.
+--- @field icon string The path to the object's icon. Relative to `Data Files\\icons\\`.
 --- @field ignoresNormalWeaponResistance boolean Access to the flag that controls if this weapon bypasses the "Resist normal weapons" magic effect.
 --- @field isAmmo boolean *Read-only*. If true, the weapon is a type of ammunition. Arrows and bolts are ammunition, while thrown weapons aren't.
 --- @field isMelee boolean *Read-only*. If true, the weapon has a melee weapon type.

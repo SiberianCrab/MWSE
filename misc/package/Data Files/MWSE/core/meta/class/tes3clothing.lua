@@ -6,7 +6,7 @@
 --- @class tes3clothing : tes3item, tes3physicalObject, tes3object, tes3baseObject
 --- @field enchantCapacity number The object's enchantment capacity.
 --- @field enchantment tes3enchantment The enchantment used by the object.
---- @field icon string The path to the object's icon.
+--- @field icon string The path to the object's icon. Relative to `Data Files\\icons\\`.
 --- @field isLeftPart boolean Determines if the armor is the left part of a pair.
 --- @field mesh string The path to the object's mesh.
 --- @field name string The player-facing name for the object.

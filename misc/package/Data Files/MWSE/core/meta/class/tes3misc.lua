@@ -4,7 +4,7 @@
 --- @meta
 --- A core miscellaneous object.
 --- @class tes3misc : tes3item, tes3physicalObject, tes3object, tes3baseObject
---- @field icon string The path to the object's icon.
+--- @field icon string The path to the object's icon. Relative to `Data Files\\icons\\`.
 --- @field isGold boolean True if the misc item is a valid form of gold.
 --- @field isKey boolean Access to the flag determining if this item is recognized as a key.
 --- @field isSoulGem boolean *Read-only*. Determines if this item is a soul gem.

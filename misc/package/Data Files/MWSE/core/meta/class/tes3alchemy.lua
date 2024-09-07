@@ -7,7 +7,7 @@
 --- @field autoCalc boolean If set, the value of the object is automatically calculated.
 --- @field effects tes3effect[] *Read-only*. An array-style table of the [`tes3effect`](https://mwse.github.io/MWSE/types/tes3effect/) data on the object.
 --- @field flags number The alchemy item's flags.
---- @field icon string The path to the object's icon.
+--- @field icon string The path to the object's icon. Relative to `Data Files\\icons\\`.
 --- @field mesh string The path to the object's mesh.
 --- @field name string The player-facing name for the object.
 --- @field script tes3script The script that runs on the object.

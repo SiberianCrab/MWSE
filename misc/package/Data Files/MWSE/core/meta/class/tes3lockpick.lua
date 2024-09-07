@@ -4,7 +4,7 @@
 --- @meta
 --- A core lockpick object.
 --- @class tes3lockpick : tes3item, tes3physicalObject, tes3object, tes3baseObject
---- @field icon string The path to the object's icon.
+--- @field icon string The path to the object's icon. Relative to `Data Files\\icons\\`.
 --- @field maxCondition number The maximum condition/health of the lockpick object.
 --- @field mesh string The path to the object's mesh.
 --- @field name string The player-facing name for the object.
