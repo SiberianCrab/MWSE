@@ -24,6 +24,7 @@
 --- @field nextWeather tes3weatherAsh|tes3weatherBlight|tes3weatherBlizzard|tes3weatherClear|tes3weatherCloudy|tes3weatherFoggy|tes3weatherOvercast|tes3weatherRain|tes3weatherSnow|tes3weatherThunder *Read-only*. The next weather.
 --- @field particlesActive tes3weatherControllerParticle[] *Read-only*. Provides a list of active weather particles.
 --- @field particlesInactive tes3weatherControllerParticle[] *Read-only*. Provides a list of inactive weather particles.
+--- @field precipitationFallSpeed number The z component of the rain or snow fall particle velocity (not including blizzards). Snow fall velocity is also multiplied by `snowFallSpeedScale`. This value is initialized by the "Precipitation Gravity" entry in morrowind.ini.
 --- @field sceneRainRoot niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode *Read-only*. Provides read-only access to the scene rain root NiNode.
 --- @field sceneSkyLight niDirectionalLight *Read-only*. Provides read-only access to the scene sky light directional light.
 --- @field sceneSkyRoot niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode *Read-only*. Provides read-only access to the scene sky root NiNode.
@@ -37,6 +38,7 @@
 --- @field skyPostSunsetTime number The sky has one color for day and night states each. The night color will be used when the game hour is between `skyPostSunsetTime` and `skyPreSunriseTime`. This corresponds to the setting of the same name in Morrowind.ini file.
 --- @field skyPreSunriseTime number The sky has one color for day and night states each. The night color will be used when the game hour is between `skyPostSunsetTime` and `skyPreSunriseTime`. This corresponds to the setting of the same name in Morrowind.ini file.
 --- @field skyPreSunsetTime number The sky has one color for day and night states each. The day color will be used when the game hour is between `skyPostSunriseTime` and `skyPreSunsetTime`. This corresponds to the setting of the same name in Morrowind.ini file.
+--- @field snowFallSpeedScale number A multipler for the z component of snow fall particle velocity (not including blizzards). The z component is set by `precipitationFallSpeed * snowFallSpeedScale`. This value is initialized by the "Snow Gravity Scale" entry in morrowind.ini.
 --- @field starsFadingDuration number The stars will fade in `starsPostSunsetStart` hours after the sunset. They fade out `starsPreSunriseFinish` hours before sunrise. This value represents the duration of the fading. This corresponds to the setting of the same name in Morrowind.ini file.
 --- @field starsPostSunsetStart number The stars will start to fade in (appear) `starsPostSunsetStart` hours before sunrise. This corresponds to the setting of the same name in Morrowind.ini file.
 --- @field starsPreSunriseFinish number The stars will start to fade out (disappear) `starsPreSunriseFinish` hours before sunrise. This corresponds to the setting of the same name in Morrowind.ini file.

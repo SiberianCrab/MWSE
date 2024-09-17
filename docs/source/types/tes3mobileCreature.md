@@ -949,6 +949,17 @@ Direct access to the actor's current movement flags, showing if the actor is sne
 
 ***
 
+### `isSpeaking`
+<div class="search_terms" style="display: none">isspeaking, speaking</div>
+
+*Read-only*. This property is `true` when the actor is speaking a dialogue line. This includes: hit grunts, combat reactions, and the usual dialogue.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `isSwimming`
 <div class="search_terms" style="display: none">isswimming, swimming</div>
 

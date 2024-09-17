@@ -1200,7 +1200,9 @@ namespace mwse::lua {
 
 	float __fastcall OnApplyFatigueDamageFromAttack(TES3::MobileActor* mobileActor, TES3::MobileActor* attacker, float damage, float swing, bool alwaysPlayHitVoice) {
 		mwse::lua::event::DamageHandToHandEvent::m_Attacker = attacker;
+		mwse::lua::event::DamageHandToHandEvent::m_Source = "attack";
 		auto result = mobileActor->applyFatigueDamage(damage, swing, alwaysPlayHitVoice);
+		mwse::lua::event::DamageHandToHandEvent::m_Source = nullptr;
 		mwse::lua::event::DamageHandToHandEvent::m_Attacker = nullptr;
 		return result;
 	}

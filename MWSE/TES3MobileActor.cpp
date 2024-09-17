@@ -582,6 +582,7 @@ namespace TES3 {
 			}
 		}
 
+		// Call original function.
 		bool killingBlow = TES3_MobileActor_applyHealthDamage(this, damage, isPlayerAttack, scaleWithDifficulty, doNotChangeHealth);
 
 		// Do our post-damage event.
@@ -594,6 +595,35 @@ namespace TES3 {
 		}
 
 		return killingBlow;
+	}
+
+	const auto TES3_MobileActor_applyFatigueDamage = reinterpret_cast<float(__thiscall*)(MobileActor*, float, float, bool)>(0x5581B0);
+	float MobileActor::applyFatigueDamage(float fatigueDamage, float swing, bool alwaysPlayHitVoice) {
+		bool miss = fatigueDamage <= 0.001f;
+
+		// Invoke our pre-damage event and check if it is blocked.
+		mwse::lua::LuaManager& luaManager = mwse::lua::LuaManager::getInstance();
+		if (!miss && mwse::lua::event::DamageHandToHandEvent::getEventEnabled()) {
+			auto stateHandle = luaManager.getThreadSafeStateHandle();
+			sol::table eventData = stateHandle.triggerEvent(new mwse::lua::event::DamageHandToHandEvent(this, fatigueDamage));
+			if (eventData.valid()) {
+				if (eventData.get_or("block", false)) {
+					return 0;
+				}
+
+				fatigueDamage = eventData["fatigueDamage"];
+			}
+		}
+
+		// Call original function. Should run on both hits and misses.
+		float result = TES3_MobileActor_applyFatigueDamage(this, fatigueDamage, swing, alwaysPlayHitVoice);
+
+		// Do our post-damage event.
+		if (!miss && mwse::lua::event::DamagedHandToHandEvent::getEventEnabled()) {
+			auto stateHandle = luaManager.getThreadSafeStateHandle();
+			sol::table eventData = stateHandle.triggerEvent(new mwse::lua::event::DamagedHandToHandEvent(this, fatigueDamage));
+		}
+		return result;
 	}
 
 	float MobileActor::applyDamage_lua(sol::table params) {
@@ -631,6 +661,15 @@ namespace TES3 {
 		return adjustedDamage;
 	}
 
+	float MobileActor::applyFatigueDamage_lua(float fatigueDamage, float swing, bool alwaysPlayHitVoice) {
+		auto prevSource = mwse::lua::event::DamageHandToHandEvent::m_Source;
+		mwse::lua::event::DamageHandToHandEvent::m_Source = "script";
+		float result = applyFatigueDamage(fatigueDamage, swing, alwaysPlayHitVoice);
+		mwse::lua::event::DamageHandToHandEvent::m_Source = prevSource;
+
+		return result;
+	}
+
 	float MobileActor::calcEffectiveDamage_lua(sol::table params) {
 		auto applyArmor = params.get_or("applyArmor", false);
 		sol::optional<float> damage = params["damage"];
@@ -660,32 +699,6 @@ namespace TES3 {
 		}
 
 		return adjustedDamage;
-	}
-
-	const auto TES3_MobileActor_applyFatigueDamage = reinterpret_cast<float(__thiscall*)(MobileActor*, float, float, bool)>(0x5581B0);
-	float MobileActor::applyFatigueDamage(float fatigueDamage, float swing, bool alwaysPlayHitVoice) {
-		// Invoke our pre-damage event and check if it is blocked.
-		mwse::lua::LuaManager& luaManager = mwse::lua::LuaManager::getInstance();
-		if (mwse::lua::event::DamageHandToHandEvent::getEventEnabled()) {
-			auto stateHandle = luaManager.getThreadSafeStateHandle();
-			sol::table eventData = stateHandle.triggerEvent(new mwse::lua::event::DamageHandToHandEvent(this, fatigueDamage));
-			if (eventData.valid()) {
-				if (eventData.get_or("block", false)) {
-					return 0;
-				}
-
-				fatigueDamage = eventData["fatigueDamage"];
-			}
-		}
-
-		float result = TES3_MobileActor_applyFatigueDamage(this, fatigueDamage, swing, alwaysPlayHitVoice);
-
-		// Do our post-damage event.
-		if (mwse::lua::event::DamagedHandToHandEvent::getEventEnabled()) {
-			auto stateHandle = luaManager.getThreadSafeStateHandle();
-			sol::table eventData = stateHandle.triggerEvent(new mwse::lua::event::DamagedHandToHandEvent(this, fatigueDamage));
-		}
-		return result;
 	}
 
 	const auto TES3_MobileActor_applyJumpFatigueCost = reinterpret_cast<float(__thiscall*)(const MobileActor*)>(0x527A60);
@@ -1980,6 +1993,23 @@ namespace TES3 {
 
 	void MobileActor::setMovementFlagWalking(bool value) {
 		setMobileActorMovementFlag(TES3::ActorMovement::Walking, value);
+	}
+
+	bool MobileActor::isSpeaking() const {
+		if (!animationController.asActor) {
+			return false;
+		}
+
+		auto animData = animationController.asActor->animationData;
+		if (!animData) {
+			return false;
+		}
+
+		if (animData->lipsyncLevel != -1) {
+			return true;
+		}
+
+		return false;
 	}
 
 	bool MobileActor::isAffectedByObject_lua(sol::object object) const {
