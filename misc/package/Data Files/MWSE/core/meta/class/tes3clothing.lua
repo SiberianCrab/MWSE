@@ -8,7 +8,7 @@
 --- @field enchantment tes3enchantment The enchantment used by the object.
 --- @field icon string The path to the object's icon. Relative to `Data Files\\icons\\`.
 --- @field isLeftPart boolean Determines if the armor is the left part of a pair.
---- @field mesh string The path to the object's mesh.
+--- @field mesh string The path to the object's mesh. Relative to `Data Files\\meshes\\`.
 --- @field name string The player-facing name for the object.
 --- @field parts tes3wearablePart[] An array-style table of the [`tes3wearablePart`](https://mwse.github.io/MWSE/types/tes3wearablePart/) data on the object.
 --- @field script tes3script The script that runs on the object.
