@@ -96,6 +96,7 @@
 --- @field isRunning boolean Direct access to the actor's current movement flags, showing if the actor is running.
 --- @field isSliding boolean Direct access to the actor's current movement flags, showing if the actor is sliding off a steep surface.
 --- @field isSneaking boolean Direct access to the actor's current movement flags, showing if the actor is sneaking.
+--- @field isSpeaking boolean *Read-only*. This property is `true` when the actor is speaking a dialogue line. This includes: hit grunts, combat reactions, and the usual dialogue.
 --- @field isSwimming boolean Direct access to the actor's current movement flags, showing if the actor is swimming.
 --- @field isTurningLeft boolean Direct access to the actor's current movement flags, showing if the actor is turning left.
 --- @field isTurningRight boolean Direct access to the actor's current movement flags, showing if the actor is turning right.

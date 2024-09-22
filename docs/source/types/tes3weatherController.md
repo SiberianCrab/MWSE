@@ -230,6 +230,17 @@ The hours remaining.
 
 ***
 
+### `precipitationFallSpeed`
+<div class="search_terms" style="display: none">precipitationfallspeed</div>
+
+The z component of the rain or snow fall particle velocity (not including blizzards). Snow fall velocity is also multiplied by `snowFallSpeedScale`. This value is initialized by the "Precipitation Gravity" entry in morrowind.ini.
+
+**Returns**:
+
+* `result` (number)
+
+***
+
 ### `sceneRainRoot`
 <div class="search_terms" style="display: none">scenerainroot</div>
 
@@ -366,6 +377,17 @@ The sky has one color for day and night states each. The night color will be use
 <div class="search_terms" style="display: none">skypresunsettime</div>
 
 The sky has one color for day and night states each. The day color will be used when the game hour is between `skyPostSunriseTime` and `skyPreSunsetTime`. This corresponds to the setting of the same name in Morrowind.ini file.
+
+**Returns**:
+
+* `result` (number)
+
+***
+
+### `snowFallSpeedScale`
+<div class="search_terms" style="display: none">snowfallspeedscale</div>
+
+A multipler for the z component of snow fall particle velocity (not including blizzards). The z component is set by `precipitationFallSpeed * snowFallSpeedScale`. This value is initialized by the "Snow Gravity Scale" entry in morrowind.ini.
 
 **Returns**:
 

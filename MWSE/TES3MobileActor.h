@@ -261,6 +261,7 @@ namespace TES3 {
 		float applyFatigueDamage(float damage, float swing, bool alwaysPlayHitVoice = false);
 		void applyJumpFatigueCost() const;
 		float applyDamage_lua(sol::table params);
+		float applyFatigueDamage_lua(float damage, float swing, bool alwaysPlayHitVoice = false);
 		float calcEffectiveDamage_lua(sol::table params);
 		bool doJump(Vector3 velocity, bool applyFatigueCost = true, bool isDefaultJump = false);
 		bool doJump_lua(sol::optional<sol::table> params);
@@ -476,6 +477,8 @@ namespace TES3 {
 		void setMovementFlagTurnRight(bool value);
 		bool getMovementFlagWalking() const;
 		void setMovementFlagWalking(bool value);
+
+		bool isSpeaking() const;
 
 		bool isAffectedByObject_lua(sol::object object) const;
 

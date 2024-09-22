@@ -471,6 +471,14 @@ function table.wrapindex(t, index)
 	return newIndex
 end
 
+function table.shuffle(t, n)
+	n = n or #t
+	for i = n, 2, -1 do
+		local j = math.random(i)
+		t[i], t[j] = t[j], t[i]
+	end
+end
+
 
 -------------------------------------------------
 -- Extend base table: Add binary search/insert
