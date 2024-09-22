@@ -32,6 +32,10 @@
 #include "DialogSearchAndReplaceWindow.h"
 #include "DialogTextSearchWindow.h"
 #include "DialogUseReportWindow.h"
+#include "DialogEditBirthsignsWindow.h"
+#include "DialogEditClassWindow.h"
+#include "DialogEditRaceWindow.h"
+#include "DialogEditFactionWindow.h"
 
 #include "TextureRenderer.h"
 
@@ -707,6 +711,10 @@ namespace se::cs {
 		dialog::search_and_replace_window::installPatches();
 		dialog::text_search_window::installPatches();
 		dialog::use_report_window::installPatches();
+		dialog::edit_birthsigns_window::installPatches();
+		dialog::edit_class_window::installPatches();
+		dialog::edit_race_window::installPatches();
+		dialog::edit_faction_window::installPatches();
 		TextureRenderer::installPatches();
 	}
 

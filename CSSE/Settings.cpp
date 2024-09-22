@@ -494,6 +494,86 @@ namespace se::cs {
 	}
 
 	//
+	// Birthsigns Settings Window.
+	//
+
+	void Settings_t::BirthsignsWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::BirthsignsWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
+	// Class Settings Window.
+	//
+
+	void Settings_t::ClassWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::ClassWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
+	// Race Settings Window.
+	//
+
+	void Settings_t::RaceWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::RaceWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
+	// Faction Settings Window.
+	//
+
+	void Settings_t::FactionWindowSettings::from_toml(const toml::value& v) {
+		x_position = toml::find_or(v, "x_position", x_position);
+		y_position = toml::find_or(v, "y_position", y_position);
+	}
+
+	toml::value Settings_t::FactionWindowSettings::into_toml() const {
+		return toml::value(
+			{
+
+				{ "x_position", x_position },
+				{ "y_position", y_position },
+
+			}
+		);
+	}
+
+	//
 	// Color theme
 	// 
 
@@ -707,6 +787,10 @@ namespace se::cs {
 		alchemy_object_window = toml::find_or(v, "alchemy_object_window", alchemy_object_window);
 		creature_object_window = toml::find_or(v, "creature_object_window", creature_object_window);
 		NPC_object_window = toml::find_or(v, "NPC_object_window", NPC_object_window);
+		birthsigns_window = toml::find_or(v, "birthsigns_window", birthsigns_window);
+		class_window = toml::find_or(v, "class_window", class_window);
+		race_window = toml::find_or(v, "race_window", race_window);
+		faction_window = toml::find_or(v, "faction_window", faction_window);
 		color_theme = toml::find_or(v, "color_theme", color_theme);
 		quickstart = toml::find_or(v, "quickstart", quickstart);
 		script_editor = toml::find_or(v, "script_editor", script_editor);
@@ -733,6 +817,10 @@ namespace se::cs {
 				{ "alchemy_object_window", alchemy_object_window },
 				{ "creature_object_window", creature_object_window },
 				{ "NPC_object_window", NPC_object_window },
+				{ "birthsigns_window", birthsigns_window },
+				{ "class_window", class_window },
+				{ "race_window", race_window },
+				{ "faction_window", faction_window },
 				{ "color_theme", color_theme },
 				{ "quickstart", quickstart },
 				{ "script_editor", script_editor },

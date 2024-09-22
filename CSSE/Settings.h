@@ -248,6 +248,46 @@ namespace se::cs {
 			toml::value into_toml() const;
 		} NPC_object_window;
 
+		// Birthsigns window.
+
+		struct BirthsignsWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} birthsigns_window;
+
+		// Class window.
+
+		struct ClassWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} class_window;
+
+		// Race window.
+
+		struct RaceWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} race_window;
+
+		// Faction window.
+
+		struct FactionWindowSettings {
+			int x_position = 0;
+			int y_position = 71;
+
+			void from_toml(const toml::value& v);
+			toml::value into_toml() const;
+		} faction_window;
+
 		struct ColorTheme {
 			std::array<unsigned char, 3> highlight_deleted_object_color = { 255, 235, 235 };
 			std::array<unsigned char, 3> highlight_modified_from_master_color = { 235, 255, 235 };
