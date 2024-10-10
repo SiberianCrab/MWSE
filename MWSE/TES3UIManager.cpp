@@ -94,13 +94,19 @@ namespace TES3::UI {
 	Element* createMenu_lua(sol::table params) {
 		auto id = mwse::lua::getOptionalUIID(params, "id");
 		if (id == ID_NULL) {
-			mwse::log::getLog() << "createMenu: id argument is required." << std::endl;
-			return nullptr;
+			throw std::invalid_argument("createMenu: id argument is required.");
+		}
+
+		bool isDragFrame = params.get_or("dragFrame", false);
+		bool isFixedFrame = params.get_or("fixedFrame", false);
+
+		if (!(isDragFrame || isFixedFrame)) {
+			throw std::invalid_argument("createMenu: Either dragFrame or fixedFrame must be selected.");
 		}
 
 		Element* menu = createMenu(id);
 
-		if (params.get_or("fixedFrame", false)) {
+		if (isFixedFrame) {
 			menu->createFixedFrame(id, 1);
 			// Standard behaviours
 			preventInventoryMenuToggle(menu);
@@ -111,12 +117,13 @@ namespace TES3::UI {
 				menu->setProperty(TES3::UI::Property::event_unfocus, returnTrueFunc);
 			}
 		}
-		else if (params.get_or("dragFrame", false)) {
+		else if (isDragFrame) {
 			menu->createDragFrame(id, 1);
-		}
 
-		if (params.get_or("loadable", true)) {
-			menu->setProperty(Property::savable_menu, Property::boolean_true);
+			// Optionally mark menu as auto-saving its positioning to morrowind.ini.
+			if (params.get_or("loadable", true)) {
+				menu->setProperty(Property::savable_menu, Property::boolean_true);
+			}
 		}
 
 		return menu;

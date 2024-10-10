@@ -1155,6 +1155,25 @@ namespace mwse::patch {
 		}
 	}
 
+	//
+	// Patch: Modify proximity movement speed matching of AI followers to limit the speed match from going to zero on immobilized follow targets.
+	//
+
+	float __stdcall PatchGetAnimDataMovementSpeedCapped(TES3::AnimationData* animData) {
+		// Restrict speed matching to be at least 60% of base animation speed.
+		return std::max(0.6f, animData->movementSpeed);
+	}
+
+	__declspec(naked) void PatchMovementAnimSpeedMatching() {
+		__asm {
+			push eax
+			call $					// Replace with call PatchGetAnimDataMovementSpeedCapped
+			fstp [esp + 0x14]		// fst [targetMoveSpeed]
+			fld [esp + 0x10]		// fld [finalMovementSpeed]
+		}
+	}
+	const size_t PatchMovementAnimSpeedMatching_size = 0xE;
+
 
 	//
 	// Install all the patches.
@@ -1593,6 +1612,10 @@ namespace mwse::patch {
 
 		// Patch: Allow bound armour function to also summon bracers and pauldrons.
 		genCallEnforced(0x466457, 0x465DE0, reinterpret_cast<DWORD>(PatchSwapBoundArmor));
+
+		// Patch: Modify proximity movement speed matching of AI followers to limit the speed match from going to zero on immobilized follow targets.
+		writePatchCodeUnprotected(0x540DBA, (BYTE*)&PatchMovementAnimSpeedMatching, PatchMovementAnimSpeedMatching_size);
+		genCallUnprotected(0x540DBA + 1, reinterpret_cast<DWORD>(PatchGetAnimDataMovementSpeedCapped));
 	}
 
 	void installPostLuaPatches() {
