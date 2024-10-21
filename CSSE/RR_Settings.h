@@ -2,12 +2,12 @@
 
 namespace se::cs {
 
-	//08-12 Windows Font Dependant Settings
+	//08-12 Font Dependant Settings
 		//ResizeConstants
 			//Font 08 = 13 | Font 10 = 16 | Font 12 = 20
 			constexpr auto Window_08_12_STATIC_HEIGHT = 20;
 
-	//08-10 Windows Font Dependant Settings
+	//08-10 Font Dependant Settings
 		//ResizeConstants
 			//Font 08 = 13 | Font 10 = 16
 			constexpr auto Window_08_10_STATIC_HEIGHT = 16;

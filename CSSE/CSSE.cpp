@@ -527,17 +527,17 @@ namespace se::cs {
 			switch (uCommand) {
 			case HELP_FINDER:
 				// Displays the Help Topics dialog box.
-				ShellExecuteA(0, 0, "https://tes3cs.pages.dev/", 0, 0, SW_SHOW);
+				ShellExecuteA(0, 0, "https://en.uesp.net/wiki/Morrowind_Mod:Construction_Set", 0, 0, SW_SHOW);
 				return TRUE;
 			case HELP_CONTEXT:
 				// Displays the topic identified by the specified context identifier defined in the [MAP] section of the .hpj file.
 				// Only two of these are ever called: 0x5DC and 0x3E8
 				switch (dwData) {
 				case 0x5DCu: // Functions
-					ShellExecuteA(0, 0, "https://tes3cs.pages.dev/gameplay/scripting/functions/", 0, 0, SW_SHOW);
+					ShellExecuteA(0, 0, "https://en.uesp.net/wiki/Morrowind_Mod:Categorical_Function_List", 0, 0, SW_SHOW);
 					return TRUE;
 				case 0x3E8u: // Commands
-					ShellExecuteA(0, 0, "https://tes3cs.pages.dev/gameplay/scripting/commands/", 0, 0, SW_SHOW);
+					ShellExecuteA(0, 0, "https://en.uesp.net/wiki/Morrowind_Mod:Scripting_Basics", 0, 0, SW_SHOW);
 					return TRUE;
 				}
 				break;
