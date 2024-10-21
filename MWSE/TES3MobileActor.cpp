@@ -33,6 +33,7 @@
 #include "TES3MobManager.h"
 #include "TES3MobilePlayer.h"
 #include "TES3ItemData.h"
+#include "TES3Race.h"
 #include "TES3Spell.h"
 #include "TES3Reference.h"
 #include "TES3WorldController.h"
@@ -1163,6 +1164,17 @@ namespace TES3 {
 		// Equipping weapons while they are in use breaks animations and AI.
 		if (item->objectType == ObjectType::Weapon && isAttackingOrCasting()) {
 			return false;
+		}
+
+		// Prevent equipping incompatible wearables on non-player beast races.
+		// For players, execution continues to later display the correct warning message.
+		if (actorType == MobileActorType::NPC && actor->getRace()->getIsBeast()) {
+			if (item->objectType == ObjectType::Armor && !static_cast<Armor*>(item)->isUsableByBeasts()) {
+				return false;
+			}
+			if (item->objectType == ObjectType::Clothing && !static_cast<Clothing*>(item)->isUsableByBeasts()) {
+				return false;
+			}
 		}
 
 		// Check if item exists in the inventory.

@@ -121,6 +121,17 @@ True if this object is an editor marker for a gameplay location. These include t
 
 ***
 
+### `isUsableByBeasts`
+<div class="search_terms" style="display: none">isusablebybeasts, usablebybeasts</div>
+
+*Read-only*. If this property is `true`, beast races can wear this clothing item. This property is `false` for any kind of clothing that covers feet.
+
+**Returns**:
+
+* `result` (boolean)
+
+***
+
 ### `mesh`
 <div class="search_terms" style="display: none">mesh</div>
 

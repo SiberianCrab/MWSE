@@ -50,7 +50,7 @@ function tes3ui.createHelpLayerMenu(params) end
 --- @class tes3ui.createHelpLayerMenu.params
 --- @field id string|number The menu’s ID. The menu can be later accessed by tes3ui.findHelpLayerMenu(id).
 
---- Creates a top-level menu.
+--- Creates a top-level menu. It will be styled like a regular menu, with the configurable background alpha and a frame. There are two types of menu: `dragFrame` (movable and resizeable with titlebar) or `fixedFrame` (fixed with simple border). A type must be specified to create a menu.
 --- @param params tes3ui.createMenu.params This table accepts the following values:
 --- 
 --- `id`: string|number — The menu’s ID. The menu can be later accessed by tes3ui.findMenu(id).
@@ -61,7 +61,7 @@ function tes3ui.createHelpLayerMenu(params) end
 --- 
 --- `modal`: boolean? — *Default*: `true`. Only applies to fixedFrame menus. Modal menus prevent interaction with other menus while the menu is active. This behavior can be disabled with this flag.
 --- 
---- `loadable`: boolean? — *Default*: `true`. If set to false, calls to loadMenuPosition will fail.
+--- `loadable`: boolean? — *Default*: `true`. Only applies to dragFrame menus. Remembers the position and size of the menu (by id) when the user moves it. Calling loadMenuPosition after menu creation will restore it to the last set size and position. If set to false, calls to loadMenuPosition will fail.
 --- @return tes3uiElement result No description yet available.
 function tes3ui.createMenu(params) end
 
@@ -71,7 +71,7 @@ function tes3ui.createMenu(params) end
 --- @field dragFrame boolean? *Default*: `false`. Constructs a draggable and resizeable frame and background for the menu. It is similar to the stats, inventory, magic and map menus in the standard UI. Its title bar text can be set with the .text property. After construction, position and minimum dimensions should be set.
 --- @field fixedFrame boolean? *Default*: `false`. Constructs a fixed (non-draggable) frame and background for the menu. The layout system should automatically centre and size it to fit whatever is added to the menu. This type of menu is modal by default, preventing interaction with other menus while the menu is active.
 --- @field modal boolean? *Default*: `true`. Only applies to fixedFrame menus. Modal menus prevent interaction with other menus while the menu is active. This behavior can be disabled with this flag.
---- @field loadable boolean? *Default*: `true`. If set to false, calls to loadMenuPosition will fail.
+--- @field loadable boolean? *Default*: `true`. Only applies to dragFrame menus. Remembers the position and size of the menu (by id) when the user moves it. Calling loadMenuPosition after menu creation will restore it to the last set size and position. If set to false, calls to loadMenuPosition will fail.
 
 --- Creates a respond text. This function is used for the mwscript `Choice` function.
 --- @param params tes3ui.createResponseText.params This table accepts the following values:
