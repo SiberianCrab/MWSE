@@ -8,7 +8,7 @@ namespace se::cs::dialog::cell_window {
 	// Default IDs.
 	constexpr UINT CONTROL_ID_CELL_LIST_VIEW = 1155;
 	constexpr UINT CONTROL_ID_REFS_LIST_VIEW = 1156;
-	constexpr UINT CONTROL_ID_NO_CELL_SELECTED = 1163;
+	constexpr UINT CONTROL_ID_REFS_LABEL = 1163;
 
 	// Custom IDs.
 	constexpr UINT CONTROL_ID_FILTER_LABEL = 2000;

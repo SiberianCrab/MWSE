@@ -208,7 +208,7 @@ namespace se::cs::dialog::cell_window {
 
 			currentX = mainWidth / 2;
 
-			auto noCellSelected = GetDlgItem(hDlg, CONTROL_ID_NO_CELL_SELECTED);
+			auto noCellSelected = GetDlgItem(hDlg, CONTROL_ID_REFS_LABEL);
 			MoveWindow(noCellSelected, currentX, currentY, mainWidth / 2, COMBO_HEIGHT, TRUE);
 
 			auto refsListView = GetDlgItem(hDlg, CONTROL_ID_REFS_LIST_VIEW);
