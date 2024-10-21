@@ -3992,6 +3992,7 @@ tes3.event = require("tes3.event")
 ---| `tes3.event.objectCopied`
 ---| `tes3.event.objectCreated`
 ---| `tes3.event.objectInvalidated`
+---| `tes3.event.pickpocket`
 ---| `tes3.event.playGroup`
 ---| `tes3.event.playItemSound`
 ---| `tes3.event.postInfoResponse`

@@ -25,6 +25,7 @@
     <ClInclude Include="LuaMusicChangeTrackEvent.h" />
     <ClInclude Include="LuaObjectCopiedEvent.h" />
     <ClInclude Include="LuaObjectCreatedEvent.h" />
+    <ClInclude Include="LuaPickpocketEvent.h" />
     <ClInclude Include="LuaShieldBlockedEvent.h" />
     <ClInclude Include="LuaSimulatedEvent.h" />
     <ClInclude Include="LuaStartGlobalScriptEvent.h" />
@@ -666,6 +667,7 @@
     <ClCompile Include="LuaObjectFilteredEvent.cpp" />
     <ClCompile Include="LuaObjectInvalidatedEvent.cpp" />
     <ClCompile Include="LuaPickLockEvent.cpp" />
+    <ClCompile Include="LuaPickpocketEvent.cpp" />
     <ClCompile Include="LuaPlayAnimationGroupEvent.cpp" />
     <ClCompile Include="LuaPlayItemSoundEvent.cpp" />
     <ClCompile Include="LuaPostInfoResponseEvent.cpp" />
