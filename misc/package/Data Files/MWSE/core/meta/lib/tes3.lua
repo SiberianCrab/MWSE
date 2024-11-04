@@ -663,7 +663,7 @@ function tes3.createReference(params) end
 --- 
 --- `position`: tes3vector3|number[]|nil — *Optional*. If provided the VFX will be attached relative to a position, and not follow a reference.
 --- 
---- `avObject`: niAmbientLight|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil — *Optional*. If provided the VFX will be attached to this scene object.
+--- `avObject`: niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil — *Optional*. If provided the VFX will be attached to this scene object.
 --- 
 --- `object`: tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3probe|tes3repairTool|tes3static|tes3weapon|string|nil — *Optional*. The physical object to use as the VFX. To use an enchantment-style VFX, supply the magicEffectId parameter instead.
 --- 
@@ -685,7 +685,7 @@ function tes3.createVisualEffect(params) end
 --- @class tes3.createVisualEffect.params
 --- @field reference tes3reference? *Optional*. If provided the VFX will be attached to this reference.
 --- @field position tes3vector3|number[]|nil *Optional*. If provided the VFX will be attached relative to a position, and not follow a reference.
---- @field avObject niAmbientLight|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil *Optional*. If provided the VFX will be attached to this scene object.
+--- @field avObject niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil *Optional*. If provided the VFX will be attached to this scene object.
 --- @field object tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3probe|tes3repairTool|tes3static|tes3weapon|string|nil *Optional*. The physical object to use as the VFX. To use an enchantment-style VFX, supply the magicEffectId parameter instead.
 --- @field magicEffectId number? *Optional*. The magic effect ID to use to create an enchantment-style VFX. This will use most of the same VFX logic, but cannot be applied to a position or specific niAVObject.
 --- @field serial number? *Optional*. An associated tes3magicSourceInstance serial. If a serial is assigned to the VFX, the effect expiring will also remove the VFX. This is not used when creating an enchantment-style VFX.
@@ -1651,7 +1651,7 @@ function tes3.loadGame(filename) end
 --- Loads a mesh file and provides a scene graph object.
 --- @param path string Path, relative to Data Files/Meshes.
 --- @param useCache boolean? *Default*: `true`. If false, a new object will be created even if it had been previously loaded.
---- @return niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode model No description yet available.
+--- @return niBSAnimationNode|niBSParticleNode|niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode model No description yet available.
 function tes3.loadMesh(path, useCache) end
 
 --- Loads a source texture file and provides the niSourceTexture object.
@@ -1958,9 +1958,9 @@ function tes3.random(seed) end
 --- 
 --- `maxDistance`: number? — *Default*: `0`. The maximum distance that the test will run. If set to `0`, no maximum distance will be used.
 --- 
---- `ignore`: table<integer?, niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|tes3reference|nil>|nil — *Optional*. An array of references and/or scene graph nodes to cull from the result(s).
+--- `ignore`: table<integer?, niBSAnimationNode|niBSParticleNode|niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|tes3reference|nil>|nil — *Optional*. An array of references and/or scene graph nodes to cull from the result(s).
 --- 
---- `root`: niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|nil — *Default*: `tes3.game.worldRoot`. Node pointer to node scene. Only nodes that are a child of this root will be checked by this function. This option can considerably increase performance if used properly. Common choices for the root node are: [`tes3.game.worldLandscapeRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldLandscapeRoot), [`worldObjectRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldObjectRoot) (for most static objects), and [`worldPickRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldPickRoot) (for containers, NPCs, plants, doors, etc).
+--- `root`: niBSAnimationNode|niBSParticleNode|niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|nil — *Default*: `tes3.game.worldRoot`. Node pointer to node scene. Only nodes that are a child of this root will be checked by this function. This option can considerably increase performance if used properly. Common choices for the root node are: [`tes3.game.worldLandscapeRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldLandscapeRoot), [`worldObjectRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldObjectRoot) (for most static objects), and [`worldPickRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldPickRoot) (for containers, NPCs, plants, doors, etc).
 --- 
 --- `useModelBounds`: boolean? — *Default*: `false`. If `true`, model bounds will be tested for intersection. Otherwise triangles will be used. This will result in more accurate collision testing, but will be more computationally expensive. This is rarely needed.
 --- 
@@ -1990,8 +1990,8 @@ function tes3.rayTest(params) end
 --- @field direction tes3vector3|number[] Direction of the ray. Does not have to be unit length.
 --- @field findAll boolean? *Default*: `false`. If true, the ray test won't stop after the first result.
 --- @field maxDistance number? *Default*: `0`. The maximum distance that the test will run. If set to `0`, no maximum distance will be used.
---- @field ignore table<integer?, niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|tes3reference|nil>|nil *Optional*. An array of references and/or scene graph nodes to cull from the result(s).
---- @field root niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|nil *Default*: `tes3.game.worldRoot`. Node pointer to node scene. Only nodes that are a child of this root will be checked by this function. This option can considerably increase performance if used properly. Common choices for the root node are: [`tes3.game.worldLandscapeRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldLandscapeRoot), [`worldObjectRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldObjectRoot) (for most static objects), and [`worldPickRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldPickRoot) (for containers, NPCs, plants, doors, etc).
+--- @field ignore table<integer?, niBSAnimationNode|niBSParticleNode|niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|tes3reference|nil>|nil *Optional*. An array of references and/or scene graph nodes to cull from the result(s).
+--- @field root niBSAnimationNode|niBSParticleNode|niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode|nil *Default*: `tes3.game.worldRoot`. Node pointer to node scene. Only nodes that are a child of this root will be checked by this function. This option can considerably increase performance if used properly. Common choices for the root node are: [`tes3.game.worldLandscapeRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldLandscapeRoot), [`worldObjectRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldObjectRoot) (for most static objects), and [`worldPickRoot`](https://mwse.github.io/MWSE/types/tes3game/#worldPickRoot) (for containers, NPCs, plants, doors, etc).
 --- @field useModelBounds boolean? *Default*: `false`. If `true`, model bounds will be tested for intersection. Otherwise triangles will be used. This will result in more accurate collision testing, but will be more computationally expensive. This is rarely needed.
 --- @field useModelCoordinates boolean? *Default*: `false`. If true, model coordinates will be used instead of world coordinates. Typically not needed.
 --- @field useBackTriangles boolean? *Default*: `false`. Include intersections with back-facing triangles. This essentially makes it possible to intersect with the "back-side" of an object, which could make it possible to return a hit on an object if the `position` parameter is "inside" the object in question.This will result in more accurate collision testing, but will be more computationally expensive. This is rarely needed.
@@ -2130,7 +2130,7 @@ function tes3.removeSpell(params) end
 --- 
 --- `vfx`: tes3vfx? — *Optional*. If provided, the specific VFX handle will be deleted.
 --- 
---- `avObject`: niAmbientLight|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil — *Optional*. If provided, any VFXs associated with the given niAVObject will be deleted.
+--- `avObject`: niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil — *Optional*. If provided, any VFXs associated with the given niAVObject will be deleted.
 --- 
 --- `serial`: number? — *Optional*. The magic source instance serial number to remove effects for. This must be paired with a reference as well.
 --- 
@@ -2141,7 +2141,7 @@ function tes3.removeVisualEffect(params) end
 ---Table parameter definitions for `tes3.removeVisualEffect`.
 --- @class tes3.removeVisualEffect.params
 --- @field vfx tes3vfx? *Optional*. If provided, the specific VFX handle will be deleted.
---- @field avObject niAmbientLight|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil *Optional*. If provided, any VFXs associated with the given niAVObject will be deleted.
+--- @field avObject niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|nil *Optional*. If provided, any VFXs associated with the given niAVObject will be deleted.
 --- @field serial number? *Optional*. The magic source instance serial number to remove effects for. This must be paired with a reference as well.
 --- @field reference tes3reference|string|nil *Optional*. The reference to remove all visual effects from. A serial may also be provided.
 

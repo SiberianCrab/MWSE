@@ -55,6 +55,9 @@ namespace se::cs::winui {
 	// Sets the current selection index as ComboBox_SetCurSel, with additional messaging.
 	void ComboBox_SetCurSelEx(HWND hWnd, int index);
 
+	// Selects the entry with the given exact text. Returns CB_ERR if no selection change was made.
+	int ComboBox_SelectStringExact(HWND hWnd, const char* string);
+
 	//
 	// ListView
 	//

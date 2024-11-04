@@ -1406,7 +1406,7 @@ namespace se::cs::dialog::dialogue_window {
 		writeValueEnforced<BYTE>(0x4EBFF4 + 0x1, sizeof(DialogueWindowData_Vanilla), sizeof(DialogueWindowData));
 		genCallUnprotected(0x4EC018, reinterpret_cast<DWORD>(SetExtendedUserData), 0x6);
 
-		// Patch: Extend Render Window message handling.
+		// Patch: Extend window message handling.
 		genJumpEnforced(0x401334, 0x4EAEA0, reinterpret_cast<DWORD>(PatchDialogProc));
 	}
 }

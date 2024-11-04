@@ -23,6 +23,8 @@ namespace se::cs {
 	struct GameFile;
 	struct GameSetting;
 	struct GameSettingInitializer;
+	struct GlobalVariable;
+	struct ItemData;
 	struct LandTexture;
 	struct LeveledCreature;
 	struct LeveledItem;
@@ -38,11 +40,13 @@ namespace se::cs {
 	struct Region;
 	struct RepairTool;
 	struct Script;
+	struct SecurityAttachmentNode;
 	struct Skill;
 	struct Sound;
 	struct Spell;
 	struct SpellList;
 	struct Static;
+	struct TravelDestination;
 	struct Weapon;
 
 	struct BaseObject_VirtualTable;

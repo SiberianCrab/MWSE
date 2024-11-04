@@ -461,6 +461,9 @@
     <ClInclude Include="DialogEditFactionWindow.h">
       <Filter>Header Files\UI\Dialog</Filter>
     </ClInclude>
+    <ClInclude Include="CSGlobalVariable.h">
+      <Filter>Header Files\CS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

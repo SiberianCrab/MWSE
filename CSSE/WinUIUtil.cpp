@@ -186,6 +186,15 @@ namespace se::cs::winui {
 		SendMessageA(GetAncestor(hWnd, GA_PARENT), WM_COMMAND, MAKEWPARAM(GetWindowLongPtr(hWnd, GWLP_ID), CBN_SELCHANGE), (LPARAM)hWnd);
 	}
 
+	int ComboBox_SelectStringExact(HWND hWnd, const char* string) {
+		const auto index = ComboBox_FindStringExact(hWnd, 0, string);
+		if (index == CB_ERR) {
+			return CB_ERR;
+		}
+
+		return ComboBox_SetCurSel(hWnd, index);
+	}
+
 	//
 	// ListView
 	//

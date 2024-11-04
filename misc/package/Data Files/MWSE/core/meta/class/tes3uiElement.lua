@@ -85,7 +85,7 @@
 --- @field rawText string The raw value of the element's text. This, unlike the normal text property, will not directly read widget information or handle the removal of the positional cursor.
 --- @field repeatKeys boolean Controls if there is repeating text input when keys are held down. `true` by default.
 --- @field scaleMode boolean When set to `true` on image and NIF elements, the image or NIF is scaled to fit the element `width` and `height`.
---- @field sceneNode niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode *Read-only*. Underlying access to the scene graph responsible for this element.
+--- @field sceneNode niBSAnimationNode|niBSParticleNode|niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode *Read-only*. Underlying access to the scene graph responsible for this element.
 --- @field text string The element's text. Text input can be read by accessing this property.
 --- 
 --- !!! tip

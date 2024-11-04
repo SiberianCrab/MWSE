@@ -1767,6 +1767,12 @@
     <ClInclude Include="LuaPickpocketEvent.h">
       <Filter>Header Files\Lua\Events</Filter>
     </ClInclude>
+    <ClInclude Include="NIBSAnimationNodeLua.h">
+      <Filter>Header Files\Lua\Bindings\NI</Filter>
+    </ClInclude>
+    <ClInclude Include="NIBoundingVolumeLua.h">
+      <Filter>Header Files\Lua\Bindings\NI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -3844,6 +3850,15 @@
     </ClCompile>
     <ClCompile Include="LuaPickpocketEvent.cpp">
       <Filter>Source Files\Lua\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="NIBSAnimationNodeLua.cpp">
+      <Filter>Source Files\Lua\Bindings\NI</Filter>
+    </ClCompile>
+    <ClCompile Include="NIBSAnimationNode.cpp">
+      <Filter>Source Files\DataAdapters\NI</Filter>
+    </ClCompile>
+    <ClCompile Include="NIBoundingVolumeLua.cpp">
+      <Filter>Source Files\Lua\Bindings\NI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
