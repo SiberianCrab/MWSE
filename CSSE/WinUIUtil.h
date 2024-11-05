@@ -34,6 +34,8 @@ namespace se::cs::winui {
 	void ResizeAndCenterWindow(HWND hWnd, int width, int height);
 	bool MoveWindow(HWND hWnd, int x, int y, bool repaint = false);
 
+	void SetDialogFocus(HWND hWnd, int controlId);
+
 	LONG GetStyle(HWND hWnd);
 	void SetStyle(HWND hWnd, LONG lStyle);
 	void AddStyles(HWND hWnd, LONG lStyle);

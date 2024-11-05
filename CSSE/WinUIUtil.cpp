@@ -110,6 +110,11 @@ namespace se::cs::winui {
 		return MoveWindow(hWnd, x, y, GetRectWidth(windowRect), GetRectHeight(windowRect), repaint ? TRUE : FALSE);
 	}
 
+	void SetDialogFocus(HWND hWnd, int controlId) {
+		const auto hDlgControl = GetDlgItem(hWnd, controlId);
+		SendMessageA(hWnd, WM_NEXTDLGCTL, (WPARAM)hDlgControl, TRUE);
+	}
+
 	LONG GetStyle(HWND hWnd) {
 		return GetWindowLongA(hWnd, GWL_STYLE);
 	}
