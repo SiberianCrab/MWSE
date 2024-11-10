@@ -37,7 +37,7 @@ namespace NI {
 	static_assert(sizeof(RotatingParticlesData) == 0x48, "NI::RotatingParticlesData failed size validation");
 
 	struct Particles : TriBasedGeometry {
-		AVObject* boundCenterSourceObject; // 0xAC
+		AVObject* staticBoundPositionSource; // 0xAC
 
 		Particles(ParticlesData* data);
 

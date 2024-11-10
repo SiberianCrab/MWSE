@@ -890,6 +890,9 @@ namespace TES3::UI {
 		{ "mortar", reinterpret_cast<EventCallback*>(0x59A190) },
 		{ "quickUse", reinterpret_cast<EventCallback*>(0x608A90) },
 		{ "retort", reinterpret_cast<EventCallback*>(0x59A1C0) },
+		{ "soulGemFilled", reinterpret_cast<EventCallback*>(0x5C6B00) },
+
+		// Deprecated
 		{ "soulgemFilled", reinterpret_cast<EventCallback*>(0x5C6B00) },
 	};
 

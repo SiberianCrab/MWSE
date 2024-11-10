@@ -89,7 +89,7 @@ namespace se::cs::dialog::reference_data {
 		}
 
 		// Make sure the selection was actually changed.
-		const auto userData = (UserData*)GetWindowLongA(context.getWindowHandle(), GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		if (!userData->itemData || userData->itemData->owner != selectedOwner) {
 			return;
 		}
@@ -145,7 +145,7 @@ namespace se::cs::dialog::reference_data {
 		const auto hWnd = context.getWindowHandle();
 		const auto hOwnerComboxBox = GetDlgItem(hWnd, CONTROL_ID_OWNER_COMBO);
 		const auto hOwnerVariableComboBox = GetDlgItem(hWnd, CONTROL_ID_OWNER_VARIABLE_RANK_COMBO);
-		const auto userData = (UserData*)GetWindowLongA(context.getWindowHandle(), GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 
 		char buffer[32] = {};
 		const auto selection = ComboBox_GetCurSel(hOwnerVariableComboBox);
@@ -167,7 +167,7 @@ namespace se::cs::dialog::reference_data {
 		context.setResult(0);
 
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		if (userData->unknown_0x2F) {
 			return;
 		}
@@ -187,7 +187,7 @@ namespace se::cs::dialog::reference_data {
 
 		const auto hWnd = context.getWindowHandle();
 		const auto hKeyComboBox = GetDlgItem(hWnd, CONTROL_ID_KEY_COMBO);
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 
 		const auto selectedIndex = ComboBox_GetCurSel(hKeyComboBox);
 		if (selectedIndex == CB_ERR) {
@@ -213,7 +213,7 @@ namespace se::cs::dialog::reference_data {
 
 		const auto hWnd = context.getWindowHandle();
 		const auto hTrapComboBox = GetDlgItem(hWnd, CONTROL_ID_TRAP_COMBO);
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 
 		const auto selectedIndex = ComboBox_GetCurSel(hTrapComboBox);
 		if (selectedIndex == CB_ERR) {
@@ -238,7 +238,7 @@ namespace se::cs::dialog::reference_data {
 		context.setResult(0);
 
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		if (userData->unknown_0x2F) {
 			return;
 		}
@@ -260,7 +260,7 @@ namespace se::cs::dialog::reference_data {
 	void PatchDialogProc_BeforeCommand_LoadCell_SelectionChanged(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
 		const auto hLoadCellComboBox = GetDlgItem(hWnd, CONTROL_ID_LOAD_CELL_COMBO);
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 
 		const auto selectedIndex = ComboBox_GetCurSel(hLoadCellComboBox);
 		if (selectedIndex == CB_ERR) {
@@ -283,7 +283,7 @@ namespace se::cs::dialog::reference_data {
 
 		const auto hWnd = context.getWindowHandle();
 		const auto hSoulComboBox = GetDlgItem(hWnd, CONTROL_ID_SOUL_COMBO);
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 
 		const auto selectedIndex = ComboBox_GetCurSel(hSoulComboBox);
 		if (selectedIndex == CB_ERR) {
@@ -305,7 +305,7 @@ namespace se::cs::dialog::reference_data {
 
 	void PatchDialogProc_BeforeCommand_GenericSetModified(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		userData->lParam->reference->setModified(true);
 	}
 
@@ -314,7 +314,7 @@ namespace se::cs::dialog::reference_data {
 		context.setResult(0);
 
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		if (userData->unknown_0x2F) {
 			return;
 		}
@@ -357,13 +357,13 @@ namespace se::cs::dialog::reference_data {
 
 	void PatchDialogProc_BeforeCommand_GenericStoreLastPosition(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		lastUsedPosition = userData->lParam->reference->referenceData.unknown_0x10;
 	}
 
 	void PatchDialogProc_BeforeCommand_GenericStoreLastRotation(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		lastUsedRotation = userData->lParam->reference->referenceData.orientationNonAttached;
 	}
 
@@ -476,7 +476,7 @@ namespace se::cs::dialog::reference_data {
 
 	void PatchDialogProc_AfterCommand_GenericCompareLastPosition(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		const auto reference = userData->lParam->reference;
 		if (reference->referenceData.unknown_0x10 != lastUsedPosition) {
 			reference->setModified(true);
@@ -485,7 +485,7 @@ namespace se::cs::dialog::reference_data {
 
 	void PatchDialogProc_AfterCommand_GenericCompareLastRotation(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
-		const auto userData = (UserData*)GetWindowLongA(hWnd, GWL_USERDATA);
+		const auto userData = context.getUserData<UserData>();
 		const auto reference = userData->lParam->reference;
 		if (reference->referenceData.orientationNonAttached != lastUsedRotation) {
 			reference->setModified(true);

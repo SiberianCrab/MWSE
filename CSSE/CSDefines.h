@@ -31,6 +31,7 @@ namespace se::cs {
 	struct Light;
 	struct Lockpick;
 	struct ModelLoader;
+	struct NPC;
 	struct Object;
 	struct PhysicalObject;
 	struct Probe;

@@ -9,7 +9,7 @@ namespace se::cs::dialog::path_grid_window {
 	// Set the save button as focused by default instead of the generate default button.
 	void PatchDialogProc_AfterInitialize(DialogProcContext& context) {
 		const auto hWnd = context.getWindowHandle();
-		const auto hDefaultFocus = (HWND)context.getWParam();
+		const auto hDefaultFocus = context.getDefaultFocus();
 		if (GetDlgCtrlID(hDefaultFocus) != CONTROL_ID_SAVE_BUTTON) {
 			SetFocus(GetDlgItem(hWnd, CONTROL_ID_SAVE_BUTTON));
 

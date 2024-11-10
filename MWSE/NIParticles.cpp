@@ -6,7 +6,7 @@
 namespace NI {
 	Particles::Particles(ParticlesData* data) : TriBasedGeometry(data) {
 		vTable.asObject = reinterpret_cast<Object_vTable*>(0x74FCE8);
-		boundCenterSourceObject = nullptr;
+		staticBoundPositionSource = nullptr;
 	}
 
 	Pointer<Particles> Particles::create(unsigned short vertexCount, bool hasNormals, bool hasColors) {

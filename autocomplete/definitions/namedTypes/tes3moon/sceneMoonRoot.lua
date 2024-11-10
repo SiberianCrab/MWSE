@@ -1,6 +1,6 @@
 return {
 	type = "value",
-	description = [[Provides access to the scene storm root NiNode.]],
+	description = [[Provides access to the moon root NiNode.]],
 	readOnly = true,
 	valuetype = "niNode",
 }
