@@ -12,7 +12,7 @@ Most VFX assignments are persistent, and only expire when their lifespan ends, a
 			{ name = "avObject", type = "niAVObject", optional = true, description = "If provided the VFX will be attached to this scene object." },
 
 			{ name = "object", type = "tes3physicalObject|string", optional = true, description = "The physical object to use as the VFX. To use an enchantment-style VFX, supply the magicEffectId parameter instead." },
-			{ name = "magicEffectId", type = "number", optional = true, description = "The magic effect ID to use to create an enchantment-style VFX. This will use most of the same VFX logic, but cannot be applied to a position or specific niAVObject." },
+			{ name = "magicEffectId", type = "tes3.effect", optional = true, description = "The magic effect ID to use to create an enchantment-style VFX. This will use most of the same VFX logic, but cannot be applied to a position or specific niAVObject." },
 
 			{ name = "serial", type = "number", optional = true, description = "An associated tes3magicSourceInstance serial. If a serial is assigned to the VFX, the effect expiring will also remove the VFX. This is not used when creating an enchantment-style VFX." },
 			{ name = "repeatCount", type = "number", optional = true, description = "A repeat count for the VFX. If provided, the key timing for the associated effect will be used, multiplied by this value, to determine the total lifespan of the VFX. This is not used when creating an enchantment-style VFX." },

@@ -2700,7 +2700,7 @@ namespace mwse::lua {
 		return disabledPathItt != disabledMarkers.end();
 	}
 
-	void LuaManager::gatherMainModScripts(const std::string_view& path, bool core, const std::string_view& filename) {
+	void LuaManager::gatherMainModScripts(const std::string_view& path, bool core, const std::string_view& scriptFilename) {
 		if (!std::filesystem::exists(path)) {
 			return;
 		}
@@ -2708,36 +2708,48 @@ namespace mwse::lua {
 		// Do some precomputing for storing and calculating active lua mods.
 		sol::table luaMWSE = luaState["mwse"];
 		sol::table activeLuaMods = luaMWSE["activeLuaMods"];
+		bool isLegacy = !string::equal(scriptFilename, "main.lua");
 
 		auto subclassOrder = 0u;
-		for (const auto& p : std::filesystem::recursive_directory_iterator(path, std::filesystem::directory_options::follow_directory_symlink)) {
+		for (auto it = std::filesystem::recursive_directory_iterator(path, std::filesystem::directory_options::follow_directory_symlink);
+			 it != std::filesystem::recursive_directory_iterator();
+			 ++it) {
+
 			try {
-				if (p.path().filename() == filename) {
+				auto filename = it->path().filename();
+				
+				if (filename == ".git") {
+					// Skip .git subdirectories, as scanning their contents are likely to take the path length over the path limit and crash.
+					it.disable_recursion_pending();
+					continue;
+				}
+
+				if (filename == scriptFilename) {
 					// If a parent directory is marked .disabled, ignore files in it.
-					const auto pathString = p.path().string();
+					const auto pathString = it->path().string();
 					if (isPathDisabled(pathString)) {
 						log::getLog() << "[LuaManager] Skipping mod initializer in disabled directory: " << pathString << std::endl;
 						continue;
 					}
 
 					// Get a version of its path as a key.
-					auto luaModKey = pathString.substr(path.length() + 1, pathString.length() - path.length() - filename.length() - 2);
+					auto luaModKey = pathString.substr(path.length() + 1, pathString.length() - path.length() - scriptFilename.length() - 2);
 					std::replace(luaModKey.begin(), luaModKey.end(), '\\', '.');
 					string::to_lower(luaModKey);
 
 					// Check for key conflicts.
 					if (activeLuaMods[luaModKey] != sol::nil) {
-						log::getLog() << "[LuaManager] Skipping mod with duplicate key '" << luaModKey << "' in direcotry: " << pathString << std::endl;
+						log::getLog() << "[LuaManager] Skipping mod with duplicate key '" << luaModKey << "' in directory: " << pathString << std::endl;
 						continue;
 					}
 
 					// Prepare runtime data.
 					auto runtime = luaState.create_table();
-					runtime["path"] = p.path().string();
-					runtime["parent_path"] = p.path().parent_path().string();
+					runtime["path"] = pathString;
+					runtime["parent_path"] = it->path().parent_path().string();
 					runtime["key"] = luaModKey;
 					runtime["core_mod"] = core;
-					runtime["legacy_mod"] = !string::equal(filename, "main.lua");
+					runtime["legacy_mod"] = isLegacy;
 					runtime["load_std_order"] = subclassOrder++;
 
 					activeLuaMods[luaModKey] = runtime;
@@ -2771,6 +2783,20 @@ namespace mwse::lua {
 		}
 
 		return result;
+	}
+
+	const auto TES3_ui_MenuMap_updateLocalPlayer = reinterpret_cast<bool(__cdecl*)(TES3::UI::Element*, int, int, int, TES3::UI::Element*)>(0x5EB760);
+	void __cdecl OnRefreshedLocalMap(TES3::UI::Element* menu, int eventId, int data0, int data1, TES3::UI::Element* source) {
+		TES3_ui_MenuMap_updateLocalPlayer(menu, eventId, data0, data1, source);
+
+		if (event::UiRefreshedEvent::getEventEnabled()) {
+			const auto& TES3_UI_ID_MenuMap_local = *reinterpret_cast<TES3::UI::UI_ID*>(0x7D4640);
+			auto localMap = menu->findChild(TES3_UI_ID_MenuMap_local);
+
+			if (localMap) {
+				LuaManager::getInstance().getThreadSafeStateHandle().triggerEvent(new event::UiRefreshedEvent(localMap));
+			}
+		}
 	}
 
 	//
@@ -5626,6 +5652,7 @@ namespace mwse::lua {
 
 		// Event: UI Refreshed.
 		genCallEnforced(0x6272F9, 0x649870, reinterpret_cast<DWORD>(OnRefreshedStatsPane)); // MenuStat_scroll_pane
+		genCallEnforced(0x5EB319, 0x5EB760, reinterpret_cast<DWORD>(OnRefreshedLocalMap)); // MenuMap_local
 
 		// Event: Inventory Filter.
 		genCallEnforced(0x5CBD5F, 0x5CC720, reinterpret_cast<DWORD>(OnFilterInventoryTile));

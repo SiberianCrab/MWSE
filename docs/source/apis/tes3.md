@@ -1165,7 +1165,7 @@ local vfx = tes3.createVisualEffect({ reference = ..., position = ..., avObject 
 	* `position` ([tes3vector3](../types/tes3vector3.md), number[]): *Optional*. If provided the VFX will be attached relative to a position, and not follow a reference.
 	* `avObject` ([niAVObject](../types/niAVObject.md)): *Optional*. If provided the VFX will be attached to this scene object.
 	* `object` ([tes3physicalObject](../types/tes3physicalObject.md), string): *Optional*. The physical object to use as the VFX. To use an enchantment-style VFX, supply the magicEffectId parameter instead.
-	* `magicEffectId` (number): *Optional*. The magic effect ID to use to create an enchantment-style VFX. This will use most of the same VFX logic, but cannot be applied to a position or specific niAVObject.
+	* `magicEffectId` ([tes3.effect](../references/magic-effects.md)): *Optional*. The magic effect ID to use to create an enchantment-style VFX. This will use most of the same VFX logic, but cannot be applied to a position or specific niAVObject.
 	* `serial` (number): *Optional*. An associated tes3magicSourceInstance serial. If a serial is assigned to the VFX, the effect expiring will also remove the VFX. This is not used when creating an enchantment-style VFX.
 	* `repeatCount` (number): *Optional*. A repeat count for the VFX. If provided, the key timing for the associated effect will be used, multiplied by this value, to determine the total lifespan of the VFX. This is not used when creating an enchantment-style VFX.
 	* `lifespan` (number): *Optional*. The desired lifespan for the VFX. If not provided, the VFX will never expire.
@@ -3605,6 +3605,24 @@ local element = tes3.messageBox({ message = ..., buttons = ..., callback = ..., 
 
 ***
 
+### `tes3.modDisposition`
+<div class="search_terms" style="display: none">moddisposition, disposition</div>
+
+Modifies the effective disposition of an NPC, and updates the dialogue UI if visible. The change is clamped so that effective disposition remains within the range 0-100. The change can be either permanent or temporary (limited to a dialogue session).
+
+```lua
+tes3.modDisposition({ reference = ..., value = ..., temporary = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `reference` ([tes3mobileActor](../types/tes3mobileActor.md), [tes3reference](../types/tes3reference.md), string)
+	* `value` (integer): The change in disposition.
+	* `temporary` (boolean): *Default*: `false`. When true, the disposition change will only temporarily modify disposition while the dialogue window is open. Temporary changes have no effect outside dialogue.
+
+***
+
 ### `tes3.modStatistic`
 <div class="search_terms" style="display: none">modstatistic, statistic</div>
 
@@ -3752,7 +3770,7 @@ tes3.playAnimation({ reference = ..., group = ..., lower = ..., upper = ..., shi
 	* `shield` ([tes3.animationGroup](../references/animation-groups.md)): *Optional*. Sets the animation group id for the shield arm. This is used to combine different animations for each body section. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 	* `startFlag` ([tes3.animationStartFlag](../references/animation-start-flags.md)): *Default*: `tes3.animationStartFlag.immediate`. A flag for starting the group with, using [`tes3.animationStartFlag`](https://mwse.github.io/MWSE/references/animation-start-flags/) constants.
 	* `loopCount` (number): *Default*: `-1`. If provided, the animation will repeat its loop section a given number of times. To make an animation play through once, set loopCount = 0. Defaults to infinite looping.
-	* `mesh` (string): *Optional*. Deprecated. Please use [`tes3.loadAnimation`](https://mwse.github.io/MWSE/apis/tes3/#tes3loadanimation) (check its documentation) before calling `playAnimation`. You can also use `loadAnimation` to reset loaded animations to default.
+	* `mesh` (string): *Optional*. You can also use [`tes3.loadAnimation`](https://mwse.github.io/MWSE/apis/tes3/#tes3loadanimation) to reset loaded animations to default.
 
 ***
 
@@ -4509,7 +4527,7 @@ tes3.setItemIsStolen({ item = ..., from = ..., stolen = ... })
 ### `tes3.setJournalIndex`
 <div class="search_terms" style="display: none">setjournalindex, journalindex</div>
 
-Sets the index of a given journal in a way similar to the mwscript function SetJournalIndex.
+Sets the index of a given quest. Doesn't alter journal entries. Similar to the mwscript function SetJournalIndex.
 
 ```lua
 local wasSet = tes3.setJournalIndex({ id = ..., index = ..., showMessage = ... })
@@ -5214,7 +5232,7 @@ tes3.updateInventoryGUI({ reference = ... })
 ### `tes3.updateJournal`
 <div class="search_terms" style="display: none">updatejournal, journal</div>
 
-Updates the journal index in a way similar to the mwscript function Journal.
+Adds provided journal entry to the player's journal and adds the quest to the active quests list. Similar to the mwscript function Journal.
 
 ```lua
 local wasUpdated = tes3.updateJournal({ id = ..., index = ..., speaker = ..., showMessage = ... })

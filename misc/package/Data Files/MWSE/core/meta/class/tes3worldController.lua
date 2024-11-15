@@ -40,7 +40,10 @@
 --- @field hudStyle number No known effect.
 --- @field inputController tes3inputController *Read-only*. The controller responsible for player input.
 --- @field instance HINSTANCE *Read-only*. 
---- @field itemRepairSound tes3sound The sound played when an item is repaired.
+--- @field itemRepairSound tes3sound|nil The sound played when an item is repaired.
+--- 
+--- !!! bug
+--- 	Due to a bug in the game engine, the initialization code for this field never sets it to any `tes3sound` object. Instead, use sound IDs "repair" or "repair fail."
 --- @field lastFrameTime number *Read-only*. The value of `tes3.worldController.systemTime` at the start of the previous frame. Measured in milliseconds since the program was started.
 --- @field lightArmorHitSound tes3sound The sound played when a light armor piece is hit.
 --- @field mapController tes3mapController *Read-only*. The controller responsible for the world and local maps.

@@ -2191,6 +2191,48 @@ namespace mwse::lua {
 		}
 	}
 
+	void modDisposition(sol::table params) {
+		auto reference = getOptionalParamExecutionReference(params);
+		auto mobile = reference->getAttachedMobileNPC();
+		sol::optional<int> value = params["value"];
+		bool temporary = getOptionalParam(params, "temporary", false);
+		bool inDialogue = false;
+
+		if (!value) {
+			throw std::invalid_argument("tes3.modDisposition: 'value' is required.");
+		}
+
+		// Check if the player is in dialogue with the target.
+		if (mobile) {
+			auto menuDialog = TES3::UI::findMenu(*reinterpret_cast<TES3::UI::UI_ID*>(0x7D3442));
+			if (menuDialog && TES3::UI::getServiceActor() == mobile) {
+				inDialogue = true;
+			}
+		}
+
+		if (temporary) {
+			// Only make temporary changes in the dialogue menu. 
+			if (inDialogue) {
+				// Modify the NPC disposition, with clamping of effective disposition.
+				reference->baseObject->modDisposition(value.value());
+
+				// Modify the temporary disposition property and update UI.
+				const auto TES3_ui_temporaryDispositionMod = reinterpret_cast<int(__cdecl*)(int)>(0x5C08E0);
+				TES3_ui_temporaryDispositionMod(value.value());
+			}
+		}
+		else {
+			// Modify the NPC disposition, with clamping of effective disposition.
+			reference->baseObject->modDisposition(value.value());
+
+			if (inDialogue) {
+				// Modify the permanent disposition property and update UI.
+				const auto TES3_ui_permanentDispositionMod = reinterpret_cast<int(__cdecl*)(int)>(0x5C0860);
+				TES3_ui_permanentDispositionMod(value.value());
+			}
+		}
+	}
+
 	bool getLegacyScriptRunning(sol::table params) {
 		auto script = getOptionalParamScript(params, "script");
 		if (script == nullptr) {
@@ -5631,7 +5673,8 @@ namespace mwse::lua {
 			height1 = reference1->baseObject->boundingBox->maximum.z;
 		}
 		else {
-			throw std::invalid_argument("Could not determine first reference's height data.");
+			// Possibly the asset or its collision is uninitialized. Assume height is zero instead of failing.
+			height1 = 0;
 		}
 
 		// Try to get the second reference's data.
@@ -5645,7 +5688,8 @@ namespace mwse::lua {
 			height2 = reference2->baseObject->boundingBox->maximum.z;
 		}
 		else {
-			throw std::invalid_argument("Could not determine second reference's height data.");
+			// Possibly the asset or its collision is uninitialized. Assume height is zero instead of failing.
+			height2 = 0;
 		}
 
 		return tes3::testLineOfSight(&position1.value(), height1, &position2.value(), height2);
@@ -6249,6 +6293,7 @@ namespace mwse::lua {
 		tes3["loadSourceTexture"] = loadSourceTexture;
 		tes3["lock"] = lock;
 		tes3["messageBox"] = messageBox;
+		tes3["modDisposition"] = modDisposition;
 		tes3["modStatistic"] = modStatistic;
 		tes3["newGame"] = newGame;
 		tes3["payMerchant"] = payMerchant;
