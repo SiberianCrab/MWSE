@@ -16,6 +16,8 @@ CSSE requires [MGE XE](https://www.nexusmods.com/morrowind/mods/41102?) v0.14.3 
 
 If using OpenMW, you will still need to install MGE XE into your Morrowind installation directory (the same directory that you launch the Construction Set).
 
+If you are on Linux, you also need additional setup in winecfg so that WINE will use the included dlls. Read [Hristos' guide] (https://hristos.co/blog/enjoying-morrowind-on-linux-part-one-original-engine/) for a full walkthrough. Specifically, in winecfg, the dlls d3d8, mwse, csse need to be set to native and builtin.
+
 ## Installation
 
 You can obtain the CSSE using one of the following methods:
