@@ -3210,6 +3210,26 @@ namespace mwse::lua {
 		return instance;
 	}
 
+	const auto TES3_MobileActor_applyEquippedConstantEffectEnchs = reinterpret_cast<void(__thiscall*)(TES3::MobileActor*)>(0x52CF40);
+	const auto TES3_MobileActor_removeEquippedConstantEffectEnchs = reinterpret_cast<void(__thiscall*)(TES3::MobileActor*)>(0x52D010);
+	void applyConstantEffectEquipment(sol::table params) {
+		TES3::Reference* reference = getOptionalParamExecutionReference(params);
+		if (reference == nullptr) {
+			throw std::invalid_argument("Invalid reference parameter provided.");
+		}
+
+		TES3::MobileActor* mobile = reference->getAttachedMobileActor();
+		bool activate = getOptionalParam<bool>(params, "activate", false);
+		bool deactivate = getOptionalParam<bool>(params, "deactivate", false);
+
+		if (activate) {
+			TES3_MobileActor_applyEquippedConstantEffectEnchs(mobile);
+		}
+		else if (deactivate) {
+			TES3_MobileActor_removeEquippedConstantEffectEnchs(mobile);
+		}
+	}
+
 	TES3::MagicSourceInstance* getMagicSourceInstanceBySerial(sol::table params) {
 		auto serialNumber = getOptionalParam<unsigned int>(params, "serialNumber", UINT32_MAX);
 		if (serialNumber == UINT32_MAX) {
@@ -6171,6 +6191,7 @@ namespace mwse::lua {
 		tes3["addTopic"] = addTopic;
 		tes3["adjustSoundVolume"] = adjustSoundVolume;
 		tes3["advanceTime"] = advanceTime;
+		tes3["applyConstantEffectEquipment"] = applyConstantEffectEquipment;
 		tes3["applyMagicSource"] = applyMagicSource;
 		tes3["applyTextDefines"] = applyTextDefines;
 		tes3["beginTransform"] = beginTransform;

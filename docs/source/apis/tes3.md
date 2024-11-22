@@ -567,6 +567,26 @@ local hoursPassed = tes3.advanceTime({ hours = ..., resting = ..., updateEnviron
 
 ***
 
+### `tes3.applyConstantEffectEquipment`
+<div class="search_terms" style="display: none">applyconstanteffectequipment, constanteffectequipment</div>
+
+Controls the magic activation of equipped constant effect items on actors. The game is not very consistent in the activation on constant effect magic on non-player actors. It will activate them on equipping, and on combat start, but does not do this at other times, like cell change. This function allows control over this part of the magic system. It is designed for non-players, and is not recommend to use on the player.
+
+One of `activate` or `deactivate` must be true. Only constant effects on equipped items are considered. `activate` will start constant effects, which will take effect on the next frame. `deactivate` immediately removes constant effects. Activating or deactivating multiple times will not cause stacking problems.
+
+```lua
+tes3.applyConstantEffectEquipment({ reference = ..., activate = ..., deactivate = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): The actor reference.
+	* `activate` (boolean): *Default*: `false`. Activate constant effects on equipped items.
+	* `deactivate` (boolean): *Default*: `false`. Deactivate constant effects on equipped items.
+
+***
+
 ### `tes3.applyMagicSource`
 <div class="search_terms" style="display: none">applymagicsource, magicsource</div>
 

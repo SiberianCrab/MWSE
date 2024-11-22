@@ -340,6 +340,24 @@ function tes3.advanceTime(params) end
 --- @field resting boolean? *Default*: `false`. Should advancing time count as resting? If set to true invokes usual sleeping mechanics: health, fatigue and magicka restoration, and possible rest interruption. The length of the rest will be equal to hours parameter, rounded down to nearest natural number.
 --- @field updateEnvironment boolean? *Default*: `true`. Controls if the weather system is updated for each hour passed.
 
+--- Controls the magic activation of equipped constant effect items on actors. The game is not very consistent in the activation on constant effect magic on non-player actors. It will activate them on equipping, and on combat start, but does not do this at other times, like cell change. This function allows control over this part of the magic system. It is designed for non-players, and is not recommend to use on the player.
+--- 
+--- One of `activate` or `deactivate` must be true. Only constant effects on equipped items are considered. `activate` will start constant effects, which will take effect on the next frame. `deactivate` immediately removes constant effects. Activating or deactivating multiple times will not cause stacking problems.
+--- @param params tes3.applyConstantEffectEquipment.params This table accepts the following values:
+--- 
+--- `reference`: tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — The actor reference.
+--- 
+--- `activate`: boolean? — *Default*: `false`. Activate constant effects on equipped items.
+--- 
+--- `deactivate`: boolean? — *Default*: `false`. Deactivate constant effects on equipped items.
+function tes3.applyConstantEffectEquipment(params) end
+
+---Table parameter definitions for `tes3.applyConstantEffectEquipment`.
+--- @class tes3.applyConstantEffectEquipment.params
+--- @field reference tes3reference|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string The actor reference.
+--- @field activate boolean? *Default*: `false`. Activate constant effects on equipped items.
+--- @field deactivate boolean? *Default*: `false`. Deactivate constant effects on equipped items.
+
 --- Applies magic effects from a spell, potion, or enchantment on the given actor instantly. You can also apply any custom set of effects, by passing an effects table.
 --- 
 --- Usage:

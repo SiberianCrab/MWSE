@@ -39,6 +39,7 @@
 #include "NIPick.h"
 #include "NISortAdjustNode.h"
 #include "NiTriShape.h"
+#include "NiTriShapeData.h"
 #include "NIUVController.h"
 
 #include "BitUtil.h"
@@ -1184,9 +1185,9 @@ namespace mwse::patch {
 
 	__declspec(naked) void PatchNITriBasedGeom_Ctor1() {
 		__asm {
-			movzx eax, word ptr[esp + 0x1C]	// eax = zero extended triangleCount
-			mov dword ptr[esi], 0x751268		// Set NiTriBasedGeom vtable
-			mov[esi + 0x34], eax				// Initialize triangleCount and patchRenderFlags together
+			movzx eax, word ptr [esp + 0x1C]	// eax = zero extended triangleCount
+			mov dword ptr [esi], 0x751268		// Set NiTriBasedGeom vtable
+			mov [esi + 0x34], eax				// Initialize triangleCount and patchRenderFlags together
 			nop
 		}
 	}
@@ -1195,16 +1196,26 @@ namespace mwse::patch {
 	__declspec(naked) void PatchNITriBasedGeom_Ctor2() {
 		__asm {
 			xor edx, edx
-			mov[esi + 0x34], edx				// Initialize triangleCount and patchRenderFlags together
+			mov [esi + 0x34], edx				// Initialize triangleCount and patchRenderFlags together
 			nop
 		}
 	}
 	const size_t PatchNITriBasedGeom_Ctor2_size = 0x6;
 
+	const auto NI_TriBasedGeometry_CopyMembers = reinterpret_cast<void(__thiscall*)(NI::TriBasedGeometry*, NI::TriBasedGeometry*)>(0x6F15B0);
+	void __fastcall PatchNITriShapeCopyMembers(NI::TriShape* _this, DWORD _EDX_, NI::TriShape* to) {
+		NI_TriBasedGeometry_CopyMembers(_this, to);
+
+		// Ensure that if the geometry data has been deep cloned, that the render flags are copied too.
+		if (to->modelData != _this->modelData) {
+			to->getModelData()->patchRenderFlags = _this->getModelData()->patchRenderFlags;
+		}
+	}
+
 	__declspec(naked) void PatchNIDX8Renderer_RenderShape() {
 		__asm {
 			nop
-			test word ptr[esi + 0x36], Const_SoftwareSkinningFlag	// Skip hardware skinning if patchRenderFlags matches SoftwareSkinningFlag
+			test word ptr [esi + 0x36], Const_SoftwareSkinningFlag	// Skip hardware skinning if patchRenderFlags matches SoftwareSkinningFlag
 			__asm _emit 0x75 __asm _emit 0x19						// jnz short $ + 0x1B (assembler can't output short offsets correctly)
 		}
 	}
@@ -1657,6 +1668,7 @@ namespace mwse::patch {
 		auto TriShape_linkObject = &NI::TriShape::linkObject;
 		writePatchCodeUnprotected(0x6FF0A8, (BYTE*)&PatchNITriBasedGeom_Ctor1, PatchNITriBasedGeom_Ctor1_size);
 		writePatchCodeUnprotected(0x6FF0F0, (BYTE*)&PatchNITriBasedGeom_Ctor2, PatchNITriBasedGeom_Ctor2_size);
+		genCallEnforced(0x6E54C5, 0x6F15B0, reinterpret_cast<DWORD>(PatchNITriShapeCopyMembers));
 		writePatchCodeUnprotected(0x6ACF1F, (BYTE*)&PatchNIDX8Renderer_RenderShape, PatchNIDX8Renderer_RenderShape_size);
 		overrideVirtualTableEnforced(0x7508B0, offsetof(NI::TriShape_vTable, NI::TriShape_vTable::linkObject), 0x6E56D0, *reinterpret_cast<DWORD*>(&TriShape_linkObject));
 	}
