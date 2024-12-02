@@ -886,6 +886,23 @@ local success = tes3.cast({ reference = ..., target = ..., spell = ..., instant 
 
 ***
 
+### `tes3.changeWeather`
+<div class="search_terms" style="display: none">changeweather</div>
+
+Changes the current weather, either with a transition period or immediately. It only affects the weather simulation system, independent of regional weather settings.
+
+```lua
+tes3.changeWeather({ id = ..., immediate = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `id` ([tes3.weather](../references/weather-types.md), integer): Maps to [`tes3.weather`](https://mwse.github.io/MWSE/references/weather-types/) constants.
+	* `immediate` (boolean): *Optional*. When true, the weather changes immediately. When false, a transition to the selected weather is started.
+
+***
+
 ### `tes3.checkMerchantOffersService`
 <div class="search_terms" style="display: none">checkmerchantoffersservice</div>
 
@@ -1293,7 +1310,7 @@ Equip may fail for the following reasons:
 
 - The item cannot be found in the inventory.
 - The exact match cannot be found when itemData is provided.
-- When a weapon is being used to attack, it cannot be replaced.
+- When a weapon is being used to attack, it cannot be replaced during the attack animation.
 
 ```lua
 local itemEquipped = tes3.equip({ reference = ..., item = ..., itemData = ..., addItem = ..., selectBestCondition = ..., selectWorstCondition = ..., bypassEquipEvents = ... })
@@ -1305,7 +1322,7 @@ local itemEquipped = tes3.equip({ reference = ..., item = ..., itemData = ..., a
 	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): The reference to perform the equip on.
 	* `item` ([tes3item](../types/tes3item.md), string): The item to equip.
 	* `itemData` ([tes3itemData](../types/tes3itemData.md)): *Optional*. The item data of the specific item to equip, if a specific item is required.
-	* `addItem` (boolean): *Default*: `false`. If `true`, the item will be added to the actor's inventory if needed.
+	* `addItem` (boolean): *Default*: `false`. If `true`, the item will be added to the actor's inventory if it is not already present.
 	* `selectBestCondition` (boolean): *Default*: `false`. If `true`, the item in the inventory with the best condition and best charge will be selected.
 	* `selectWorstCondition` (boolean): *Default*: `false`. If `true`, the item in the inventory with the worst condition and worst charge will be selected. Can be useful for selecting tools.
 	* `bypassEquipEvents` (boolean): *Default*: `false`. If `true`, this call will not raise any `equip`-related events.

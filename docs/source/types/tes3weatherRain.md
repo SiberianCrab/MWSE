@@ -36,7 +36,7 @@ This type inherits the following: [tes3weather](../types/tes3weather.md)
 ### `ambientLoopSoundId`
 <div class="search_terms" style="display: none">ambientloopsoundid</div>
 
-The weather's ambient looping sound ID.
+The weather's ambient looping sound ID. This can be changed, and the sound will switch over when the weather is active.
 
 **Returns**:
 
@@ -311,7 +311,7 @@ The weather's particle radius.
 ### `rainLoopSoundId`
 <div class="search_terms" style="display: none">rainloopsoundid</div>
 
-The weather's rain loop sound ID.
+The weather's rain loop sound ID. This can be changed, and the sound will switch over when the weather is active
 
 **Returns**:
 

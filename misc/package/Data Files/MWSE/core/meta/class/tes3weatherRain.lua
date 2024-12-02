@@ -11,5 +11,5 @@
 --- @field particleRadius number The weather's particle radius.
 --- @field rainActive boolean *Read-only*. The weather's active rain flag.
 --- @field rainLoopSound tes3sound *Read-only*. The weather's rain loop sound object.
---- @field rainLoopSoundId string The weather's rain loop sound ID.
+--- @field rainLoopSoundId string The weather's rain loop sound ID. This can be changed, and the sound will switch over when the weather is active
 --- @field threshold number The weather's threshold value.

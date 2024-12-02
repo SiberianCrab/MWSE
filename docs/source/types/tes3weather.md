@@ -35,7 +35,7 @@ A structure that contains base weather information shared by inheriting weather 
 ### `ambientLoopSoundId`
 <div class="search_terms" style="display: none">ambientloopsoundid</div>
 
-The weather's ambient looping sound ID.
+The weather's ambient looping sound ID. This can be changed, and the sound will switch over when the weather is active.
 
 **Returns**:
 

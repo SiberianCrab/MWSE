@@ -1276,6 +1276,23 @@ namespace mwse::lua {
 		return nullptr;
 	}
 
+	void changeWeather(sol::table params) {
+		auto weatherId = getOptionalParam<int>(params, "id");
+		auto immediate = getOptionalParam<bool>(params, "immediate", false);
+
+		if (!weatherId) {
+			throw std::invalid_argument("tes3.changeWeather: id param is required.");
+		}
+
+		auto weatherController = TES3::WorldController::get()->weatherController;
+		if (immediate) {
+			weatherController->switchImmediate(weatherId.value());
+		}
+		else {
+			weatherController->switchTransition(weatherId.value());
+		}
+	}
+
 	sol::optional<TES3::Vector2> getCursorPosition() {
 		auto worldController = TES3::WorldController::get();
 		if (worldController) {
@@ -6200,6 +6217,7 @@ namespace mwse::lua {
 		tes3["cancelAnimationLoop"] = cancelAnimationLoop;
 		tes3["canRest"] = canRest;
 		tes3["cast"] = cast;
+		tes3["changeWeather"] = changeWeather;
 		tes3["checkMerchantOffersService"] = checkMerchantOffersService;
 		tes3["checkMerchantTradesItem"] = checkMerchantTradesItem;
 		tes3["clearMarkLocation"] = clearMarkLocation;

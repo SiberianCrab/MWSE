@@ -10,6 +10,9 @@
 
 #include "LuaManager.h"
 #include "LuaCalcSunDamageScalarEvent.h"
+#include "LuaWeatherChangedImmediateEvent.h"
+#include "LuaWeatherTransitionFinishedEvent.h"
+#include "LuaWeatherTransitionStartedEvent.h"
 
 namespace TES3 {
 	const auto TES3_WeatherController_calcSunDamageScalar = reinterpret_cast<float(__thiscall*)(WeatherController*)>(0x0440630);
@@ -84,14 +87,38 @@ namespace TES3 {
 		TES3_WeatherController_setFogColour(this, fogProperty);
 	}
 
+	static std::atomic<bool> weatherEventGuard = false;
+
 	void WeatherController::switchImmediate(int weather) {
 		if (lastActiveRegion) {
 			lastActiveRegion->currentWeatherIndex = weather;
 		}
 		switchWeather(weather, 1.0f);
+
+		// Fire off the event, after function completes.
+		// Prevent recursive triggering of weather change events.
+		if (!weatherEventGuard && mwse::lua::event::WeatherChangedImmediateEvent::getEventEnabled()) {
+			mwse::lua::LuaManager& luaManager = mwse::lua::LuaManager::getInstance();
+			auto stateHandle = luaManager.getThreadSafeStateHandle();
+
+			weatherEventGuard = true;
+			stateHandle.triggerEvent(new mwse::lua::event::WeatherChangedImmediateEvent());
+			weatherEventGuard = false;
+		}
 	}
 
 	void WeatherController::switchTransition(int weather) {
+		// Fire off the event before transition starts.
+		// Prevent recursive triggering of weather change events.
+		if (!weatherEventGuard && mwse::lua::event::WeatherTransitionStartedEvent::getEventEnabled()) {
+			mwse::lua::LuaManager& luaManager = mwse::lua::LuaManager::getInstance();
+			auto stateHandle = luaManager.getThreadSafeStateHandle();
+
+			weatherEventGuard = true;
+			stateHandle.triggerEvent(new mwse::lua::event::WeatherTransitionStartedEvent());
+			weatherEventGuard = false;
+		}
+
 		switchWeather(weather, 0.001f);
 		if (lastActiveRegion) {
 			lastActiveRegion->currentWeatherIndex = weather;

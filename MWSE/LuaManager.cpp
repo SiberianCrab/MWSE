@@ -1525,7 +1525,7 @@ namespace mwse::lua {
 		auto enchantedFrom = getValueFromEnchantingMenu<TES3::Item>(ui_id_ptr_MenuEnchantment_Item, ui_id_ptr_MenuEnchantment_SoulGem);
 		auto soulGemUsed = getValueFromEnchantingMenu<TES3::Misc>(ui_id_ptr_MenuEnchantment_SoulGem, ui_id_ptr_MenuEnchantment_SoulGem);
 		auto soulGemItemData = getValueFromEnchantingMenu<TES3::ItemData>(ui_id_ptr_MenuEnchantment_SoulGem, ui_id_ptr_MenuEnchantment_Item);
-		auto soulUsed = soulGemItemData ? soulGemItemData->soul : nullptr;
+		auto soulUsed = soulGemItemData ? soulGemItemData->getSoul() : nullptr;
 
 		// TODO: Allow item data to be accessed or transferred to the newly enchanted item.
 		//auto enchantedFromItemData = getValueFromEnchantingMenu<TES3::ItemData>(ui_id_ptr_MenuEnchantment_Item, ui_id_ptr_MenuEnchantment_Item);
@@ -3396,7 +3396,7 @@ namespace mwse::lua {
 		// Change the soul to the aliased creature. The item will be destroyed (or the value unset) soon,
 		// but we must make sure that future events don't require the original value.
 		auto itemData = reinterpret_cast<TES3::ItemData*>(value->ptrValue);
-		auto actor = itemData->soul;
+		auto actor = itemData->getSoul();
 		if (actor->objectType == TES3::ObjectType::Creature) {
 			PatchGetAliasedSoulValueProperty_AliasedCreature->soul = static_cast<TES3::Creature*>(actor)->getSoulValue();
 			itemData->soul = PatchGetAliasedSoulValueProperty_AliasedCreature;
@@ -3418,7 +3418,7 @@ namespace mwse::lua {
 	constexpr size_t PatchGetSoulValueForTooltip_LoadObject_Size = 0x3;
 
 	int __fastcall PatchGetSoulValueForTooltip(TES3::ItemData* itemData, TES3::Misc* soulGem) {
-		auto actor = itemData->soul;
+		auto actor = itemData->getSoul();
 
 		int baseValue = 0;
 		if (actor->objectType == TES3::ObjectType::Creature) {
@@ -3448,7 +3448,7 @@ namespace mwse::lua {
 	constexpr size_t PatchGetSoulValueForTooltip_NoMCPLoader_Size = 0x6;
 
 	int __fastcall PatchGetSoulValueForTooltip_NoMCP(TES3::ItemData* itemData, TES3::Misc* soulGem) {
-		auto actor = itemData->soul;
+		auto actor = itemData->getSoul();
 
 		int baseValue = 0;
 		if (actor->objectType == TES3::ObjectType::Creature) {
@@ -3476,7 +3476,7 @@ namespace mwse::lua {
 	constexpr size_t PatchGetSoulValueForRechargeTitle_Setup_Size = 0x2;
 
 	int __fastcall PatchGetSoulValueForRechargeTitle(TES3::UI::InventoryTile* tile) {
-		auto actor = tile->itemData->soul;
+		auto actor = tile->itemData->getSoul();
 		if (actor->objectType == TES3::ObjectType::Creature) {
 			auto creature = static_cast<TES3::Creature*>(actor);
 			return creature->getSoulValue();
@@ -3499,16 +3499,8 @@ namespace mwse::lua {
 		auto itemData = reinterpret_cast<TES3::ItemData*>(soulGemElement->getProperty(TES3::UI::PropertyType::Pointer, TES3_UI_ID_MenuEnchantment_Item).ptrValue);
 
 		// Calculate the new soul value.
-		auto actor = itemData->soul;
-		int soulValue = 0;
-		if (itemData->soul->objectType == TES3::ObjectType::Creature) {
-			auto creature = static_cast<TES3::Creature*>(actor);
-			soulValue = creature->getSoulValue();
-		}
-		else if (itemData->soul->objectType == TES3::ObjectType::NPC) {
-			auto npc = static_cast<TES3::NPC*>(actor);
-			soulValue = npc->getSoulValue().value_or(0);
-		}
+		auto soul = itemData->getSoul();
+		int soulValue = soul ? soul->getSoulValue().value_or(0) : 0;
 
 		// Update the stored soul value on the GUI elements.
 		self->setProperty(TES3_UI_ID_MenuEnchantment_soulcharge, soulValue);
