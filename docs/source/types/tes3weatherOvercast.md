@@ -25,7 +25,7 @@ This type inherits the following: [tes3weather](../types/tes3weather.md)
 ### `ambientLoopSound`
 <div class="search_terms" style="display: none">ambientloopsound</div>
 
-*Read-only*. The weather's ambient looping sound.
+*Read-only*. The weather's ambient looping sound. The current ambient sound should be changed by setting `ambientLoopSoundId`.
 
 **Returns**:
 

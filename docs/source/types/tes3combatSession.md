@@ -6,7 +6,7 @@
 	More information: https://github.com/MWSE/MWSE/tree/master/docs
 -->
 
-A structure that keeps track of combat session data.
+A structure that keeps track of combat session data that lasts for the duration of combat. It is mainly used for AI decision making. It is not saved to a savegame.
 
 ## Properties
 
@@ -18,6 +18,27 @@ No description yet available.
 **Returns**:
 
 * `result` (number)
+
+***
+
+### `castableSpells`
+<div class="search_terms" style="display: none">castablespells</div>
+
+The list of castable spells that the AI will consider using during combat. This includes both offensive and defensive spells. It is initialized at the start of combat and may be changed by mods at any time. Like other combat session data, it is not saved to a savegame.
+
+This is actually a list collection type. You can use these methods on castableSpells:
+
+castableSpells:add(tes3spell)
+castableSpells:find(tes3spell) -> index
+castableSpells:erase(index)
+castableSpells:clear()
+
+Note that ids cannot be used with these methods.
+
+
+**Returns**:
+
+* `result` ([tes3spell](../types/tes3spell.md)[])
 
 ***
 

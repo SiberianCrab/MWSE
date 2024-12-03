@@ -3779,9 +3779,6 @@
     <ClCompile Include="TES3WaterController.cpp">
       <Filter>Source Files\DataAdapters\TES3</Filter>
     </ClCompile>
-    <ClCompile Include="TES3WaterControllerLua.cpp">
-      <Filter>Source Files\Lua\Bindings</Filter>
-    </ClCompile>
     <ClCompile Include="NIAnimationData.cpp">
       <Filter>Source Files\DataAdapters\NI</Filter>
     </ClCompile>
@@ -3859,6 +3856,9 @@
     </ClCompile>
     <ClCompile Include="NICopyTransformController.cpp">
       <Filter>Source Files\DataAdapters\NI</Filter>
+    </ClCompile>
+    <ClCompile Include="TES3WaterControllerLua.cpp">
+      <Filter>Source Files\Lua\Bindings\TES3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

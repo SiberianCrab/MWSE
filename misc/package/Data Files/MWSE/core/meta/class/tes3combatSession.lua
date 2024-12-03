@@ -2,9 +2,20 @@
 -- More information: https://github.com/MWSE/MWSE/tree/master/docs
 
 --- @meta
---- A structure that keeps track of combat session data.
+--- A structure that keeps track of combat session data that lasts for the duration of combat. It is mainly used for AI decision making. It is not saved to a savegame.
 --- @class tes3combatSession
 --- @field alchemyPriority number No description yet available.
+--- @field castableSpells tes3spell[] The list of castable spells that the AI will consider using during combat. This includes both offensive and defensive spells. It is initialized at the start of combat and may be changed by mods at any time. Like other combat session data, it is not saved to a savegame.
+--- 
+--- This is actually a list collection type. You can use these methods on castableSpells:
+--- 
+--- castableSpells:add(tes3spell)
+--- castableSpells:find(tes3spell) -> index
+--- castableSpells:erase(index)
+--- castableSpells:clear()
+--- 
+--- Note that ids cannot be used with these methods.
+--- 
 --- @field data table A generic lua table that data can be written to, and synced to/from the save. All information stored must be valid for serialization to json.
 --- 
 --- There is a guide available [here](https://mwse.github.io/MWSE/guides/storing-data/) on using this table.
