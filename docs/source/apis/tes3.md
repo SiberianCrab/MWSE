@@ -1587,6 +1587,27 @@ local gameSetting = tes3.findGMST(id)
 
 ***
 
+### `tes3.findQuest`
+<div class="search_terms" style="display: none">findquest, quest</div>
+
+Finds a journal quest log by dialogue topic or quest name. Pass either a journal dialogue id or a quest name. A quest can cover multiple dialogue journal topics under the same quest name. Quests are also where the flags for active and finished quests are tracked.
+
+```lua
+local quest = tes3.findQuest({ journal = ..., name = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `journal` ([tes3dialogue](../types/tes3dialogue.md), string): *Optional*. The dialogue journal id to look for.
+	* `name` (string): *Optional*. The quest name (as displayed in the journal) to look for.
+
+**Returns**:
+
+* `quest` ([tes3quest](../types/tes3quest.md))
+
+***
+
 ### `tes3.findRegion`
 <div class="search_terms" style="display: none">findregion, region</div>
 
@@ -2689,7 +2710,10 @@ local result = tes3.getQuickKey({ slot = ... })
 ### `tes3.getReference`
 <div class="search_terms" style="display: none">getreference, reference</div>
 
-Fetches the first reference for a given base object ID.
+Fetches the first reference for a given base object ID. It will find the first clone if the object is an actor. It will scan every cell's references for a match, so performance must be considered when using this.
+
+!!!note
+	This is a slow operation, so ideally a reference should be looked up once on game load. Use a safe object handle to store references.
 
 ```lua
 local reference = tes3.getReference(id)

@@ -108,7 +108,12 @@ namespace TES3 {
 	}
 
 	void WeatherController::switchTransition(int weather) {
-		// Fire off the event before transition starts.
+		switchWeather(weather, 0.001f);
+		if (lastActiveRegion) {
+			lastActiveRegion->currentWeatherIndex = weather;
+		}
+
+		// Fire off the event after the transition starts.
 		// Prevent recursive triggering of weather change events.
 		if (!weatherEventGuard && mwse::lua::event::WeatherTransitionStartedEvent::getEventEnabled()) {
 			mwse::lua::LuaManager& luaManager = mwse::lua::LuaManager::getInstance();
@@ -117,11 +122,6 @@ namespace TES3 {
 			weatherEventGuard = true;
 			stateHandle.triggerEvent(new mwse::lua::event::WeatherTransitionStartedEvent());
 			weatherEventGuard = false;
-		}
-
-		switchWeather(weather, 0.001f);
-		if (lastActiveRegion) {
-			lastActiveRegion->currentWeatherIndex = weather;
 		}
 	}
 }

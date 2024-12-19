@@ -922,6 +922,20 @@ function tes3.findGlobal(id) end
 --- @return tes3gameSetting gameSetting No description yet available.
 function tes3.findGMST(id) end
 
+--- Finds a journal quest log by dialogue topic or quest name. Pass either a journal dialogue id or a quest name. A quest can cover multiple dialogue journal topics under the same quest name. Quests are also where the flags for active and finished quests are tracked.
+--- @param params tes3.findQuest.params This table accepts the following values:
+--- 
+--- `journal`: tes3dialogue|string|nil — *Optional*. The dialogue journal id to look for.
+--- 
+--- `name`: string? — *Optional*. The quest name (as displayed in the journal) to look for.
+--- @return tes3quest quest No description yet available.
+function tes3.findQuest(params) end
+
+---Table parameter definitions for `tes3.findQuest`.
+--- @class tes3.findQuest.params
+--- @field journal tes3dialogue|string|nil *Optional*. The dialogue journal id to look for.
+--- @field name string? *Optional*. The quest name (as displayed in the journal) to look for.
+
 --- Fetches the core game region object for a given region ID. If the region with a given ID doesn't exist, nil is returned.
 --- @param params tes3.findRegion.params This table accepts the following values:
 --- 
@@ -1382,7 +1396,10 @@ function tes3.getQuickKey(params) end
 --- @class tes3.getQuickKey.params
 --- @field slot number The key to retrieve data for. This is a value between 1 and 9.
 
---- Fetches the first reference for a given base object ID.
+--- Fetches the first reference for a given base object ID. It will find the first clone if the object is an actor. It will scan every cell's references for a match, so performance must be considered when using this.
+--- 
+--- !!!note
+--- 	This is a slow operation, so ideally a reference should be looked up once on game load. Use a safe object handle to store references.
 --- @param id string? *Optional*. Passing "player" or "playersavegame" will return the player reference.
 --- @return tes3reference reference No description yet available.
 function tes3.getReference(id) end
