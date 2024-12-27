@@ -1064,6 +1064,17 @@ function tes3.getCell(params) end
 --- @field x number? *Optional*. The X grid-position.
 --- @field y number? *Optional*. The Y grid-position.
 
+--- Finds the closest exterior position to a reference, which will be a door exit from an interior cell to exterior cell, or just the reference's position in exteriors. It will search for the closest exterior to the player if no reference is given. The function recursively checks cells for connecting doors until an exterior is reached. Behave-as-exterior cells do not count as an exterior. If no exterior is reachable, nil will be returned.
+--- @param params tes3.getClosestExteriorPosition.params This table accepts the following values:
+--- 
+--- `reference`: tes3reference? — *Optional*. The reference to search from. Defaults to the player reference if not provided.
+--- @return tes3vector3|nil position No description yet available.
+function tes3.getClosestExteriorPosition(params) end
+
+---Table parameter definitions for `tes3.getClosestExteriorPosition`.
+--- @class tes3.getClosestExteriorPosition.params
+--- @field reference tes3reference? *Optional*. The reference to search from. Defaults to the player reference if not provided.
+
 --- Gets the number of days that have passed leading up to the start of a given month.
 --- @param month number The 0-based month index.
 --- @return number days No description yet available.

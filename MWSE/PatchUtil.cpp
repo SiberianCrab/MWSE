@@ -1037,17 +1037,17 @@ namespace mwse::patch {
 	//
 
 	const auto TES3_SwapBoundArmor = reinterpret_cast<bool (__cdecl*)(TES3::MagicEffectInstance*, const char*, const char*)>(0x465DE0);
-	const auto TES3_UI_PostAddBoundItem = reinterpret_cast<void(__cdecl*)(TES3::Item*, TES3::ItemData*, int)>(0x5D1F00);
+	const auto TES3_UI_PostAddAndEquipBoundItem = reinterpret_cast<void(__cdecl*)(TES3::Item*, TES3::ItemData*, int)>(0x5D1F00);
 
 	TES3::EquipmentStack* createEquipBoundItem(TES3::Item* item, TES3::Actor* actor, TES3::MobileActor* mobile) {
 		// Create and equip bound item. Excerpted from bound gauntlet code.
 		TES3::EquipmentStack* equipped = nullptr;
-		auto itemData = TES3::ItemData::createForObject(item);
+		auto itemData = TES3::ItemData::createForBoundItem(item);
 
 		actor->inventory.addItem(mobile, item, 1, false, &itemData);
 		actor->equipItem(item, itemData, &equipped, mobile);
 		if (mobile->actorType == TES3::MobileActorType::Player) {
-			TES3_UI_PostAddBoundItem(item, itemData, 1);
+			TES3_UI_PostAddAndEquipBoundItem(item, itemData, 1);
 		}
 		mobile->wearItem(item, itemData, false, false, true);
 		return equipped->canonicalCopy();

@@ -1389,7 +1389,7 @@ function mwse.mcm.createTableVariable(variable) end
 --- 
 --- `searchChildDescriptions`: boolean? — *Default*: `true`. If true, default search handler will search through all the page and setting `description` fields in this MCM template.
 --- 
---- `onSearch`: nil|fun(searchText: string): boolean — *Optional*. A custom search handler function. This function should return true if this mod Template should show up in search results for given `searchText`.
+--- `onSearch`: nil|fun(searchText: string): boolean — *Optional*. A custom search handler function. This function should return true if this mod Template should show up in search results for given `searchText` (it's in lowercase).
 --- 
 --- `pages`: mwseMCMPage.new.data[]? — *Optional*. You can create pages for the template directly here. The entries in the array must specify the class of the page.
 --- 
@@ -1418,7 +1418,7 @@ function mwse.mcm.createTemplate(data) end
 --- @field onClose nil|fun(modConfigContainer: tes3uiElement) *Optional*. Set this to a function which will be called when the menu is closed. Useful for saving variables, such as TableVariable.
 --- @field searchChildLabels boolean? *Default*: `true`. If true, default search handler will search through all the page and setting `label` and `text` fields in this MCM template.
 --- @field searchChildDescriptions boolean? *Default*: `true`. If true, default search handler will search through all the page and setting `description` fields in this MCM template.
---- @field onSearch nil|fun(searchText: string): boolean *Optional*. A custom search handler function. This function should return true if this mod Template should show up in search results for given `searchText`.
+--- @field onSearch nil|fun(searchText: string): boolean *Optional*. A custom search handler function. This function should return true if this mod Template should show up in search results for given `searchText` (it's in lowercase).
 --- @field pages mwseMCMPage.new.data[]? *Optional*. You can create pages for the template directly here. The entries in the array must specify the class of the page.
 --- @field indent integer? *Default*: `12`. The left padding size in pixels. Only used if the `childIndent` isn't set on the parent component.
 --- @field childIndent integer? *Optional*. The left padding size in pixels. Used on all the child components.

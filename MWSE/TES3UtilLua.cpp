@@ -2488,6 +2488,54 @@ namespace mwse::lua {
 		return TES3::DataHandler::get()->getLastExteriorPosition();
 	}
 
+	sol::optional<TES3::Vector3> getClosestExteriorPosition(sol::optional<sol::table> params) {
+		auto reference = getOptionalParamExecutionReference(params);
+		if (reference == nullptr) {
+			// Default to player.
+			auto mobilePlayer = TES3::WorldController::get()->getMobilePlayer();
+			reference = mobilePlayer->reference;
+		}
+
+		auto startCell = reference->getCell();
+		if (!startCell->getIsInterior()) {
+			return reference->position;
+		}
+
+		std::vector<TES3::Cell*> unvisitedCells;
+		std::unordered_set<TES3::Cell*> knownCells;
+		unvisitedCells.push_back(startCell);
+		knownCells.insert(startCell);
+
+		// Breadth-first search cells connected by load doors until an exterior is reached.
+		while (unvisitedCells.size() > 0) {
+			auto cell = unvisitedCells.back();
+			unvisitedCells.pop_back();
+
+			for (auto refr : cell->persistentRefs) {
+				if (refr->baseObject->objectType == TES3::ObjectType::Door) {
+					auto destination = refr->getAttachedTravelDestination();
+					if (destination) {
+						auto destinationCell = destination->cell;
+
+						if (destinationCell->getIsInterior()) {
+							// Queue up new unseen interior cells.
+							if (knownCells.count(destinationCell) == 0) {
+								knownCells.insert(destinationCell);
+								unvisitedCells.push_back(destinationCell);
+							}
+						}
+						else {
+							// For an exterior destination, return the door marker position.
+							return destination->destination->position;
+						}
+					}
+				}
+			}
+		}
+
+		return {};
+	}
+
 	sol::optional<std::string> getLanguage() {
 		switch (getLanguageCode()) {
 		case 0:
@@ -3434,7 +3482,7 @@ namespace mwse::lua {
 			itemData->owner = nullptr;
 
 			// Delete the item data if it's fully repaired.
-			if (TES3::ItemData::isFullyRepaired(itemData, item)) {
+			if (TES3::ItemData::isItemDataStackable(itemData, item)) {
 				delete itemData;
 				itemData = nullptr;
 			}
@@ -4047,7 +4095,7 @@ namespace mwse::lua {
 			}
 
 			// Check to see if the item is fully repaired.
-			if (!forceRemoval && !TES3::ItemData::isFullyRepaired(itemData, static_cast<TES3::Item*>(reference->baseObject), ignoreOwnership)) {
+			if (!forceRemoval && !TES3::ItemData::isItemDataStackable(itemData, static_cast<TES3::Item*>(reference->baseObject), ignoreOwnership)) {
 				return false;
 			}
 
@@ -4077,7 +4125,7 @@ namespace mwse::lua {
 		}
 
 		// Do we need to remove it?
-		if (!forceRemoval && !TES3::ItemData::isFullyRepaired(itemData, item, ignoreOwnership)) {
+		if (!forceRemoval && !TES3::ItemData::isItemDataStackable(itemData, item, ignoreOwnership)) {
 			return false;
 		}
 
@@ -6301,6 +6349,7 @@ namespace mwse::lua {
 		tes3["getCameraPosition"] = getCameraPosition;
 		tes3["getCameraVector"] = getCameraVector;
 		tes3["getCell"] = getCell;
+		tes3["getClosestExteriorPosition"] = getClosestExteriorPosition;
 		tes3["getCumulativeDaysForMonth"] = getCumulativeDaysForMonth;
 		tes3["getCurrentAIPackageId"] = getCurrentAIPackageId;
 		tes3["getCurrentWeather"] = getCurrentWeather;

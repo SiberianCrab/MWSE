@@ -8,6 +8,6 @@
 --- @class tes3quest : tes3baseObject
 --- @field dialogue tes3dialogue[] *Read-only*. A collection of dialogues associated with the quest.
 --- @field info tes3dialogueInfo[] *Read-only*. A collection of dialogue info associated with the quest.
---- @field isActive boolean If the quest is active. This occurs when the quest hass started but not finished yet.
+--- @field isActive boolean If the quest is active. This occurs when the quest has started but not finished yet.
 --- @field isFinished boolean If the quest has finished. This is when the quest has reached a journal entry with the finished flag.
 --- @field isStarted boolean If the quest has started. This occurs when at least one journal entry has been added.

@@ -1936,6 +1936,26 @@ local cell = tes3.getCell({ id = ..., position = ..., x = ..., y = ... })
 
 ***
 
+### `tes3.getClosestExteriorPosition`
+<div class="search_terms" style="display: none">getclosestexteriorposition, closestexteriorposition</div>
+
+Finds the closest exterior position to a reference, which will be a door exit from an interior cell to exterior cell, or just the reference's position in exteriors. It will search for the closest exterior to the player if no reference is given. The function recursively checks cells for connecting doors until an exterior is reached. Behave-as-exterior cells do not count as an exterior. If no exterior is reachable, nil will be returned.
+
+```lua
+local position = tes3.getClosestExteriorPosition({ reference = ... })
+```
+
+**Parameters**:
+
+* `params` (table)
+	* `reference` ([tes3reference](../types/tes3reference.md)): *Optional*. The reference to search from. Defaults to the player reference if not provided.
+
+**Returns**:
+
+* `position` ([tes3vector3](../types/tes3vector3.md), nil)
+
+***
+
 ### `tes3.getCumulativeDaysForMonth`
 <div class="search_terms" style="display: none">getcumulativedaysformonth, cumulativedaysformonth</div>
 

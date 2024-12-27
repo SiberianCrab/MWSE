@@ -82,7 +82,7 @@ The blocked state of the object.
 ### `isActive`
 <div class="search_terms" style="display: none">isactive, active</div>
 
-If the quest is active. This occurs when the quest hass started but not finished yet.
+If the quest is active. This occurs when the quest has started but not finished yet.
 
 **Returns**:
 

@@ -3711,6 +3711,10 @@ namespace mwse::lua {
 				gameFile->writeChunkData('TAUL', json.c_str(), json.length() + 1);
 			}
 		}
+		if (itemData->flags) {
+			// Save added flags.
+			gameFile->writeChunkData('GLFE', &itemData->flags, sizeof(TES3::ItemData::flags));
+		}
 
 		return result;
 	}
@@ -3746,6 +3750,11 @@ namespace mwse::lua {
 
 			// Clean up the buffer we made.
 			delete[] buffer;
+		}
+		else if (result == 'GLFE') {
+			auto threadID = GetCurrentThreadId();
+			auto saveLoadItemData = saveLoadItemDataMap[threadID];
+			gameFile->readChunkData(&saveLoadItemData->flags, sizeof(TES3::ItemData::flags));
 		}
 
 		// It's safe to return LUAT here, it will just pass to the next load for us.
@@ -3834,6 +3843,37 @@ namespace mwse::lua {
 	}
 
 	//
+	// Patch: Use added flags on ItemData to track bound items, instead of matching ids against bound item GMSTs.
+	//
+
+	__declspec(naked) void PatchCheckIfBoundEquipmentStack() {
+		__asm {
+			mov ecx, [esi + 4]			// ecx = equipmentStack->itemData
+			test ecx, ecx
+			jz nonbound
+			test [ecx + 0x20], 1		// if itemData->flags & ItemDataFlag_BoundItem
+			jz nonbound
+			jmp $						// Replace with bound item jump destination
+		nonbound:
+			jmp $						// Replace with non-bound item jump destination
+		}
+	}
+	const size_t PatchCheckIfBoundEquipmentStack_size = 0x17;
+
+	__declspec(naked) void PatchCheckIfBoundItemTile() {
+		__asm {
+			mov ecx, [ebp + 4]				// ecx = inventoryTile->itemData
+			test ecx, ecx
+			jz done
+			test [ecx + 0x20], 1			// if itemData->flags & ItemDataFlag_BoundItem
+			jz done
+			mov byte ptr [ebp + 0x40], 1	// inventoryTile->isBoundItem = true
+		done:
+		}
+	}
+	const size_t PatchCheckIfBoundItemTile_size = 0x11;
+
+	//
 	// Patch bound item / summon saving and loading.
 	//
 
@@ -3845,7 +3885,9 @@ namespace mwse::lua {
 		const short overrideSavingMagicEffectsFromID = TES3::EffectID::SummonCenturionSphere;
 
 		if (id >= overrideSavingMagicEffectsFromID && stack->object) {
-			if (stack->object->objectType == TES3::ObjectType::Armor || stack->object->objectType == TES3::ObjectType::Weapon) {
+			if (stack->object->objectType == TES3::ObjectType::Armor
+				|| stack->object->objectType == TES3::ObjectType::Clothing
+				|| stack->object->objectType == TES3::ObjectType::Weapon) {
 				id = TES3::EffectID::BoundDagger;
 			}
 			else if (stack->object->objectType == TES3::ObjectType::Reference) {
@@ -5889,10 +5931,10 @@ namespace mwse::lua {
 		genCallEnforced(0x5C4C36, 0x4E44E0, reinterpret_cast<DWORD>(&TES3::ItemData::dtor));
 		genCallEnforced(0x4E48A7, 0x4E5410, reinterpret_cast<DWORD>(OnDeletingItemData));
 		genPushEnforced(0x4E7761, (BYTE)sizeof(TES3::ItemData));
-		genCallEnforced(0x46589C, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForObject));
-		genCallEnforced(0x465CFC, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForObject));
-		genCallEnforced(0x465D92, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForObject));
-		genCallEnforced(0x465F1A, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForObject));
+		genCallEnforced(0x46589C, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForBoundItem));
+		genCallEnforced(0x465CFC, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForBoundItem));
+		genCallEnforced(0x465D92, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForBoundItem));
+		genCallEnforced(0x465F1A, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForBoundItem));
 		genCallEnforced(0x495402, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForObject));
 		genCallEnforced(0x496383, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForObject));
 		genCallEnforced(0x49803E, 0x4E7750, reinterpret_cast<DWORD>(&TES3::ItemData::createForObject));
@@ -5917,20 +5959,33 @@ namespace mwse::lua {
 		GeneratePatchForInlineItemDataDestruction(0x4E76DA);
 		GeneratePatchForInlineItemDataDestruction(0x4E78F8);
 
-		// Override item data fully repaired comparison to ensure there are no lua variables.
-		genCallEnforced(0x41089C, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x465643, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x496BF0, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x497C58, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x4E162B, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x52C400, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x52C6A2, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x5B4F07, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x5E1826, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x60E172, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x60E566, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x615789, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
-		genCallEnforced(0x633A6F, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isFullyRepaired));
+		// Override item data re-stackable tests to ensure item data with lua variables are preserved.
+		genCallEnforced(0x41089C, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x465643, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x496BF0, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x497C58, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x4E162B, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x52C400, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x52C6A2, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x5B4F07, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x5E1826, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x60E172, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x60E566, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x615789, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+		genCallEnforced(0x633A6F, 0x4E7970, reinterpret_cast<DWORD>(&TES3::ItemData::isItemDataStackable));
+
+		// Patch: Use added flags on ItemData to track bound items, instead of matching ids against bound item GMSTs.
+		writePatchCodeUnprotected(0x465460, (BYTE*)&PatchCheckIfBoundEquipmentStack, PatchCheckIfBoundEquipmentStack_size);
+		genJumpUnprotected(0x465460 + 0xD, 0x46565D);
+		genJumpUnprotected(0x465460 + 0x12, 0x46563A);
+		writePatchCodeUnprotected(0x496999, (BYTE*)&PatchCheckIfBoundEquipmentStack, PatchCheckIfBoundEquipmentStack_size);
+		genJumpUnprotected(0x496999 + 0xD, 0x496CB0);
+		genJumpUnprotected(0x496999 + 0x12, 0x496B8A);
+
+		writePatchCodeUnprotected(0x631440, (BYTE*)&PatchCheckIfBoundItemTile, PatchCheckIfBoundItemTile_size);
+		genJumpUnprotected(0x631440 + PatchCheckIfBoundItemTile_size, 0x631602);
+		writePatchCodeUnprotected(0x63174D, (BYTE*)&PatchCheckIfBoundItemTile, PatchCheckIfBoundItemTile_size);
+		genJumpUnprotected(0x63174D + PatchCheckIfBoundItemTile_size, 0x63190F);
 
 		// File loading/saving hooks for extended ItemData structure.
 		genCallEnforced(0x4998EA, 0x47E710, reinterpret_cast<DWORD>(GetFirstSavedItemStack));
