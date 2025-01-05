@@ -496,7 +496,7 @@ A creature to use instead of this one for sound generation.
 ### `sourceless`
 <div class="search_terms" style="display: none">sourceless</div>
 
-The soruceless flag of the object.
+The sourceless flag of the object.
 
 **Returns**:
 

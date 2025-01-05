@@ -2,7 +2,7 @@
 -- More information: https://github.com/MWSE/MWSE/tree/master/docs
 
 --- @meta
---- A leveled creature game object.
+--- A leveled item game object.
 --- @class tes3leveledItem : tes3physicalObject, tes3object, tes3baseObject
 --- @field calculateForEachItem boolean If `true`, each entry is rolled in the leveled list when resolving items. This can result in multiple items from one list being added.
 --- @field calculateFromAllLevels boolean If `true`, the leveled list is picked from the entire level range, instead of just the highest.

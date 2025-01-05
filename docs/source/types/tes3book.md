@@ -267,7 +267,7 @@ The skill learned from the book (from [`tes3.skill`](https://mwse.github.io/MWSE
 ### `sourceless`
 <div class="search_terms" style="display: none">sourceless</div>
 
-The soruceless flag of the object.
+The sourceless flag of the object.
 
 **Returns**:
 

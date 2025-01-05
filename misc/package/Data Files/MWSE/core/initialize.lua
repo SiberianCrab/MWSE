@@ -151,6 +151,31 @@ function dofile(path)
 	error("dofile: Could not resolve path " .. path)
 end
 
+local function addUserFriendlyNameToSolType(friendlyName, metatable)
+	metatable.__type.friendlyName = friendlyName
+end
+
+for friendlyName, maybeUserdataType in pairs(_G) do
+	pcall(addUserFriendlyNameToSolType, friendlyName, maybeUserdataType)
+end
+
+local function getUserdataTypeName(variable)
+    return variable.__type.friendlyName
+end
+
+local originalType = type
+function type(variable)
+	local baseType = originalType(variable)
+	if (baseType == "userdata") then
+		local success, typeName = pcall(getUserdataTypeName, variable)
+		if (success) then
+			return baseType, typeName
+		end
+	end
+	return baseType
+end
+
+
 -------------------------------------------------
 -- Global includes
 -------------------------------------------------

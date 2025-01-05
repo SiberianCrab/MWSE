@@ -1090,9 +1090,17 @@ namespace se::cs::dialog::render_window {
 	// Patch: Extend reference status data
 	//
 
+	const auto TES3CS_UpdateStatusMessage = reinterpret_cast<void(__cdecl*)(WPARAM, const char*)>(0x404881);
+
 	void __cdecl Patch_ExtendReferenceStatusData(WPARAM wParam, const char* lParam) {
 		const auto cell = gCurrentCell::get();
-		const auto reference = SelectionData::get()->firstTarget->reference;
+		const auto firstTarget = SelectionData::get()->firstTarget;
+		if (firstTarget == nullptr || cell == nullptr) {
+			TES3CS_UpdateStatusMessage(wParam, lParam);
+			return;
+		}
+
+		const auto reference = firstTarget->reference;
 
 		std::stringstream ss;
 		ss << std::dec << std::fixed << std::setprecision(0)
@@ -1101,7 +1109,6 @@ namespace se::cs::dialog::render_window {
 			<< " " << std::setprecision(2) << reference->getScale()
 			<< " " << cell->getEditorId();
 		
-		const auto TES3CS_UpdateStatusMessage = reinterpret_cast<void(__cdecl*)(WPARAM, const char*)>(0x46E680);
 		TES3CS_UpdateStatusMessage(wParam, ss.str().c_str());
 	}
 

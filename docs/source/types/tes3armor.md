@@ -359,7 +359,7 @@ The slot used by the armor. Maps to [`tes3.armorSlot`](https://mwse.github.io/MW
 ### `sourceless`
 <div class="search_terms" style="display: none">sourceless</div>
 
-The soruceless flag of the object.
+The sourceless flag of the object.
 
 **Returns**:
 

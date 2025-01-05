@@ -6287,6 +6287,7 @@ namespace mwse::lua {
 		sol::table tes3 = state["tes3"];
 
 		tes3["addArmorSlot"] = addArmorSlot;
+		tes3["addClothingSlot"] = addClothingSlot;
 		tes3["addItem"] = addItem;
 		tes3["addItemData"] = addItemData;
 		tes3["addJournalEntry"] = addJournalEntry;
