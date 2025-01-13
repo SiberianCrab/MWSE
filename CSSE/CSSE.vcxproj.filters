@@ -145,6 +145,17 @@
       <Filter>Source Files\UI\Dialog</Filter>
     </ClCompile>
     <ClCompile Include="DialogEditFactionWindow.cpp">
+    <ClCompile Include="CSEffect.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSMagicEffect.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSEnchantment.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
+    <ClCompile Include="CSAlchemy.cpp">
+      <Filter>Source Files\CS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +479,15 @@
     </ClInclude>
     <ClInclude Include="DialogPathGridWindow.h">
       <Filter>Header Files\UI\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="CSMagicEffect.h">
+      <Filter>Header Files\CS</Filter>
+    </ClInclude>
+    <ClInclude Include="CSAlchemy.h">
+      <Filter>Header Files\CS</Filter>
+    </ClInclude>
+    <ClInclude Include="CSLand.h">
+      <Filter>Header Files\CS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

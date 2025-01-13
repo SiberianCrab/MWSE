@@ -25,11 +25,13 @@ namespace se::cs {
 	struct GameSettingInitializer;
 	struct GlobalVariable;
 	struct ItemData;
+	struct Land;
 	struct LandTexture;
 	struct LeveledCreature;
 	struct LeveledItem;
 	struct Light;
 	struct Lockpick;
+	struct MagicEffect;
 	struct ModelLoader;
 	struct NPC;
 	struct Object;

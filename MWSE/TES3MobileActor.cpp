@@ -1310,6 +1310,7 @@ namespace TES3 {
 			auto addItem = getOptionalParam<bool>(params, "addItem", false);
 			auto selectBestCondition = getOptionalParam<bool>(params, "selectBestCondition", false);
 			auto selectWorstCondition = getOptionalParam<bool>(params, "selectWorstCondition", false);
+			TES3::WorldController::ItemUpDownSoundBlocker soundBlocker = !getOptionalParam<bool>(params, "playSound", true);
 
 			return equipItem(item, itemData, addItem, selectBestCondition, selectWorstCondition);
 		}

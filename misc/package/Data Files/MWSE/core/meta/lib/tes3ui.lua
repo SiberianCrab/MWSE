@@ -94,7 +94,7 @@ function tes3ui.createResponseText(params) end
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/apis/tes3ui/#tes3uicreatetooltipmenu).
 --- @param params tes3ui.createTooltipMenu.params? This table accepts the following values:
 --- 
---- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil — *Optional*. The item to create a tooltip for. If not specified, the tooltip will be empty.
+--- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil — *Optional*. The item to create a tooltip for. If not specified, the tooltip will be empty.
 --- 
 --- `itemData`: tes3itemData? — *Optional*. The item data for the item.
 --- 
@@ -106,7 +106,7 @@ function tes3ui.createTooltipMenu(params) end
 
 ---Table parameter definitions for `tes3ui.createTooltipMenu`.
 --- @class tes3ui.createTooltipMenu.params
---- @field item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil *Optional*. The item to create a tooltip for. If not specified, the tooltip will be empty.
+--- @field item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil *Optional*. The item to create a tooltip for. If not specified, the tooltip will be empty.
 --- @field itemData tes3itemData? *Optional*. The item data for the item.
 --- @field spell tes3spell? *Optional*. The spell to create a tooltip for.
 --- @field skill tes3skill? *Optional*. The skill to create a tooltip for.
@@ -154,7 +154,7 @@ function tes3ui.getMenuOnTop() end
 function tes3ui.getPalette(name) end
 
 --- Returns the mobile actor currently providing services, or the actor the player is talking to.
---- @return tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer result No description yet available.
+--- @return tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer result No description yet available.
 function tes3ui.getServiceActor() end
 
 --- Returns the UI scale, set in MGE.

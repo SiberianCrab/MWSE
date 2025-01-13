@@ -19,7 +19,7 @@ tes3bodyPartManager = {}
 function tes3bodyPartManager:getActiveBodyPart(layer, index) end
 
 --- The method fetches active body part of a actor for the given item.
---- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item to fetch the active body part for.
+--- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item to fetch the active body part for.
 --- @return tes3bodyPartManagerActiveBodyPart result No description yet available.
 function tes3bodyPartManager:getActiveBodyPartForItem(item) end
 
@@ -34,14 +34,14 @@ function tes3bodyPartManager:removeActiveBodyPart(layer, index, setOverride, ove
 function tes3bodyPartManager:removeEquippedLayers() end
 
 --- The method sets a new body part for a given object.
---- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item that the body part is from.
+--- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item that the body part is from.
 --- @param index tes3.activeBodyPart A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
 --- @param bodyPartId string The unique ID of the `tes3bodyPart` object to set as a new body part for given object.
 --- @param isFirstPerson boolean? *Default*: `false`. A flag which must be set if the target reference is the first person player.
 function tes3bodyPartManager:setBodyPartByIdForObject(item, index, bodyPartId, isFirstPerson) end
 
 --- The method sets an active body part slot with an item and bodyPart. Triggers `bodyPart` event.
---- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item that the body part is from.
+--- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item that the body part is from.
 --- @param index tes3.activeBodyPart A value from [`tes3.activeBodyPart`](https://mwse.github.io/MWSE/references/active-body-parts/) namespace.
 --- @param bodyPart tes3bodyPart The `tes3bodyPart` object to set as a new body part for given object.
 --- @param isFirstPerson boolean? *Default*: `false`. A flag which must be set if the target reference is the first person player.

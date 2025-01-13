@@ -23,7 +23,7 @@
 --- @field deltaTime number The time in seconds since the last update.
 --- @field flags number 
 --- @field hasOverrideAnimations boolean *Read-only*. True if the actor has some custom animations in the override layer. For example, drumming or sitting. These are assigned in the Construction Set or using [tes3.loadAnimation](https://mwse.github.io/MWSE/apis/tes3/#tes3loadanimation).
---- @field headGeometry niAutoNormalParticles|niParticles|niRotatingParticles|niTriShape 
+--- @field headGeometry niAutoNormalParticles|niGeometry|niParticles|niRotatingParticles|niTriShape 
 --- @field headMorphTiming number The timing offset of the head morph controller. Used to select either blinking or lipsync animations. Actively updated by the animation system during blinking or voiceovers. Timing is specific to the current head model.
 --- @field headNode niBSAnimationNode|niBSParticleNode|niBillboardNode|niCollisionSwitch|niNode|niSortAdjustNode|niSwitchNode 
 --- @field keyframeLayers tes3animationDataSequenceGroup[] *Read-only*. 

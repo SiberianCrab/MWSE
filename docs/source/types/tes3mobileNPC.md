@@ -2126,7 +2126,7 @@ Equip may fail for the following reasons:
 - When a weapon is being used to attack, it cannot be replaced.
 
 ```lua
-local itemEquipped = myObject:equip({ item = ..., itemData = ..., addItem = ..., selectBestCondition = ..., selectWorstCondition = ... })
+local itemEquipped = myObject:equip({ item = ..., itemData = ..., addItem = ..., selectBestCondition = ..., selectWorstCondition = ..., playSound = ... })
 ```
 
 **Parameters**:
@@ -2137,6 +2137,7 @@ local itemEquipped = myObject:equip({ item = ..., itemData = ..., addItem = ...,
 	* `addItem` (boolean): *Default*: `false`. If `true`, the item will be added to the actor's inventory if needed.
 	* `selectBestCondition` (boolean): *Default*: `false`. If `true`, the item in the inventory with the best condition and best charge will be selected.
 	* `selectWorstCondition` (boolean): *Default*: `false`. If `true`, the item in the inventory with the worst condition and worst charge will be selected. Can be useful for selecting tools.
+	* `playSound` (boolean): *Default*: `true`. If `true`, the default item sound will be played for the item.
 
 **Returns**:
 

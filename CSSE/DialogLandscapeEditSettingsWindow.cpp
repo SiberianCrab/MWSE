@@ -10,6 +10,8 @@
 #include "CSDataHandler.h"
 #include "CSRecordHandler.h"
 #include "CSRegion.h"
+#include "CSLand.h"
+#include "CSCell.h"
 
 #include "DialogProcContext.h"
 
@@ -126,11 +128,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 		return reinterpret_cast<LandTexture*>(queryData.lParam);
 	}
 
-	bool setSelectTexture(LandTexture* landTexture) {
-		return setSelectTexture(landTexture->texture);
-	}
-
-	bool setSelectTexture(NI::Texture* texture) {
+	bool setSelectTexture(LandTexture* texture) {
 		if (texture == nullptr) {
 			return false;
 		}
@@ -155,7 +153,7 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 				continue;
 			}
 
-			if (landTexture->texture == texture) {
+			if (landTexture == texture) {
 				ListView_SetItemState(textureList, row, LVIS_SELECTED, LVIS_SELECTED);
 				ListView_EnsureVisible(textureList, row, TRUE);
 				return true;

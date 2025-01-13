@@ -17,7 +17,7 @@
 --- @field requirement tes3globalVariable|number|nil A requirement, typically associated with ownership and when the player may freely interact with an object. The type depends on the owner. Faction owners provide a required rank as a number, while NPCs provide a global variable to check.
 --- @field script tes3script *Read-only*. The script associated with the scriptVariables.
 --- @field scriptVariables tes3scriptVariables Access to the structure where individual mwscript data is stored.
---- @field soul tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3npc|tes3npcInstance Only available on misc items. The actor that is stored inside the soul gem.
+--- @field soul tes3actor|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3npc|tes3npcInstance Only available on misc items. The actor that is stored inside the soul gem.
 --- @field tempData table A generic lua table that data can be written to, but is not synced to/from a save.
 --- 
 --- There is a guide available [here](https://mwse.github.io/MWSE/guides/storing-data/) on using this table.

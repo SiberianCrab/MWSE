@@ -450,6 +450,8 @@ local function onClickModConfigButton()
 		-- Cause the menu to refresh itself.
 		menu:updateLayout()
 		modList.widget:contentsChanged()
+		-- Mods with a certain title length can add an unnecessary newline, which goes away when the layout is refreshed.
+		menu:updateLayout()
 
 		if lastModName ~= nil then
 			for _, child in ipairs(modListContents.children) do

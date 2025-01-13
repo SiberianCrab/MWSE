@@ -58,7 +58,7 @@
 --- @field fatigue tes3statistic|tes3statisticSkill *Read-only*. Access to the actor's fatigue statistic. When modifying this value, prefer to use `tes3.modStatistic` or `tes3.setStatistic` to also update the UI immediately.
 --- @field fight number The actor's fight AI value.
 --- @field flee number The actor's flee AI value.
---- @field friendlyActors tes3mobileCreature[]|tes3mobileNPC[]|tes3mobilePlayer[] *Read-only*. A collection of other `tes3mobileActor`s that this actor considers friendly.
+--- @field friendlyActors tes3mobileActor[]|tes3mobileCreature[]|tes3mobileNPC[]|tes3mobilePlayer[] *Read-only*. A collection of other `tes3mobileActor`s that this actor considers friendly.
 --- @field friendlyFireHitCount number The number of times the player has hit this actor with friendly fire. The actor will turn on the player on the fourth hit if it is not already in combat. The game will not increase this past 4, and will reset it to 0 at the end of combat.
 --- @field greetDuration number No description yet available.
 --- @field greetTimer number *Read-only*. No description yet available.
@@ -71,7 +71,7 @@
 --- @field height number The height of the mobile's bounding box.
 --- @field hello number The actor's hello AI value.
 --- @field holdBreathTime number This is the time the actor can stay underwater without taking drowning damage, measured in seconds. It's starting value is `fHoldBreathTime`(GMST) seconds by default. Once the actor is underwater, this value is decreasing based on the time passed while underwater. The actor will start taking drowning damage once this time is below 0. During drowning this time will have more and more negative values based on the duration of the drowning. Changing this allows manipulating for how long the actor can stay underwater without drowning. Note that player's Breath HUD element won't show values larger than `fHoldBreathTime`.
---- @field hostileActors tes3mobileCreature[]|tes3mobileNPC[]|tes3mobilePlayer[] *Read-only*. A collection of other `tes3mobileActor`s that this actor considers hostile.
+--- @field hostileActors tes3mobileActor[]|tes3mobileCreature[]|tes3mobileNPC[]|tes3mobilePlayer[] *Read-only*. A collection of other `tes3mobileActor`s that this actor considers hostile.
 --- @field idleAnim boolean *Read-only*. Friendly access to the actor's flag that controls if the actor is using their idle animation.
 --- @field inCombat boolean *Read-only*. Friendly access to the actor's flag that controls if the actor is in combat.
 --- @field intelligence tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's intelligence attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
@@ -247,7 +247,7 @@ function tes3mobileActor:doJump(params) end
 --- - When a weapon is being used to attack, it cannot be replaced.
 --- @param params tes3mobileActor.equip.params This table accepts the following values:
 --- 
---- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string — The item to equip.
+--- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string — The item to equip.
 --- 
 --- `itemData`: tes3itemData? — *Optional*. The item data of the specific item to equip, if a specific item is required.
 --- 
@@ -256,21 +256,24 @@ function tes3mobileActor:doJump(params) end
 --- `selectBestCondition`: boolean? — *Default*: `false`. If `true`, the item in the inventory with the best condition and best charge will be selected.
 --- 
 --- `selectWorstCondition`: boolean? — *Default*: `false`. If `true`, the item in the inventory with the worst condition and worst charge will be selected. Can be useful for selecting tools.
+--- 
+--- `playSound`: boolean? — *Default*: `true`. If `true`, the default item sound will be played for the item.
 --- @return boolean itemEquipped No description yet available.
 function tes3mobileActor:equip(params) end
 
 ---Table parameter definitions for `tes3mobileActor.equip`.
 --- @class tes3mobileActor.equip.params
---- @field item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string The item to equip.
+--- @field item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string The item to equip.
 --- @field itemData tes3itemData? *Optional*. The item data of the specific item to equip, if a specific item is required.
 --- @field addItem boolean? *Default*: `false`. If `true`, the item will be added to the actor's inventory if needed.
 --- @field selectBestCondition boolean? *Default*: `false`. If `true`, the item in the inventory with the best condition and best charge will be selected.
 --- @field selectWorstCondition boolean? *Default*: `false`. If `true`, the item in the inventory with the worst condition and worst charge will be selected. Can be useful for selecting tools.
+--- @field playSound boolean? *Default*: `true`. If `true`, the default item sound will be played for the item.
 
 --- Equips a spell or enchantment, optionally equipping the enchanted item if needed. Returns `false` if the item could not be equipped.
 --- @param params tes3mobileActor.equipMagic.params This table accepts the following values:
 --- 
---- `source`: tes3spell|tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string — The source of the magic to equip.
+--- `source`: tes3spell|tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string — The source of the magic to equip.
 --- --- 
 --- --- 		Spells must be castable. Castable spells have a `castType` of `tes3.spellType.spell` or `tes3.spellType.power`. The actor is not required to know this spell.
 --- --- 
@@ -287,7 +290,7 @@ function tes3mobileActor:equipMagic(params) end
 
 ---Table parameter definitions for `tes3mobileActor.equipMagic`.
 --- @class tes3mobileActor.equipMagic.params
---- @field source tes3spell|tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string The source of the magic to equip.
+--- @field source tes3spell|tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string The source of the magic to equip.
 --- 
 --- 		Spells must be castable. Castable spells have a `castType` of `tes3.spellType.spell` or `tes3.spellType.power`. The actor is not required to know this spell.
 --- 
@@ -351,7 +354,7 @@ function tes3mobileActor:getSkillStatistic(skillId) end
 function tes3mobileActor:getSkillValue(skillId) end
 
 --- Returns the angle between provided actor and the front side of the actor on whom the method was called. The returned angle is in degress in range [-180, 180], where 0 degrees is directly in front of the actor, the negative values are on the actor's left side, and positive values on the actor's right.
---- @param mobile tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer The target actor to calculate the facing angle.
+--- @param mobile tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer The target actor to calculate the facing angle.
 --- @return number angle In range of [-180, 180] in degrees.
 function tes3mobileActor:getViewToActor(mobile) end
 
@@ -431,7 +434,7 @@ function tes3mobileActor:resurrect(params) end
 function tes3mobileActor:setPowerUseTimestamp(power, timestamp) end
 
 --- Forces the actor into combat with another actor.
---- @param target tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer No description yet available.
+--- @param target tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer No description yet available.
 function tes3mobileActor:startCombat(target) end
 
 --- Starts dialogue with this actor for the player.
@@ -444,7 +447,7 @@ function tes3mobileActor:stopCombat(force) end
 --- Unequips one or more items from the actor.
 --- @param params tes3mobileActor.unequip.params This table accepts the following values:
 --- 
---- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil — *Optional*. The item to unequip.
+--- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil — *Optional*. The item to unequip.
 --- 
 --- `itemData`: tes3itemData? — *Optional*. The item data of the specific item to unequip, if a specific item is required.
 --- 
@@ -458,7 +461,7 @@ function tes3mobileActor:unequip(params) end
 
 ---Table parameter definitions for `tes3mobileActor.unequip`.
 --- @class tes3mobileActor.unequip.params
---- @field item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil *Optional*. The item to unequip.
+--- @field item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string|nil *Optional*. The item to unequip.
 --- @field itemData tes3itemData? *Optional*. The item data of the specific item to unequip, if a specific item is required.
 --- @field type tes3.objectType? *Optional*. The item type to unequip. Only used if no other parameter is provided. Only values pertaining to equipment from [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) can be passed here.
 --- @field armorSlot tes3.armorSlot? *Optional*. The armor slot to unequip. Maps to values in [`tes3.armorSlot`](https://mwse.github.io/MWSE/references/armor-slots/) namespace.

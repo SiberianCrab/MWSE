@@ -7,7 +7,7 @@
 --- For example, many doors may share the same base object. However, each door reference might have a different owner, different lock/trap statuses, etc. that make the object unique.
 --- @class tes3reference : tes3object, tes3baseObject
 --- @field activationReference tes3reference The current reference, if any, that this reference will activate.
---- @field attachments table<string, tes3bodyPartManager|tes3itemData|tes3lightNode|tes3lockNode|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|tes3travelDestinationNode|tes3animationData> *Read-only*. A table with friendly named access to all supported attachments. See the table below for available keys in this table.
+--- @field attachments table<string, tes3bodyPartManager|tes3itemData|tes3lightNode|tes3lockNode|tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|tes3travelDestinationNode|tes3animationData> *Read-only*. A table with friendly named access to all supported attachments. See the table below for available keys in this table.
 --- 
 --- Key               | Attachment type | Description
 --- ----------------- | --------------- | -----------
@@ -26,7 +26,7 @@
 --- local animData = myRef.attachments.animation
 --- ```
 --- 
---- @field baseObject tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3probe|tes3repairTool|tes3static|tes3weapon *Read-only*. This is similar to the object field, but is guaranteed to provide the base-most object. If object is an actor clone, the base actor will be given instead.
+--- @field baseObject tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3physicalObject|tes3probe|tes3repairTool|tes3static|tes3weapon *Read-only*. This is similar to the object field, but is guaranteed to provide the base-most object. If object is an actor clone, the base actor will be given instead.
 --- @field bodyPartManager tes3bodyPartManager|nil *Read-only*. Access to the reference's body part manager, if available. Typically this is only available on NPC references.
 --- @field cell tes3cell *Read-only*. The cell that the reference is currently in.
 --- @field context tes3scriptContext *Read-only*. Access to the script context for this reference and its associated script.
@@ -49,7 +49,7 @@
 --- @field mobile tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3mobilePlayer|tes3mobileProjectile|tes3mobileSpellProjectile|tes3mobileSpellProjectile|nil *Read-only*. Access to the attached mobile object, if applicable.
 --- @field nextNode tes3reference *Read-only*. The next reference in the parent reference list.
 --- @field nodeData tes3reference *Read-only*. Redundant access to this object, for iterating over a tes3referenceList.
---- @field object tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3probe|tes3repairTool|tes3static|tes3weapon *Read-only*. The object that the reference is for, such as a weapon, armor, or actor.
+--- @field object tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3physicalObject|tes3probe|tes3repairTool|tes3static|tes3weapon *Read-only*. The object that the reference is for, such as a weapon, armor, or actor.
 --- @field orientation tes3vector3 Access to the reference's orientation, in XYZ Euler angles in radians in [0, 2 PI] except for actors. For actors, the Z angle is in range [-PI, PI] radians. Changing the orientation marks the reference as modified.
 --- @field position tes3vector3 Access to the reference's position. Setting the position sets the reference as modified.
 --- 

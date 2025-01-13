@@ -382,7 +382,7 @@ namespace mwse::lua {
 
 		if (target.is<sol::function>()) {
 			scriptOverrides[(unsigned long)script] = target;
-			script->dataLength = 0;
+			script->header.dataSize = 0;
 			return true;
 		}
 		else if (target.is<std::string>()) {
@@ -392,7 +392,7 @@ namespace mwse::lua {
 			sol::object result = state.safe_script_file("./Data Files/MWSE/mods/" + target.as<std::string>() + ".lua");
 			if (result.get_type() == sol::type::table) {
 				scriptOverrides[(unsigned long)script] = result;
-				script->dataLength = 0;
+				script->header.dataSize = 0;
 				return true;
 			}
 		}
@@ -638,12 +638,12 @@ namespace mwse::lua {
 			sol::protected_function_result result = execute(params);
 			if (!result.valid()) {
 				sol::error error = result;
-				log::getLog() << "Lua error encountered when override of script '" << script->name << "':" << std::endl << error.what() << std::endl;
+				log::getLog() << "Lua error encountered when override of script '" << script->header.name << "':" << std::endl << error.what() << std::endl;
 				TES3::WorldController::get()->stopGlobalScript(script);
 			}
 		}
 		else {
-			log::getLog() << "No execute function found for script override of '" << script->name << "'. Script execution stopped." << std::endl;
+			log::getLog() << "No execute function found for script override of '" << script->header.name << "'. Script execution stopped." << std::endl;
 			TES3::WorldController::get()->stopGlobalScript(script);
 		}
 

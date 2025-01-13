@@ -416,6 +416,10 @@ namespace TES3 {
 	}
 
 	bool Reference::enable() {
+		if (getDeleted()) {
+			return false;
+		}
+
 		// Make sure we're not already enabled.
 		if (!getDisabled()) {
 			return false;

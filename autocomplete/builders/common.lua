@@ -655,15 +655,13 @@ function common.compileInheritances(classes)
 	for _, class in pairs(classes) do
 		if (class.allDescendents) then
 			local allDescendentKeys = {}
-			if (not class.isAbstract) then
-				table.insert(allDescendentKeys, class.key)
-			end
 			for _, descendent in pairs(class.allDescendents) do
 				if (not descendent.isAbstract) then
 					table.insert(allDescendentKeys, descendent.key)
 				end
 			end
 			if (#allDescendentKeys > 0) then
+				table.insert(allDescendentKeys, class.key)
 				table.sort(allDescendentKeys)
 				class.allDescendentKeys = table.concat(allDescendentKeys, "|")
 			end

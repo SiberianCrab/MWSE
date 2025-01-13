@@ -7,7 +7,7 @@
 --- Each reflect effect active on a target will roll separately; the reflect chances are independent. This event also occurs once per effect in a spell, so a multi-effect spell may trigger this multiple times.
 --- @class magicReflectEventData
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
---- @field mobile tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile actor that may reflect the spell.
+--- @field mobile tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile actor that may reflect the spell.
 --- @field reflectChance number The % chance that the magic is reflected. May be modified.
 --- @field reflectEffect tes3activeMagicEffect *Read-only*. The specific reflect effect being tested. This is a `tes3activeMagicEffect` instead of a more common magic instance. You can lookup the magic source instance or effect instance with `tes3activeMagicEffect` accessors.
 --- @field source tes3alchemy|tes3enchantment|tes3spell *Read-only*. The magic source.

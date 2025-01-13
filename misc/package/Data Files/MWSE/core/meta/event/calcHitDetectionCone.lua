@@ -8,7 +8,7 @@
 --- @field angleXY number The maximum allowable angle offset (in degrees) in the horizontal direction that will hit. This is related to game setting fCombatAngleXY but using different units. May be adjusted. The highest effective angle is 90 degrees, and larger angles will behave like 90 degrees.
 --- @field angleZ number The maximum allowable angle offset (in degrees) in the vertical direction that will hit. This is related to game setting fCombatAngleZ but using different units. May be adjusted. The highest effective angle is 90 degrees, and larger angles will behave like 90 degrees.
 --- @field attacker tes3reference *Read-only*. The reference of the attacker.
---- @field attackerMobile tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile which is making the attack.
+--- @field attackerMobile tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile which is making the attack.
 --- @field reach number The weapon's reach multiplier, typically in the range 0.5 - 2.0. May be adjusted.
 --- @field target tes3reference *Read-only*. The reference of the target. Only available at the second stage (weapon strike).
---- @field targetMobile tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile which is targetted. Only available at the second stage (weapon strike).
+--- @field targetMobile tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer *Read-only*. The mobile which is targetted. Only available at the second stage (weapon strike).

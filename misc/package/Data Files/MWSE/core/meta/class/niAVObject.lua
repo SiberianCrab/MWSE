@@ -25,33 +25,33 @@
 niAVObject = {}
 
 --- Attaches a property to this object, without checking to see if the property or another of its type is already on the list. Property lists must not have more than one property of a given class (i.e. no two niTexturingProperty objects) attached at once, or else undefined behavior will result.
---- @param property niAlphaProperty|niFogProperty|niMaterialProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty No description yet available.
+--- @param property niAlphaProperty|niFogProperty|niMaterialProperty|niProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty No description yet available.
 function niAVObject:attachProperty(property) end
 
 --- Resets the object's local transform.
 function niAVObject:clearTransforms() end
 
 --- Update object's local transform by copying from another source.
---- @param source niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|tes3transform No description yet available.
+--- @param source niAVObject|niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape|tes3transform No description yet available.
 function niAVObject:copyTransforms(source) end
 
 --- Detaches all the properties on the object and returns them in the table.
---- @return niAlphaProperty[]|niFogProperty[]|niMaterialProperty[]|niStencilProperty[]|niTexturingProperty[]|niVertexColorProperty[]|niZBufferProperty[] result No description yet available.
+--- @return niAlphaProperty[]|niFogProperty[]|niMaterialProperty[]|niProperty[]|niStencilProperty[]|niTexturingProperty[]|niVertexColorProperty[]|niZBufferProperty[] result No description yet available.
 function niAVObject:detachAllProperties() end
 
 --- Detaches and returns a property from the object which matches the given property type.
 --- @param type ni.propertyType The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
---- @return niAlphaProperty|niFogProperty|niMaterialProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty result No description yet available.
+--- @return niAlphaProperty|niFogProperty|niMaterialProperty|niProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty result No description yet available.
 function niAVObject:detachProperty(type) end
 
 --- Searches this node and all child nodes recursively for a node with a name that matches the argument.
 --- @param name string No description yet available.
---- @return niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape result No description yet available.
+--- @return niAVObject|niAmbientLight|niAutoNormalParticles|niBSAnimationNode|niBSParticleNode|niBillboardNode|niCamera|niCollisionSwitch|niDirectionalLight|niNode|niParticles|niPointLight|niRotatingParticles|niSortAdjustNode|niSpotLight|niSwitchNode|niTextureEffect|niTriShape result No description yet available.
 function niAVObject:getObjectByName(name) end
 
 --- Gets an attached property by property type.
 --- @param type ni.propertyType The types are available in [`ni.propertyType`](https://mwse.github.io/MWSE/references/ni/property-types/) table.
---- @return niAlphaProperty|niFogProperty|niMaterialProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty result No description yet available.
+--- @return niAlphaProperty|niFogProperty|niMaterialProperty|niProperty|niStencilProperty|niTexturingProperty|niVertexColorProperty|niZBufferProperty result No description yet available.
 function niAVObject:getProperty(type) end
 
 --- Recursively checks if either the object or any of its parents are appCulled.
