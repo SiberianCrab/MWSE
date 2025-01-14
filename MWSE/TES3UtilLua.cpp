@@ -3394,7 +3394,7 @@ namespace mwse::lua {
 		}
 	}
 
-	int addItem(sol::table params) {
+	std::tuple<int, TES3::Item*, TES3::ItemData*> addItem(sol::table params) {
 		auto& luaManager = mwse::lua::LuaManager::getInstance();
 		auto stateHandle = luaManager.getThreadSafeStateHandle();
 		auto& state = stateHandle.state;
@@ -3414,7 +3414,7 @@ namespace mwse::lua {
 		else if (itemBase->objectType == TES3::ObjectType::LeveledItem) {
 			item = static_cast<TES3::Item*>(static_cast<TES3::LeveledItem*>(itemBase)->resolve());
 			if (!item) {
-				return 0;
+				return { 0, nullptr, nullptr };
 			}
 			else if (!item->isItem()) {
 				throw std::invalid_argument("Unexpected item case. Report this issue.");
@@ -3470,7 +3470,7 @@ namespace mwse::lua {
 					delete itemData;
 					itemData = nullptr;
 				}
-				return 0;
+				return { 0, nullptr, nullptr };
 			}
 
 			// Figure out how many more of the item can fit in the container.
@@ -3488,7 +3488,7 @@ namespace mwse::lua {
 				delete itemData;
 				itemData = nullptr;
 			}
-			return 0;
+			return { 0, nullptr, nullptr };
 		}
 
 		if (itemData) {
@@ -3584,7 +3584,7 @@ namespace mwse::lua {
 		}
 
 		reference->setObjectModified(true);
-		return fulfilledCount;
+		return { fulfilledCount, item, itemData };
 	}
 
 	int removeItem(sol::table params) {

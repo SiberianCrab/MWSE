@@ -18,5 +18,9 @@ return {
 			{ name = "updateGUI", type = "boolean", optional = true, default = true, description = "If `false`, the function won't manually resync the player's GUI state. This can result in some optimizations, though [`tes3ui.forcePlayerInventoryUpdate()`](https://mwse.github.io/MWSE/apis/tes3ui/#tes3uiforceplayerinventoryupdate) must manually be called after all inventory updates are finished." },
 		},
 	}},
-	returns = {{ name = "addedCount", type = "number" }},
+	returns = {
+		{ name = "count", type = "number", description = "The number of items added to the reference." },
+		{ name = "item", type = "tes3item", description = "The item added. This is usually the `item` parameter passed to the function, but can be something else in the case of leveled items." },
+		{ name = "itemData", type = "tes3itemData", description = "The itemData added. This can be created if the `soul` parameter is used, or if an `itemData` was passed. If the passed `itemData` was deleted, the value will be `nil`." },
+	},
 }

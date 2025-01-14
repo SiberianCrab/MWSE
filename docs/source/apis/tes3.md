@@ -175,7 +175,7 @@ tes3.addClothingSlot({ slot = ..., name = ..., key = ... })
 Adds an item to a given reference's inventory or mobile's inventory. The `reference` will be cloned if needed.
 
 ```lua
-local addedCount = tes3.addItem({ reference = ..., item = ..., itemData = ..., soul = ..., count = ..., playSound = ..., showMessage = ..., limit = ..., reevaluateEquipment = ..., equipProjectiles = ..., updateGUI = ... })
+local count, item, itemData = tes3.addItem({ reference = ..., item = ..., itemData = ..., soul = ..., count = ..., playSound = ..., showMessage = ..., limit = ..., reevaluateEquipment = ..., equipProjectiles = ..., updateGUI = ... })
 ```
 
 **Parameters**:
@@ -195,7 +195,9 @@ local addedCount = tes3.addItem({ reference = ..., item = ..., itemData = ..., s
 
 **Returns**:
 
-* `addedCount` (number)
+* `count` (number): The number of items added to the reference.
+* `item` ([tes3item](../types/tes3item.md)): The item added. This is usually the `item` parameter passed to the function, but can be something else in the case of leveled items.
+* `itemData` ([tes3itemData](../types/tes3itemData.md)): The itemData added. This can be created if the `soul` parameter is used, or if an `itemData` was passed. If the passed `itemData` was deleted, the value will be `nil`.
 
 ***
 

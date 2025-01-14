@@ -78,7 +78,9 @@ function tes3.addClothingSlot(params) end
 --- `equipProjectiles`: boolean? — *Default*: `true`. If `true`, and the reference has the same projectile already equipped, the stacks will be merged. This will only work if the GUI is updated.
 --- 
 --- `updateGUI`: boolean? — *Default*: `true`. If `false`, the function won't manually resync the player's GUI state. This can result in some optimizations, though [`tes3ui.forcePlayerInventoryUpdate()`](https://mwse.github.io/MWSE/apis/tes3ui/#tes3uiforceplayerinventoryupdate) must manually be called after all inventory updates are finished.
---- @return number addedCount No description yet available.
+--- @return number count The number of items added to the reference.
+--- @return tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon item The item added. This is usually the `item` parameter passed to the function, but can be something else in the case of leveled items.
+--- @return tes3itemData itemData The itemData added. This can be created if the `soul` parameter is used, or if an `itemData` was passed. If the passed `itemData` was deleted, the value will be `nil`.
 function tes3.addItem(params) end
 
 ---Table parameter definitions for `tes3.addItem`.
