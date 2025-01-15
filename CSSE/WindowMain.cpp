@@ -124,6 +124,19 @@ namespace se::cs::window::main {
 		}
 	}
 
+	void SetupOpenMWUserFolder() {
+		const auto realUserPath = path::openmw::getConfigPath();
+
+		// Ensure user folder is created.
+		const auto csseUserPath = path::openmw::getTemporaryConfigPath();
+		std::filesystem::create_directories(csseUserPath);
+
+		// Copy the settings.cfg file if it doesn't already exist.
+		if (!std::filesystem::exists(csseUserPath / "settings.cfg") && std::filesystem::exists(realUserPath / "settings.cfg")) {
+			std::filesystem::copy_file(realUserPath / "settings.cfg", csseUserPath / "settings.cfg");
+		}
+	}
+
 	void UpdateOpenMWConfig() {
 		std::ofstream cfg(path::openmw::getTemporaryConfigPath() / "openmw.cfg");
 		if (!cfg.is_open()) {
@@ -213,7 +226,7 @@ namespace se::cs::window::main {
 
 		// Update the script to have OpenMW run based on the environment.
 		const auto tempPath = path::openmw::getTemporaryConfigPath();
-		std::filesystem::create_directories(tempPath);
+		SetupOpenMWUserFolder();
 		UpdateOpenMWConfig();
 		UpdateOpenMWScriptFile();
 

@@ -29,7 +29,7 @@ namespace se::cs::dialog::cell_window {
 	static std::optional<std::regex> currentSearchRegex;
 	static bool modeShowModifiedOnly = false;
 
-	using gSuppressItemChangePropegation = memory::ExternalGlobal<bool, 0x6CDFF8>;
+	using gSuppressItemChangePropagation = memory::ExternalGlobal<bool, 0x6CDFF8>;
 	static int lastCellTopIndex = -1;
 
 	void __cdecl PatchSpeedUpCellViewDialog(HWND hWnd) {
@@ -121,7 +121,7 @@ namespace se::cs::dialog::cell_window {
 			return;
 		}
 
-		gSuppressItemChangePropegation::set(true);
+		gSuppressItemChangePropagation::set(true);
 
 		const auto hWnd = gCellViewWindowHandle::get();
 		const auto cellListView = GetDlgItem(hWnd, CONTROL_ID_CELL_LIST_VIEW);
@@ -141,12 +141,12 @@ namespace se::cs::dialog::cell_window {
 		const auto activeCell = gActiveEditCell::get();
 		LVFINDINFOA findInfo = { LVFI_PARAM, NULL, (LPARAM)cell, {}, {} };
 		const auto index = ListView_FindItem(cellListView, 0, &findInfo);
-		if (index != -1) {
+		if (index > 0) {
 			ListView_SetItemState(cellListView, index, LVIS_SELECTED, LVIS_SELECTED);
 			ListView_EnsureVisible(cellListView, index, TRUE);
 		}
 
-		gSuppressItemChangePropegation::set(false);
+		gSuppressItemChangePropagation::set(false);
 	}
 
 	void RefreshCellListView(HWND hWnd) {
