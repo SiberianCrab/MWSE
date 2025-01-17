@@ -528,6 +528,10 @@ local inCell = myObject:isPointInCell(x, y)
 
 Used in a for loop, iterates over objects in the cell.
 
+!!! note
+	This iterator will also yield disabled and deleted references.
+
+
 ```lua
 local iterator = myObject:iterateReferences(filter)
 ```

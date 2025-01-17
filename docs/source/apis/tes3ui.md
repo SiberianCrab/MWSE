@@ -554,7 +554,7 @@ tes3ui.logToConsole(text, isCommand)
 		tes3ui.logToConsole("player->ModStrength 10", false)
 	
 		-- This will make "player->ModWillpower 10" appear in the console coloured blue.
-		-- It CAN be selected by using up arrow key, and when the enter is pressed,
+		-- It can be selected by using up arrow key, and when the enter is pressed,
 		-- it will call that function.
 		tes3ui.logToConsole("player->ModWillpower 10", true)
 	
@@ -793,27 +793,27 @@ tes3ui.showInventorySelectMenu({ reference = ..., title = ..., leaveMenuMode = .
 			-- .. is Lua operator of concatenation. It joins 2 strings together.
 			title = "Bribe " .. actorReference.object.name,
 			callback = function(e)
-				if e.item then
-					-- If e.item exist, that means that the player picked an
-					-- item in the  menu. It up to us to do something with it.
-					tes3.transferItem({
-						from = tes3.player,
-						to = actorReference,
-						item = e.item,
-						itemData = e.itemData,
-						count = e.count,
-					})
-					-- Here we calculate the total gold value of the transfered item(s), since that
-					-- can be a stack of items. e.count holds the amount of the items selected.
-					local itemWorth = e.item.value * e.count
+				if not e.item then return end
 	
-					-- At last! Now the actual persuasion part. We use `modifier` argument.
-					-- The higher the value we pass there the higher the disposition change.
-					tes3.persuade({
-						actor = actorReference,
-						modifier = math.log10(itemWorth)
-					})
-				end
+				-- If e.item exist, that means that the player picked an
+				-- item in the menu. It up to us to do something with it.
+				tes3.transferItem({
+					from = tes3.player,
+					to = actorReference,
+					item = e.item,
+					itemData = e.itemData,
+					count = e.count,
+				})
+				-- Here we calculate the total gold value of the transfered item(s), since that
+				-- can be a stack of items. e.count holds the amount of the items selected.
+				local itemWorth = e.item.value * e.count
+	
+				-- At last! Now the actual persuasion part. We use `modifier` argument.
+				-- The higher the value we pass there the higher the disposition change.
+				tes3.persuade({
+					actor = actorReference,
+					modifier = math.log10(itemWorth)
+				})
 			end,
 			-- At first it's counter intuitive that this filter selects all the non-enchanted items
 			-- This illusion disappears soon as we relize that the game uses this filter in the
@@ -838,14 +838,15 @@ tes3ui.showInventorySelectMenu({ reference = ..., title = ..., leaveMenuMode = .
 	-- can be passed to `filter` argument of tes3.showInventorySelectMenu().
 	
 	-- This function will filter only weapon items.
+	---@param e tes3ui.showInventorySelectMenu.filterParams
 	local function weaponFilter(e)
 		if e.item.objectType == tes3.objectType.weapon then
 			-- The filter function needs to return `true`
 			-- for a certain item to appear in the menu.
 			return true
-		else
-			return false
 		end
+	
+		return false
 	end
 	
 	-- This is a dictinary of items that can be damaged (have a condition)
@@ -854,6 +855,7 @@ tes3ui.showInventorySelectMenu({ reference = ..., title = ..., leaveMenuMode = .
 		[tes3.objectType.armor] = true,
 	}
 	-- This function will filter only items that aren't at full condition.
+	---@param e tes3ui.showInventorySelectMenu.filterParams
 	local function damagedItemsFilter(e)
 		-- The first check is whether the item is in our
 		-- dictionary of items with condition
@@ -863,19 +865,20 @@ tes3ui.showInventorySelectMenu({ reference = ..., title = ..., leaveMenuMode = .
 		e.itemData and
 		(e.itemData.condition < e.item.maxCondition) then
 			return true
-		else
-			return false
 		end
+	
+		return false
 	end
 	
 	local myFilterValue = 256
-	-- This function will filter only items that have a value less than `myFilterValue`
+	-- This function will filter only items that have a value less than `myFilterValue`.
+	---@param e tes3ui.showInventorySelectMenu.filterParams
 	local function valueFilter(e)
 		if (e.item.value < myFilterValue) then
 			return true
-		else
-			return false
 		end
+	
+		return false
 	end
 
 	```

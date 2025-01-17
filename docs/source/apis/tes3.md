@@ -800,27 +800,27 @@ local success = tes3.cast({ reference = ..., target = ..., spell = ..., instant 
 	-- The following code can be tested in-game by pressing Alt + l or Alt + k
 	
 	event.register(tes3.event.keyDown, function(e)
-		if e.isAltDown then
-			tes3.messageBox("mwscript.explodeSpell")
-			---@diagnostic disable-next-line: deprecated
-			mwscript.explodeSpell({
-				reference = tes3.game.playerTarget,
-				spell = "proj_trap_spell"
-			})
-		end
-	end, { filter = tes3.scanCode.l })
+		if not tes3.isKeyEqual({ actual = e, expected = { keyCode = tes3.scanCode.l, isAltDown = true } }) then return end
+	
+		tes3.messageBox("mwscript.explodeSpell")
+		---@diagnostic disable-next-line: deprecated
+		mwscript.explodeSpell({
+			reference = tes3.game.playerTarget,
+			spell = "proj_trap_spell"
+		})
+	end)
 	
 	event.register(tes3.event.keyDown, function(e)
-		if e.isAltDown then
-			tes3.messageBox("tes3.cast")
-			-- This will behave the same as mwscript.explodeSpell()
-			tes3.cast({
-				target = tes3.game.playerTarget,
-				reference = tes3.game.playerTarget,
-				spell = "proj_trap_spell",
-			})
-		end
-	end, { filter = tes3.scanCode.k })
+		if not tes3.isKeyEqual({ actual = e, expected = { keyCode = tes3.scanCode.k, isAltDown = true } }) then return end
+	
+		tes3.messageBox("tes3.cast")
+		-- This will behave the same as mwscript.explodeSpell()
+		tes3.cast({
+			target = tes3.game.playerTarget,
+			reference = tes3.game.playerTarget,
+			spell = "proj_trap_spell",
+		})
+	end)
 
 	```
 
@@ -3315,7 +3315,10 @@ local equal = tes3.isKeyEqual({ actual = ..., expected = ... })
 	local config = mwse.loadConfig("myModConfig", defaultConfig)
 	
 	local function registerModConfig()
-		local template = mwse.mcm.createTemplate({ name = "Test Mod" })
+		local template = mwse.mcm.createTemplate({
+			name = "Test Mod",
+			config = config
+		})
 		template:register()
 	
 		local page = template:createSideBarPage({ label = "Settings" })
@@ -3324,10 +3327,7 @@ local equal = tes3.isKeyEqual({ actual = ..., expected = ... })
 			label = "My combo",
 			description = "This combo does...",
 			allowMouse = true,
-			variable = mwse.mcm.createTableVariable({
-				id = "combo",
-				table = config
-			}),
+			configKey = "combo",
 		})
 	end
 	event.register(tes3.event.modConfigReady, registerModConfig)
@@ -3674,14 +3674,12 @@ local element = tes3.messageBox({ message = ..., buttons = ..., callback = ..., 
 	-- Here we define the body of our function.
 	onButtonPressed = function(e)
 		-- This corresponds to the first button
-		--  of our message, which is "Yes"
+		-- of our message, which is "Yes"
 		if e.button == 0 then
 			tes3.addItem({
 				reference = tes3.player,
 				item = "ingred_bread_01_UNI3",
 			})
-		else
-			-- Do nothing
 		end
 	end
 
@@ -4173,14 +4171,14 @@ tes3.removeEffects({ reference = ..., effect = ..., castType = ..., chance = ...
 	
 		local underwater = headPosition < waterLevel
 	
-		if underwater then
-			-- There is a 50 % chance that any Water Breathing effect will be removed from the player
-			tes3.removeEffects({
-				reference = tes3.player,
-				chance = 50,
-				effect = tes3.effect.waterBreathing,
-			})
-		end
+		if not underwater then return end
+	
+		-- There is a 50 % chance that any Water Breathing effect will be removed from the player
+		tes3.removeEffects({
+			reference = tes3.player,
+			chance = 50,
+			effect = tes3.effect.waterBreathing,
+		})
 	end
 	
 	event.register(tes3.event.initialized, function ()
