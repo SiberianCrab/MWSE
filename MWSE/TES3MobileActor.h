@@ -312,7 +312,7 @@ namespace TES3 {
 		SpellList* getSpellList();
 		IteratedList<Spell*> * getCombatSpellList();
 
-		bool isActive();
+		bool isActive() const;
 		void forceSpellCast(MobileActor * target);
 
 		void dropItem(Object * item, ItemData * itemData = nullptr, int count = 1, bool ignoreItemData = true);
@@ -320,7 +320,7 @@ namespace TES3 {
 		// Always returns false for non-MACH.
 		bool persuade(int random, int persuasionIndex);
 
-		bool getIsWerewolf();
+		bool getIsWerewolf() const;
 		void setIsWerewolf(bool set);
 		void changeWerewolfState(bool isWerewolf);
 

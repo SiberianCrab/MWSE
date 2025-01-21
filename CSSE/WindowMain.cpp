@@ -609,7 +609,7 @@ namespace se::cs::window::main {
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = _T("Elder Scroll Saves (*.ess)\0*.ess\0");
 		ofn.nFilterIndex = 1;
-		ofn.lpstrFileTitle = _T("Select save file");
+		ofn.lpstrFileTitle = LPSTR("Select save file");
 		ofn.nMaxFileTitle = 0;
 		ofn.lpstrInitialDir = NULL;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
@@ -712,7 +712,7 @@ namespace se::cs::window::main {
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = _T("OpenMW saves (*.omwsave)\0*.omwsave\0");
 		ofn.nFilterIndex = 1;
-		ofn.lpstrFileTitle = _T("Select save file");
+		ofn.lpstrFileTitle = LPSTR("Select save file");
 		ofn.nMaxFileTitle = 0;
 		ofn.lpstrInitialDir = NULL;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;

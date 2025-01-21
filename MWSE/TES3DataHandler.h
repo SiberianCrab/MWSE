@@ -392,6 +392,8 @@ namespace TES3 {
 		void updateCollisionGroupsForActiveCells(bool force = true, bool isResettingData = false, bool resetCollisionGroups = true);
 		void updateCollisionGroupsForActiveCells_raw(bool force = true);
 
+		void getClosestPrisonReferences(Reference** prisonMarker, Reference** stolenGoods);
+
 		bool isCellInMemory(const Cell* cell, bool unknown) const;
 
 		//
@@ -399,6 +401,10 @@ namespace TES3 {
 		//
 
 		std::reference_wrapper<ExteriorCellData* [9]> getExteriorCellData_lua();
+
+		long getGameSettingLong(int id) const;
+		float getGameSettingFloat(int id) const;
+		const char* getGameSettingString(int id) const;
 
 		//
 		// Debug values.

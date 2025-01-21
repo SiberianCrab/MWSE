@@ -1277,6 +1277,20 @@ namespace mwse::patch {
 	const size_t PatchSoulTrappedCreatureNotFound3_size = 0x5;
 
 	//
+	// Patch: Prevent crash with magic effects on invalid targets.
+	//
+
+	void __cdecl PatchMagicEffectFortifySkill(TES3::MagicSourceInstance* sourceInstance, float deltaTime, TES3::MagicEffectInstance* effectInstance, int effectIndex) {
+		auto mobile = effectInstance->target->getAttachedMobileActor();
+		if (mobile == nullptr) {
+			return;
+		}
+
+		const auto MagicEffectFortifySkill = reinterpret_cast<void(__cdecl*)(TES3::MagicSourceInstance*, float, TES3::MagicEffectInstance*, int)>(0x4625F0);
+		MagicEffectFortifySkill(sourceInstance, deltaTime, effectInstance, effectIndex);
+	}
+
+	//
 	// Install all the patches.
 	//
 
@@ -1735,6 +1749,9 @@ namespace mwse::patch {
 		writePatchCodeUnprotected(0x49DEE1, (BYTE*)&PatchSoulTrappedCreatureNotFound1, PatchSoulTrappedCreatureNotFound1_size);
 		writePatchCodeUnprotected(0x4A4BEC, (BYTE*)&PatchSoulTrappedCreatureNotFound2, PatchSoulTrappedCreatureNotFound2_size);
 		writePatchCodeUnprotected(0x4D8DD7, (BYTE*)&PatchSoulTrappedCreatureNotFound3, PatchSoulTrappedCreatureNotFound3_size);
+
+		// Patch: Prevent crash with magic effects on invalid targets.
+		writeDoubleWordEnforced(0x7884B0 + (TES3::EffectID::FortifySkill * 4), 0x4625F0, reinterpret_cast<DWORD>(PatchMagicEffectFortifySkill));
 	}
 
 	void installPostLuaPatches() {

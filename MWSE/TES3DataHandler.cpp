@@ -21,6 +21,7 @@
 #include "TES3Cell.h"
 #include "TES3DialogueInfo.h"
 #include "TES3GlobalVariable.h"
+#include "TES3GameSetting.h"
 #include "TES3MagicEffectController.h"
 #include "TES3MobilePlayer.h"
 #include "TES3Reference.h"
@@ -620,6 +621,11 @@ namespace TES3 {
 		TES3_DataHandler_updateCollisionGroupsForActiveCells(this, force);
 	}
 
+	const auto TES3_DataHandler_getClosestPrisonReferences = reinterpret_cast<void(__thiscall*)(DataHandler*, Reference**, Reference**)>(0x48EE30);
+	void DataHandler::getClosestPrisonReferences(Reference** prisonMarker, Reference** stolenGoods) {
+		TES3_DataHandler_getClosestPrisonReferences(this, prisonMarker, stolenGoods);
+	}
+
 	const auto TES3_DataHandler_isCellInMemory  = reinterpret_cast<bool(__thiscall*)(const DataHandler*, const Cell*, bool)>(0x484AF0);
 	bool DataHandler::isCellInMemory(const Cell* cell, bool unknown) const {
 		return TES3_DataHandler_isCellInMemory(this, cell, unknown);
@@ -627,6 +633,18 @@ namespace TES3 {
 
 	std::reference_wrapper<DataHandler::ExteriorCellData* [9]> DataHandler::getExteriorCellData_lua() {
 		return std::ref(exteriorCellData);
+	}
+
+	long DataHandler::getGameSettingLong(int id) const {
+		return nonDynamicData->GMSTs[id]->value.asLong;
+	}
+
+	float DataHandler::getGameSettingFloat(int id) const {
+		return nonDynamicData->GMSTs[id]->value.asFloat;
+	}
+
+	const char* DataHandler::getGameSettingString(int id) const {
+		return nonDynamicData->GMSTs[id]->value.asString;
 	}
 
 }

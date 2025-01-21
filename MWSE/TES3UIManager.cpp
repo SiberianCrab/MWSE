@@ -1173,6 +1173,21 @@ namespace TES3::UI {
 		return { textBuffer, lineCount };
 	}
 
+	void showLoadingMenu(const char* title, float progress) {
+		const auto TES3_UI_showLoadingMenu = reinterpret_cast<void(__cdecl*)(const char*, float)>(0x5DED20);
+		TES3_UI_showLoadingMenu(title, progress);
+	}
+
+	void updateLoadingMenu(float progress) {
+		const auto TES3_UI_updateLoadingMenu = reinterpret_cast<void(__cdecl*)(float)>(0x4C7D90);
+		TES3_UI_updateLoadingMenu(progress);
+	}
+
+	void destroyLoadingMenu() {
+		const auto TES3_UI_destroyLoadingMenu = reinterpret_cast<void(__cdecl*)()>(0x5DEEA0);
+		TES3_UI_destroyLoadingMenu();
+	}
+
 	void pushNewUIID(DWORD address, const char* name) {
 		DWORD id = registerID(name);
 		mwse::genPushEnforced(address, id);
