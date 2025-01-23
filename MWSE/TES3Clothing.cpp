@@ -15,6 +15,11 @@ namespace TES3 {
 		TES3_Clothing_dtor(this);
 	}
 
+	const auto TES3_Clothing_setupBodyParts = reinterpret_cast<void(__thiscall*)(const Clothing*, BodyPartManager*, bool, bool)>(0x4A38F0);
+	void Clothing::setupBodyParts(BodyPartManager* bodyPartManager, bool isFemale, bool isFirstPerson) const {
+		TES3_Clothing_setupBodyParts(this, bodyPartManager, isFemale, isFirstPerson);
+	}
+
 	void Clothing::setIconPath(const char* path) {
 		if (strnlen_s(path, 32) >= 32) {
 			throw std::invalid_argument("Path must not be 32 or more characters.");

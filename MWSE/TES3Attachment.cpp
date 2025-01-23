@@ -3,12 +3,17 @@
 #include "TES3Misc.h"
 
 namespace TES3 {
-	Misc* LockAttachmentNode::getKey() {
+
+	//
+	// LockAttachment
+	//
+
+	Misc* LockAttachmentNode::getKey() const {
 		return key;
 	}
 
 	void LockAttachmentNode::setKey(Misc* k) {
-		if (k && !(k->flags & 1)) {
+		if (k && !k->getIsKey()) {
 			throw std::invalid_argument("Invalid key specified. Object is not a key.");
 		}
 

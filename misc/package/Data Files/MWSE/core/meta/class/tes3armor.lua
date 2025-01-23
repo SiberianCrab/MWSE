@@ -49,3 +49,9 @@ function tes3armor:createCopy(params) end
 --- @field addToObjectList boolean? *Default*: `true`. If true, the object will be added to the data handler. If this is false, the new object may not have a randomly generated ID. Do not use this without knowing the implications.
 --- @field sourceless boolean? *Default*: `false`. If true, the object will be made sourceless, and will not be serialized to the save game. If the object is copied outside of a save game, the object will **always** be sourceless.
 
+--- Updates a body part manager for this piece of equipment, setting up all the necessary nodes for each layer.
+--- @param bodyPartManager tes3bodyPartManager No description yet available.
+--- @param isFemale boolean No description yet available.
+--- @param isFirstPerson boolean No description yet available.
+function tes3armor:setupBodyParts(bodyPartManager, isFemale, isFirstPerson) end
+

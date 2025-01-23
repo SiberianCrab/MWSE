@@ -85,6 +85,7 @@ namespace TES3::UI {
 	void updateMagicMenuSelection();
 	void updateSpellmakingMenu();
 	void updateEnchantingMenu();
+	void flagSkillUpdated(int unknown);
 
 	void updateInventoryMenuTiles();
 	void updateContentsMenuTiles();

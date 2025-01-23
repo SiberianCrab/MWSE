@@ -119,6 +119,10 @@ namespace TES3 {
 		// Custom functions.
 		//
 
+		int getCompanionCount() const;
+		std::vector<TES3::MobileActor*> getCompanionList() const;
+		float getCompanionMaxDistance() const;
+
 		void updateSceneGraph();
 
 		int progressSkillToNextLevel(int skillId);

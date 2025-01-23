@@ -24,6 +24,17 @@ The current reference, if any, that this reference will activate.
 
 ***
 
+### `animationData`
+<div class="search_terms" style="display: none">animationdata</div>
+
+*Read-only*. Access to the reference's animation data, if available. Typically this is only available on NPC or creature references.
+
+**Returns**:
+
+* `result` ([tes3animationData](../types/tes3animationData.md), nil)
+
+***
+
 ### `attachments`
 <div class="search_terms" style="display: none">attachments</div>
 

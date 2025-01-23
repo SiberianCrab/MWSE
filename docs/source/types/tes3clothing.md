@@ -411,3 +411,20 @@ local newObject = myObject:createCopy({ id = ..., addToObjectList = ..., sourcel
 
 * `newObject` ([tes3clothing](../types/tes3clothing.md))
 
+***
+
+### `setupBodyParts`
+<div class="search_terms" style="display: none">setupbodyparts, upbodyparts</div>
+
+Updates a body part manager for this piece of equipment, setting up all the necessary nodes for each layer.
+
+```lua
+myObject:setupBodyParts(bodyPartManager, isFemale, isFirstPerson)
+```
+
+**Parameters**:
+
+* `bodyPartManager` ([tes3bodyPartManager](../types/tes3bodyPartManager.md))
+* `isFemale` (boolean)
+* `isFirstPerson` (boolean)
+

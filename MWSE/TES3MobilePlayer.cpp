@@ -11,6 +11,8 @@
 
 #include "Log.h"
 
+#include "TES3AIData.h"
+#include "TES3AIPackage.h"
 #include "TES3NPC.h"
 #include "TES3PlayerAnimationController.h"
 #include "TES3Race.h"
@@ -134,6 +136,86 @@ namespace TES3 {
 	const auto TES3_MobilePlayer_setVanityState = reinterpret_cast<void(__thiscall*)(MobilePlayer*, int)>(0x567960);
 	void MobilePlayer::setVanityState(int state) {
 		TES3_MobilePlayer_setVanityState(this, state);
+	}
+
+	int MobilePlayer::getCompanionCount() const {
+		int count = 0;
+		const auto maxDistance = getCompanionMaxDistance();
+
+		for (const auto& mobile : listFriendlyActors) {
+			if (mobile == this) {
+				continue;
+			}
+
+			if (!mobile->getFlagActiveAI()) {
+				continue;
+			}
+
+			if (mobile->reference == nullptr || mobile->reference->getDisabled() || mobile->reference->getDeleted()) {
+				continue;
+			}
+
+			const auto activePackage = mobile->aiPlanner->getActivePackage();
+			if (activePackage == nullptr) {
+				continue;
+			}
+
+			if (activePackage->packageType != AIPackageType::Escort) {
+				continue;
+			}
+
+			const auto distanceToPlayer = getPosition()->distance(mobile->getPosition());
+			if (distanceToPlayer > maxDistance) {
+				continue;
+			}
+
+			count++;
+		}
+
+		return count;
+	}
+
+	std::vector<TES3::MobileActor*> MobilePlayer::getCompanionList() const {
+		std::vector<TES3::MobileActor*> results = {};
+		const auto maxDistance = getCompanionMaxDistance();
+
+		for (const auto& mobile : listFriendlyActors) {
+			if (mobile == this) {
+				continue;
+			}
+
+			if (!mobile->getFlagActiveAI()) {
+				continue;
+			}
+
+			if (mobile->reference == nullptr || mobile->reference->getDisabled() || mobile->reference->getDeleted()) {
+				continue;
+			}
+
+			const auto activePackage = mobile->aiPlanner->getActivePackage();
+			if (activePackage == nullptr) {
+				continue;
+			}
+
+			if (activePackage->packageType != AIPackageType::Escort) {
+				continue;
+			}
+
+			const auto distanceToPlayer = getPosition()->distance(mobile->getPosition());
+			if (distanceToPlayer > maxDistance) {
+				continue;
+			}
+
+			results.push_back(mobile);
+		}
+
+		return std::move(results);
+	}
+
+	float MobilePlayer::getCompanionMaxDistance() const {
+		constexpr auto BASE_DISTANCE = 512.0f;
+		constexpr auto EXTENSION_PER_FRIENDLY = 128.0f;
+		return BASE_DISTANCE + listFriendlyActors.size() * EXTENSION_PER_FRIENDLY;
 	}
 
 	static Vector3 lastPlayerPosition;

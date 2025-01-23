@@ -244,7 +244,29 @@ namespace TES3 {
 
 		auto actor = getAttachedMobileActor();
 		if (actor && mwse::lua::event::BodyPartsUpdatedEvent::getEventEnabled()) {
-			mwse::lua::LuaManager::getInstance().getThreadSafeStateHandle().triggerEvent(new mwse::lua::event::BodyPartsUpdatedEvent(this, actor));
+			auto stateHandle = mwse::lua::LuaManager::getInstance().getThreadSafeStateHandle();
+			sol::table eventData = stateHandle.triggerEvent(new mwse::lua::event::BodyPartsUpdatedEvent(this, actor));
+			if (eventData.valid()) {
+				if (eventData.get_or("updated", false)) {
+					const auto bodyPartManager = getAttachedBodyPartManager();
+					if (bodyPartManager == nullptr) {
+						return result;
+					}
+
+					bodyPartManager->updateForReference(this);
+					auto refNode = getSceneGraphNode();
+					refNode->updateProperties();
+					refNode->updateEffects();
+
+					const auto animationData = getAttachedAnimationData();
+					if (animationData) {
+						const auto headNode = bodyPartManager->getActiveBodyPartBaseNode(TES3::BodyPartManager::ActiveBodyPart::Layer::Base, TES3::BodyPartManager::ActiveBodyPart::Index::Head);
+						animationData->setHeadNode(headNode);
+					}
+
+					refNode->update();
+				}
+			}
 		}
 
 		return result;

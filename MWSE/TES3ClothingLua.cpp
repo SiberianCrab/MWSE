@@ -32,6 +32,7 @@ namespace mwse::lua {
 
 		// Basic function binding.
 		usertypeDefinition["createCopy"] = &TES3::Clothing::createCopy_lua<TES3::Clothing>;
+		usertypeDefinition["setupBodyParts"] = &TES3::Clothing::createCopy_lua<TES3::Clothing>;
 
 		// Functions exposed as properties.
 		usertypeDefinition["enchantment"] = sol::property(&TES3::Clothing::getEnchantment, &TES3::Clothing::setEnchantment);

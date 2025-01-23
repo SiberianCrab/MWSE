@@ -126,6 +126,16 @@ local config = {
 						table = mwseConfig,
 					},
 				},
+				{
+					class = "OnOffButton",
+					label = i18n("suppressUselessWarnings.label"),
+					description = i18n("suppressUselessWarnings.description"),
+					variable = {
+						id = "SuppressUselessWarnings",
+						class = "TableVariable",
+						table = mwseConfig,
+					},
+				},
 			},
 			sidebarComponents = {
 				{

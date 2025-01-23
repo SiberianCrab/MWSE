@@ -145,6 +145,11 @@ namespace TES3 {
 		return TES3_Armor_getWeightClass(this);
 	}
 
+	const auto TES3_Armor_setupBodyParts = reinterpret_cast<void(__thiscall*)(const Armor*, BodyPartManager*, bool, bool)>(0x4A1280);
+	void Armor::setupBodyParts(BodyPartManager* bodyPartManager, bool isFemale, bool isFirstPerson) const {
+		TES3_Armor_setupBodyParts(this, bodyPartManager, isFemale, isFirstPerson);
+	}
+
 	float Armor::getArmorScalar() const {
 		// Handle custom slots.
 		if (slot < ArmorSlot::First || slot > ArmorSlot::Last) {

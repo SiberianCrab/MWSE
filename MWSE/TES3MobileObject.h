@@ -298,7 +298,7 @@ namespace TES3 {
 		void setBoundSize(const Vector3&);
 		Vector3* getImpulseVelocity();
 		void setImpulseVelocityFromLua(sol::stack_object);
-		Vector3* getPosition();
+		Vector3* getPosition() const;
 		void setPositionFromLua(sol::stack_object);
 		Vector3* getVelocity();
 		void setVelocityFromLua(sol::stack_object);

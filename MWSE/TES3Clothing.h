@@ -46,6 +46,12 @@ namespace TES3 {
 		~Clothing();
 
 		//
+		// Other related this-call functions.
+		//
+
+		void setupBodyParts(BodyPartManager* bodyPartManager, bool isFemale, bool isFirstPerson) const;
+
+		//
 		// Custom functions.
 		//
 

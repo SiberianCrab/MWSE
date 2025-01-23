@@ -722,6 +722,11 @@ namespace TES3::UI {
 		TES3_UI_UpdateEnchantingMenu();
 	}
 
+	const auto TES3_UI_FlagSkillUpdated = reinterpret_cast<void(__cdecl*)(int)>(0x627320);
+	void flagSkillUpdated(int unknown) {
+		TES3_UI_FlagSkillUpdated(unknown);
+	}
+
 	const auto TES3_UpdateInventoryTiles = reinterpret_cast<void(__cdecl*)()>(0x5CC910);
 	void updateInventoryMenuTiles() {
 		TES3_UpdateInventoryTiles();

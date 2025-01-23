@@ -1291,6 +1291,33 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Suppress sGeneralMastPlugMismatchMsg message.
+	//
+
+	std::optional<UINT> AllowYesToAll = {};
+
+	static UINT __stdcall GetCachedYesToAll(LPCSTR lpAppName, LPCSTR lpKeyName, INT nDefault, LPCSTR lpFileName) {
+		if (!AllowYesToAll.has_value()) {
+			AllowYesToAll = GetPrivateProfileIntA(lpAppName, lpKeyName, nDefault, lpFileName);
+		}
+
+		return AllowYesToAll.value_or(FALSE);
+	}
+
+	static void __cdecl SuppressGeneralMastPlugMismatchMsg(const char* sGeneralMastPlugMismatchMsg) {
+		// Prevent the message from even showing.
+		if (Configuration::SuppressUselessWarnings) {
+			return;
+		}
+
+		// Display the message, but prevent yes to all from being used.
+		decltype(AllowYesToAll) cachedYesToAll = FALSE;
+		std::swap(cachedYesToAll, AllowYesToAll);
+		tes3::logAndShowError(sGeneralMastPlugMismatchMsg);
+		std::swap(cachedYesToAll, AllowYesToAll);
+	}
+
+	//
 	// Install all the patches.
 	//
 
@@ -1752,6 +1779,10 @@ namespace mwse::patch {
 
 		// Patch: Prevent crash with magic effects on invalid targets.
 		writeDoubleWordEnforced(0x7884B0 + (TES3::EffectID::FortifySkill * 4), 0x4625F0, reinterpret_cast<DWORD>(PatchMagicEffectFortifySkill));
+
+		// Patch: Suppress sGeneralMastPlugMismatchMsg message.
+		genCallUnprotected(0x477512, reinterpret_cast<DWORD>(GetCachedYesToAll), 0x477518 - 0x477512);
+		genCallEnforced(0x4BB55D, 0x477400, reinterpret_cast<DWORD>(SuppressGeneralMastPlugMismatchMsg));
 	}
 
 	void installPostLuaPatches() {

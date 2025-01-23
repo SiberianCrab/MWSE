@@ -83,7 +83,7 @@ namespace TES3 {
 		// Custom functions.
 		//
 
-		Misc* getKey();
+		Misc* getKey() const;
 		void setKey(Misc* key);
 
 	};

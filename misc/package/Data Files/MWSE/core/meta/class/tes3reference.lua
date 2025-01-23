@@ -7,6 +7,7 @@
 --- For example, many doors may share the same base object. However, each door reference might have a different owner, different lock/trap statuses, etc. that make the object unique.
 --- @class tes3reference : tes3object, tes3baseObject
 --- @field activationReference tes3reference The current reference, if any, that this reference will activate.
+--- @field animationData tes3animationData|nil *Read-only*. Access to the reference's animation data, if available. Typically this is only available on NPC or creature references.
 --- @field attachments table<string, tes3bodyPartManager|tes3itemData|tes3lightNode|tes3lockNode|tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|tes3travelDestinationNode|tes3animationData> *Read-only*. A table with friendly named access to all supported attachments. See the table below for available keys in this table.
 --- 
 --- Key               | Attachment type | Description

@@ -50,6 +50,7 @@ namespace mwse::lua {
 		// Basic function binding.
 		usertypeDefinition["calculateArmorRating"] = &TES3::Armor::calculateArmorRating_lua;
 		usertypeDefinition["createCopy"] = &TES3::Armor::createCopy_lua<TES3::Armor>;
+		usertypeDefinition["setupBodyParts"] = &TES3::Armor::setupBodyParts;
 
 		// TODO: Deprecated. Remove before 2.1-stable.
 		usertypeDefinition["health"] = sol::property(&TES3::Armor::getDurability, &TES3::Armor::setDurability);
