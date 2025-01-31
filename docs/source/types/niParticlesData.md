@@ -10,7 +10,7 @@ niParticlesData objects contain the geometry data necessary to render a niPartic
 
 There are two ways to adjust particle size within an niParticles object. The `radius` affects all the particles in this niParticlesData object. There is also a `size` for each particle (available as `sizes` array), which is a ratio between 0.0 and 1.0 that is multiplied by the radius to obtain the final rendered size of the particle.
 
-This type inherits the following: [niTriBasedGeometryData](../types/niTriBasedGeometryData.md), [niGeometryData](../types/niGeometryData.md), [niObject](../types/niObject.md)
+This type inherits the following: [niTriBasedGeometryData](../types/niTriBasedGeometryData.md), [niGeometryData](../types/niGeometryData.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `activeCount`

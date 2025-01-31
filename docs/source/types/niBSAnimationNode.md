@@ -8,7 +8,7 @@
 
 A subclass of `niNode` that synchronizes animation timing and updates when placed in a subtree under an `niBSAnimationManager`.
 
-This type inherits the following: [niNode](../types/niNode.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md)
+This type inherits the following: [niNode](../types/niNode.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `alphaProperty`

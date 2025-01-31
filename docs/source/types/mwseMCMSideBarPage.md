@@ -10,7 +10,7 @@ A Sidebar Page is a special page type that includes an additional container used
 
 Children in the *components* list can have a *description* text field, which will display in the sidebar when that component is moused over. When no component is moused over, the sidebar will display the text in the *description* field of the page and any component added to the `myPage.sidebar`.
 
-This type inherits the following: [mwseMCMPage](../types/mwseMCMPage.md), [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md)
+This type inherits the following: [mwseMCMPage](../types/mwseMCMPage.md), [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md).
 ## Properties
 
 ### `childIndent`

@@ -111,6 +111,7 @@
 #include "TES3CombatSessionLua.h"
 #include "TES3ContainerLua.h"
 #include "TES3CreatureLua.h"
+#include "TES3CrimeLua.h"
 #include "TES3DataHandlerLua.h"
 #include "TES3DialogueLua.h"
 #include "TES3DoorLua.h"
@@ -509,6 +510,7 @@ namespace mwse::lua {
 		bindTES3CombatSession();
 		bindTES3Container();
 		bindTES3Creature();
+		bindTES3Crime();
 		bindTES3DataHandler();
 		bindTES3Dialogue();
 		bindTES3Door();
@@ -747,6 +749,12 @@ namespace mwse::lua {
 		const auto TES3Game_loadAllPlugins = reinterpret_cast<bool(__thiscall*)(TES3::Game*)>(0x419CE0);
 		TES3Game_loadAllPlugins(game);
 
+		// Update compatibility globals.
+		const auto mwseBuildGlobal = TES3::DataHandler::get()->nonDynamicData->findGlobalVariable("MWSE_BUILD");
+		if (mwseBuildGlobal) {
+			mwseBuildGlobal->value = Configuration::BuildNumber;
+		}
+
 		// Trigger initialization.
 		auto stateHandle = LuaManager::getInstance().getThreadSafeStateHandle();
 		stateHandle.triggerEvent(new event::GenericEvent("initialized"));
@@ -973,6 +981,12 @@ namespace mwse::lua {
 		if (event::LoadedGameEvent::getEventEnabled()) {
 			stateHandle.triggerEvent(new event::LoadedGameEvent(nullptr, false, true));
 		}
+
+		// Update compatibility globals.
+		const auto mwseBuildGlobal = TES3::DataHandler::get()->nonDynamicData->findGlobalVariable("MWSE_BUILD");
+		if (mwseBuildGlobal) {
+			mwseBuildGlobal->value = Configuration::BuildNumber;
+		}
 	}
 
 	//
@@ -1067,21 +1081,21 @@ namespace mwse::lua {
 	// UI event hooking.
 	//
 
-	signed char __cdecl OnUIEvent(DWORD function, TES3::UI::Element* parent, DWORD prop, DWORD b, DWORD c, TES3::UI::Element* source) {
+	bool __cdecl OnUIEvent(TES3::UI::EventCallback callback, TES3::UI::Element* parent, TES3::UI::Property prop, DWORD b, DWORD c, TES3::UI::Element* source) {
 		// Execute event. If the event blocked the call, bail.
 		mwse::lua::LuaManager& luaManager = mwse::lua::LuaManager::getInstance();
 		if (event::GenericUiPreEvent::getEventEnabled()) {
 			auto stateHandle = luaManager.getThreadSafeStateHandle();
-			sol::table eventData = stateHandle.triggerEvent(new event::GenericUiPreEvent(parent, source, prop, b, c));
+			sol::table eventData = stateHandle.triggerEvent(new event::GenericUiPreEvent(parent, source, (unsigned int)prop, b, c));
 			if (eventData.valid() && eventData.get_or("block", false)) {
 				return 0;
 			}
 		}
 
-		signed char result = reinterpret_cast<signed char(__cdecl*)(TES3::UI::Element*, DWORD, DWORD, DWORD, TES3::UI::Element*)>(function)(parent, prop, b, c, source);
+		const auto result = callback(parent, prop, b, c, source);
 
 		if (event::GenericUiPostEvent::getEventEnabled()) {
-			luaManager.getThreadSafeStateHandle().triggerEvent(new event::GenericUiPostEvent(parent, source, prop, b, c));
+			luaManager.getThreadSafeStateHandle().triggerEvent(new event::GenericUiPostEvent(parent, source, (unsigned int)prop, b, c));
 		}
 
 		return result;
@@ -1097,6 +1111,28 @@ namespace mwse::lua {
 			jmp callbackUIEvent
 		}
 	}
+
+	TES3::UI::Element* __cdecl OnUITooltipEvent(TES3::UI::EventCallback callback, TES3::UI::Element* parent, TES3::UI::Property prop, DWORD b, DWORD c, TES3::UI::Element* source) {
+		TES3::UI::Element* sourceCache = source;
+		std::swap(TES3::UI::MenuInputController::lastTooltipSource, sourceCache);
+		callback(parent, prop, b, c, source);
+		std::swap(TES3::UI::MenuInputController::lastTooltipSource, sourceCache);
+		return TES3::UI::findHelpLayerMenu(TES3::UI::UI_ID(TES3::UI::Property::HelpMenu));
+	}
+
+	__declspec(naked) void HookOnUITooltipEvent() {
+		__asm
+		{
+			push edi					// Size: 0x1
+			nop							// Replaced with a call generation. Can't do so here, because offsets aren't accurate.
+			nop							// ^
+			nop							// ^
+			nop							// ^
+			nop							// ^
+			add esp, 0x18				// Size: 0x3
+		}
+	}
+	const size_t HookOnUITooltipEvent_size = 0x9;
 
 	//
 	// Hook show rest attempt.
@@ -5176,6 +5212,11 @@ namespace mwse::lua {
 
 		// Event: UI Event
 		genJumpUnprotected(TES3_HOOK_UI_EVENT, reinterpret_cast<DWORD>(HookUIEvent), TES3_HOOK_UI_EVENT_SIZE);
+
+		// Hook tooltip events.
+		genNOPUnprotected(0x58363B, 0x58364A - 0x58363B);
+		writePatchCodeUnprotected(0x58363B, (BYTE*)&HookOnUITooltipEvent, HookOnUITooltipEvent_size);
+		genCallUnprotected(0x58363B + 0x1, reinterpret_cast<DWORD>(OnUITooltipEvent));
 
 		// Event: Show Rest/Wait Menu
 		genCallEnforced(0x41ADB6, 0x610170, reinterpret_cast<DWORD>(OnShowRestWaitMenu));

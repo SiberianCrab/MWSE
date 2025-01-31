@@ -38,7 +38,6 @@
 #include "TES3Container.h"
 #include "TES3CombatSession.h"
 #include "TES3Creature.h"
-#include "TES3CrimeEventList.h"
 #include "TES3DataHandler.h"
 #include "TES3Dialogue.h"
 #include "TES3DialogueInfo.h"
@@ -1435,7 +1434,7 @@ namespace mwse::lua {
 
 		// Add the crime to the criminal's committed crimes list if there are witnesses.
 		if (crimeEvent.witnesses->count) {
-			crimeEvent.criminal->committedCrimes.insertCrime(&crimeEvent);
+			crimeEvent.criminal->committedCrimes.push_front(crimeEvent);
 			return true;
 		}
 
@@ -4022,14 +4021,9 @@ namespace mwse::lua {
 	}
 
 	TES3::ItemData* addItemData(sol::table params) {
-		// Get the reference of the item or item container.
-		TES3::Reference* toReference = getOptionalParamReference(params, "to");
-		if (toReference == nullptr) {
-			throw std::invalid_argument("Invalid 'to' parameter provided.");
-		}
-		// Check if it's setting a world reference or an item in a container.
-		TES3::Actor* toActor = static_cast<TES3::Actor*>(toReference->baseObject);
-		if (!toActor->isActor()) {
+		// Get the reference to add the itemData to, if one was provided.
+		TES3::Reference* toReference = getOptionalParamReference(params, "reference");
+		if (toReference) {
 			// It's a reference. This is the easy part.
 			// Return nil if there is already itemData, or return the newly-created itemData.
 			if (toReference->getAttachedItemData()) {
@@ -4039,19 +4033,27 @@ namespace mwse::lua {
 			return toReference->getOrCreateAttachedItemData();
 		}
 
+		// Get the reference of the item or item container.
+		toReference = getOptionalParamReference(params, "to");
+		if (toReference == nullptr) {
+			throw std::invalid_argument("Invalid 'to' parameter provided, or no 'reference' provided.");
+		}
+		else if (!toReference->baseObject->isActor()) {
+			throw std::invalid_argument("Invalid 'to' parameter provided. Reference does not have an inventory. Use the 'reference' parameter to add itemData to the reference itself.");
+		}
+
 		// Get the item we are going to transfer.
-		TES3::Item* item = getOptionalParamObject<TES3::Item>(params, "item");
+		const auto item = getOptionalParamObject<TES3::Item>(params, "item");
 		if (item == nullptr) {
 			throw std::invalid_argument("Invalid 'item' parameter provided.");
 		}
 
 		// Does the reference need to be cloned?
-		if (toReference->clone()) {
-			toActor = static_cast<TES3::Actor*>(toReference->baseObject);
-		}
+		toReference->clone();
+		const auto inventory = toReference->getInventory();
 
 		// Try to find an ItemData-less item and add ItemData for it.
-		TES3::ItemStack* stack = toActor->inventory.findItemStack(item);
+		const auto stack = inventory->findItemStack(item);
 		if (!stack || stack->count < 1) {
 			throw std::runtime_error("The actor does not possess any of 'item'.");
 		}
@@ -4066,7 +4068,7 @@ namespace mwse::lua {
 		}
 
 		// Finally add ItemData to stack.
-		TES3::ItemData* itemData = TES3::ItemData::createForObject(item);
+		const auto itemData = TES3::ItemData::createForObject(item);
 		stack->variables->add(itemData);
 
 		// If either of them are the player, we need to update the GUI.

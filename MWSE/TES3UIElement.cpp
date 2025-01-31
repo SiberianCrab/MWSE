@@ -360,7 +360,7 @@ namespace TES3::UI {
 
 	std::string Element::toJson() const {
 		std::ostringstream ss;
-		ss << "\"tes3uiElement:" << id << ":" << name.cString << "\"";
+		ss << "\"tes3uiElement:" << id << ":" << (name.cString ? name.cString : "(unnamed)") << "\"";
 		return std::move(ss.str());
 	}
 
@@ -1255,6 +1255,39 @@ namespace TES3::UI {
 			throw std::runtime_error("This function only works on top-level elements.");
 		}
 		return TES3_ui_loadMenuPosition(this, 0);
+	}
+
+	bool Element::reorder_lua(sol::table params) {
+		sol::optional<Element*> insertBefore = params["before"];
+		sol::optional<Element*> insertAfter = params["after"];
+		int index = parent->getIndexOfChild(this);
+
+		if (insertBefore && insertBefore.value()) {
+			if (parent != insertBefore.value()->parent) {
+				throw std::runtime_error("reorder: Elements do not have the same parent.");
+			}
+
+			auto indexBefore = parent->getIndexOfChild(insertBefore.value());
+			if (indexBefore == -1) {
+				return false;
+			}
+			
+			return parent->reorderChildren(indexBefore, index, 1);
+		}
+		else if (insertAfter && insertAfter.value()) {
+			if (parent != insertAfter.value()->parent) {
+				throw std::runtime_error("reorder: Elements do not have the same parent.");
+			}
+
+			auto indexAfter = parent->getIndexOfChild(insertAfter.value());
+			if (indexAfter == -1) {
+				return false;
+			}
+
+			return parent->reorderChildren(indexAfter + 1, index, 1);
+		}
+
+		throw std::invalid_argument("reorder: Either 'before' or 'after' must be provided.");
 	}
 
 	bool Element::reorderChildren_lua(sol::object insertBefore, sol::object moveFrom, int count) {

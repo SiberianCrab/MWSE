@@ -10,7 +10,7 @@
 --- @field classes tes3class[] *Read-only*. A collection of all class objects.
 --- @field dialogues tes3dialogue[] *Read-only*. A collection of all dialogue objects.
 --- @field factions tes3faction[] *Read-only*. A collection of all faction objects.
---- @field globals tes3iterator *Read-only*. A collection of all global variable objects.
+--- @field globals tes3globalVariable[] *Read-only*. A collection of all global variable objects.
 --- @field isSavingOrLoading boolean *Read-only*. True when in the process of saving or loading the game.
 --- @field landTextures tes3landTexture[] *Read-only*. A collection of all land texture objects.
 --- @field lastLoadedFile tes3gameFile *Read-only*. The last loaded savegame file.

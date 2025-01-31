@@ -8,7 +8,7 @@
 
 niRotatingParticlesData objects contain the geometry data necessary to render a niRotatingParticles object. When a niRotatingParticles-based object is created, the actual geometry data is stored in an attached niRotatingParticlesData object.
 
-This type inherits the following: [niParticlesData](../types/niParticlesData.md), [niTriBasedGeometryData](../types/niTriBasedGeometryData.md), [niGeometryData](../types/niGeometryData.md), [niObject](../types/niObject.md)
+This type inherits the following: [niParticlesData](../types/niParticlesData.md), [niTriBasedGeometryData](../types/niTriBasedGeometryData.md), [niGeometryData](../types/niGeometryData.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `activeCount`

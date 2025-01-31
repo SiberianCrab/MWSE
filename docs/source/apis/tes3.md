@@ -204,17 +204,18 @@ local count, item, itemData = tes3.addItem({ reference = ..., item = ..., itemDa
 ### `tes3.addItemData`
 <div class="search_terms" style="display: none">additemdata, itemdata</div>
 
-Creates an item data if there is room for a new stack in a given inventory. This can be then used to add custom user data or adjust an item's condition. This will return nil if no item data could be allocated for the item -- for example if the reference doesn't have the item in their inventory or each item of that type already has item data. Calling this function will mark the `to` reference as modified.
+Creates itemData on a given `reference`, or `to` a reference's inventory. This can be then used to add custom user data or adjust an item's condition. This will return nil if no item data could be allocated for the item -- for example if the reference doesn't have the item in their inventory or each item of that type already has item data. Calling this function will mark the `reference` or `to` reference as modified.
 
 ```lua
-local createdData = tes3.addItemData({ to = ..., item = ..., updateGUI = ... })
+local createdData = tes3.addItemData({ reference = ..., to = ..., item = ..., updateGUI = ... })
 ```
 
 **Parameters**:
 
 * `params` (table)
-	* `to` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): The reference or mobile whose inventory will be modified.
-	* `item` ([tes3item](../types/tes3item.md), string): The item to create item data for.
+	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): *Optional*. The reference who will be modified. Use this parameter if you want to add itemData to a reference itself.
+	* `to` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): *Optional*. The reference or mobile whose inventory will be modified. Use this parameter if you want to add itemData to an item in a reference's inventory.
+	* `item` ([tes3item](../types/tes3item.md), string): *Optional*. The item to create item data for. Only applicable if the `to` parameter is used.
 	* `updateGUI` (boolean): *Default*: `true`. If false, the player or contents menu won't be updated.
 
 **Returns**:

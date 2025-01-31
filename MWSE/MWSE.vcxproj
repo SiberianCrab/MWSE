@@ -38,7 +38,9 @@
     <ClInclude Include="NIPathController.h" />
     <ClInclude Include="NISortAdjustNode.h" />
     <ClInclude Include="TES3AnimationGroupLua.h" />
+    <ClInclude Include="TES3CrimeLua.h" />
     <ClInclude Include="TES3DialogueFilterContext.h" />
+    <ClInclude Include="TES3ItemLua.h" />
     <ClInclude Include="TES3LandLua.h" />
     <ClInclude Include="LuaActiveMagicEffectIconsUpdatedEvent.h" />
     <ClInclude Include="LuaAttackHitEvent.h" />
@@ -307,9 +309,7 @@
     <ClInclude Include="TES3BodyPartLua.h" />
     <ClInclude Include="TES3CollisionLua.h" />
     <ClInclude Include="TES3CombatSessionLua.h" />
-    <ClInclude Include="TES3CrimeController.h" />
     <ClInclude Include="TES3CrimeEvent.h" />
-    <ClInclude Include="TES3CrimeEventList.h" />
     <ClInclude Include="DynamicLuaObject.h" />
     <ClInclude Include="TES3Fader.h" />
     <ClInclude Include="TES3FaderLua.h" />
@@ -799,6 +799,7 @@
     <ClCompile Include="TES3BodyPartManager.cpp" />
     <ClCompile Include="TES3Clothing.cpp" />
     <ClCompile Include="TES3Creature.cpp" />
+    <ClCompile Include="TES3CrimeLua.cpp" />
     <ClCompile Include="TES3CriticalSection.cpp" />
     <ClCompile Include="TES3DialogueConditional.cpp" />
     <ClCompile Include="TES3DialogueFilterContext.cpp" />
@@ -858,8 +859,6 @@
     <ClCompile Include="TES3CollisionLua.cpp" />
     <ClCompile Include="TES3CombatSession.cpp" />
     <ClCompile Include="TES3CombatSessionLua.cpp" />
-    <ClCompile Include="TES3CrimeController.cpp" />
-    <ClCompile Include="TES3CrimeEventList.cpp" />
     <ClCompile Include="TES3DialogueInfo.cpp" />
     <ClCompile Include="TES3Enchantment.cpp" />
     <ClCompile Include="TES3Fader.cpp" />
@@ -1322,10 +1321,10 @@ copy /y "$(TargetDir)MWSE.pdb" "$(MorrowindDir)MWSE.pdb"</Command>
     <PreBuildEvent>
       <Command>set buildTime=
 for /f "skip=1 delims=" %%x in ('wmic os get localdatetime') do if not defined buildTime set buildTime=%%x
-echo #pragma once &gt; $(ProjectDir)/BuildDate.h
-echo. &gt;&gt; $(ProjectDir)/BuildDate.h
-echo #define MWSE_BUILD_DATE %buildTime:~0,8% &gt;&gt; $(ProjectDir)/BuildDate.h
-if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_BUILD_NUMBER% &gt;&gt; $(ProjectDir)/BuildDate.h)</Command>
+echo #pragma once &gt; "$(ProjectDir)."/BuildDate.h
+echo. &gt;&gt; "$(ProjectDir)."/BuildDate.h
+echo #define MWSE_BUILD_DATE %buildTime:~0,8% &gt;&gt; "$(ProjectDir)."/BuildDate.h
+if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_BUILD_NUMBER% &gt;&gt; "$(ProjectDir)."/BuildDate.h)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -1360,10 +1359,10 @@ copy /y "$(TargetDir)MWSE.pdb" "$(MorrowindDir)MWSE.pdb"</Command>
     <PreBuildEvent>
       <Command>set buildTime=
 for /f "skip=1 delims=" %%x in ('wmic os get localdatetime') do if not defined buildTime set buildTime=%%x
-echo #pragma once &gt; $(ProjectDir)/BuildDate.h
-echo. &gt;&gt; $(ProjectDir)/BuildDate.h
-echo #define MWSE_BUILD_DATE %buildTime:~0,8% &gt;&gt; $(ProjectDir)/BuildDate.h
-if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_BUILD_NUMBER% &gt;&gt; $(ProjectDir)/BuildDate.h)</Command>
+echo #pragma once &gt; "$(ProjectDir)."/BuildDate.h
+echo. &gt;&gt; "$(ProjectDir)."/BuildDate.h
+echo #define MWSE_BUILD_DATE %buildTime:~0,8% &gt;&gt; "$(ProjectDir)."/BuildDate.h
+if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_BUILD_NUMBER% &gt;&gt; "$(ProjectDir)."/BuildDate.h)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

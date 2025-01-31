@@ -289,8 +289,8 @@ function Template:createTabsBlock(parentBlock)
 		-- Move active tab forward 1
 		for i, page in ipairs(self.pages) do
 			local tab = tabsBlock:findChild(page.tabUID)
-			if tab.widget.state == tes3.uiState.active and self.pages[i + 1] then
-				self:clickTab(self.pages[i + 1])
+			if tab.widget.state == tes3.uiState.active then
+				self:clickTab(self.pages[table.wrapindex(self.pages, i + 1)])
 				break
 			end
 		end
@@ -300,14 +300,14 @@ function Template:createTabsBlock(parentBlock)
 		-- Move active tab back 1
 		for i, page in ipairs(self.pages) do
 			local tab = tabsBlock:findChild(page.tabUID)
-			if tab.widget.state == tes3.uiState.active and self.pages[i - 1] then
-				self:clickTab(self.pages[i - 1])
+			if tab.widget.state == tes3.uiState.active then
+				self:clickTab(self.pages[table.wrapindex(self.pages, i - 1)])
 				break
 			end
 		end
 	end)
 
-	outerTabsBlock:getTopLevelMenu():registerAfter(tes3.uiEvent.update, function() self:padTabBlock() end)
+	parentBlock:registerAfter(tes3.uiEvent.update, function() self:padTabBlock() end)
 	outerTabsBlock:updateLayout()
 	self:padTabBlock()
 end

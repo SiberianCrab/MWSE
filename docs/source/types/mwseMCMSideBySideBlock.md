@@ -8,7 +8,7 @@
 
 A Side-by-side block is a category that arranges its settings horizontally instead of vertically. Particularly useful in conjunction with buttons that have no labels.
 
-This type inherits the following: [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md)
+This type inherits the following: [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md).
 ## Properties
 
 ### `childIndent`

@@ -8,7 +8,7 @@
 
 
 
-This type inherits the following: [mwseMCMPage](../types/mwseMCMPage.md), [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md)
+This type inherits the following: [mwseMCMPage](../types/mwseMCMPage.md), [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md).
 ## Properties
 
 ### `childIndent`

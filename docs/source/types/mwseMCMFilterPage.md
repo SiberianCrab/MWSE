@@ -8,7 +8,7 @@
 
 A Filter Page is a Sidebar Page with additional functionality: The components container is a vertical scroll pane with a search bar. This is especially useful if you have a large or unknown number of settings.
 
-This type inherits the following: [mwseMCMSideBarPage](../types/mwseMCMSideBarPage.md), [mwseMCMPage](../types/mwseMCMPage.md), [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md)
+This type inherits the following: [mwseMCMSideBarPage](../types/mwseMCMSideBarPage.md), [mwseMCMPage](../types/mwseMCMPage.md), [mwseMCMCategory](../types/mwseMCMCategory.md), [mwseMCMComponent](../types/mwseMCMComponent.md).
 ## Properties
 
 ### `childIndent`

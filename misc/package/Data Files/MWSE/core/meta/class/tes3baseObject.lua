@@ -14,6 +14,9 @@
 --- @field persistent boolean The persistent flag of the object.
 --- @field sourceless boolean The sourceless flag of the object.
 --- @field sourceMod string *Read-only*. The filename (including the extension) of the mod that owns this object. It has `nil` value if the object was anything other than loaded from an ESP or ESM file.
+--- @field supportsActivate boolean If true, the object supports activation. This includes all the items (excluding non-carriable lights), actors outside combat, activators, containers and doors.
+--- 
+--- However, the activation of such an object may still be blocked via mwscript or a Lua script.
 --- @field supportsLuaData boolean If true, references of this object can store temporary or persistent lua data.
 tes3baseObject = {}
 

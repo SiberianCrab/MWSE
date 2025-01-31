@@ -8,7 +8,7 @@
 
 A mobile object for a physical projectile.
 
-This type inherits the following: [tes3mobileObject](../types/tes3mobileObject.md)
+This type inherits the following: [tes3mobileObject](../types/tes3mobileObject.md).
 ## Properties
 
 ### `animTime`

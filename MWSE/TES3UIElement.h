@@ -332,6 +332,7 @@ namespace TES3::UI {
 		void saveMenuPosition();
 		bool loadMenuPosition();
 
+		bool reorder_lua(sol::table params);
 		bool reorderChildren_lua(sol::object insertBefore, sol::object moveFrom, int count);
 		void updateLayout_lua(sol::optional<bool> updateTimestamp = true);
 

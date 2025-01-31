@@ -456,7 +456,7 @@ local function writePackageDetails(file, package)
 	file:write(string.format("%s\n\n", common.getDescriptionString(package)))
 	if (package.type == "class") then
 		if (package.inherits) then
-			file:write(string.format("This type inherits the following: %s\n", buildParentChain(package.inherits)))
+			file:write(string.format("This type inherits the following: %s.\n", buildParentChain(package.inherits)))
 		end
 
 		-- Write class examples before the methods and properties

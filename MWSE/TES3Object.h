@@ -249,6 +249,8 @@ namespace TES3 {
 		// Custom functions.
 		//
 
+		bool supportsActivate() const;
+
 		BaseObject* getBaseObject() const;
 
 		bool isActor() const;

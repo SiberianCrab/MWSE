@@ -82,8 +82,21 @@ end
 function tes3uiElement:createTextInput(params)
 	params = params or {}
 
+	local parent = self
+	if (params.createBorder) then
+		parent = self:createThinBorder({ id = "MWSE:TextInputBorder"})
+		parent.autoHeight = true
+		parent.autoWidth = true
+		parent.paddingLeft = 5
+		parent.paddingRight = 5
+		parent.paddingTop = 3
+		parent.paddingBottom = 5
+		parent.widthProportional = 1.0
+	end
+
 	-- Create our element.
-	local element = self:_createTextInput(params) ---@diagnostic disable-line
+	local element = parent:_createTextInput(params) ---@diagnostic disable-line
+	--- @cast element tes3uiElement
 	local asWidget = element.widget
 
 	-- Basic property setting.
@@ -121,7 +134,12 @@ function tes3uiElement:createTextInput(params)
 	end
 
 	-- Handle focus.
-	element:registerAfter("mouseClick", common.ui.eventCallback.acquireTextInput)
+	element:registerAfter(tes3.uiEvent.mouseClick, common.ui.eventCallback.acquireTextInput)
+	if (params.createBorder) then
+		parent:registerAfter(tes3.uiEvent.mouseClick, function()
+			tes3ui.acquireTextInput(element)
+		end)
+	end
 	if (params.autoFocus) then
 		tes3ui.acquireTextInput(element)
 	end

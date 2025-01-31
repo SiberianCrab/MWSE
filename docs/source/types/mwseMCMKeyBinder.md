@@ -35,7 +35,7 @@ On the other hand, if the KeyBinder allows binding mouse keys in addition to key
 ```
 
 
-This type inherits the following: [mwseMCMBinder](../types/mwseMCMBinder.md), [mwseMCMButton](../types/mwseMCMButton.md), [mwseMCMSetting](../types/mwseMCMSetting.md), [mwseMCMComponent](../types/mwseMCMComponent.md)
+This type inherits the following: [mwseMCMBinder](../types/mwseMCMBinder.md), [mwseMCMButton](../types/mwseMCMButton.md), [mwseMCMSetting](../types/mwseMCMSetting.md), [mwseMCMComponent](../types/mwseMCMComponent.md).
 ??? example "Example: Filtering out key presses that aren't equal to the bound key combination"
 
 	```lua

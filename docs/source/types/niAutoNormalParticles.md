@@ -8,7 +8,7 @@
 
 An object that represent collections of large numbers of small point-like objects, designed for dynamic effects like fountains, waterfalls, snow, explosions, etc. Normals are not provided in the particle data, but are automatically generated to face the camera when rendered.
 
-This type inherits the following: [niParticles](../types/niParticles.md), [niTriBasedGeometry](../types/niTriBasedGeometry.md), [niGeometry](../types/niGeometry.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md)
+This type inherits the following: [niParticles](../types/niParticles.md), [niTriBasedGeometry](../types/niTriBasedGeometry.md), [niGeometry](../types/niGeometry.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `alphaProperty`

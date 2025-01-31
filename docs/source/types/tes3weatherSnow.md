@@ -8,7 +8,7 @@
 
 A structure that contains weather information for the snow weather type.
 
-This type inherits the following: [tes3weather](../types/tes3weather.md)
+This type inherits the following: [tes3weather](../types/tes3weather.md).
 ## Properties
 
 ### `ambientDayColor`

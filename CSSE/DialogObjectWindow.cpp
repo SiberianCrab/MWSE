@@ -165,18 +165,6 @@ namespace se::cs::dialog::object_window {
 	static std::optional<std::regex> currentSearchRegex;
 	static bool modeShowModifiedOnly = false;
 
-	bool matchDispatcher(const std::string_view& haystack) {
-		if (currentSearchRegex) {
-			return std::regex_search(haystack.data(), currentSearchRegex.value());
-		}
-		else if (settings.object_window.search_settings.case_sensitive) {
-			return string::contains(haystack, currentSearchText);
-		}
-		else {
-			return string::cicontains(haystack, currentSearchText);
-		}
-	}
-
 	// TODO: Make use of the new object-class search features.
 	bool PatchFilterObjectWindow_ObjectMatchesSearchText(const Object* object) {
 		// Hide deprecated objects.

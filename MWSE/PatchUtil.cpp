@@ -10,6 +10,8 @@
 #include "TES3BodyPartManager.h"
 #include "TES3Cell.h"
 #include "TES3Class.h"
+#include "TES3CombatSession.h"
+#include "TES3Creature.h"
 #include "TES3CutscenePlayer.h"
 #include "TES3DataHandler.h"
 #include "TES3Dialogue.h"
@@ -31,6 +33,7 @@
 #include "TES3UIInventoryTile.h"
 #include "TES3UIMenuController.h"
 #include "TES3VFXManager.h"
+#include "TES3Weapon.h"
 #include "TES3WorldController.h"
 
 #include "NICollisionSwitch.h"
@@ -38,8 +41,8 @@
 #include "NILinesData.h"
 #include "NIPick.h"
 #include "NISortAdjustNode.h"
-#include "NiTriShape.h"
-#include "NiTriShapeData.h"
+#include "NITriShape.h"
+#include "NITriShapeData.h"
 #include "NIUVController.h"
 
 #include "BitUtil.h"
@@ -1318,6 +1321,86 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Make AI consider weapon condition when selecting the most damaging weapon for combat.
+	//
+
+	const auto TES3_getMinWaterLevel = reinterpret_cast<float(__cdecl*)()>(0x51D760);
+
+	float __stdcall PatchCalculateEffectiveWeaponMult(TES3::CombatSession* session, TES3::ItemStack* itemStack, float fAIMeleeWeaponMult, float fAIRangeMeleeWeaponMult) {
+		// Original code.
+		float weaponMult;
+		auto weapon = static_cast<TES3::Weapon*>(itemStack->object);
+
+		if (weapon->weaponType < TES3::WeaponType::Bow) {
+			// Melee.
+			weaponMult = fAIMeleeWeaponMult;
+			session->ammoDamage = 0;
+		}
+		else {
+			// Ranged.
+			const auto mobile = session->parentActor;
+			const auto& position = mobile->reference->position;
+			const auto waterLevel = TES3_getMinWaterLevel();
+
+			// Corrected test for head position calculation.
+			if (mobile->getMovementFlagSwimming() || position.z + 0.7 * mobile->height < waterLevel) {
+				weaponMult = 0.0f;
+			}
+			else {
+				weaponMult = fAIRangeMeleeWeaponMult;
+			}
+		}
+
+		// Find best condition weapon in the stack, and adjust weaponMult to include damage reduction from weapon condition.
+		auto variables = itemStack->variables;
+		if (variables && itemStack->count == variables->endIndex) {
+			int bestCondition = 0;
+			for (auto itemData : *variables) {
+				if (itemData->condition > bestCondition) {
+					bestCondition = itemData->condition;
+				}
+			}
+			weaponMult *= float(bestCondition) / float(weapon->maxCondition);
+		}
+
+		return weaponMult;
+	}
+
+	void* __stdcall PatchGetWeaponStackItemDataVariables(TES3::ItemStack* itemStack) {
+		auto variables = itemStack->variables;
+
+		// Prevent a bug that doesn't select fully repaired weapons if there are damaged weapons in the stack.
+		// Return nullptr if there are fully repaired weapons, so that the selected itemData is set to nullptr.
+		if (variables && itemStack->count > variables->endIndex) {
+			variables = nullptr;
+		}
+
+		return variables;
+	}
+
+	__declspec(naked) void PatchCombatSessionNextActionPhysicalWeighting1() {
+		__asm {
+			push [esp + 0x2C]		// push fAIRangeMeleeWeaponMult
+			push [esp + 0x34]		// push fAIMeleeWeaponMult
+			push ebp				// push itemStack
+			push edi				// push combatSession
+			call $					// Replace with call PatchCalculateEffectiveWeaponMult
+			jmp $ + 0x79
+		}
+	}
+	const size_t PatchCombatSessionNextActionPhysicalWeighting1_size = 0x14;
+
+	__declspec(naked) void PatchCombatSessionNextActionPhysicalWeighting2() {
+		__asm {
+			mov [eax + 4], ecx		// equipStack.itemData = ecx
+			push ebp				// push itemStack
+			call $					// Replace with call PatchGetWeaponStackItemDataVariables
+			test eax, eax			// if (itemDataArray)
+		}
+	}
+	const size_t PatchCombatSessionNextActionPhysicalWeighting2_size = 0xB;
+
+	//
 	// Install all the patches.
 	//
 
@@ -1783,6 +1866,12 @@ namespace mwse::patch {
 		// Patch: Suppress sGeneralMastPlugMismatchMsg message.
 		genCallUnprotected(0x477512, reinterpret_cast<DWORD>(GetCachedYesToAll), 0x477518 - 0x477512);
 		genCallEnforced(0x4BB55D, 0x477400, reinterpret_cast<DWORD>(SuppressGeneralMastPlugMismatchMsg));
+
+		// Patch: Make AI consider weapon condition when selecting the most damaging weapon for combat.
+		writePatchCodeUnprotected(0x5376BB, (BYTE*)&PatchCombatSessionNextActionPhysicalWeighting1, PatchCombatSessionNextActionPhysicalWeighting1_size);
+		genCallUnprotected(0x5376BB + 0xA, reinterpret_cast<DWORD>(PatchCalculateEffectiveWeaponMult));
+		writePatchCodeUnprotected(0x5378BE, (BYTE*)&PatchCombatSessionNextActionPhysicalWeighting2, PatchCombatSessionNextActionPhysicalWeighting2_size);
+		genCallUnprotected(0x5378BE + 4, reinterpret_cast<DWORD>(PatchGetWeaponStackItemDataVariables));
 	}
 
 	void installPostLuaPatches() {
@@ -1804,6 +1893,17 @@ namespace mwse::patch {
 		if (Configuration::PatchNiFlipController) {
 			auto NiFlipController_clone = &NI::FlipController::copy;
 			genCallEnforced(0x715D26, DWORD(NI::FlipController::_copy), *reinterpret_cast<DWORD*>(&NiFlipController_clone));
+		}
+
+		// Patch: Allow global audio.
+		if (Configuration::UseGlobalAudio) {
+			constexpr auto DS_FLAGS_DEFAULT = DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
+			constexpr auto DS_FLAGS_3D = DS_FLAGS_DEFAULT | DSBCAPS_CTRL3D | DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_MUTE3DATMAXDISTANCE;
+			writeAddFlagEnforced(0x401FEA + 0x3, DS_FLAGS_DEFAULT | DSBCAPS_CTRLPAN, DSBCAPS_GLOBALFOCUS);
+			writeAddFlagEnforced(0x401FE1 + 0x3, DS_FLAGS_3D, DSBCAPS_GLOBALFOCUS);
+			writeAddFlagEnforced(0x401FF7 + 0x3, DS_FLAGS_DEFAULT, DSBCAPS_GLOBALFOCUS);
+			writeAddFlagEnforced(0x40240E + 0x3, DS_FLAGS_DEFAULT | DSBCAPS_CTRLPAN, DSBCAPS_GLOBALFOCUS);
+			writeAddFlagEnforced(0x402405 + 0x3, DS_FLAGS_3D, DSBCAPS_GLOBALFOCUS);
 		}
 	}
 

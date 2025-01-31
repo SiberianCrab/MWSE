@@ -12,11 +12,11 @@ function common.enable(element)
 	end
 
 	element.disabled = true
-	element.color = tes3ui.getPalette("disabled_color")
+	element.color = tes3ui.getPalette(tes3.palette.activeColor)
 
 	local widget = element.widget
 	if (widget and widget.state) then
-		widget.state = tes3.uiState.disabled
+		widget.state = tes3.uiState.active
 	end
 end
 
@@ -29,7 +29,7 @@ function common.disable(element)
 	end
 
 	element.disabled = true
-	element.color = tes3ui.getPalette("disabled_color")
+	element.color = tes3ui.getPalette(tes3.palette.disabledColor)
 
 	local widget = element.widget
 	if (widget and widget.state) then

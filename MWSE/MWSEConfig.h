@@ -15,6 +15,7 @@ namespace mwse {
 		static bool EnableLuaErrorNotifications;
 		static bool UseSkinnedAccurateActivationRaytests;
 		static bool SuppressUselessWarnings;
+		static bool UseGlobalAudio;
 		static UINT BuildNumber;
 
 		static sol::table getDefaults();

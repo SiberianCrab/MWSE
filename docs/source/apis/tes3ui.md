@@ -186,17 +186,17 @@ tes3ui.createResponseText({ text = ..., type = ..., index = ... })
 ### `tes3ui.createTooltipMenu`
 <div class="search_terms" style="display: none">createtooltipmenu, tooltipmenu</div>
 
-Creates a tooltip menu, which can be an empty menu, an item tooltip, a skill tooltip, or a spell tooltip. This should be called from within a tooltip event callback. These automatically follow the mouse cursor, and are also destroyed automatically when the mouse leaves the originating element. Creating an item tooltip will invoke the uiObjectTooltip event.
+Creates a tooltip menu, which can be an empty menu, an item tooltip, a skill tooltip, or a spell tooltip. This should be called from within a tooltip event callback. These automatically follow the mouse cursor, and are also destroyed automatically when the mouse leaves the originating element. Creating an object tooltip will invoke the uiObjectTooltip event. Creating a tooltip with no argument will create an empty tooltip.
 
 ```lua
-local result = tes3ui.createTooltipMenu({ item = ..., itemData = ..., spell = ..., skill = ... })
+local result = tes3ui.createTooltipMenu({ object = ..., itemData = ..., spell = ..., skill = ... })
 ```
 
 **Parameters**:
 
 * `params` (table): *Optional*.
-	* `item` ([tes3item](../types/tes3item.md), string): *Optional*. The item to create a tooltip for. If not specified, the tooltip will be empty.
-	* `itemData` ([tes3itemData](../types/tes3itemData.md)): *Optional*. The item data for the item.
+	* `object` ([tes3object](../types/tes3object.md), string): *Optional*. The object to create a tooltip for.
+	* `itemData` ([tes3itemData](../types/tes3itemData.md)): *Optional*. The itemData for the object, if providing an object.
 	* `spell` ([tes3spell](../types/tes3spell.md)): *Optional*. The spell to create a tooltip for.
 	* `skill` ([tes3skill](../types/tes3skill.md)): *Optional*. The skill to create a tooltip for.
 

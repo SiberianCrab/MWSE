@@ -30,6 +30,8 @@
 #include "TES3UIManager.h"
 #include "TES3WorldController.h"
 
+#include "MWSEConfig.h"
+
 namespace TES3 {
 
 	Cell* DataHandler::previousVisitedCell = nullptr;
@@ -275,6 +277,12 @@ namespace TES3 {
 			TES3::UI::setSuppressingHelpMenu(false);
 		}
 
+		// Update compatibility globals.
+		const auto mwseBuildGlobal = TES3::DataHandler::get()->nonDynamicData->findGlobalVariable("MWSE_BUILD");
+		if (mwseBuildGlobal) {
+			mwseBuildGlobal->value = mwse::Configuration::BuildNumber;
+		}
+
 		return loaded ? LoadGameResult::Success : LoadGameResult::Failure;
 	}
 
@@ -467,6 +475,14 @@ namespace TES3 {
 
 	nonstd::span<GameFile*> NonDynamicData::getActiveMods() {
 		return nonstd::span(activeMods, activeModCount);
+	}
+
+	IteratedList<GlobalVariable*>* NonDynamicData::getGlobalsList() const {
+		if (globals == nullptr) {
+			return nullptr;
+		}
+
+		return &globals->variables;
 	}
 
 	sol::table NonDynamicData::getMagicEffects_lua(sol::this_state ts) {

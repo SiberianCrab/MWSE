@@ -38,6 +38,16 @@ local config = {
 				},
 				{
 					class = "OnOffButton",
+					label = i18n("playAudioInBackground.label"),
+					description = i18n("playAudioInBackground.description"),
+					variable = {
+						id = "UseGlobalAudio",
+						class = "TableVariable",
+						table = mwseConfig,
+					},
+				},
+				{
+					class = "OnOffButton",
 					label = i18n("letterboxMovies.label"),
 					description = i18n("letterboxMovies.description"),
 					variable = {

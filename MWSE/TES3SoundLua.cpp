@@ -3,6 +3,7 @@
 #include "LuaManager.h"
 #include "TES3ObjectLua.h"
 
+#include "TES3Creature.h"
 #include "TES3Sound.h"
 #include "TES3SoundGenerator.h"
 
@@ -62,8 +63,9 @@ namespace mwse::lua {
 			usertypeDefinition["__tojson"] = &TES3::SoundGenerator::toJson;
 
 			// Basic property binding.
-			usertypeDefinition["sound"] = sol::readonly_property(&TES3::SoundGenerator::sound);
-			usertypeDefinition["type"] = sol::readonly_property(&TES3::SoundGenerator::soundType);
+			usertypeDefinition["creature"] = &TES3::SoundGenerator::creature;
+			usertypeDefinition["sound"] = &TES3::SoundGenerator::sound;
+			usertypeDefinition["type"] = &TES3::SoundGenerator::soundType;
 		}
 	}
 }

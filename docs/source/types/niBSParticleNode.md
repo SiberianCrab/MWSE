@@ -8,7 +8,7 @@
 
 A subclass of `niBSAnimationNode` that optionally pins child nodes to world space. Intended for world space particle systems.
 
-This type inherits the following: [niBSAnimationNode](../types/niBSAnimationNode.md), [niNode](../types/niNode.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md)
+This type inherits the following: [niBSAnimationNode](../types/niBSAnimationNode.md), [niNode](../types/niNode.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `alphaProperty`

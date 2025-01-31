@@ -8,7 +8,7 @@
 
 An object that represent collections of large numbers of small point-like objects, designed for dynamic effects like fountains, waterfalls, snow, explosions, etc.
 
-This type inherits the following: [niTriBasedGeometry](../types/niTriBasedGeometry.md), [niGeometry](../types/niGeometry.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md)
+This type inherits the following: [niTriBasedGeometry](../types/niTriBasedGeometry.md), [niGeometry](../types/niGeometry.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `alphaProperty`

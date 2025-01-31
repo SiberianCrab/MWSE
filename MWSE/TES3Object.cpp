@@ -105,6 +105,39 @@ namespace TES3 {
 		return BaseObject_writeFileHeader(this, file);
 	}
 
+	bool BaseObject::supportsActivate() const {
+		auto asObject = static_cast<const Object*>(this);
+		if (asObject && asObject->getIsLocationMarker()) {
+			return false;
+		}
+
+		// Make sure we aren't dealing with references.
+		BaseObject* asBase = getBaseObject();
+
+		if (asBase->isItem()) {
+			return static_cast<const Item*>(this)->getIsCarriable();
+		}
+
+		if (asBase->objectType == ObjectType::NPC || asBase->objectType == ObjectType::Creature) {
+			const auto macp = WorldController::get() ? WorldController::get()->getMobilePlayer() : nullptr;
+			if (macp) {
+				return macp->getFlagInCombat();
+			}
+			else {
+				return true;
+			}
+		}
+
+		switch (asBase->objectType) {
+		case TES3::ObjectType::Activator:
+		case TES3::ObjectType::Container:
+		case TES3::ObjectType::Door:
+			return true;
+		default:
+			return false;
+		}
+	}
+
 	BaseObject* BaseObject::getBaseObject() const {
 		BaseObject* object = const_cast<BaseObject*>(this);
 
@@ -758,16 +791,18 @@ namespace TES3 {
 	}
 
 	Reference* PhysicalObject::getReference() const {
-		if (auto thisRef = reinterpret_cast<Reference*>(referenceToThis); thisRef && thisRef->objectType == ObjectType::Reference) {
-			return thisRef;
-		}
-		else {
-			auto mobile = getMobile();
-			if (mobile) {
-				return mobile->reference;
+		__try {
+			if (auto thisRef = reinterpret_cast<Reference*>(referenceToThis); thisRef && thisRef->objectType == ObjectType::Reference) {
+				return thisRef;
+			}
+			else {
+				auto mobile = getMobile();
+				if (mobile) {
+					return mobile->reference;
+				}
 			}
 		}
-
+		__except (EXCEPTION_EXECUTE_HANDLER) {}
 		return nullptr;
 	}
 }

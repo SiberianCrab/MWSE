@@ -8,7 +8,7 @@
 
 A mobile object for a the player.
 
-This type inherits the following: [tes3mobileNPC](../types/tes3mobileNPC.md), [tes3mobileActor](../types/tes3mobileActor.md), [tes3mobileObject](../types/tes3mobileObject.md)
+This type inherits the following: [tes3mobileNPC](../types/tes3mobileNPC.md), [tes3mobileActor](../types/tes3mobileActor.md), [tes3mobileObject](../types/tes3mobileObject.md).
 ## Properties
 
 ### `acrobatics`
@@ -357,6 +357,17 @@ The player's current bounty.
 **Returns**:
 
 * `result` (number)
+
+***
+
+### `bountyData`
+<div class="search_terms" style="display: none">bountydata</div>
+
+The player's bounty boutny data, which includes information on the bounty, as well as the number of infractions.
+
+**Returns**:
+
+* `result` ([tes3bountyData](../types/tes3bountyData.md))
 
 ***
 
@@ -2674,6 +2685,25 @@ local result = myObject:getBootsWeight()
 **Returns**:
 
 * `result` (number)
+
+***
+
+### `getEffectiveAttackDistance`
+<div class="search_terms" style="display: none">geteffectiveattackdistance, effectiveattackdistance</div>
+
+Returns the distance used for checking attack range. This is measured by the distance between the actors' bounding boxes edges, as if the actors were exactly facing each other. The number may be negative if the bounding boxes overlap.
+
+```lua
+local distance = myObject:getEffectiveAttackDistance(mobile)
+```
+
+**Parameters**:
+
+* `mobile` ([tes3mobileActor](../types/tes3mobileActor.md)): The target actor.
+
+**Returns**:
+
+* `distance` (number)
 
 ***
 

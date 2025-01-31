@@ -10,6 +10,7 @@
 --- @field autoRun boolean Toggle flag for if the player should constantly run forward.
 --- @field birthsign tes3birthsign *Read-only*. The player's birthsign.
 --- @field bounty number The player's current bounty.
+--- @field bountyData tes3bountyData The player's bounty boutny data, which includes information on the bounty, as well as the number of infractions.
 --- @field cameraHeight number Access to the player camera height, used for both the first person and third person camera (specifically the orbit centre). It is normally placed at head height by the game, on loading, or when a race is selected. The camera height can be reset to its regular value by setting this property to `nil`.
 --- @field castReady boolean Toggle flag for if the player has casting ready.
 --- @field clawMultiplier tes3globalVariable *Read-only*. Quick access to the `ClawMultiplier` global variable.

@@ -58,12 +58,15 @@ namespace TES3 {
 		Actor* stolenFrom;
 
 		CrimeEvent();
+		CrimeEvent(CrimeEvent& event);
 		~CrimeEvent();
 
 		CrimeEvent * ctor();
 		void dtor();
-
 		void copy(CrimeEvent* crimeEvent);
+
+		const char* getBountyKey() const;
+		void setBountyKey(const char* key);
 	};
 	static_assert(sizeof(CrimeEvent) == 0x3C, "TES3::CrimeEvent failed size validation");
 }

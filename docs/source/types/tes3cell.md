@@ -8,7 +8,7 @@
 
 An exterior or interior game area.
 
-This type inherits the following: [tes3baseObject](../types/tes3baseObject.md)
+This type inherits the following: [tes3baseObject](../types/tes3baseObject.md).
 ## Properties
 
 ### `activators`
@@ -461,6 +461,19 @@ The cell's sun color. Only available on interior cells.
 **Returns**:
 
 * `result` ([niPackedColor](../types/niPackedColor.md))
+
+***
+
+### `supportsActivate`
+<div class="search_terms" style="display: none">supportsactivate</div>
+
+If true, the object supports activation. This includes all the items (excluding non-carriable lights), actors outside combat, activators, containers and doors.
+
+However, the activation of such an object may still be blocked via mwscript or a Lua script.
+
+**Returns**:
+
+* `result` (boolean)
 
 ***
 

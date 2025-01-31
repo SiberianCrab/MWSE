@@ -370,6 +370,7 @@ namespace mwse::lua {
 		eventCallbacksAfter.erase(element);
 		eventCallbacksLegacy.erase(element);
 		originalCallbackMap.erase(element);
+		destroyMap.erase(element);
 	}
 
 	void copyLuaCallbacks(TES3::UI::Element* from, TES3::UI::Element* to) {

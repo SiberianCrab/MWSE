@@ -106,6 +106,8 @@ namespace se::cs {
 		GameSetting* getGameSettingForSkill(int id) const;
 		GameSetting* getGameSettingForEffect(int id) const;
 
+		GlobalVariable* getGlobal(const char* id) const;
+
 		MagicEffect* getMagicEffect(int id);
 
 		GameFile* getAvailableGameFileByIndex(unsigned int index) const;

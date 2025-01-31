@@ -20,13 +20,14 @@ namespace TES3::UI {
 	Object* MenuInputController::lastTooltipObject = nullptr;
 	ItemData* MenuInputController::lastTooltipItemData = nullptr;
 	int MenuInputController::lastTooltipCount = 0;
+	Element* MenuInputController::lastTooltipSource = nullptr;
 
 	const auto TES3_MenuInputController_flushBufferedTextEvents = reinterpret_cast<void(__thiscall*)(MenuInputController*)>(0x58E9C0);
 	void MenuInputController::flushBufferedTextEvents() {
 		TES3_MenuInputController_flushBufferedTextEvents(this);
 	}
 
-	Element* MenuInputController::getTextInputElement() {
+	Element* MenuInputController::getTextInputElement() const {
 		return textInputFocus;
 	}
 
@@ -125,19 +126,19 @@ namespace TES3::UI {
 		TES3_updateFogOfWarRenderState();
 	}
 
-	bool MenuController::getInventoryMenuEnabled() {
+	bool MenuController::getInventoryMenuEnabled() const {
 		return inventoryMenuEnabled;
 	}
 
-	bool MenuController::getMagicMenuEnabled() {
+	bool MenuController::getMagicMenuEnabled() const {
 		return magicMenuEnabled;
 	}
 
-	bool MenuController::getMapMenuEnabled() {
+	bool MenuController::getMapMenuEnabled() const {
 		return mapMenuEnabled;
 	}
 
-	bool MenuController::getStatsMenuEnabled() {
+	bool MenuController::getStatsMenuEnabled() const {
 		return statsMenuEnabled;
 	}
 

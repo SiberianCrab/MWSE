@@ -8,7 +8,7 @@
 
 An object that represent collections of large numbers of small point-like objects. Each object in the collection can be separately rotated. Rotations are not truly supported in Morrowind's engine.
 
-This type inherits the following: [niParticles](../types/niParticles.md), [niTriBasedGeometry](../types/niTriBasedGeometry.md), [niGeometry](../types/niGeometry.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md)
+This type inherits the following: [niParticles](../types/niParticles.md), [niTriBasedGeometry](../types/niTriBasedGeometry.md), [niGeometry](../types/niGeometry.md), [niAVObject](../types/niAVObject.md), [niObjectNET](../types/niObjectNET.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `alphaProperty`

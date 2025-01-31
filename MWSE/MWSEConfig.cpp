@@ -18,6 +18,7 @@ namespace mwse {
 	bool Configuration::EnableLuaErrorNotifications = false;
 	bool Configuration::UseSkinnedAccurateActivationRaytests = true;
 	bool Configuration::SuppressUselessWarnings = true;
+	bool Configuration::UseGlobalAudio = false;
 #ifdef APPVEYOR_BUILD_NUMBER
 	UINT Configuration::BuildNumber = APPVEYOR_BUILD_NUMBER;
 #else
@@ -63,6 +64,7 @@ namespace mwse {
 		DECLARE_CONFIG(EnableLuaErrorNotifications)
 		DECLARE_CONFIG(UseSkinnedAccurateActivationRaytests)
 		DECLARE_CONFIG(SuppressUselessWarnings)
+		DECLARE_CONFIG(UseGlobalAudio)
 		DECLARE_CONFIG(BuildNumber)
 	}
 }

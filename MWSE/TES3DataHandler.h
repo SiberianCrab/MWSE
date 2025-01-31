@@ -188,6 +188,8 @@ namespace TES3 {
 
 		nonstd::span<GameFile*> getActiveMods();
 
+		IteratedList<GlobalVariable*>* getGlobalsList() const;
+
 		sol::table getMagicEffects_lua(sol::this_state ts);
 
 		bool objectExists(const std::string_view& id);

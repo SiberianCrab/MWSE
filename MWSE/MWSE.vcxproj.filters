@@ -1197,12 +1197,6 @@
     <ClInclude Include="LuaMeshLoadedEvent.h">
       <Filter>Header Files\Lua\Events</Filter>
     </ClInclude>
-    <ClInclude Include="TES3CrimeEventList.h">
-      <Filter>Header Files\DataAdapters\TES3\Crime</Filter>
-    </ClInclude>
-    <ClInclude Include="TES3CrimeController.h">
-      <Filter>Header Files\DataAdapters\TES3\Crime</Filter>
-    </ClInclude>
     <ClInclude Include="LuaCrimeWitnessedEvent.h">
       <Filter>Header Files\Lua\Events</Filter>
     </ClInclude>
@@ -1772,6 +1766,12 @@
     </ClInclude>
     <ClInclude Include="NIBoundingVolumeLua.h">
       <Filter>Header Files\Lua\Bindings\NI</Filter>
+    </ClInclude>
+    <ClInclude Include="TES3ItemLua.h">
+      <Filter>Header Files\Lua\Bindings\TES3</Filter>
+    </ClInclude>
+    <ClInclude Include="TES3CrimeLua.h">
+      <Filter>Header Files\Lua\Bindings\TES3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3227,12 +3227,6 @@
     <ClCompile Include="LuaMeshLoadedEvent.cpp">
       <Filter>Source Files\Lua\Events</Filter>
     </ClCompile>
-    <ClCompile Include="TES3CrimeEventList.cpp">
-      <Filter>Source Files\DataAdapters\TES3</Filter>
-    </ClCompile>
-    <ClCompile Include="TES3CrimeController.cpp">
-      <Filter>Source Files\DataAdapters\TES3</Filter>
-    </ClCompile>
     <ClCompile Include="LuaCrimeWitnessedEvent.cpp">
       <Filter>Source Files\Lua\Events</Filter>
     </ClCompile>
@@ -3858,6 +3852,9 @@
       <Filter>Source Files\DataAdapters\NI</Filter>
     </ClCompile>
     <ClCompile Include="TES3WaterControllerLua.cpp">
+      <Filter>Source Files\Lua\Bindings\TES3</Filter>
+    </ClCompile>
+    <ClCompile Include="TES3CrimeLua.cpp">
       <Filter>Source Files\Lua\Bindings\TES3</Filter>
     </ClCompile>
   </ItemGroup>

@@ -4,3 +4,9 @@
 --- @meta
 --- An item object.
 --- @class tes3item : tes3physicalObject, tes3object, tes3baseObject
+--- @field icon string The path to the object's icon. Relative to `Data Files\\icons\\`.
+--- @field isCarriable boolean *Read-only*. If true, the item can be carried and interacted with normally in an inventory. While this is false for certain lights, they can still sometimes appear in an inventory, but cannot be interacted with.
+--- @field mesh string The path to the object's mesh. Relative to `Data Files\\meshes\\`.
+--- @field name string The player-facing name for the object.
+--- @field promptsEquipmentReevaluation boolean *Read-only*. If true, the item should prompt equipment reevaluated when added to the actor's inventory. Thius is true for armor, clothing, and weapons.
+--- @field stolenList tes3activator[]|tes3alchemy[]|tes3apparatus[]|tes3armor[]|tes3baseObject[]|tes3birthsign[]|tes3bodyPart[]|tes3book[]|tes3cell[]|tes3class[]|tes3clothing[]|tes3container[]|tes3containerInstance[]|tes3creature[]|tes3creatureInstance[]|tes3dialogue[]|tes3dialogueInfo[]|tes3door[]|tes3enchantment[]|tes3faction[]|tes3gameSetting[]|tes3globalVariable[]|tes3ingredient[]|tes3land[]|tes3landTexture[]|tes3leveledCreature[]|tes3leveledItem[]|tes3light[]|tes3lockpick[]|tes3magicSourceInstance[]|tes3misc[]|tes3npc[]|tes3npcInstance[]|tes3pathGrid[]|tes3probe[]|tes3quest[]|tes3race[]|tes3reference[]|tes3region[]|tes3repairTool[]|tes3script[]|tes3skill[]|tes3sound[]|tes3soundGenerator[]|tes3spell[]|tes3startScript[]|tes3static[]|tes3weapon[] *Read-only*. A non-mutable list of all actors that the item has been stolen from.

@@ -161,12 +161,16 @@ namespace TES3::UI {
 			return menu;
 		}
 
-		auto item = getOptionalParamObject<TES3::Item>(params, "item");
-		if (item) {
+		auto object = getOptionalParamObject<TES3::Object>(params, "object");
+		if (object == nullptr) {
+			// Backwards compatibility with the old item parameter.
+			object = getOptionalParamObject<TES3::Object>(params, "item");
+		}
+		if (object) {
 			auto itemData = getOptionalParam<TES3::ItemData*>(params, "itemData", nullptr);
 			auto count = itemData ? itemData->count : 0;
 
-			WorldController::get()->menuController->menuInputController->displayObjectTooltip(item, itemData, count);
+			WorldController::get()->menuController->menuInputController->displayObjectTooltip(object, itemData, count);
 			return menu;
 		}
 
@@ -1481,5 +1485,16 @@ namespace TES3::UI {
 		pushNewUIID(0x5F3F83, "MenuMulti_bottom_row_right");
 		pushNewUIID(0x5F4168, "MenuMulti_map");
 		pushNewUIID(0x5F4226, "MenuMap_layout");
+
+		// MenuPersuasion
+		pushNewUIID(0x5FFB23, "MenuPersuasion_Header");
+		pushNewUIID(0x5FFD6A, "MenuPersuasion_Admire");
+		pushNewUIID(0x5FFDF3, "MenuPersuasion_Intimidate");
+		pushNewUIID(0x5FFE7E, "MenuPersuasion_Taunt");
+		pushNewUIID(0x5FFF09, "MenuPersuasion_Bribe10");
+		pushNewUIID(0x5FFFCB, "MenuPersuasion_Bribe100");
+		pushNewUIID(0x60008D, "MenuPersuasion_Bribe1000");
+		pushNewUIID(0x5FFBE0, "MenuPersuasion_Footer");
+		pushNewUIID(0x5FFC88, "MenuPersuasion_Gold");
 	}
 }

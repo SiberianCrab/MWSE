@@ -8,7 +8,7 @@
 
 Contains skinning data that may be shared by multiple `NiSkinInstance` objects.
 
-This type inherits the following: [niObject](../types/niObject.md)
+This type inherits the following: [niObject](../types/niObject.md).
 ## Properties
 
 ### `boneData`

@@ -7,6 +7,7 @@
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/events/crimeWitnessed).
 --- @class crimeWitnessedEventData
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
+--- @field crimeEvent tes3crimeEvent *Read-only*. Direct access to the crime event data that was witnessed.
 --- @field position tes3vector3 *Read-only*. The position that the crime ocurred at.
 --- @field realTimestamp number *Read-only*. The timestamp that the crime ocurred at.
 --- @field type string *Read-only*. The type of crime that was committed. The type can be "attack", "killing", "stealing", "pickpocket", "theft", "trespass", and "werewolf". Crime "theft" is raised when picking up owned items. Crime "trespass" is raised when lockpicking, probing, using Open magic on owned doors or chests and sleeping in owned beds.

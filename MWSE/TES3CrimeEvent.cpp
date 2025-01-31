@@ -7,6 +7,10 @@ namespace TES3 {
 		ctor();
 	}
 
+	CrimeEvent::CrimeEvent(CrimeEvent& event) : CrimeEvent() {
+		copy(&event);
+	}
+
 	CrimeEvent::~CrimeEvent() {
 		dtor();
 	}
@@ -24,5 +28,13 @@ namespace TES3 {
 	const auto TES3_CrimeEvent_copy = reinterpret_cast<CrimeEvent * (__thiscall*)(CrimeEvent *, CrimeEvent *)>(0x51F3A0);
 	void CrimeEvent::copy(CrimeEvent* crimeEvent) {
 		TES3_CrimeEvent_copy(this, crimeEvent);
+	}
+
+	const char* CrimeEvent::getBountyKey() const {
+		return bountyKey.c_str;
+	}
+
+	void CrimeEvent::setBountyKey(const char* key) {
+		bountyKey = key;
 	}
 }

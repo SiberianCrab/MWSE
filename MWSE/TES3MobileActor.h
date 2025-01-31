@@ -6,7 +6,7 @@
 #include "TES3AIBehavior.h"
 #include "TES3Armor.h"
 #include "TES3Clothing.h"
-#include "TES3CrimeController.h"
+#include "TES3CrimeEvent.h"
 #include "TES3Deque.h"
 #include "TES3HashMap.h"
 #include "TES3Inventory.h"
@@ -147,7 +147,7 @@ namespace TES3 {
 		AIPlanner * aiPlanner; // 0xC8
 		ActionData actionData; // 0xCC
 		ActionData actionBeforeCombat; // 0x13C
-		CrimeController committedCrimes; // 0x1AC
+		Deque<CrimeEvent> committedCrimes; // 0x1AC
 		int unknown_0x1B8;
 		int unknown_0x1BC;
 		CombatSession * combatSession; // 0x1C0
@@ -172,7 +172,7 @@ namespace TES3 {
 			ActorAnimationController * asActor;
 			PlayerAnimationController * asPlayer;
 		} animationController; // 0x244
-		CrimeController witnessedCrimes; // 0x248
+		Deque<CrimeEvent> witnessedCrimes; // 0x248
 		Statistic attributes[8]; // 0x254
 		Statistic health; // 0x2B4
 		Statistic magicka; // 0x2C0
@@ -248,6 +248,7 @@ namespace TES3 {
 		float getBootsWeight() const;
 		float getWeaponSpeed() const;
 		float getAttackReach() const;
+		float getEffectiveAttackDistance(const TES3::MobileActor* mobile) const;
 
 		void startCombat(MobileActor*);
 		void startCombat_lua(sol::object target);

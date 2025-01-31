@@ -6,6 +6,7 @@
 --- @class uiObjectTooltipEventData
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
 --- @field count number *Read-only*. The number of items in the stack.
+--- @field creator tes3uiElement? *Read-only*. The UI element, if applicable, that created this tooltip.
 --- @field itemData tes3itemData *Read-only*. The item data of object, if any.
 --- @field object tes3activator|tes3alchemy|tes3apparatus|tes3armor|tes3bodyPart|tes3book|tes3clothing|tes3container|tes3containerInstance|tes3creature|tes3creatureInstance|tes3door|tes3ingredient|tes3leveledCreature|tes3leveledItem|tes3light|tes3lockpick|tes3misc|tes3npc|tes3npcInstance|tes3physicalObject|tes3probe|tes3repairTool|tes3static|tes3weapon *Read-only*. The object being examined.
 --- @field reference tes3reference *Read-only*. The reference being examined. Only valid for in-world objects. For inventory tiles it will always be nil.

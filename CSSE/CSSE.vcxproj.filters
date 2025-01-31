@@ -157,6 +157,9 @@
     <ClCompile Include="CSAlchemy.cpp">
       <Filter>Source Files\CS</Filter>
     </ClCompile>
+    <ClCompile Include="CSGlobalVariable.cpp">
+      <Filter>Source Files\CS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CSSE.def">

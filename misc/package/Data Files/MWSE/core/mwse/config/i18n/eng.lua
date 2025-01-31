@@ -6,6 +6,8 @@ return {
 	["logWarningsWithLuaStack.description"] = "When enabled, any warnings raised during normal gameplay that would write to warnings.txt will also write to mwse.log. In addition, a stack trace is provided to give context to what mod may be responsible for the warning.\n\nThis can lead to superfluous log entries when using certain mods, like Better Bodies.",
 	["runInBackground.label"] = "Run Morrowind in the background?",
 	["runInBackground.description"] = "By default Morrowind skips most game logic when not in focus. When using windowed mode (including borderless fullscreen), this feature allows Morrowind to continue running. Enabling this can also help to increase stability, due to how Morrowind handles some audio threads.",
+	["playAudioInBackground.label"] = "Play audio in background?",
+	["playAudioInBackground.description"] = "By default, Morrowind does not use global audio playback, meaning that audio stops playing when the window is not in focus. Turning this on allows audio to work in the background.",
 	["letterboxMovies.label"] = "Letterbox movies?",
 	["letterboxMovies.description"] = "Morrowind stretches movies to fill the whole window by default. This option will instead render movies with black bars to either side, centering the movie in the window.",
 	["patchNiFlipController.label"] = "Fix NiFlipController cloning?",

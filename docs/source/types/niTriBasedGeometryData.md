@@ -8,7 +8,7 @@
 
 Contains the actual geometry data for a `NiTriBasedGeometry` object.
 
-This type inherits the following: [niGeometryData](../types/niGeometryData.md), [niObject](../types/niObject.md)
+This type inherits the following: [niGeometryData](../types/niGeometryData.md), [niObject](../types/niObject.md).
 ## Properties
 
 ### `activeTriangleCount`

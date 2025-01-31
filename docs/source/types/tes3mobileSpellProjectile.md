@@ -8,7 +8,7 @@
 
 A mobile object for a spell projectile.
 
-This type inherits the following: [tes3mobileProjectile](../types/tes3mobileProjectile.md), [tes3mobileObject](../types/tes3mobileObject.md)
+This type inherits the following: [tes3mobileProjectile](../types/tes3mobileProjectile.md), [tes3mobileObject](../types/tes3mobileObject.md).
 ## Properties
 
 ### `animTime`

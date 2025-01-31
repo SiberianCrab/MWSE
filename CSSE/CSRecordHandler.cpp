@@ -87,6 +87,11 @@ namespace se::cs {
 		return gameSettingsHandler->gameSettings[effectGMST];
 	}
 
+	GlobalVariable* RecordHandler::getGlobal(const char* id) const {
+		const auto RecordHandler_getGlobal = reinterpret_cast<GlobalVariable * (__thiscall*)(const RecordHandler*, const char*)>(0x402F31);
+		return RecordHandler_getGlobal(this, id);
+	}
+
 	MagicEffect* RecordHandler::getMagicEffect(int id) {
 		if (id < EffectID::FirstEffect || id > EffectID::LastEffect) {
 			return nullptr;

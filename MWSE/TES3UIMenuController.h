@@ -46,11 +46,12 @@ namespace TES3::UI {
 		static Object* lastTooltipObject;
 		static ItemData* lastTooltipItemData;
 		static int lastTooltipCount;
+		static Element* lastTooltipSource;
 
 		MenuInputController() = delete;
 		~MenuInputController() = delete;
 
-		Element* getTextInputElement();
+		Element* getTextInputElement() const;
 		void acquireTextInput(Element* element);
 		void displayObjectTooltip(TES3::Object* object, TES3::ItemData* itemData, int count = 0);
 
@@ -214,10 +215,10 @@ namespace TES3::UI {
 		// Custom functions.
 		//
 
-		bool getInventoryMenuEnabled();
-		bool getMagicMenuEnabled();
-		bool getMapMenuEnabled();
-		bool getStatsMenuEnabled();
+		bool getInventoryMenuEnabled() const;
+		bool getMagicMenuEnabled() const;
+		bool getMapMenuEnabled() const;
+		bool getStatsMenuEnabled() const;
 
 		bool getGodModeEnabled() const;
 		void setGodModeEnabled(bool state);

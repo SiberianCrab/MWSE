@@ -8,7 +8,7 @@
 
 A Category has a header and a list of components. Components within a category are indented. The Categories can be nested indefinitely. A Category is a good way to organize settings within a page.
 
-This type inherits the following: [mwseMCMComponent](../types/mwseMCMComponent.md)
+This type inherits the following: [mwseMCMComponent](../types/mwseMCMComponent.md).
 ## Properties
 
 ### `childIndent`

@@ -93,7 +93,7 @@
 --- @field texture niSourceTexture The underlying texture for the element. This assumes that the element is of an element type. Setting this value will change the element to an image type. Texture dimensions must be powers of 2.
 --- @field type tes3.uiElementType *Read-only*. The type of content this `tes3uiElement` represents. This is an expanded set of the options available from the `contentType` property. Maps to values in [`tes3.uiElementType`](https://mwse.github.io/MWSE/references/tes3uiElement-types/).
 --- @field visible boolean Controls if the element is visible.
---- @field widget tes3uiButton|tes3uiColorPicker|tes3uiColorPreview|tes3uiCycleButton|tes3uiFillBar|tes3uiHyperlink|tes3uiParagraphInput|tes3uiScrollPane|tes3uiSlider|tes3uiTextInput|tes3uiTextSelect|tes3uiWidget|nil Access to element specific properties. This will be `nil` if there are no element specific properties. See the return types and the create* functions for more details.
+--- @field widget tes3uiButton|tes3uiColorPicker|tes3uiColorPreview|tes3uiCycleButton|tes3uiFillBar|tes3uiHyperlink|tes3uiParagraphInput|tes3uiScrollPane|tes3uiSlider|tes3uiTabContainer|tes3uiTextInput|tes3uiTextSelect|tes3uiWidget|nil Access to element specific properties. This will be `nil` if there are no element specific properties. See the return types and the create* functions for more details.
 --- @field width integer The element's width in pixels.
 --- @field widthProportional number Sets element dimensions using a proportional sizer. The sizer starts with the parent dimension in the flow direction, subtracts any fixed dimension children leaving the proportional sizer space. Each proportionally sized element then gets an equal division of the space, multiplied by this member. Values above 1.0 are permissible.
 --- 
@@ -482,6 +482,19 @@ function tes3uiElement:createSliderVertical(params) end
 --- @field step number? *Default*: `1`. The change in value when clicking the left and right arrow buttons.
 --- @field jump number? *Default*: `5`. The change in value when clicking into the empty areas next to the slider handle.
 
+--- Creates a clickable button, whose text changes linearly through options as it is clicked. Register the `valueChanged` event for when the option is cycled or changed via script.
+--- 
+--- Button specific properties can be accessed through the `widget` property. The widget type for buttons is [`tes3uiCycleButton`](https://mwse.github.io/MWSE/types/tes3uiCycleButton/).
+--- @param params tes3uiElement.createTabContainer.params This table accepts the following values:
+--- 
+--- `id`: string|number|nil — *Optional*. An identifier to help find this element later.
+--- @return tes3uiElement result No description yet available.
+function tes3uiElement:createTabContainer(params) end
+
+---Table parameter definitions for `tes3uiElement.createTabContainer`.
+--- @class tes3uiElement.createTabContainer.params
+--- @field id string|number|nil *Optional*. An identifier to help find this element later.
+
 --- Creates a single line text input element. To receive input the keyboard must be captured with `tes3ui.acquireTextInput(element)`. Read the input with the `text` property. Write an initial value to display by setting the `text` property; that value will be cleared on the first keypress.
 --- 
 --- Text input specific properties can be accessed through the `widget` property. The widget type for text inputs is [`tes3uiTextInput`](https://mwse.github.io/MWSE/types/tes3uiTextInput/).
@@ -498,6 +511,8 @@ function tes3uiElement:createSliderVertical(params) end
 --- `numeric`: boolean? — *Default*: `false`. If true, only numbers can be put into the input. The text value of the element will still be a string, and need to be converted using `tonumber`.
 --- 
 --- `autoFocus`: boolean? — *Default*: `false`. If true, the input will be automatically focused after creation.
+--- 
+--- `createBorder`: boolean? — *Default*: `false`. If true, a thin border will be created around the input box. By default it will have standard padding, and will have `widthProportional` set to `1.0`. It can be accessed by the return value's `.parent`.
 --- @return tes3uiElement result No description yet available.
 function tes3uiElement:createTextInput(params) end
 
@@ -508,6 +523,7 @@ function tes3uiElement:createTextInput(params) end
 --- @field placeholderText string? *Optional*. Placeholder text for the input. If the element is ever made empty, this will be displayed instead in the disabled text color.
 --- @field numeric boolean? *Default*: `false`. If true, only numbers can be put into the input. The text value of the element will still be a string, and need to be converted using `tonumber`.
 --- @field autoFocus boolean? *Default*: `false`. If true, the input will be automatically focused after creation.
+--- @field createBorder boolean? *Default*: `false`. If true, a thin border will be created around the input box. By default it will have standard padding, and will have `widthProportional` set to `1.0`. It can be accessed by the return value's `.parent`.
 
 --- Creates a selectable line of text, with configurable hover, click, and disabled colors. Can be used to create a list box by placing them in a ScrollPane.
 --- 
@@ -773,6 +789,22 @@ function tes3uiElement:registerBefore(eventID, callback, priority) end
 --- @param property number|string The property to set.
 function tes3uiElement:removeProperty(property) end
 
+--- Re-orders an element to before or after a sibling element. Provide either a `before` or `after` parameter.
+--- @param params tes3uiElement.reorder.params This table accepts the following values:
+--- 
+--- `before`: tes3uiElement — The calling element will be moved to before this element.
+--- 
+--- `after`: tes3uiElement — The calling element will be moved to after this element.
+--- @return boolean result No description yet available.
+function tes3uiElement:reorder(params) end
+
+---Table parameter definitions for `tes3uiElement.reorder`.
+--- @class tes3uiElement.reorder.params
+--- @field before tes3uiElement The calling element will be moved to before this element.
+--- @field after tes3uiElement The calling element will be moved to after this element.
+
+--- This method is deprecated. Prefer to use `tes3uiElement.reorder` when moving single children.
+--- 
 --- Moves the layout order of the children of this element. `count` elements are taken from starting child `Element` or index (0-based) `moveFrom`, and moved before the child `Element` or index (0-based) `insertBefore`. If `count` is -1, all children after `moveFrom` are moved. If any index is a negative number, then the index represents a distance from the end of the child list.
 --- 
 --- Returns `true` if the operation succeeded, or `false` if at least one argument was invalid.

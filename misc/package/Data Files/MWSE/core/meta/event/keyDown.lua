@@ -7,6 +7,7 @@
 --- [Examples available in online documentation](https://mwse.github.io/MWSE/events/keyDown).
 --- @class keyDownEventData
 --- @field claim boolean If set to `true`, any lower-priority event callbacks will be skipped. Returning `false` will set this to `true`.
+--- @field element tes3uiElement? *Read-only*. The UI element that the key is going to be dispatched to, or `nil` if one is not in focus.
 --- @field isAltDown boolean *Read-only*. True if either alt key is held.
 --- @field isControlDown boolean *Read-only*. True if either control key is held.
 --- @field isShiftDown boolean *Read-only*. True if either shift key is held.

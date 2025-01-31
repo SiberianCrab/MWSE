@@ -334,6 +334,11 @@ function tes3mobileActor:getActiveMagicEffects(params) end
 --- @return number result No description yet available.
 function tes3mobileActor:getBootsWeight() end
 
+--- Returns the distance used for checking attack range. This is measured by the distance between the actors' bounding boxes edges, as if the actors were exactly facing each other. The number may be negative if the bounding boxes overlap.
+--- @param mobile tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer The target actor.
+--- @return number distance No description yet available.
+function tes3mobileActor:getEffectiveAttackDistance(mobile) end
+
 --- Gets the fatigue-based skill scaling term used by many game mechanics, based on the actor's current and maximum fatigue. It is equal to `max(0, fFatigueBase - fFatigueMult * max(0, 1 - fatigue.current/fatigue.base))`
 --- @return number result No description yet available.
 function tes3mobileActor:getFatigueTerm() end
