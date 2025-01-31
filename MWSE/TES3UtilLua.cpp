@@ -2813,8 +2813,8 @@ namespace mwse::lua {
 
 	void addArmorSlot(sol::this_state ts, sol::table params) {
 		sol::optional<int> slot = params["slot"];
-		if (!slot || (slot.value() >= TES3::ArmorSlot::First && slot.value() <= TES3::ArmorSlot::Last) || mwse::tes3::getArmorSlotData(slot.value())) {
-			throw std::exception("tes3.addArmorSlot: Invalid slot. An unusued slot must be provided.");
+		if (!slot || (slot.value() >= TES3::ArmorSlot::First && slot.value() <= TES3::ArmorSlot::Last)) {
+			throw std::exception("tes3.addArmorSlot: Invalid slot. A vanilla slot cannot be defined.");
 		}
 
 		sol::optional<std::string> name = params["name"];
@@ -2824,6 +2824,18 @@ namespace mwse::lua {
 
 		sol::optional<float> weight = params["weight"];
 		sol::optional<float> armorScalar = params["scalar"];
+
+		const auto& existing = mwse::tes3::getArmorSlotData(slot.value());
+		if (existing) {
+			// Don't error if we're adding the same slot with the same name.
+			if (existing->name == name) {
+				// Do override the weight/armor scalar though in case of an updated mod.
+				existing->weight = weight.value_or(existing->weight);
+				existing->armorScalar = armorScalar.value_or(existing->armorScalar);
+				return;
+			}
+			throw std::exception("tes3.addArmorSlot: Invalid slot. The slot already exists with a different name.");
+		}
 
 		auto slotData = std::make_shared<TES3::ArmorSlotData>();
 		slotData->slot = slot.value();
@@ -2846,8 +2858,8 @@ namespace mwse::lua {
 
 	void addClothingSlot(sol::this_state ts, sol::table params) {
 		sol::optional<int> slot = params["slot"];
-		if (!slot || (slot.value() >= TES3::ClothingSlot::First && slot.value() <= TES3::ClothingSlot::Last) || mwse::tes3::getClothingSlotData(slot.value())) {
-			throw std::exception("tes3.addClothingSlot: Invalid slot. An unusued slot must be provided.");
+		if (!slot || (slot.value() >= TES3::ClothingSlot::First && slot.value() <= TES3::ClothingSlot::Last)) {
+			throw std::exception("tes3.addClothingSlot: Invalid slot. A vanilla slot cannot be defined.");
 		}
 
 		if (slot.value() < 0 || slot.value() > UINT8_MAX) {
@@ -2857,6 +2869,15 @@ namespace mwse::lua {
 		sol::optional<std::string> name = params["name"];
 		if (!name || name.value().empty()) {
 			throw std::exception("tes3.addClothingSlot: No name provided for slot.");
+		}
+
+		const auto& existing = mwse::tes3::getClothingSlotData(slot.value());
+		if (existing) {
+			// Don't error if we're adding the same slot with the same name.
+			if (existing->name == name) {
+				return;
+			}
+			throw std::exception("tes3.addClothingSlot: Invalid slot. The slot already exists with a different name.");
 		}
 
 		auto slotData = std::make_shared<TES3::ClothingSlotData>();
