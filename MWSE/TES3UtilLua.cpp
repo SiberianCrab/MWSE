@@ -333,7 +333,11 @@ namespace mwse::lua {
 		float pitch = getOptionalParam<float>(params, "pitch", 1.0f);
 
 		if (sound == nullptr && soundPath == nullptr) {
-			log::getLog() << "tes3.playSound: Could not locate sound." << std::endl;
+			const auto id = getOptionalParam<const char*>(params, "sound", nullptr);
+			if (id) {
+				log::getLog() << "tes3.playSound: Could not locate sound with ID '" << id << "'." << std::endl;
+				lua::logStackTrace();
+			}
 			return false;
 		}
 
@@ -373,7 +377,11 @@ namespace mwse::lua {
 		TES3::Reference* reference = getOptionalParamReference(params, "reference");
 
 		if (sound == nullptr) {
-			log::getLog() << "tes3.getSoundPlaying: Could not locate sound." << std::endl;
+			const auto id = getOptionalParam<const char*>(params, "sound", nullptr);
+			if (id) {
+				log::getLog() << "tes3.getSoundPlaying: Could not locate sound with ID '" << id << "'." << std::endl;
+				lua::logStackTrace();
+			}
 			return false;
 		}
 

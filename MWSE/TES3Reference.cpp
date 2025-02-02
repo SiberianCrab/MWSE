@@ -6,6 +6,8 @@
 #include "LuaActivateEvent.h"
 #include "LuaBodyPartsUpdatedEvent.h"
 #include "LuaDisarmTrapEvent.h"
+#include "LuaLeveledCreaturePickedEvent.h"
+#include "LuaLeveledItemPickedEvent.h"
 #include "LuaPickLockEvent.h"
 #include "LuaReferenceActivatedEvent.h"
 #include "LuaReferenceDeactivatedEvent.h"
@@ -62,6 +64,8 @@ namespace TES3 {
 
 	const auto TES3_Reference_dtor = reinterpret_cast<void(__thiscall*)(Reference*)>(0x4E45C0);
 	void Reference::dtor() {
+		cleanupAssociatedData();
+
 		TES3_Reference_dtor(this);
 	}
 
@@ -601,6 +605,39 @@ namespace TES3 {
 		setScale(1.0f);
 		setDeleted(true);
 		setObjectModified(true);
+	}
+
+	inline void clearIfThis(const Reference* self, Reference*& ptr) {
+		if (ptr == self) {
+			ptr = nullptr;
+		}
+	}
+
+	void Reference::cleanupAssociatedData() {
+		const auto tes3game = TES3::Game::get();
+		const auto worldController = TES3::WorldController::get();
+		const auto mobile = getAttachedMobileActor();
+
+		/*
+		* The game will, after this function returns, clean up the following on its own:
+		*	- Moved References
+		*	- Attachment data
+		*	- Scene node/loaded meshes
+		*	- For the mobile, it cleans up AI planners
+		*/
+
+		// Clean up static event references.
+		clearIfThis(this, mwse::lua::event::LeveledCreaturePickedEvent::m_LastLeveledSourceReference);
+		clearIfThis(this, mwse::lua::event::LeveledItemPickedEvent::m_Reference);
+
+		// Cleanup activation target.
+		if (tes3game) {
+			if (tes3game->playerTarget == this) {
+				// We use a function here to make sure the event triggers.
+				tes3game->setPlayerTarget(nullptr);
+			}
+			clearIfThis(this, tes3game->tooltipTarget);
+		}
 	}
 
 	Vector3 * Reference::getPosition() {

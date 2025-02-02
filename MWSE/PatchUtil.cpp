@@ -1872,6 +1872,9 @@ namespace mwse::patch {
 		genCallUnprotected(0x5376BB + 0xA, reinterpret_cast<DWORD>(PatchCalculateEffectiveWeaponMult));
 		writePatchCodeUnprotected(0x5378BE, (BYTE*)&PatchCombatSessionNextActionPhysicalWeighting2, PatchCombatSessionNextActionPhysicalWeighting2_size);
 		genCallUnprotected(0x5378BE + 4, reinterpret_cast<DWORD>(PatchGetWeaponStackItemDataVariables));
+
+		// Patch: Clean up mobile collision data when a mobile is destroyed. Fixes probably a Todd-typo.
+		genNOPUnprotected(0x55E55B, 0x55E55F - 0x55E55B);
 	}
 
 	void installPostLuaPatches() {

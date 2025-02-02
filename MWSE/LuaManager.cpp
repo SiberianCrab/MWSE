@@ -2025,36 +2025,15 @@ namespace mwse::lua {
 	// Event: Activation Target Changed
 	//
 
-	static const uintptr_t MACP__getVanityState = 0x567990;
-	static TES3::Reference* ActivationTargetChanged_preActivationTarget = nullptr;
-	static bool ActivationTargetChanged_invalidated = false;
+	static void __fastcall OnCheckPlayerActivationTarget(TES3::Game* game) {
+		const auto targetBefore = game->playerTarget;
 
-	static __declspec(naked) void HookPreFindActivationTarget() {
-		__asm {
-			mov		eax, ds:[0x7C6CDC]  // global_TES3_Game
-			mov		eax, [eax + 0xE8]	// game->playerTarget
-			mov		ActivationTargetChanged_preActivationTarget, eax
-			mov		ActivationTargetChanged_invalidated, 0
-			jmp		MACP__getVanityState
-		}
-	}
+		const auto TES3_Game_CheckPlayerActivationTarget = reinterpret_cast<void(__thiscall*)(TES3::Game*)>(0x41CA50);
+		TES3_Game_CheckPlayerActivationTarget(game);
 
-	static __declspec(naked) void HookPostActivate() {
-		// On ref activation, clear remembered reference to avoid using a stale pointer to a possibly destroyed reference.
-		// The invalidation flag is required to identify change when the current target also becomes nullptr.
-		__asm {
-			xor		edx, edx
-			mov		ActivationTargetChanged_preActivationTarget, edx
-			mov		ActivationTargetChanged_invalidated, 1
-			retn	8
-		}
-	}
-
-	static void HookPostFindActivationTarget() {
-		TES3::Reference* currentTarget = TES3::Game::get()->playerTarget;
-		bool changed = ActivationTargetChanged_invalidated || ActivationTargetChanged_preActivationTarget != currentTarget;
-		if (changed && event::ActivationTargetChangedEvent::getEventEnabled()) {
-			LuaManager::getInstance().getThreadSafeStateHandle().triggerEvent(new event::ActivationTargetChangedEvent(ActivationTargetChanged_preActivationTarget, currentTarget));
+		if (game->playerTarget != targetBefore && event::ActivationTargetChangedEvent::getEventEnabled()) {
+			auto& stateHandle = LuaManager::getInstance().getThreadSafeStateHandle();
+			stateHandle.triggerEvent(new event::ActivationTargetChangedEvent(targetBefore, game->playerTarget));
 		}
 	}
 
@@ -5536,9 +5515,7 @@ namespace mwse::lua {
 		*/
 
 		// Event: Activation Target Changed
-		genCallEnforced(0x41CA64, 0x567990, reinterpret_cast<DWORD>(HookPreFindActivationTarget));
-		genJumpUnprotected(0x4EB0BE, reinterpret_cast<DWORD>(HookPostActivate));
-		genJumpUnprotected(0x41CCF5, reinterpret_cast<DWORD>(HookPostFindActivationTarget));
+		genCallEnforced(0x41B3D6, 0x41CA50, reinterpret_cast<DWORD>(OnCheckPlayerActivationTarget));
 
 		// Event: Active magic effect icons updated
 		const auto onActiveMagicEffectIconsUpdated = &TES3::MagicInstanceController::updateActiveMagicEffectIcons;
@@ -6648,6 +6625,13 @@ namespace mwse::lua {
 		genCallEnforced(0x4EEFAA, 0x4F0CA0, *reinterpret_cast<DWORD*>(&baseObjectDestructor));
 		genCallEnforced(0x4F026F, 0x4F0CA0, *reinterpret_cast<DWORD*>(&baseObjectDestructor));
 		genCallEnforced(0x4F0C83, 0x4F0CA0, *reinterpret_cast<DWORD*>(&baseObjectDestructor));
+		
+		// Also clean up references, but do it just before deletion so we have more information.
+		auto referenceObjectDestructor = &TES3::Reference::dtor;
+		genJumpEnforced(0x49A675, 0x4E45C0, *reinterpret_cast<DWORD*>(&referenceObjectDestructor));
+		genCallEnforced(0x4DE528, 0x4E45C0, *reinterpret_cast<DWORD*>(&referenceObjectDestructor));
+		genCallEnforced(0x4E45A3, 0x4E45C0, *reinterpret_cast<DWORD*>(&referenceObjectDestructor));
+		genJumpEnforced(0x72D1B4, 0x4E45C0, *reinterpret_cast<DWORD*>(&referenceObjectDestructor));
 
 		// Allow area-of-effect magic effects and tes3.findActorsInProximity to hit/find incapacitated actors.
 		genJumpUnprotected(0x570341, 0x57034C);

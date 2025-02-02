@@ -1,6 +1,7 @@
 #include "Settings.h"
 
 #include "LogUtil.h"
+#include "StringUtil.h"
 #include "TomlUtil.h"
 #include "PathUtil.h"
 
@@ -736,7 +737,7 @@ namespace se::cs {
 	}
 
 	void Settings_t::load() {
-		if (std::filesystem::current_path() != path::getInstallPath()) {
+		if (!std::filesystem::equivalent(std::filesystem::current_path(), path::getInstallPath())) {
 			log::stream << "[WARNING] Loading config file from unexpected working directory:" << std::endl;
 			log::stream << "  Expected: " << path::getInstallPath().string() << std::endl;
 			log::stream << "  Observed: " << std::filesystem::current_path().string() << std::endl;

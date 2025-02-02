@@ -1018,6 +1018,13 @@ mwse.saveConfig("MWSE", userConfig)
 -------------------------------------------------
 
 function tes3.claimSpellEffectId(name, id)
+	-- Ignore duplicate claims.
+	if (name and tes3.effect[name] == id) then
+		return
+	end
+
+	assert(type(name) == "string", "Name must be a string.")
+	assert(type(id) == "number", "ID must be a number.")
 	assert(table.find(tes3.effect, id) == nil, "Effect ID is not unique.")
 	assert(tes3.effect[name] == nil, "Effect name is not unique.")
 	tes3.effect[name] = id

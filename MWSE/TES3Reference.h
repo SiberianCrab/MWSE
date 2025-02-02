@@ -82,6 +82,7 @@ namespace TES3 {
 
 		void setDeleted(bool deleted);
 		void setDeletedWithSafety();
+		void cleanupAssociatedData();
 
 		bool getNoCollision() const;
 		void setNoCollision(bool set, bool updateCells = true);
