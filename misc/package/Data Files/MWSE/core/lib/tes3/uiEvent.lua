@@ -16,6 +16,8 @@ return {
 	help = "help",
 	focus = "focus",
 	unfocus = "unfocus",
+	inputFocus = "inputFocus",
+	inputUnfocus = "inputUnfocus",
 	preUpdate = "preUpdate",
 	update = "update",
 	destroy = "destroy",

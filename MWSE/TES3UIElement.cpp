@@ -1101,6 +1101,15 @@ namespace TES3::UI {
 		return reinterpret_cast<LuaData*>(getProperty(PropertyType::Pointer, propLuaData).ptrValue);
 	}
 
+	sol::object Element::getAllLuaData() const {
+		auto container = getLuaDataContainer();
+		if (container == nullptr) {
+			return sol::nil;
+		}
+
+		return container->getData();
+	}
+
 	sol::object Element::getLuaData(const std::string_view& key) const {
 		auto container = getLuaDataContainer();
 		if (container == nullptr) {

@@ -60,6 +60,8 @@ namespace TES3::UI {
 		}
 	}
 
+	Element* MenuInputController::previousTextInputFocus = nullptr;
+
 	void MenuInputController::updateObjectTooltip() {
 		// Do we have a valid tooltip object?
 		if (lastTooltipObject == nullptr) {

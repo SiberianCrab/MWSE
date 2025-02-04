@@ -317,6 +317,7 @@ namespace TES3::UI {
 		void setPropertyProperty_lua(sol::object key, sol::object value);
 
 		LuaData* getLuaDataContainer() const;
+		sol::object getAllLuaData() const;
 		sol::object getLuaData(const std::string_view& key) const;
 		void setLuaData(sol::this_state ts, const std::string_view& key, sol::object value);
 

@@ -37,6 +37,7 @@
     <ClInclude Include="NIBSAnimationNodeLua.h" />
     <ClInclude Include="NIPathController.h" />
     <ClInclude Include="NISortAdjustNode.h" />
+    <ClInclude Include="NITriShapeDynamicData.h" />
     <ClInclude Include="TES3AnimationGroupLua.h" />
     <ClInclude Include="TES3CrimeLua.h" />
     <ClInclude Include="TES3DialogueFilterContext.h" />

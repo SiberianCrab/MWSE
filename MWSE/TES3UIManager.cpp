@@ -1251,11 +1251,33 @@ namespace TES3::UI {
 		// Clean up any lua event registration.
 		mwse::lua::cleanupEventRegistrations(self);
 
+		// Clean up stale pointers.
+		if (MenuInputController::previousTextInputFocus == self) {
+			MenuInputController::previousTextInputFocus = nullptr;
+		}
+
 		// Clean up any lua data.
 		auto luaData = self->getLuaDataContainer();
 		if (luaData) {
 			delete luaData;
 		}
+	}
+
+	bool __fastcall patchKeyboardInput(MenuInputController* controller) {
+		// Let elements know that their focus has changed.
+		if (controller->textInputFocus != MenuInputController::previousTextInputFocus) {
+			if (MenuInputController::previousTextInputFocus) {
+				mwse::lua::triggerEvent(MenuInputController::previousTextInputFocus, registerProperty("inputUnfocus"), 0, 0);
+			}
+			if (controller->textInputFocus) {
+				mwse::lua::triggerEvent(controller->textInputFocus, registerProperty("inputFocus"), 0, 0);
+			}
+			MenuInputController::previousTextInputFocus = controller->textInputFocus;
+		}
+
+		// Call overwritten code.
+		const auto TES3_UI_MenuInputController_keyboardInput = reinterpret_cast<bool(__thiscall*)(MenuInputController*)>(0x58E8A0);
+		return TES3_UI_MenuInputController_keyboardInput(controller);
 	}
 
 	void hook() {
@@ -1293,6 +1315,9 @@ namespace TES3::UI {
 		// Patch inventory item tooltip to get accurate item count from the tile, which was failing on split item stacks.
 		mwse::writeValueEnforced<DWORD>(0x5CC0A9+1, 0x5CDF90, reinterpret_cast<DWORD>(onInventoryTileTooltip));
 		mwse::writeValueEnforced<DWORD>(0x5CCC6F+1, 0x5CDF90, reinterpret_cast<DWORD>(onInventoryTileTooltip));
+
+		// Patch input elements to allow focus/unfocus events.
+		mwse::genCallEnforced(0x58E1E2, 0x58E8A0, reinterpret_cast<DWORD>(patchKeyboardInput));
 
 		// Provide some UI IDs for elements that don't have them:
 		// Tooltips (HelpMenu)

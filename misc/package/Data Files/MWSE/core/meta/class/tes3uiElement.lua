@@ -589,6 +589,10 @@ function tes3uiElement:findChild(id) end
 --- @param id tes3uiEventData The original UI event.
 function tes3uiElement:forwardEvent(id) end
 
+--- Gets the parent table of the element's lua data, or `nil` if it has not been created. This function should not be called for getting or setting data. Instead, use `getLuaData` and `setLuaData`. This property exists for diagnostics and internal use.
+--- @return table? result No description yet available.
+function tes3uiElement:getAllLuaData() end
+
 --- Returns the descendant element that creation functions used on this element will place children into, or the calling element if there is no specific descendant for children.
 --- 
 --- Some widgets like ScrollPanes are built of multiple layers of elements. When an element is created in a complex widget, it is automatically placed as a child of a content element, but other functions do not access this content element directly. This function finds this content container for any element, so that changing layout and accessing children is possible. For simple elements, the calling element will be returned so that there is always a valid container element.

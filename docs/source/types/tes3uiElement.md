@@ -1344,6 +1344,21 @@ myObject:forwardEvent(id)
 
 ***
 
+### `getAllLuaData`
+<div class="search_terms" style="display: none">getallluadata, allluadata</div>
+
+Gets the parent table of the element's lua data, or `nil` if it has not been created. This function should not be called for getting or setting data. Instead, use `getLuaData` and `setLuaData`. This property exists for diagnostics and internal use.
+
+```lua
+local result = myObject:getAllLuaData()
+```
+
+**Returns**:
+
+* `result` (table?)
+
+***
+
 ### `getContentElement`
 <div class="search_terms" style="display: none">getcontentelement, contentelement</div>
 

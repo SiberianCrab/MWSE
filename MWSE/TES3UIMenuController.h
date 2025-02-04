@@ -65,6 +65,8 @@ namespace TES3::UI {
 		// Custom functions.
 		//
 
+		static Element* previousTextInputFocus;
+
 		void updateObjectTooltip();
 	};
 	static_assert(sizeof(MenuInputController) == 0xAC, "TES3::UI::MenuInputController failed size validation");

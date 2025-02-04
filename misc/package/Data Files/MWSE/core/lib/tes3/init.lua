@@ -165,7 +165,7 @@ function tes3.isKeyEqual(params)
 	local actualMouseButton = actual.mouseButton or actual.button
 	local expectedMouseButton = expected.mouseButton or expected.button
 
-	if ((actual.keyCode or false)  ~= (expected.keyCode or false)
+	if ((actual.keyCode or false) ~= (expected.keyCode or false)
 		or (actual.isShiftDown or false) ~= (expected.isShiftDown or false)
 		or (actual.isControlDown or false) ~= (expected.isControlDown or false)
 		or (actual.isAltDown or false) ~= (expected.isAltDown or false)

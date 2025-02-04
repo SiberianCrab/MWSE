@@ -150,7 +150,8 @@ function tes3uiElement:createCycleButton(params)
 	assert(type(params) == "table", "Invalid parameters provided.")
 	validateOptions(params.options)
 	if (params.index) then
-		assert(type(params.options[params.index]) == "number", "Invalid 'index' parameter provided. Must be a valid index into the options table.")
+		assert(type(params.index) == "number", "Invalid 'index' parameter provided. Must be a valid index into the options table.")
+		assert(type(params.options[params.index]) == "table", "Invalid 'index' parameter provided. Must be a valid index into the options table.")
 	end
 
 	-- Create and define basic properties.
