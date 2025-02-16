@@ -1612,6 +1612,25 @@ local quest = tes3.findQuest({ journal = ..., name = ... })
 
 ***
 
+### `tes3.findRace`
+<div class="search_terms" style="display: none">findrace, race</div>
+
+Fetches the core game character race object for a given ID. If the race with a given ID doesn't exist, nil is returned.
+
+```lua
+local race = tes3.findRace(id)
+```
+
+**Parameters**:
+
+* `id` (string): ID of the race to search for.
+
+**Returns**:
+
+* `race` ([tes3race](../types/tes3race.md))
+
+***
+
 ### `tes3.findRegion`
 <div class="search_terms" style="display: none">findregion, region</div>
 

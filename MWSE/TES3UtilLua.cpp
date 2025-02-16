@@ -717,6 +717,14 @@ namespace mwse::lua {
 		return nullptr;
 	}
 
+	TES3::Race* findRace(const char* id) {
+		auto dataHandler = TES3::DataHandler::get();
+		if (dataHandler) {
+			return dataHandler->nonDynamicData->findRace(id);
+		}
+		return nullptr;
+	}
+
 	TES3::Faction* getFaction(const char* id) {
 		auto dataHandler = TES3::DataHandler::get();
 		if (dataHandler) {
@@ -6155,7 +6163,6 @@ namespace mwse::lua {
 		return worldController->fonts[0]->getSubstituteResult();
 	}
 
-	const auto TES3_UI_updateTopicsList = reinterpret_cast<void(__cdecl*)()>(0x5BE6C0);
 	bool addTopic(sol::optional<sol::table> params) {
 		const auto worldController = TES3::WorldController::get();
 		if (!worldController) {
@@ -6179,7 +6186,7 @@ namespace mwse::lua {
 		macp->addTopic(topic);
 
 		if (getOptionalParam<bool>(params, "updateGUI", true)) {
-			TES3_UI_updateTopicsList();
+			TES3::UI::updateTopicsList();
 		}
 
 		return macp->dialogueList->size() > topicCountBefore;
@@ -6384,6 +6391,7 @@ namespace mwse::lua {
 		tes3["findGlobal"] = findGlobal;
 		tes3["findGMST"] = findGMST;
 		tes3["findQuest"] = findQuest;
+		tes3["findRace"] = findRace;
 		tes3["findRegion"] = findRegion;
 		tes3["force1stPerson"] = force1stPerson;
 		tes3["force3rdPerson"] = force3rdPerson;
@@ -6523,8 +6531,8 @@ namespace mwse::lua {
 		tes3["showRestMenu"] = showRestMenu;
 		tes3["showSpellmakingMenu"] = showSpellmakingMenu;
 		tes3["skipAnimationFrame"] = skipAnimationFrame;
-		tes3["stopLegacyScript"] = stopLegacyScript;
 		tes3["skipToNextMusicTrack"] = skipToNextMusicTrack;
+		tes3["stopLegacyScript"] = stopLegacyScript;
 		tes3["streamMusic"] = streamMusic;
 		tes3["tapKey"] = tapKey;
 		tes3["testLineOfSight"] = testLineOfSight;

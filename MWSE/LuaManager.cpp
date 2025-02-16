@@ -2026,14 +2026,15 @@ namespace mwse::lua {
 	//
 
 	static void __fastcall OnCheckPlayerActivationTarget(TES3::Game* game) {
-		const auto targetBefore = game->playerTarget;
+		auto& previous = event::ActivationTargetChangedEvent::ms_PreviousReference;
+		previous = game->playerTarget;
 
 		const auto TES3_Game_CheckPlayerActivationTarget = reinterpret_cast<void(__thiscall*)(TES3::Game*)>(0x41CA50);
 		TES3_Game_CheckPlayerActivationTarget(game);
 
-		if (game->playerTarget != targetBefore && event::ActivationTargetChangedEvent::getEventEnabled()) {
+		if (game->playerTarget != previous && event::ActivationTargetChangedEvent::getEventEnabled()) {
 			auto& stateHandle = LuaManager::getInstance().getThreadSafeStateHandle();
-			stateHandle.triggerEvent(new event::ActivationTargetChangedEvent(targetBefore, game->playerTarget));
+			stateHandle.triggerEvent(new event::ActivationTargetChangedEvent(game->playerTarget));
 		}
 	}
 
@@ -6163,6 +6164,16 @@ namespace mwse::lua {
 		genCallEnforced(0x4D9F7C, 0x473CB0, *reinterpret_cast<DWORD*>(&bodyPartManagerSetBodyPartForObject));
 		genCallEnforced(0x4D9FBC, 0x473CB0, *reinterpret_cast<DWORD*>(&bodyPartManagerSetBodyPartForObject));
 
+		// Event: updateBodyPartsForItem
+		auto armorSetupBodyParts = &TES3::Armor::setupBodyParts;
+		genCallEnforced(0x4DA03A, 0x4A1280, *reinterpret_cast<DWORD*>(&armorSetupBodyParts));
+		auto clothingSetupBodyParts = &TES3::Clothing::setupBodyParts;
+		genCallEnforced(0x4DA063, 0x4A38F0, *reinterpret_cast<DWORD*>(&clothingSetupBodyParts));
+
+		// Event: removedEquipmentBodyParts
+		auto bodyPartManagerRemoveEquippedLayers = &TES3::BodyPartManager::removeEquippedLayers;
+		genCallEnforced(0x4D9FC3, 0x472D70, *reinterpret_cast<DWORD*>(&bodyPartManagerRemoveEquippedLayers));
+
 		// Fix BPM constructor to always have a reference.
 		auto bodyPartManagerConstructor = &TES3::BodyPartManager::ctor;
 		genCallEnforced(0x4D8235, 0x472580, *reinterpret_cast<DWORD*>(&bodyPartManagerConstructor));
@@ -6607,6 +6618,11 @@ namespace mwse::lua {
 		genCallEnforced(0x5FE991, 0x40FA80, *reinterpret_cast<DWORD*>(&startGlobalScript));
 		auto startGlobalScriptBySourceID = &TES3::WorldController::startGlobalScriptBySourceID;
 		genCallEnforced(0x4FF826, 0x40FA80, *reinterpret_cast<DWORD*>(&startGlobalScriptBySourceID));
+
+		// Event: topicsListUpdated
+		mwse::genCallEnforced(0x5C03A6, 0x5BE6C0, reinterpret_cast<DWORD>(TES3::UI::updateTopicsList));
+		mwse::genCallEnforced(0x5C06D0, 0x5BE6C0, reinterpret_cast<DWORD>(TES3::UI::updateTopicsList));
+		mwse::genCallEnforced(0x5C0AF6, 0x5BE6C0, reinterpret_cast<DWORD>(TES3::UI::updateTopicsList));
 
 		// UI framework hooks
 		TES3::UI::hook();

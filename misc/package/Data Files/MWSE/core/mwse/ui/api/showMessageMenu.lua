@@ -338,7 +338,7 @@ function tes3ui.showMessageMenu(params)
 	-- Create menu.
 	local menu = tes3ui.createMenu({ id = copiedParams.id or uiids.menu, fixedFrame = true })
 	local contentElement = menu:getContentElement()
-	contentElement.maxWidth = 400
+	contentElement.maxWidth = params.maxWidth or 400
 	contentElement.childAlignX = 0.5
 	tes3ui.enterMenuMode(menu.id)
 
@@ -355,4 +355,6 @@ function tes3ui.showMessageMenu(params)
 
 	-- Create our menu.
 	recreateMenu(menu)
+
+	return menu
 end

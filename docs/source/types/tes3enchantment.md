@@ -11,6 +11,17 @@ An enchantment game object.
 This type inherits the following: [tes3object](../types/tes3object.md), [tes3baseObject](../types/tes3baseObject.md).
 ## Properties
 
+### `autoCalc`
+<div class="search_terms" style="display: none">autocalc</div>
+
+Determines if the charge cost for the enchantment is autocalculated.
+
+**Returns**:
+
+* `result` (number)
+
+***
+
 ### `blocked`
 <div class="search_terms" style="display: none">blocked</div>
 

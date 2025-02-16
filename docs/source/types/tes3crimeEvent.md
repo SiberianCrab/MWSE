@@ -85,7 +85,7 @@ The base crime type. Maps to `tes3.crimeType`.
 
 **Returns**:
 
-* `result` (number)
+* `result` ([tes3.crimeType](../references/crime-types.md))
 
 ***
 

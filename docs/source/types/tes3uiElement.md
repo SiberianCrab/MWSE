@@ -1124,9 +1124,7 @@ local result = myObject:createSliderVertical({ id = ..., current = ..., max = ..
 ### `createTabContainer`
 <div class="search_terms" style="display: none">createtabcontainer, tabcontainer</div>
 
-Creates a clickable button, whose text changes linearly through options as it is clicked. Register the `valueChanged` event for when the option is cycled or changed via script.
-
-Button specific properties can be accessed through the `widget` property. The widget type for buttons is [`tes3uiCycleButton`](https://mwse.github.io/MWSE/types/tes3uiCycleButton/).
+Creates a collection of elements meant to represent a tab-based interface. With the widget of this element, tabs can be added with `:addTab`, which will contain the content element of that tab. When the user clicks on each tab, other tab content panes will be hidden, in favor of the one associated with the clicked tab. See [`tes3uiTabContainer`](https://mwse.github.io/MWSE/types/tes3uiTabContainer/) for a what the widget provides.
 
 ```lua
 local result = myObject:createTabContainer({ id = ... })
@@ -1325,7 +1323,7 @@ local result = myObject:findChild(id)
 
 **Returns**:
 
-* `result` ([tes3uiElement](../types/tes3uiElement.md))
+* `result` ([tes3uiElement](../types/tes3uiElement.md), nil)
 
 ***
 

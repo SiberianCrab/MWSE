@@ -52,6 +52,10 @@ namespace mwse::lua {
 			usertypeDefinition["type"] = &TES3::WearablePart::bodypartID;
 			usertypeDefinition["male"] = &TES3::WearablePart::male;
 			usertypeDefinition["female"] = &TES3::WearablePart::female;
+			usertypeDefinition["valid"] = sol::readonly_property(&TES3::WearablePart::isValid);
+
+			// Basic function binding.
+			usertypeDefinition["getPart"] = &TES3::WearablePart::getPart;
 		}
 
 		// Binding for TES3::BodyPartManager::AttachNode

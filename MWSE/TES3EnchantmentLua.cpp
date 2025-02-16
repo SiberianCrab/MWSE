@@ -31,6 +31,9 @@ namespace mwse::lua {
 		usertypeDefinition["flags"] = &TES3::Enchantment::flags;
 		usertypeDefinition["maxCharge"] = &TES3::Enchantment::maxCharge;
 
+		// Convenient flag access.
+		usertypeDefinition["autoCalc"] = sol::property(&TES3::Enchantment::getAutoCalc, &TES3::Enchantment::setAutoCalc);
+
 		// Basic function binding.
 		usertypeDefinition["getActiveEffectCount"] = &TES3::Enchantment::getActiveEffectCount;
 		usertypeDefinition["getFirstIndexOfEffect"] = &TES3::Enchantment::getFirstIndexOfEffect;

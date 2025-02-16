@@ -931,7 +931,7 @@ tes3ui.showMagicSelectMenu({ title = ..., selectSpells = ..., selectPowers = ...
 Displays a message box. This may be a simple toast-style message, or a box with choice buttons.
 
 ```lua
-tes3ui.showMessageMenu({ id = ..., leaveMenuMode = ..., buttons = ..., callbackParams = ..., cancels = ..., cancelText = ..., cancelCallback = ..., header = ..., message = ..., customBlock = ..., page = ..., pageSize = ... })
+local menu = tes3ui.showMessageMenu({ id = ..., leaveMenuMode = ..., buttons = ..., callbackParams = ..., cancels = ..., cancelText = ..., cancelCallback = ..., header = ..., message = ..., customBlock = ..., page = ..., pageSize = ..., maxWidth = ... })
 ```
 
 **Parameters**:
@@ -949,6 +949,11 @@ tes3ui.showMessageMenu({ id = ..., leaveMenuMode = ..., buttons = ..., callbackP
 	* `customBlock` (fun(parent: [tes3uiElement](../types/tes3uiElement.md))): *Optional*. A custom element to be displayed below the header. This function is passed a parent tes3uiElement, which it can modify to add a custom block according to your needs.
 	* `page` (integer): *Default*: `1`.
 	* `pageSize` (integer): *Default*: `30`.
+	* `maxWidth` (integer): *Default*: `400`.
+
+**Returns**:
+
+* `menu` ([tes3uiElement](../types/tes3uiElement.md))
 
 ***
 

@@ -11,6 +11,62 @@
 
 local common = require("mwse.common")
 
+function tes3uiTextInput:clear() --- @diagnostic disable-line
+	self.element.text = ""
+	self.element:triggerEvent(tes3.uiEvent.textUpdated)
+end
+
+--- @return boolean
+function tes3uiTextInput:getIsPlaceholding() --- @diagnostic disable-line
+	return self.element:getLuaData("mwse:placeholding") == true
+end
+
+--- @param placeholding boolean
+function tes3uiTextInput:setIsPlaceholding(placeholding) --- @diagnostic disable-line
+	if (self:getIsPlaceholding() == placeholding) then return end
+	self.element:setLuaData("mwse:placeholding", placeholding)
+
+	local element = self.element --- @type tes3uiElement
+	local placeholdingText = self:getPlaceholdingText()
+	if (placeholding) then
+		-- Fire off an update/clear as if we were empty.
+		element.text = ""
+		element:triggerEvent(tes3.uiEvent.textUpdated)
+
+		-- Reset to placeholding text.
+		element.text = placeholdingText
+		element.color = tes3ui.getPalette(tes3.palette.disabledColor)
+	else
+		-- Clear any placeholding text.
+		if (element.text == placeholdingText) then
+			element.text = ""
+			element:triggerEvent(tes3.uiEvent.textUpdated)
+		end
+		element.color = tes3ui.getPalette(tes3.palette.normalColor)
+	end
+end
+
+function tes3uiTextInput:getPlaceholdingText() --- @diagnostic disable-line
+	return self.element:getLuaData("mwse:placeholderText")
+end
+
+function tes3uiTextInput:setPlaceholdingText(text) --- @diagnostic disable-line
+	if (self:getIsPlaceholding()) then
+		self.element.text = text
+	end
+	self.element:setLuaData("mwse:placeholderText", text)
+end
+
+--- @return boolean
+function tes3uiTextInput:getIsNumeric() --- @diagnostic disable-line
+	return self.element:getLuaData("mwse:numeric") == true
+end
+
+--- @param value boolean
+function tes3uiTextInput:setIsNumeric(value) --- @diagnostic disable-line
+	self.element:setLuaData("mwse:numeric", value)
+end
+
 -- Much of this code was adapted from UI Expansion. As such we need to disable one of their modules.
 local config = mwse.loadConfig("UI Expansion")
 if (config and config.components and config.components.textInput) then
@@ -23,11 +79,18 @@ end
 --- @return boolean?
 local function standardKeyPressBeforePlaceholding(e)
 	local element = e.source
-	local characterEntered = common.ui.eventCallbackHelper.getCharacterPressed(e)
+	local characterPressed = e.character
 
 	-- Prevent basically anything from happening if we are placeholding.
-	local placeholding = element:getLuaData("mwse:placeholding") --- @type boolean
-	if (placeholding and #string.trim(characterEntered or "") == 0) then
+	local placeholding = element.widget:getIsPlaceholding()
+	if (placeholding and string.len(string.trim(e.character or "")) == 0) then
+		return false
+	end
+
+	-- Prevent annoying first input, like ` in the console when opening, or whitespace spam when alt-tabbed.
+	local ignoredFirstCondition = (element.text == "" or tes3.worldController.inputController:isAltDown())
+	local ignoredFirstInput = (characterPressed == '\t' or characterPressed == " " or characterPressed == "`")
+	if (ignoredFirstCondition and ignoredFirstInput) then
 		return false
 	end
 end
@@ -38,23 +101,24 @@ end
 --- @return boolean?
 local function standardKeyPressBeforeNumeric(e)
 	local element = e.source
-	local characterEntered = common.ui.eventCallbackHelper.getCharacterPressed(e)
+	local characterEntered = e.character
 
-	if (not characterEntered or not element:getLuaData("mwse:numeric") or not tonumber(characterEntered)) then
+	if (not characterEntered or not element.widget:getIsNumeric()) then
 		return
 	end
 
-	-- minus sign is okay so long as it's the first character
+	-- Minus sign is okay so long as it's the first character.
 	if characterEntered == "-" then
-		if element.text and #element.text > 0 then
+		if (element.rawText ~= "" and not element.rawText:startswith("|")) then
 			return false
 		end
-	-- periods are okay so long as there aren't any others 
+	-- Periods are okay so long as there aren't any others .
 	elseif characterEntered == "." then
 		if element.text and element.text:find("%.") then
 			return false
 		end
-	else
+	-- Otherwise all non-numbers are rejected.
+	elseif (tonumber(characterEntered) == nil) then
 		return false
 	end
 end
@@ -64,30 +128,22 @@ end
 --- @return boolean?
 local function standardKeyPressBeforeCutCopyPaste(e)
 	local element = e.source
-	local keyPressed = common.ui.eventCallbackHelper.getKeyPressed(e)
-	local characterPressed = common.ui.eventCallbackHelper.getCharacterPressed(e)
-	local inputController = tes3.worldController.inputController
 
 	-- Handle copy/cut/paste.
-	local isControlDown = inputController:isControlDown()
-	local isAltDown = inputController:isAltDown()
-	local isShiftDown = inputController:isShiftDown()
-	local isSuperDown = inputController:isSuperDown()
-	local keyData = { keyCode = characterPressed, isControlDown = isControlDown, isAltDown = isAltDown, isShiftDown = isShiftDown, isSuperDown = isSuperDown }
-	local keyBindCopy = { keyCode = 'c', isControlDown = true, isShiftDown = false, isSuperDown = false }
-	local isCopying = tes3.isKeyEqual({ actual = keyData, expected = keyBindCopy })
-	local keyBindCut = { keyCode = 'x', isControlDown = true, isShiftDown = false, isSuperDown = false }
-	local isCutting = tes3.isKeyEqual({ actual = keyData, expected = keyBindCut })
-	local keyBindPaste = { keyCode = 'v', isAltDown = false, isControlDown = true, isShiftDown = false, isSuperDown = false }
-	local isPasting = tes3.isKeyEqual({ actual = keyData, expected = keyBindPaste })
+	local keyBindCopy = { keyCode = tes3.keyboardCode.c, isControlDown = true, isShiftDown = false, isSuperDown = false }
+	local isCopying = tes3.isKeyEqual({ actual = e.keyData, expected = keyBindCopy })
+	local keyBindCut = { keyCode = tes3.keyboardCode.x, isControlDown = true, isShiftDown = false, isSuperDown = false }
+	local isCutting = tes3.isKeyEqual({ actual = e.keyData, expected = keyBindCut })
+	local keyBindPaste = { keyCode = tes3.keyboardCode.v, isAltDown = false, isControlDown = true, isShiftDown = false, isSuperDown = false }
+	local isPasting = tes3.isKeyEqual({ actual = e.keyData, expected = keyBindPaste })
 	if (isCopying or isCutting) then
 		-- Figure out where our cursor is.
 		local rawText = element.rawText
 		local cursorPosition = rawText and string.find(rawText, "|", 1, true) or 0
 
 		-- Figure out where we want to start copying. If we are holding alt, copy after the cursor. Otherwise copy up to it.
-		local copyStart = isAltDown and (cursorPosition + 1) or 1
-		local copyEnd = isAltDown and #rawText or (cursorPosition - 1)
+		local copyStart = e.keyData.isAltDown and (cursorPosition + 1) or 1
+		local copyEnd = e.keyData.isAltDown and #rawText or (cursorPosition - 1)
 
 		-- Copy our text.
 		local copyText = string.sub(rawText, copyStart, copyEnd)
@@ -122,7 +178,7 @@ local function standardKeyPressBeforeCutCopyPaste(e)
 		local newText = string.insert(rawText, clipboardText, cursorPosition - 1)
 
 		-- Enforce numeric pasting.
-		if (element:getLuaData("mwse:numeric") and tonumber(newText:gsub("|", "")) == nil) then
+		if (element.widget:getIsNumeric() and tonumber(newText:gsub("|", "")) == nil) then
 			return false
 		end
 
@@ -138,28 +194,20 @@ end
 --- @return boolean?
 local function standardKeyPressBeforeWordDeletion(e)
 	local element = e.source
-	local keyPressed = common.ui.eventCallbackHelper.getKeyPressed(e)
-	local inputController = tes3.worldController.inputController
+	local keybindDeleteWordBehind = { keyCode = tes3.keyboardCode.backspace, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
+	local keybindDeleteWordAhead = { keyCode = tes3.keyboardCode.delete, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
 
-	local isControlDown = inputController:isControlDown()
-	local isAltDown = inputController:isAltDown()
-	local isShiftDown = inputController:isShiftDown()
-	local isSuperDown = inputController:isSuperDown()
-	local keyData = { keyCode = keyPressed, isControlDown = isControlDown, isAltDown = isAltDown, isShiftDown = isShiftDown, isSuperDown = isSuperDown }
-	local keybindDeleteWordBehind = { keyCode = 0, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
-	local keybindDeleteWordAhead = { keyCode = 7, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
-
-	if (tes3.isKeyEqual({ actual = keyData, expected = keybindDeleteWordBehind })) then
+	if (tes3.isKeyEqual({ actual = e.keyData, expected = keybindDeleteWordBehind })) then
 		-- ctrl+backspace -> delete previous word
 		element.rawText = element.rawText:gsub("(%w*[%W]*)|", "|")
-		element:getTopLevelMenu():updateLayout()
 		element:triggerEvent(tes3.uiEvent.textUpdated)
+		element:getTopLevelMenu():updateLayout()
 		return false
-	elseif (tes3.isKeyEqual({ actual = keyData, expected = keybindDeleteWordAhead })) then
+	elseif (tes3.isKeyEqual({ actual = e.keyData, expected = keybindDeleteWordAhead })) then
 		-- ctrl+delete -> delete next word
 		element.rawText = element.rawText:gsub("|(%w*[%W]*)", "|")
-		element:getTopLevelMenu():updateLayout()
 		element:triggerEvent(tes3.uiEvent.textUpdated)
+		element:getTopLevelMenu():updateLayout()
 		return false
 	end
 end
@@ -172,35 +220,27 @@ end
 --- @return boolean?
 local function standardKeyPressBeforeCursorMovement(e)
 	local element = e.source
-	local keyPressed = common.ui.eventCallbackHelper.getKeyPressed(e)
-	local inputController = tes3.worldController.inputController
+	local keybindMoveWordBehind = { keyCode = tes3.keyboardCode.leftArrow, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
+	local keybindMoveWordAhead = { keyCode = tes3.keyboardCode.rightArrow, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
+	local keybindMoveStart = { keyCode = tes3.keyboardCode.home, isControlDown = false, isAltDown = false, isShiftDown = false, isSuperDown = false }
+	local keybindMoveEnd = { keyCode = tes3.keyboardCode["end"], isControlDown = false, isAltDown = false, isShiftDown = false, isSuperDown = false }
 
-	local isControlDown = inputController:isControlDown()
-	local isAltDown = inputController:isAltDown()
-	local isShiftDown = inputController:isShiftDown()
-	local isSuperDown = inputController:isSuperDown()
-	local keyData = { keyCode = keyPressed, isControlDown = isControlDown, isAltDown = isAltDown, isShiftDown = isShiftDown, isSuperDown = isSuperDown }
-	local keybindMoveWordBehind = { keyCode = 1, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
-	local keybindMoveWordAhead = { keyCode = 2, isControlDown = true, isAltDown = false, isShiftDown = false, isSuperDown = false }
-	local keybindMoveStart = { keyCode = 5, isControlDown = false, isAltDown = false, isShiftDown = false, isSuperDown = false }
-	local keybindMoveEnd = { keyCode = 6, isControlDown = false, isAltDown = false, isShiftDown = false, isSuperDown = false }
-
-	if (tes3.isKeyEqual({ actual = keyData, expected = keybindMoveWordBehind })) then
+	if (tes3.isKeyEqual({ actual = e.keyData, expected = keybindMoveWordBehind })) then
 		-- ctrl+left -> move to previous word
 		element.rawText = element.rawText:gsub("(%w*[%W]*)|", "|%1")
 		element:getTopLevelMenu():updateLayout()
 		return false
-	elseif (tes3.isKeyEqual({ actual = keyData, expected = keybindMoveWordAhead })) then
+	elseif (tes3.isKeyEqual({ actual = e.keyData, expected = keybindMoveWordAhead })) then
 		-- ctrl+right -> move to next word
 		element.rawText = element.rawText:gsub("|(%w*[%W]*)", "%1|")
 		element:getTopLevelMenu():updateLayout()
 		return false
-	elseif (tes3.isKeyEqual({ actual = keyData, expected = keybindMoveStart })) then
+	elseif (tes3.isKeyEqual({ actual = e.keyData, expected = keybindMoveStart })) then
 		-- home -> move cursor to start
 		element.rawText = "|" .. element.rawText:gsub("|", "")
 		element:getTopLevelMenu():updateLayout()
 		return false
-	elseif (tes3.isKeyEqual({ actual = keyData, expected = keybindMoveEnd })) then
+	elseif (tes3.isKeyEqual({ actual = e.keyData, expected = keybindMoveEnd })) then
 		-- end -> move cursor to end
 		element.rawText = element.rawText:gsub("|", "") .. "|"
 		element:getTopLevelMenu():updateLayout()
@@ -217,17 +257,10 @@ end
 --- @return boolean?
 local function standardKeyPressBefore(e)
 	local element = e.source
-	local characterPressed = common.ui.eventCallbackHelper.getCharacterPressed(e)
-	local inputController = tes3.worldController.inputController
-	local isAltDown = inputController:isAltDown()
+	local characterPressed = e.character
 
 	-- Update previous text.
 	element:setLuaData("mwse:previousText", element.text)
-
-	-- Prevent tabs from inserting themselves for when alt-tabbing.
-	if (characterPressed == '\t' and isAltDown) then
-		return false
-	end
 
 	-- Are we in the placeholder state? Prevent garbage inputs.
 	local result = standardKeyPressBeforePlaceholding(e)
@@ -279,10 +312,15 @@ end
 local function onTextInputFocus(e)
 	local element = e.source
 
-	local placeholding = element:getLuaData("mwse:placeholding")
+	-- This mechanic breaks with this widget value. Ignore until we can find out where it is even used in the code.
+	if (element.widget.eraseOnFirstKey) then
+		return
+	end
+
+	local placeholding = element.widget:getIsPlaceholding()
 	local hasCursor = (element.rawText:find("|", 1, true) ~= nil)
 	if (not placeholding and not hasCursor) then
-		local lastIndex = element:getLuaData("mwse:lastCursorIndex") or #element.text
+		local lastIndex = element:getLuaData("mwse:lastCursorIndex") or (#element.text + 1)
 		element.rawText = string.insert(element.rawText, "|", lastIndex - 1)
 		element:setLuaData("mwse:lastCursorIndex", nil)
 		element:getTopLevelMenu():updateLayout()
@@ -293,16 +331,25 @@ end
 --- @param e tes3uiEventData
 local function onTextInputUnfocus(e)
 	local element = e.source
-	element:setLuaData("mwse:lastCursorIndex", element.rawText:find("|", 1, true))
-	element.rawText = element.rawText:gsub("|", "")
-	element:getTopLevelMenu():updateLayout()
+
+	-- This mechanic breaks with this widget value. Ignore until we can find out where it is even used in the code.
+	if (element.widget.eraseOnFirstKey) then
+		return
+	end
+
+	local placeholding = element.widget:getIsPlaceholding()
+	if (not placeholding) then
+		element:setLuaData("mwse:lastCursorIndex", element.rawText:find("|", 1, true))
+		element.rawText = element.rawText:gsub("|", "")
+		element:getTopLevelMenu():updateLayout()
+	end
 end
 
 --- @param e tes3uiEventData
 local function onTextUpdated(e)
 	local element = e.source
 
-	local placeholding = element:getLuaData("mwse:placeholding")
+	local placeholding = element.widget:getIsPlaceholding()
 	local placeholderText = element:getLuaData("mwse:placeholderText")
 
 	-- Make sure a text cleared event fires.
@@ -313,8 +360,10 @@ local function onTextUpdated(e)
 		return
 	elseif (placeholding and element.text ~= placeholderText) then
 		-- Unset placeholding.
-		element.color = tes3ui.getPalette("normal_color")
-		element:setLuaData("mwse:placeholding", false)
+		element.widget:setIsPlaceholding(false)
+		return
+	elseif (not placeholding and element.text == placeholderText) then
+		element.widget:setIsPlaceholding(true)
 	end
 end
 
@@ -327,7 +376,7 @@ local function onTextCleared(e)
 	if (placeholderText) then
 		element.text = placeholderText
 		element.color = tes3ui.getPalette("disabled_color")
-		element:setLuaData("mwse:placeholding", true)
+		element.widget:setIsPlaceholding(true)
 		return
 	end
 end
@@ -376,25 +425,17 @@ function tes3uiElement:createTextInput(params)
 	-- Allow placeholder text.
 	local placeholderText = params.placeholderText
 	if (placeholderText) then
-		element:setLuaData("mwse:placeholderText", placeholderText)
+		element.widget:setPlaceholdingText(placeholderText)
 
 		-- If we weren't given text, set to the placeholder text.
-		if (params.text == nil) then
-			element.text = placeholderText
+		if (params.text == nil or params.text == placeholderText) then
+			element.widget:setIsPlaceholding(true)
 		end
-
-		-- Fix color if we are using the placeholder text.
-		if (element.text == placeholderText) then
-			element.color = tes3ui.getPalette(tes3.palette.disabledColor)
-			element:setLuaData("mwse:placeholding", true)
-		end
-
-		element.widget.eraseOnFirstKey = true
 	end
 
 	-- Only allow numbers.
 	if (params.numeric) then
-		element:setLuaData("mwse:numeric", true)
+		element.widget:setIsNumeric(true)
 	end
 
 	-- Handle focus.

@@ -4,6 +4,7 @@
 #include "LuaUtil.h"
 
 #include "LuaActivateEvent.h"
+#include "LuaActivationTargetChangedEvent.h"
 #include "LuaBodyPartsUpdatedEvent.h"
 #include "LuaDisarmTrapEvent.h"
 #include "LuaLeveledCreaturePickedEvent.h"
@@ -626,10 +627,6 @@ namespace TES3 {
 		*	- For the mobile, it cleans up AI planners
 		*/
 
-		// Clean up static event references.
-		clearIfThis(this, mwse::lua::event::LeveledCreaturePickedEvent::m_LastLeveledSourceReference);
-		clearIfThis(this, mwse::lua::event::LeveledItemPickedEvent::m_Reference);
-
 		// Cleanup activation target.
 		if (tes3game) {
 			if (tes3game->playerTarget == this) {
@@ -638,6 +635,11 @@ namespace TES3 {
 			}
 			clearIfThis(this, tes3game->tooltipTarget);
 		}
+
+		// Clean up static event references.
+		clearIfThis(this, mwse::lua::event::LeveledCreaturePickedEvent::m_LastLeveledSourceReference);
+		clearIfThis(this, mwse::lua::event::LeveledItemPickedEvent::m_Reference);
+		clearIfThis(this, mwse::lua::event::ActivationTargetChangedEvent::ms_PreviousReference);
 	}
 
 	Vector3 * Reference::getPosition() {

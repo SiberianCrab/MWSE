@@ -26,10 +26,12 @@
     <ClInclude Include="LuaObjectCopiedEvent.h" />
     <ClInclude Include="LuaObjectCreatedEvent.h" />
     <ClInclude Include="LuaPickpocketEvent.h" />
+    <ClInclude Include="LuaRemovedEquipmentBodyPartsEvent.h" />
     <ClInclude Include="LuaShieldBlockedEvent.h" />
     <ClInclude Include="LuaSimulatedEvent.h" />
     <ClInclude Include="LuaStartGlobalScriptEvent.h" />
     <ClInclude Include="LuaUiSkillTooltipEvent.h" />
+    <ClInclude Include="LuaUpdateBodyPartsForItemEvent.h" />
     <ClInclude Include="NIAccumulator.h" />
     <ClInclude Include="NIAnimationData.h" />
     <ClInclude Include="NIAnimationKey.h" />
@@ -674,6 +676,7 @@
     <ClCompile Include="LuaPlayAnimationGroupEvent.cpp" />
     <ClCompile Include="LuaPlayItemSoundEvent.cpp" />
     <ClCompile Include="LuaPostInfoResponseEvent.cpp" />
+    <ClCompile Include="LuaRemovedEquipmentBodyPartsEvent.cpp" />
     <ClCompile Include="LuaShieldBlockedEvent.cpp" />
     <ClCompile Include="LuaSimulatedEvent.cpp" />
     <ClCompile Include="LuaPotionBrewedEvent.cpp" />
@@ -712,6 +715,7 @@
     <ClCompile Include="LuaUiSkillTooltipEvent.cpp" />
     <ClCompile Include="LuaUiSpellTooltipEvent.cpp" />
     <ClCompile Include="LuaUnequippedEvent.cpp" />
+    <ClCompile Include="LuaUpdateBodyPartsForItemEvent.cpp" />
     <ClCompile Include="LuaUtil.cpp" />
     <ClCompile Include="LuaVFXCreatedEvent.cpp" />
     <ClCompile Include="LuaWeaponReadiedEvent.cpp" />

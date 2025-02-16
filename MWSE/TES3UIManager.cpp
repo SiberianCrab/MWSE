@@ -448,6 +448,14 @@ namespace TES3::UI {
 		TES3_showDialogueMessage(text, style, answerIndex);
 	}
 
+	const auto TES3_UI_updateTopicsList = reinterpret_cast<void(__cdecl*)()>(0x5BE6C0);
+	void __cdecl updateTopicsList() {
+		TES3_UI_updateTopicsList();
+
+		// Fire off an event to let mods know the list was updated.
+		mwse::lua::LuaManager::getInstance().getThreadSafeStateHandle().triggerEvent(new mwse::lua::event::GenericEvent("topicsListUpdated"));
+	}
+
 	const auto TES3_showMessageBox = reinterpret_cast<Element*(__cdecl*)(const char*, const char*, bool)>(0x5F90C0);
 	Element* showMessageBox(const char* message, const char* image, bool showInDialog) {
 		return TES3_showMessageBox(message, image, showInDialog);

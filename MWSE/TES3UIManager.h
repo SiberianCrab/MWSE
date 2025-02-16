@@ -50,6 +50,7 @@ namespace TES3::UI {
 
 	void showDialogueMessage(const char* message, int style, int answerIndex);
 	void showDialogueMessage_lua(sol::table params);
+	void __cdecl updateTopicsList();
 
 	Element* showMessageBox(const char* message, const char* image = nullptr, bool showInDialog = true);
 

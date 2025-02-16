@@ -223,7 +223,7 @@ The previous object in parent collection's list.
 ### `promptsEquipmentReevaluation`
 <div class="search_terms" style="display: none">promptsequipmentreevaluation</div>
 
-*Read-only*. If true, the item should prompt equipment reevaluated when added to the actor's inventory. Thius is true for armor, clothing, and weapons.
+*Read-only*. If true, the item should prompt equipment reevaluated when added to the actor's inventory. Thus is true for armor, clothing, and weapons.
 
 **Returns**:
 
@@ -315,7 +315,7 @@ The sourceless flag of the object.
 
 **Returns**:
 
-* `result` ([tes3baseObject](../types/tes3baseObject.md)[])
+* `result` ([tes3npc](../types/tes3npc.md)[], [tes3faction](../types/tes3faction.md)[])
 
 ***
 

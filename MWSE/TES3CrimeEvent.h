@@ -58,12 +58,14 @@ namespace TES3 {
 		Actor* stolenFrom;
 
 		CrimeEvent();
-		CrimeEvent(CrimeEvent& event);
+		CrimeEvent(const CrimeEvent& event);
 		~CrimeEvent();
+
+		void operator=(const CrimeEvent& event);
 
 		CrimeEvent * ctor();
 		void dtor();
-		void copy(CrimeEvent* crimeEvent);
+		void copy(const CrimeEvent* crimeEvent);
 
 		const char* getBountyKey() const;
 		void setBountyKey(const char* key);

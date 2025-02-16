@@ -1,7 +1,6 @@
 local common = {}
 
 common.eventCallback = require("mwse.common.ui.eventCallback")
-common.eventCallbackHelper = require("mwse.common.ui.eventCallbackHelper")
 
 --- Sets the disabled flag and a disabled color on the element.
 --- If the element supports states, it also sets the disabled state.

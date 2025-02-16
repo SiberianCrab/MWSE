@@ -254,6 +254,8 @@ if defined APPVEYOR_BUILD_NUMBER (echo #define APPVEYOR_BUILD_NUMBER %APPVEYOR_B
     <ClInclude Include="DialogEditRaceWindow.h" />
     <ClInclude Include="DialogPathGridWindow.h" />
     <ClInclude Include="DialogProcContext.h" />
+    <ClInclude Include="DialogUseReportWindow.h" />
+    <ClInclude Include="CSFile.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MetadataUtil.h" />
     <ClInclude Include="ModMetadata.h" />

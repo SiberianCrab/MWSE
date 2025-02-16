@@ -386,6 +386,11 @@ namespace TES3 {
 		return TES3_NonDynamicData_findClass(this, id);
 	}
 
+	const auto TES3_NonDynamicData_findRace = reinterpret_cast<Race * (__thiscall*)(NonDynamicData*, const char*)>(0x4BA5C0);
+	Race* NonDynamicData::findRace(const char* id) {
+		return TES3_NonDynamicData_findRace(this, id);
+	}
+
 	const auto TES3_NonDynamicData_findFaction = reinterpret_cast<Faction * (__thiscall*)(NonDynamicData*, const char*)>(0x4BA750);
 	Faction* NonDynamicData::findFaction(const char* id) {
 		return TES3_NonDynamicData_findFaction(this, id);

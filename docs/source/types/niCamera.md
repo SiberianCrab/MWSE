@@ -223,7 +223,7 @@ The object's local uniform scaling factor.
 ### `scene`
 <div class="search_terms" style="display: none">scene</div>
 
-*Read-only*. The scene of the camera.
+The scene of the camera.
 
 **Returns**:
 
