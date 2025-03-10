@@ -4070,6 +4070,26 @@ namespace mwse::lua {
 			return toReference->getOrCreateAttachedItemData();
 		}
 
+		// We also want to support adding itemData to the item on the cursor.
+		const auto toCursor = getOptionalParam(params, "toCursor", false);
+		if (toCursor) {
+			const auto inventoryTile = TES3::UI::getCursorTile();
+			if (inventoryTile == nullptr) {
+				return nullptr;
+			}
+
+			if (inventoryTile->itemData == nullptr) {
+				inventoryTile->itemData = TES3::ItemData::createForObject(inventoryTile->item);
+
+				// Update all the other pointers to this itemData on the UI Element.
+				const auto cursor = TES3::UI::getCursor();
+				cursor->setProperty(TES3::UI::registerProperty("MenuInventory_extra"), inventoryTile->itemData);
+				cursor->setProperty(TES3::UI::registerProperty("PartHelpMenu_extra"), inventoryTile->itemData);
+			}
+
+			return inventoryTile->itemData;
+		}
+
 		// Get the reference of the item or item container.
 		toReference = getOptionalParamReference(params, "to");
 		if (toReference == nullptr) {

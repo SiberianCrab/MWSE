@@ -724,6 +724,7 @@
     <ClCompile Include="LuaWeatherCycledEvent.cpp" />
     <ClCompile Include="LuaWeatherTransitionFinishedEvent.cpp" />
     <ClCompile Include="LuaWeatherTransitionStartedEvent.cpp" />
+    <ClCompile Include="MGEApi.cpp" />
     <ClCompile Include="MGEApiLua.cpp" />
     <ClCompile Include="MGEPostShaders.cpp" />
     <ClCompile Include="MGEPostShadersLua.cpp" />

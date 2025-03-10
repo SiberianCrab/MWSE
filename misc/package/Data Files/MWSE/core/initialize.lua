@@ -328,8 +328,6 @@ end
 function table.copy(from, to)
 	if (to == nil) then
 		to = {}
-	elseif (type(from) ~= "table" or type(to) ~= "table") then
-		error("Arguments for table.copy must be tables.")
 	end
 
 	for k, v in pairs(from) do
@@ -354,10 +352,6 @@ function table.deepcopy(t)
 end
 
 function table.copymissing(to, from)
-	if (type(to) ~= "table" or type(from) ~= "table") then
-		error("Arguments for table.copymissing must be tables.")
-	end
-
 	for k, v in pairs(from) do
 		if (type(to[k]) == "table" and type(v) == "table") then
 			table.copymissing(to[k], v)

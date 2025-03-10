@@ -1391,7 +1391,7 @@ namespace TES3 {
 		}
 
 		// Does the base object support it?
-		if (!baseObject->getSupportsLuaData()) {
+		if (baseObject == nullptr || !baseObject->getSupportsLuaData()) {
 			return false;
 		}
 

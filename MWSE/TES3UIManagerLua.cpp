@@ -11,6 +11,7 @@
 #include "TES3InputController.h"
 
 #include "TES3UIElement.h"
+#include "TES3UIInventoryTile.h"
 #include "TES3UIManager.h"
 #include "TES3UIMenuController.h"
 
@@ -424,6 +425,8 @@ namespace mwse::lua {
 		tes3ui["findMenu"] = TES3::UI::findMenu_lua;
 		tes3ui["forcePlayerInventoryUpdate"] = TES3::UI::forcePlayerInventoryUpdate;
 		tes3ui["getConsoleReference"] = TES3::UI::getConsoleReference;
+		tes3ui["getCursor"] = TES3::UI::getCursor;
+		tes3ui["getCursorTile"] = TES3::UI::getCursorTile;
 		tes3ui["getInventorySelectType"] = TES3::UI::getInventorySelectType;
 		tes3ui["getMenuOnTop"] = TES3::UI::getMenuOnTop;
 		tes3ui["getPalette"] = TES3::UI::getPalette_lua;
@@ -441,9 +444,9 @@ namespace mwse::lua {
 		tes3ui["setConsoleReference"] = TES3::UI::setConsoleReference;
 		tes3ui["showBookMenu"] = TES3::UI::showBookMenu;
 		tes3ui["showDialogueMessage"] = TES3::UI::showDialogueMessage_lua;
-		tes3ui["showMagicSelectMenu"] = TES3::UI::showMagicSelectMenu_lua;
 		tes3ui["showInventorySelectMenu"] = TES3::UI::showInventorySelectMenu_lua;
 		tes3ui["showJournal"] = TES3::UI::showJournal;
+		tes3ui["showMagicSelectMenu"] = TES3::UI::showMagicSelectMenu_lua;
 		tes3ui["showScrollMenu"] = TES3::UI::showScrollMenu;
 		tes3ui["stealHelpMenu"] = TES3::UI::stealHelpMenu;
 		tes3ui["suppressTooltip"] = TES3::UI::setSuppressingHelpMenu;

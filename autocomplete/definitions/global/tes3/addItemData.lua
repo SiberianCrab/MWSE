@@ -5,7 +5,8 @@ return {
 		name = "params",
 		type = "table",
 		tableParams = {
-			{ name = "reference", type = "tes3reference|tes3mobileActor|string", optional = true, description = "The reference who will be modified. Use this parameter if you want to add itemData to a reference itself." },
+			{ name = "reference", type = "tes3reference|tes3mobileActor|string", optional = true, description = "The reference who will be modified. Use this parameter if you want to add itemData to a reference itself. No other parameters are necessary when this one is used." },
+			{ name = "toCursor", type = "boolean", optional = true, description = "Use this parameter if you want to add itemData to an item on the player's cursor. No other parameters are necessary when this one is used." },
 			{ name = "to", type = "tes3reference|tes3mobileActor|string", optional = true, description = "The reference or mobile whose inventory will be modified. Use this parameter if you want to add itemData to an item in a reference's inventory." },
 			{ name = "item", type = "tes3item|string", optional = true, description = "The item to create item data for. Only applicable if the `to` parameter is used." },
 			{ name = "updateGUI", type = "boolean", optional = true, default = true, description = "If false, the player or contents menu won't be updated." },

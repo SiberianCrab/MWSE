@@ -221,7 +221,7 @@ namespace TES3 {
 		};
 
 		struct LightData {
-			NI::PointLight * light; // 0x0
+			NI::Pointer<NI::PointLight> light; // 0x0
 			float radius; // 0x4
 			float unknown_0x8;
 		};

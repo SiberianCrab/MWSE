@@ -58,6 +58,12 @@ function metatable:set_currentTab(id)
 	end
 
 	for _, c in ipairs(contents.children) do
+		if not c.visible and c == content then
+			c:triggerEvent(tes3.uiEvent.tabFocus)
+		end
+		if c.visible and c ~= content then
+			c:triggerEvent(tes3.uiEvent.tabUnfocus)
+		end
 		c.visible = (c == content)
 	end
 
@@ -71,6 +77,7 @@ local function onClickTab(e)
 	--- @type tes3uiTabContainer
 	local widget = e.source.parent.parent.widget
 	widget.currentTab = e.source:getLuaData("MWSE:TabID")
+	widget.element:triggerEvent(tes3.uiEvent.valueChanged)
 end
 
 function metatable:addTab(params)

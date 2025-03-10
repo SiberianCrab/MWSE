@@ -5,6 +5,22 @@
 namespace TES3 {
 
 	//
+	// LightAttachment
+	//
+
+	NI::Light* LightAttachmentNode::getLight() const {
+		return light;
+	}
+
+	void LightAttachmentNode::setLight(NI::Light* newLight) {
+		if (newLight == nullptr) {
+			throw std::invalid_argument("A light node cannot be set to nullptr. Remove the whole dynamic light attachment to remove the dynamic light.");
+		}
+
+		light = newLight;
+	}
+
+	//
 	// LockAttachment
 	//
 

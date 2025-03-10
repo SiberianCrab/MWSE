@@ -3872,6 +3872,9 @@
     <ClCompile Include="LuaUpdateBodyPartsForItemEvent.cpp">
       <Filter>Source Files\Lua\Events</Filter>
     </ClCompile>
+    <ClCompile Include="MGEApi.cpp">
+      <Filter>Source Files\MGE Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MWSE.rc">

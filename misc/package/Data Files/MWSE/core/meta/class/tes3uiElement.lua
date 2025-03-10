@@ -721,6 +721,10 @@ function tes3uiElement:move(params) end
 --- * Color Picker:
 --- 	* **colorChanged**
 --- 		Triggers after new color was chosen in the color picker.
+--- * Tab Container:
+--- 	* **tabFocus**
+--- 	* **tabUnfocus**
+--- 	* **valueChanged**
 --- ***
 --- 
 --- #### Event forwarding

@@ -234,6 +234,10 @@ namespace TES3::UI {
 		return TES3_ui_findHelpLayerMenu(id);
 	}
 
+	Element* findHelpLayerMenu(const char* id) {
+		return findHelpLayerMenu(registerID(id));
+	}
+
 	Element* findHelpLayerMenu_lua(sol::object id) {
 		return TES3_ui_findHelpLayerMenu(mwse::lua::getUIIDFromObject(id));
 	}
@@ -364,6 +368,19 @@ namespace TES3::UI {
 		if (mwse::lua::event::ConsoleReferenceChangedEvent::getEventEnabled() && referenceBefore != referenceAfter) {
 			mwse::lua::LuaManager::getInstance().getThreadSafeStateHandle().triggerEvent(new mwse::lua::event::ConsoleReferenceChangedEvent(referenceAfter));
 		}
+	}
+
+	Element* getCursor() {
+		return TES3::UI::findHelpLayerMenu("CursorIcon");
+	}
+
+	InventoryTile* getCursorTile() {
+		const auto cursor = getCursor();
+		if (cursor == nullptr) {
+			return nullptr;
+		}
+
+		return cursor->getPropertyPointer<TES3::UI::InventoryTile>("MenuInventory_Thing");
 	}
 
 	std::tuple<unsigned int, unsigned int> getViewportSize_lua() {

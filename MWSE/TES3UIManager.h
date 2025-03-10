@@ -20,6 +20,7 @@ namespace TES3::UI {
 	Element* findMenu(const char* id);
 	Element* findMenu_lua(sol::object id);
 	Element* findHelpLayerMenu(UI_ID id);
+	Element* findHelpLayerMenu(const char* id);
 	Element* findHelpLayerMenu_lua(sol::object id);
 	Element* getMenuOnTop();
 	bool enterMenuMode(UI_ID id);
@@ -38,6 +39,9 @@ namespace TES3::UI {
 
 	Reference* getConsoleReference();
 	void __cdecl setConsoleReference(Reference* reference);
+
+	Element* getCursor();
+	InventoryTile* getCursorTile();
 
 	std::tuple<unsigned int, unsigned int> getViewportSize_lua();
 	float getViewportScale();

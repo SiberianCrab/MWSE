@@ -56,6 +56,9 @@ This type inherits the following: [tes3actor](../types/tes3actor.md), [tes3physi
 
 Quick access to the base NPC's attributes.
 
+!!! note
+	This array is 1-indexed. The array indices correspond to the [`tes3.attribute`](https://mwse.github.io/MWSE/references/attributes/) table plus 1 to account for Lua's 1-based array indexing. In other words `npc.attributes[tes3.attribute.speed + 1]` returns the attribute value corresponding to Speed.
+
 **Returns**:
 
 * `result` (number[])
@@ -574,6 +577,9 @@ The scene graph node for this object.
 <div class="search_terms" style="display: none">skills</div>
 
 Quick access to the base NPC's skills.
+
+!!! note
+	This array is 1-indexed. The array indices correspond to the [`tes3.skill`](https://mwse.github.io/MWSE/references/skills/) table plus 1 to account for Lua's 1-based array indexing. In other words `npc.skills[tes3.skill.armorer + 1]` returns the skill value corresponding to the Armorer skill.
 
 **Returns**:
 

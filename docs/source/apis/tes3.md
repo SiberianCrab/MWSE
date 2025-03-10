@@ -207,13 +207,14 @@ local count, item, itemData = tes3.addItem({ reference = ..., item = ..., itemDa
 Creates itemData on a given `reference`, or `to` a reference's inventory. This can be then used to add custom user data or adjust an item's condition. This will return nil if no item data could be allocated for the item -- for example if the reference doesn't have the item in their inventory or each item of that type already has item data. Calling this function will mark the `reference` or `to` reference as modified.
 
 ```lua
-local createdData = tes3.addItemData({ reference = ..., to = ..., item = ..., updateGUI = ... })
+local createdData = tes3.addItemData({ reference = ..., toCursor = ..., to = ..., item = ..., updateGUI = ... })
 ```
 
 **Parameters**:
 
 * `params` (table)
-	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): *Optional*. The reference who will be modified. Use this parameter if you want to add itemData to a reference itself.
+	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): *Optional*. The reference who will be modified. Use this parameter if you want to add itemData to a reference itself. No other parameters are necessary when this one is used.
+	* `toCursor` (boolean): *Optional*. Use this parameter if you want to add itemData to an item on the player's cursor. No other parameters are necessary when this one is used.
 	* `to` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): *Optional*. The reference or mobile whose inventory will be modified. Use this parameter if you want to add itemData to an item in a reference's inventory.
 	* `item` ([tes3item](../types/tes3item.md), string): *Optional*. The item to create item data for. Only applicable if the `to` parameter is used.
 	* `updateGUI` (boolean): *Default*: `true`. If false, the player or contents menu won't be updated.
@@ -3315,7 +3316,7 @@ local equal = tes3.isKeyEqual({ actual = ..., expected = ... })
 
 **Returns**:
 
-* `equal`
+* `equal` (boolean)
 
 ??? example "Example: Filtering out key presses that aren't equal to the bound key combination"
 

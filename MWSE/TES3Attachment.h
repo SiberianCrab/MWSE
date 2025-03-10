@@ -2,6 +2,8 @@
 
 #include "TES3Defines.h"
 
+#include "NILight.h"
+
 #include "TES3Item.h"
 #include "TES3Vectors.h"
 
@@ -61,6 +63,9 @@ namespace TES3 {
 
 		LightAttachmentNode() = delete;
 		~LightAttachmentNode() = delete;
+
+		NI::Light* getLight() const;
+		void setLight(NI::Light* light);
 	};
 	static_assert(sizeof(LightAttachmentNode) == 0x8, "TES3::LightAttachmentNode failed size validation");
 

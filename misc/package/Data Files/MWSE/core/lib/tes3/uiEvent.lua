@@ -18,6 +18,8 @@ return {
 	unfocus = "unfocus",
 	inputFocus = "inputFocus",
 	inputUnfocus = "inputUnfocus",
+	tabFocus = "tabFocus",
+	tabUnfocus = "tabUnfocus",
 	preUpdate = "preUpdate",
 	update = "update",
 	destroy = "destroy",
