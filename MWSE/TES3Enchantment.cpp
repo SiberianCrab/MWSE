@@ -57,6 +57,10 @@ namespace TES3 {
 		return -1;
 	}
 
+	bool Enchantment::hasEffect(int effectId) const {
+		return getFirstIndexOfEffect(effectId) != -1;
+	}
+
 	std::reference_wrapper<Effect[8]> Enchantment::getEffects() {
 		return std::ref(effects);
 	}

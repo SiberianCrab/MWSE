@@ -250,7 +250,7 @@ tes3.addJournalEntry({ text = ..., showMessage = ... })
 This function creates a new custom magic effect. The effect can be scripted through lua. This function should be used inside [`magicEffectsResolved`](https://mwse.github.io/MWSE/events/magicEffectsResolved/) event callback.
 
 ```lua
-local effect = tes3.addMagicEffect({ id = ..., name = ..., baseCost = ..., school = ..., size = ..., sizeCap = ..., speed = ..., description = ..., lighting = ..., icon = ..., particleTexture = ..., castSound = ..., boltSound = ..., hitSound = ..., areaSound = ..., castVFX = ..., boltVFX = ..., hitVFX = ..., areaVFX = ..., allowEnchanting = ..., allowSpellmaking = ..., appliesOnce = ..., canCastSelf = ..., canCastTarget = ..., canCastTouch = ..., casterLinked = ..., hasContinuousVFX = ..., hasNoDuration = ..., hasNoMagnitude = ..., illegalDaedra = ..., isHarmful = ..., nonRecastable = ..., targetsAttributes = ..., targetsSkills = ..., unreflectable = ..., usesNegativeLighting = ..., onTick = ..., onCollision = ... })
+local effect = tes3.addMagicEffect({ id = ..., name = ..., magnitudeType = ..., magnitudeTypePlural = ..., baseCost = ..., school = ..., size = ..., sizeCap = ..., speed = ..., description = ..., lighting = ..., icon = ..., particleTexture = ..., castSound = ..., boltSound = ..., hitSound = ..., areaSound = ..., castVFX = ..., boltVFX = ..., hitVFX = ..., areaVFX = ..., allowEnchanting = ..., allowSpellmaking = ..., appliesOnce = ..., canCastSelf = ..., canCastTarget = ..., canCastTouch = ..., casterLinked = ..., hasContinuousVFX = ..., hasNoDuration = ..., hasNoMagnitude = ..., illegalDaedra = ..., isHarmful = ..., nonRecastable = ..., targetsAttributes = ..., targetsSkills = ..., unreflectable = ..., usesNegativeLighting = ..., onTick = ..., onCollision = ... })
 ```
 
 **Parameters**:
@@ -258,16 +258,15 @@ local effect = tes3.addMagicEffect({ id = ..., name = ..., baseCost = ..., schoo
 * `params` (table)
 	* `id` ([tes3.effect](../references/magic-effects.md), integer): Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
 	* `name` (string): *Default*: `Unnamed Effect`. Name of the effect.
+	* `magnitudeType` (string): *Optional*. The suffix describing the magnitude, when its value is 1. By default, this resolves to the sPoint GMST.
+	* `magnitudeTypePlural` (string): *Optional*. The suffix describing the magnitude, when its value is not 1. By default, this resolves to the sPoints GMST.
 	* `baseCost` (number): *Default*: `1`. Base magicka cost for the effect.
 	* `school` ([tes3.magicSchool](../references/magic-schools.md), integer): *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
 	* `size` (number): *Default*: `1`. Controls how much the visual effect scales with its magnitude.
 	* `sizeCap` (number): *Default*: `1`. The maximum possible size of the projectile.
 	* `speed` (number): *Default*: `1`.
 	* `description` (string): *Default*: `No description available.`. Description for the effect.
-	* `lighting` (table): *Optional*.
-		* `x` (number): *Default*: `1`. Value of red color channel. In range of 0 - 1.
-		* `y` (number): *Default*: `1`. Value of green color channel. In range of 0 - 1.
-		* `z` (number): *Default*: `1`. Value of blue color channel. In range of 0 - 1.
+	* `lighting` ([tes3vector3](../types/tes3vector3.md), table, nil): *Optional*. Value of red, green, and blue values of the color for both particle lighting and enchantment wraps. In range of [0.0, 1.0].
 	* `icon` (string): Path to the effect icon. Must be a string no longer than 31 characters long. Use double \ as path separator.
 	* `particleTexture` (string): Path to the particle texture to use for the effect. Must be a string no longer than 31 characters long.
 	* `castSound` (string): The sound ID which will be played on casting a spell with this effect. Must be a string no longer than 31 characters long. If not specified, the default sound for the spell school will be used.

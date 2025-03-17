@@ -55,6 +55,7 @@ namespace TES3 {
 
 		size_t getActiveEffectCount() const;
 		int getFirstIndexOfEffect(int effectId) const;
+		bool hasEffect(int effectId) const;
 
 		std::reference_wrapper<Effect[8]> getEffects();
 

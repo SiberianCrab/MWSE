@@ -37,6 +37,7 @@ namespace mwse::lua {
 		// Basic function binding.
 		usertypeDefinition["getActiveEffectCount"] = &TES3::Enchantment::getActiveEffectCount;
 		usertypeDefinition["getFirstIndexOfEffect"] = &TES3::Enchantment::getFirstIndexOfEffect;
+		usertypeDefinition["hasEffect"] = &TES3::Enchantment::hasEffect;
 
 		// Indirect bindings to unions and arrays.
 		usertypeDefinition["effects"] = sol::readonly_property(&TES3::Enchantment::getEffects);

@@ -24,6 +24,10 @@ namespace mwse::lua {
 		usertypeDefinition["value"] = &TES3::Ingredient::value;
 		usertypeDefinition["weight"] = &TES3::Ingredient::weight;
 
+		// Basic function binding.
+		usertypeDefinition["getFirstIndexOfEffect"] = &TES3::Ingredient::getFirstIndexOfEffect;
+		usertypeDefinition["hasEffect"] = &TES3::Ingredient::hasEffect;
+
 		// Indirect bindings to unions and arrays.
 		usertypeDefinition["effects"] = sol::readonly_property(&TES3::Ingredient::getEffects);
 		usertypeDefinition["effectAttributeIds"] = sol::readonly_property(&TES3::Ingredient::getEffectAttributeIds);

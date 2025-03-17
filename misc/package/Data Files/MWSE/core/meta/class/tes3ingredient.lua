@@ -11,3 +11,15 @@
 --- @field script tes3script The script that runs on the object.
 --- @field value number The value of the object.
 --- @field weight number The weight of the object.
+tes3ingredient = {}
+
+--- Gets the first index of an effect ID in the ingredient's effect table. Returns `-1` if provided effect doesn't exist in the ingredient.
+--- @param effectId tes3.effect|integer A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @return integer index Returns 0-based index. Because Lua's arrays are 1-based, to index the ingredient's `effects` array with the return value add 1.
+function tes3ingredient:getFirstIndexOfEffect(effectId) end
+
+--- Determines if the ingredient contains an effect with the given id.
+--- @param effectId tes3.effect|integer A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @return boolean hasEffect Returns `true` if the ingredient contains the given effect id, otherwise `false`.
+function tes3ingredient:hasEffect(effectId) end
+

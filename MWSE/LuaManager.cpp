@@ -2062,9 +2062,9 @@ namespace mwse::lua {
 		return reinterpret_cast<bool(__thiscall*)(TES3::Cell*)>(0x4E22F0)(cell);
 	}
 
-	void __fastcall OnWeatherImmediateChange(TES3::WeatherController* controller, DWORD _UNUSED_, DWORD weatherId, DWORD transitionScalar) {
+	void __fastcall OnWeatherImmediateChange(TES3::WeatherController* controller, DWORD _UNUSED_, int weatherId, float transitionScalar) {
 		// Call original function.
-		reinterpret_cast<void(__thiscall*)(TES3::WeatherController*, DWORD, DWORD)>(0x441C40)(controller, weatherId, transitionScalar);
+		controller->switchWeather(weatherId, transitionScalar);
 
 		// Fire off the event, after function completes.
 		if (event::WeatherChangedImmediateEvent::getEventEnabled()) {

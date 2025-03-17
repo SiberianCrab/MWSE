@@ -145,6 +145,10 @@ function tes3.addJournalEntry(params) end
 --- 
 --- `name`: string? — *Default*: `Unnamed Effect`. Name of the effect.
 --- 
+--- `magnitudeType`: string? — *Optional*. The suffix describing the magnitude, when its value is 1. By default, this resolves to the sPoint GMST.
+--- 
+--- `magnitudeTypePlural`: string? — *Optional*. The suffix describing the magnitude, when its value is not 1. By default, this resolves to the sPoints GMST.
+--- 
 --- `baseCost`: number? — *Default*: `1`. Base magicka cost for the effect.
 --- 
 --- `school`: tes3.magicSchool|integer|nil — *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
@@ -157,7 +161,7 @@ function tes3.addJournalEntry(params) end
 --- 
 --- `description`: string? — *Default*: `No description available.`. Description for the effect.
 --- 
---- `lighting`: table? — *Optional*. No description yet available.
+--- `lighting`: tes3vector3|table|nil — *Optional*. Value of red, green, and blue values of the color for both particle lighting and enchantment wraps. In range of [0.0, 1.0].
 --- 
 --- `icon`: string — Path to the effect icon. Must be a string no longer than 31 characters long. Use double \ as path separator.
 --- 
@@ -223,13 +227,15 @@ function tes3.addMagicEffect(params) end
 --- @class tes3.addMagicEffect.params
 --- @field id tes3.effect|integer Id of the new effect. Maps to newly claimed `tes3.effect` constants with `tes3.claimSpellEffectId()`. If the effect of this id already exists, an error will be thrown.
 --- @field name string? *Default*: `Unnamed Effect`. Name of the effect.
+--- @field magnitudeType string? *Optional*. The suffix describing the magnitude, when its value is 1. By default, this resolves to the sPoint GMST.
+--- @field magnitudeTypePlural string? *Optional*. The suffix describing the magnitude, when its value is not 1. By default, this resolves to the sPoints GMST.
 --- @field baseCost number? *Default*: `1`. Base magicka cost for the effect.
 --- @field school tes3.magicSchool|integer|nil *Default*: `tes3.magicSchool.alteration`. The magic school the new effect will be assigned to. Maps to [`tes3.magicSchool`](https://mwse.github.io/MWSE/references/magic-schools/) constants.
 --- @field size number? *Default*: `1`. Controls how much the visual effect scales with its magnitude.
 --- @field sizeCap number? *Default*: `1`. The maximum possible size of the projectile.
 --- @field speed number? *Default*: `1`. No description yet available.
 --- @field description string? *Default*: `No description available.`. Description for the effect.
---- @field lighting table? *Optional*. No description yet available.
+--- @field lighting tes3vector3|table|nil *Optional*. Value of red, green, and blue values of the color for both particle lighting and enchantment wraps. In range of [0.0, 1.0].
 --- @field icon string Path to the effect icon. Must be a string no longer than 31 characters long. Use double \ as path separator.
 --- @field particleTexture string Path to the particle texture to use for the effect. Must be a string no longer than 31 characters long.
 --- @field castSound string The sound ID which will be played on casting a spell with this effect. Must be a string no longer than 31 characters long. If not specified, the default sound for the spell school will be used.

@@ -78,3 +78,8 @@ function tes3alchemy:getActiveEffectCount() end
 --- @return integer index Returns 0-based index. Because Lua's arrays are 1-based, to index the potion's `effects` array with the return value add 1.
 function tes3alchemy:getFirstIndexOfEffect(effectId) end
 
+--- Determines if the alchemy item contains an effect with the given id.
+--- @param effectId tes3.effect|integer A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @return boolean hasEffect Returns `true` if the alchemy item contains the given effect id, otherwise `false`.
+function tes3alchemy:hasEffect(effectId) end
+

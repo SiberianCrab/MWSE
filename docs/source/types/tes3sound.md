@@ -236,6 +236,21 @@ local result = myObject:isPlaying()
 
 ***
 
+### `loadBuffer`
+<div class="search_terms" style="display: none">loadbuffer</div>
+
+Loads the sound buffer. Does nothing if the sound buffer already exists.
+
+```lua
+myObject:loadBuffer(isPointSound)
+```
+
+**Parameters**:
+
+* `isPointSound` (boolean): If true, the sound is positional.
+
+***
+
 ### `play`
 <div class="search_terms" style="display: none">play</div>
 
@@ -251,6 +266,17 @@ myObject:play(playbackFlags, volume, pitch, isNot3D)
 * `volume` (number): *Optional*.
 * `pitch` (number): *Optional*.
 * `isNot3D` (boolean): *Optional*.
+
+***
+
+### `release`
+<div class="search_terms" style="display: none">release</div>
+
+Releases the underlying sound buffer, freeing its memory.
+
+```lua
+myObject:release()
+```
 
 ***
 

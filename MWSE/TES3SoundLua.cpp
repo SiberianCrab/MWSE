@@ -36,7 +36,9 @@ namespace mwse::lua {
 			// Basic function binding.
 			usertypeDefinition["isLooping"] = &TES3::Sound::isLooping;
 			usertypeDefinition["isPlaying"] = &TES3::Sound::isPlaying;
+			usertypeDefinition["loadBuffer"] = &TES3::Sound::loadBuffer;
 			usertypeDefinition["play"] = &TES3::Sound::play_lua;
+			usertypeDefinition["release"] = &TES3::Sound::release;
 			usertypeDefinition["stop"] = &TES3::Sound::stop;
 
 			// Expose float-based volume control.

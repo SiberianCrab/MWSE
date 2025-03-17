@@ -123,6 +123,7 @@ namespace mwse::lua {
 		usertypeDefinition["createCopy"] = &TES3::Alchemy::createCopy_lua<TES3::Alchemy>;
 		usertypeDefinition["getActiveEffectCount"] = &TES3::Alchemy::getActiveEffectCount;
 		usertypeDefinition["getFirstIndexOfEffect"] = &TES3::Alchemy::getFirstIndexOfEffect;
+		usertypeDefinition["hasEffect"] = &TES3::Alchemy::hasEffect;
 
 		// Functions exposed as properties.
 		usertypeDefinition["autoCalc"] = sol::property(&TES3::Alchemy::getAutoCalc, &TES3::Alchemy::setAutoCalc);

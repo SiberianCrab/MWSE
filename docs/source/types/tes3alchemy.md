@@ -457,3 +457,22 @@ local index = myObject:getFirstIndexOfEffect(effectId)
 
 * `index` (integer): Returns 0-based index. Because Lua's arrays are 1-based, to index the potion's `effects` array with the return value add 1.
 
+***
+
+### `hasEffect`
+<div class="search_terms" style="display: none">haseffect, effect</div>
+
+Determines if the alchemy item contains an effect with the given id.
+
+```lua
+local hasEffect = myObject:hasEffect(effectId)
+```
+
+**Parameters**:
+
+* `effectId` ([tes3.effect](../references/magic-effects.md), integer): A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+
+**Returns**:
+
+* `hasEffect` (boolean): Returns `true` if the alchemy item contains the given effect id, otherwise `false`.
+

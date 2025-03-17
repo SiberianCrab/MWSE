@@ -66,3 +66,8 @@ function tes3enchantment:getActiveEffectCount() end
 --- @return integer index Returns 0-based index. Because Lua's arrays are 1-based, to index the enchantment's `effects` array with the return value add 1.
 function tes3enchantment:getFirstIndexOfEffect(effectId) end
 
+--- Determines if the enchantment contains an effect with the given id.
+--- @param effectId tes3.effect|integer A value from [`tes3.effect`](https://mwse.github.io/MWSE/references/magic-effects/) table.
+--- @return boolean hasEffect Returns `true` if the enchantment contains the given effect id, otherwise `false`.
+function tes3enchantment:hasEffect(effectId) end
+
