@@ -62,6 +62,16 @@ function tes3vector2:distanceManhattan(vec) end
 --- @return number result No description yet available.
 function tes3vector2:length() end
 
+--- Returns a vector containing the maximum values for each component of the given vectors.
+--- @param other tes3vector2 No description yet available.
+--- @return tes3vector2 result No description yet available.
+function tes3vector2:max(other) end
+
+--- Returns a vector containing the minimum values for each component of the given vectors.
+--- @param other tes3vector2 No description yet available.
+--- @return tes3vector2 result No description yet available.
+function tes3vector2:min(other) end
+
 --- Normalize the vector in-place, or set its components to zero if normalization is not possible. Returns `true` if the vector was successfully normalized.
 --- @return boolean result No description yet available.
 function tes3vector2:normalize() end

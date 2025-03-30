@@ -133,7 +133,7 @@
 --- @field silence number Direct access to the actor's silence effect attribute.
 --- @field sound number Direct access to the actor's sound effect attribute.
 --- @field speed tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's speed attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
---- @field spellReadied boolean *Read-only*. Friendly access to the actor's flag that controls if the actor has a spell readied.
+--- @field spellReadied boolean Friendly access to the actor's flag that controls if the actor has a spell readied.
 --- @field strength tes3statistic|tes3statisticSkill *Read-only*. Direct access to the actor's strength attribute statistic. If you are setting player stats, instead use `tes3.setStatistic` to also update the UI immediately.
 --- @field swiftSwim number Direct access to the actor's swift swim effect attribute.
 --- @field talkedTo boolean Direct access to the actor's flag that shows it was recently talked to.

@@ -317,10 +317,9 @@ function Template:createSubcomponentsContainer(parentBlock)
 	local pageBlock = parentBlock:createBlock()
 	pageBlock.heightProportional = 1.0
 	pageBlock.widthProportional = 1.0
-	self.currentPage = self.pages[1]
-	self.currentPage:create(pageBlock)
-	self.elements.pageBlock = pageBlock
 	pageBlock.flowDirection = tes3.flowDirection.leftToRight
+	self.elements.pageBlock = pageBlock
+	self:clickTab(self.currentPage or self.pages[1])
 end
 
 --- @param parentBlock tes3uiElement

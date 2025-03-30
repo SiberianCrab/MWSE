@@ -54,6 +54,18 @@ namespace NI {
 		specular.b = r;
 	}
 
+	float PointLight::getAttenuationAtDistance(float distance) const {
+		const auto Qd2 = quadraticAttenuation * distance * distance;
+		const auto Ld = linearAttenuation * distance;
+		const auto C = constantAttenuation;
+		return 1.0f / (C + Ld + Qd2);
+	}
+
+	float PointLight::getAttenuationAtPoint(const TES3::Vector3* point) const {
+		const auto distance = worldTransform.translation.distance(point);
+		return getAttenuationAtDistance(distance);
+	}
+
 	void PointLight::setAttenuationForRadius(unsigned int radius) {
 		// Get constant attenuation.
 		if (TES3::LightAttenuation_Flags & TES3::LightAttenuationFlag::UseConstant) {

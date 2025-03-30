@@ -9,6 +9,12 @@ namespace TES3 {
 	//
 	// Vector2
 	//
+	const Vector2 Vector2::UNIT_X = { 1.0f, 0.0f };
+	const Vector2 Vector2::UNIT_NEG_X = { -1.0f, 0.0f };
+	const Vector2 Vector2::UNIT_Y = { 0.0f, 1.0f };
+	const Vector2 Vector2::UNIT_NEG_Y = { 0.0f, -1.0f };
+	const Vector2 Vector2::ONES = { 1.0f, 1.0f };
+	const Vector2 Vector2::ZEROES = { 0.0f, 0.0f };
 
 	Vector2::Vector2() :
 		x(0),
@@ -103,6 +109,14 @@ namespace TES3 {
 		return *this;
 	}
 
+	Vector2 Vector2::min(const Vector2& other) const {
+		return Vector2(std::min(x, other.x), std::min(y, other.y));
+	}
+
+	Vector2 Vector2::max(const Vector2& other) const {
+		return Vector2(std::max(x, other.x), std::max(y, other.y));
+	}
+
 	float Vector2::length() const {
 		return sqrt(x * x + y * y);
 	}
@@ -135,6 +149,8 @@ namespace TES3 {
 	const Vector3 Vector3::UNIT_NEG_Y = { 0.0f, -1.0f, 0.0f };
 	const Vector3 Vector3::UNIT_Z = { 0.0f, 0.0f, 1.0f };
 	const Vector3 Vector3::UNIT_NEG_Z = { 0.0f, 0.0f, -1.0f };
+	const Vector3 Vector3::ONES = { 1.0f, 1.0f, 1.0f };
+	const Vector3 Vector3::ZEROES = { 0.0f, 0.0f, 0.0f };
 
 	Vector3::Vector3() :
 		x(0.0f),
@@ -260,6 +276,14 @@ namespace TES3 {
 
 	Vector3 Vector3::copy() const {
 		return *this;
+	}
+
+	Vector3 Vector3::min(const Vector3& other) const {
+		return Vector3(std::min(x, other.x), std::min(y, other.y), std::min(z, other.z));
+	}
+
+	Vector3 Vector3::max(const Vector3& other) const {
+		return Vector3(std::max(x, other.x), std::max(y, other.y), std::max(z, other.z));
 	}
 
 	NI::Color Vector3::toNiColor() const {
@@ -447,6 +471,14 @@ namespace TES3 {
 		return *this;
 	}
 
+	Vector4 Vector4::min(const Vector4& other) const {
+		return Vector4(std::min(x, other.x), std::min(y, other.y), std::min(z, other.z), std::min(w, other.w));
+	}
+
+	Vector4 Vector4::max(const Vector4& other) const {
+		return Vector4(std::max(x, other.x), std::max(y, other.y), std::max(z, other.z), std::max(w, other.w));
+	}
+
 	float Vector4::distance(const Vector4* vec4) const {
 		float dx = x - vec4->x;
 		float dy = y - vec4->y;
@@ -503,6 +535,12 @@ namespace TES3 {
 	const auto TES3_Matrix33_reorthogonalize = reinterpret_cast<bool(__thiscall*)(Matrix33*)> (0x6E84A0);
 
 	const auto NI_Quaternion_FromRotation = reinterpret_cast<TES3::Matrix33 * (__thiscall*)(const NI::Quaternion*, TES3::Matrix33*)>(0x6FBEF0);
+
+	const Matrix33 Matrix33::IDENTITY = { 
+		1.0f, 0.0f, 0.0f, 
+		0.0f, 1.0f, 0.0f, 
+		0.0f, 0.0f, 1.0f 
+	};
 
 	Matrix33::Matrix33() : m0(), m1(), m2() {
 
@@ -755,6 +793,13 @@ namespace TES3 {
 	//
 	// Matrix44
 	//
+
+	const Matrix44 Matrix44::IDENTITY = { 
+		1.0f, 0.0f, 0.0f, 0.0f, 
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f, 
+		0.0f, 0.0f, 0.0f, 1.0f 
+	};
 
 	Matrix44::Matrix44() :
 		m0(),

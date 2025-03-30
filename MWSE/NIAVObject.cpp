@@ -38,7 +38,7 @@ namespace NI {
 		return vTable.asAVObject->getObjectByName(this, name);
 	}
 
-	bool AVObject::getAppCulled() {
+	bool AVObject::getAppCulled() const {
 		return vTable.asAVObject->getAppCulled(this);
 	}
 
@@ -46,14 +46,14 @@ namespace NI {
 		vTable.asAVObject->setAppCulled(this, culled);
 	}
 
-	bool AVObject::isAppCulled() {
+	bool AVObject::isAppCulled() const {
 		if (getAppCulled()) {
 			return true;
 		}
 		return parentNode ? parentNode->isAppCulled() : false;
 	}
 
-	bool AVObject::isFrustumCulled(Camera* camera) {
+	bool AVObject::isFrustumCulled(Camera* camera) const {
 		for (auto i = 0u; i < 6; i++) {
 			auto plane = camera->cullingPlanes[i];
 			auto distance = (

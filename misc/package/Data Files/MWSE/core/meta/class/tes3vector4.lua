@@ -70,3 +70,13 @@ function tes3vector4:distanceManhattan(vec) end
 --- @return number result No description yet available.
 function tes3vector4:length() end
 
+--- Returns a vector containing the maximum values for each component of the given vectors.
+--- @param other tes3vector4 No description yet available.
+--- @return tes3vector4 result No description yet available.
+function tes3vector4:max(other) end
+
+--- Returns a vector containing the minimum values for each component of the given vectors.
+--- @param other tes3vector4 No description yet available.
+--- @return tes3vector4 result No description yet available.
+function tes3vector4:min(other) end
+

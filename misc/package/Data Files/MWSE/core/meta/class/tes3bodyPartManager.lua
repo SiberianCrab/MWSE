@@ -10,6 +10,9 @@
 --- 
 --- !!! note
 --- 	This array is 1-indexed. The array indices correspond to the [`tes3.bodyPartAttachment`](https://mwse.github.io/MWSE/references/body-part-attachments/) table plus 1 to account for Lua's 1-based array indexing. In other words `bodyPartManager.attachNodes[tes3.bodyPartAttachment.leftHand + 1]` returns the `tes3bodyPartManagerAttachNode` object corresponding to the left hand.
+--- 
+--- 	Prefer using [`getAttachNode`](https://mwse.github.io/MWSE/types/tes3bodyPartManager/#getattachnode) instead to avoid confusion with the 1-based indexing.
+--- 
 --- @field reference tes3reference *Read-only*. The access to the reference this body part manager operates for.
 tes3bodyPartManager = {}
 
@@ -23,6 +26,11 @@ function tes3bodyPartManager:getActiveBodyPart(layer, index) end
 --- @param item tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon The item to fetch the active body part for.
 --- @return tes3bodyPartManagerActiveBodyPart result No description yet available.
 function tes3bodyPartManager:getActiveBodyPartForItem(item) end
+
+--- Fetches the requested attach node.
+--- @param index tes3.bodyPartAttachment A value from [`tes3.bodyPartAttachment`](https://mwse.github.io/MWSE/references/body-part-attachments/) namespace.
+--- @return tes3bodyPartManagerAttachNode result No description yet available.
+function tes3bodyPartManager:getAttachNode(index) end
 
 --- Removes an active body part and optionally sets override data that can be used prevent other items using the same location.
 --- @param layer tes3.activeBodyPartLayer A value from [`tes3.activeBodyPartLayer`](https://mwse.github.io/MWSE/references/active-body-part-layers/) namespace.

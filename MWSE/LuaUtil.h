@@ -10,6 +10,11 @@
 
 namespace mwse::lua {
 	template <typename T>
+	auto sol_copy_wrapper(const T& v) {
+		return [&]() { return v; };
+	}
+
+	template <typename T>
 	T getOptionalParam(sol::optional<sol::table> maybeParams, const char* key, T defaultValue) {
 		T value = defaultValue;
 

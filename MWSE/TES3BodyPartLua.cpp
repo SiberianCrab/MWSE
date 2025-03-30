@@ -103,6 +103,7 @@ namespace mwse::lua {
 			usertypeDefinition["setBodyPartByIdForObject"] = &TES3::BodyPartManager::setBodyPartByIdForObject;
 			usertypeDefinition["setBodyPartForObject"] = &TES3::BodyPartManager::setBodyPartForObject;
 			usertypeDefinition["updateForReference"] = &TES3::BodyPartManager::updateForReference;
+			usertypeDefinition["getAttachNode"] = &TES3::BodyPartManager::getAttachNode;
 		}
 	}
 }

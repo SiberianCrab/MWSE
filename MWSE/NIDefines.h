@@ -14,6 +14,7 @@ namespace NI {
 	struct ColorA;
 	struct ColorData;
 	struct DirectionalLight;
+	struct DX8Renderer;
 	struct DynamicEffect;
 	struct ExtraData;
 	struct FogProperty;

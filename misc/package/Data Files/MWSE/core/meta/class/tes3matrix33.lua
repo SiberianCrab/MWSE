@@ -15,6 +15,10 @@
 --- @field z tes3vector3 The third row of the matrix.
 tes3matrix33 = {}
 
+--- Creates a new identity matrix.
+--- @return tes3matrix33 matrix No description yet available.
+function tes3matrix33.identity() end
+
 --- Creates a new 3 by 3 matrix from 3 provided vectors or 9 numbers. Creates an empty matrix if nothing is provided.
 --- @param x0 number|tes3vector3|nil *Default*: `0`. No description yet available.
 --- @param y0 number|tes3vector3|nil *Default*: `0`. No description yet available.

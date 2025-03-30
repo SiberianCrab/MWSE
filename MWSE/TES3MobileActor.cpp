@@ -1035,7 +1035,7 @@ namespace TES3 {
 			}
 
 			const auto& combo = instance->sourceCombo;
-			if (combo.sourceType == MagicSourceType::Spell && combo.source.asSpell->castType == SpellCastType::Disease) {
+			if (combo.sourceType == MagicSourceType::Spell && combo.source.asSpell->isCommonDisease()) {
 				return true;
 			}
 		}
@@ -1051,7 +1051,7 @@ namespace TES3 {
 			}
 
 			const auto& combo = instance->sourceCombo;
-			if (combo.sourceType == MagicSourceType::Spell && combo.source.asSpell->castType == SpellCastType::Blight) {
+			if (combo.sourceType == MagicSourceType::Spell && combo.source.asSpell->isBlightDisease()) {
 				return true;
 			}
 		}

@@ -105,4 +105,8 @@ namespace TES3 {
 	std::reference_wrapper<decltype(BodyPartManager::attachNodes)> BodyPartManager::getAttachNodes() {
 		return std::ref(attachNodes);
 	}
+
+	BodyPartManager::AttachNode* BodyPartManager::getAttachNode(AttachNode::Index index) {
+		return &attachNodes[int(index)];
+	}
 }

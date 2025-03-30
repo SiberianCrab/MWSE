@@ -15,6 +15,10 @@
 --- @field z tes3vector4 The 4th row of the matrix.
 tes3matrix44 = {}
 
+--- Creates a new identity matrix.
+--- @return tes3matrix44 matrix No description yet available.
+function tes3matrix44.identity() end
+
 --- Creates a new 4 by 4 matrix from 4 provided vectors or 16 numbers. Creates an empty matrix if nothing is provided.
 --- @param w0 number|tes3vector4|nil *Default*: `0`. No description yet available.
 --- @param x0 number|tes3vector4|nil *Default*: `0`. No description yet available.
