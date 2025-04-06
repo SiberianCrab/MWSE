@@ -276,6 +276,7 @@ namespace TES3 {
 
 		BoundingBox();
 		BoundingBox(const Vector3& min, const Vector3& max);
+		BoundingBox(const BoundingBox& bbox);
 		BoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
 
 		bool operator==(const BoundingBox& other) const;
@@ -287,6 +288,8 @@ namespace TES3 {
 
 		BoundingBox copy() const;
 		std::array<Vector3, 8> vertices() const;
+
+		void clampPoint(Vector3& point, const Vector3& origin) const;
 	};
 	static_assert(sizeof(BoundingBox) == 0x18, "TES3::BoundingBox failed size validation");
 

@@ -120,6 +120,8 @@ namespace NI {
 	unsigned int PointLight::getSortWeight() const {
 		auto weight = 0u;
 		for (auto node = &affectedNodes; node && node->data; node = node->next) {
+			if (node->data->isAppCulled()) continue;
+
 			const auto count = node->data->getLightCount();
 			if (count > Node::LIGHT_LIMIT) {
 				weight += count;

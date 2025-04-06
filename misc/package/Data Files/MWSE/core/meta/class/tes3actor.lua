@@ -12,7 +12,7 @@
 --- 
 --- Barter gold is reset on talking to an actor if fBarterGoldResetDelay hours have passed since the last transaction. If you want to change the base amount, for example in an investment mod, you must edit the barterGold of the baseObject.
 --- @field blood integer Friendly access to actor's blood type, in [0, 7] range. The available blood types are defined in the Morrowind.ini file, and assigned to the actor via the Construction Set.
---- @field cloneCount number *Read-only*. The number of clones that exist of this actor.
+--- @field cloneCount number *Read-only*. For base objects this is the number of clones that exist of this actor. For instances this is the ordinal number of the instance.
 --- @field equipment tes3equipmentStack[] *Read-only*. The items currently equipped to the actor.
 --- @field inventory tes3inventory|tes3itemStack[] *Read-only*. The items currently carried by the actor.
 tes3actor = {}

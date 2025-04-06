@@ -1,6 +1,7 @@
 #include "TES3Vectors.h"
 
 #include "NIColor.h"
+#include "NINode.h"
 #include "NIQuaternion.h"
 
 #include "MathUtil.h"
@@ -243,7 +244,7 @@ namespace TES3 {
 
 	Vector3 Vector3::operator-() const {
 		return Vector3(-x, -y, -z);
-	};
+	}
 
 	Vector3 Vector3::operator*(const Vector3& vec3) const {
 		return Vector3(x * vec3.x, y * vec3.y, z * vec3.z);
@@ -788,7 +789,7 @@ namespace TES3 {
 		m0.z = up.x;
 		m1.z = up.y;
 		m2.z = up.z;
-	};
+	}
 
 	//
 	// Matrix44
@@ -935,6 +936,13 @@ namespace TES3 {
 
 	}
 
+	BoundingBox::BoundingBox(const BoundingBox& bbox) :
+		minimum(bbox.minimum),
+		maximum(bbox.maximum)
+	{
+
+	}
+
 	BoundingBox::BoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) :
 		minimum(minX, minY, minZ),
 		maximum(maxX, maxY, maxZ)
@@ -985,6 +993,16 @@ namespace TES3 {
 			Vector3(maximum.x, minimum.y, minimum.z),
 			Vector3(maximum.x, maximum.y, maximum.z),
 		};
+	}
+
+	void BoundingBox::clampPoint(Vector3& point, const Vector3& origin) const {
+		const auto min = minimum + origin;
+		const auto max = maximum + origin;
+		//const auto min = minimum;
+		//const auto max = maximum;
+		point.x = std::clamp(point.x, min.x, max.x);
+		point.y = std::clamp(point.y, min.y, max.y);
+		point.z = std::clamp(point.z, min.z, max.z);
 	}
 
 	//

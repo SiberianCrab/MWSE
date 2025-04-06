@@ -735,6 +735,7 @@
     <ClCompile Include="NIAnimationKey.cpp" />
     <ClCompile Include="NIBillboardNode.cpp" />
     <ClCompile Include="NIBinaryStream.cpp" />
+    <ClCompile Include="NIBound.cpp" />
     <ClCompile Include="NIBoundingVolumeLua.cpp" />
     <ClCompile Include="NIBSAnimationNode.cpp" />
     <ClCompile Include="NIBSAnimationNodeLua.cpp" />

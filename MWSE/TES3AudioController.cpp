@@ -208,6 +208,10 @@ namespace TES3 {
 	}
 
 	double AudioController::getMusicDuration() const {
+		if (musicGraph == nullptr) {
+			throw std::runtime_error("Music Error: No music graph exists.");
+		}
+
 		IMediaPosition * positioning;
 		if (musicGraph->QueryInterface(IID_IMediaPosition, (LPVOID*)&positioning) < 0) {
 			throw std::runtime_error("Music Error: Could not query IMediaPosition interface.");
@@ -224,6 +228,10 @@ namespace TES3 {
 	}
 
 	double AudioController::getMusicPosition() const {
+		if (musicGraph == nullptr) {
+			throw std::runtime_error("Music Error: No music graph exists.");
+		}
+
 		IMediaPosition * positioning;
 		if (musicGraph->QueryInterface(IID_IMediaPosition, (LPVOID*)&positioning) < 0) {
 			throw std::runtime_error("Music Error: Could not query IMediaPosition interface.");
@@ -242,6 +250,10 @@ namespace TES3 {
 	void AudioController::setMusicPosition(double position) {
 		if (position < 0.0) {
 			position = 0.0;
+		}
+
+		if (musicGraph == nullptr) {
+			throw std::runtime_error("Music Error: No music graph exists.");
 		}
 
 		IMediaPosition * positioning;
