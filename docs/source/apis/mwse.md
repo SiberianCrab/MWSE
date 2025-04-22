@@ -56,6 +56,17 @@ The mwseTimerController responsible for game-type timers.
 
 ***
 
+### `mwse.Logger`
+<div class="search_terms" style="display: none">logger</div>
+
+Provides access to the [`mwseLogger`](../types/mwseLogger.md) API 
+
+**Returns**:
+
+* `result` ([mwseLogger](../types/mwseLogger.md))
+
+***
+
 ### `mwse.realTimers`
 <div class="search_terms" style="display: none">realtimers</div>
 

@@ -10,6 +10,7 @@
 --- Formatted as YYYYMMDD.
 --- @field buildNumber integer Equal to the `APPVEYOR_BUILD_NUMBER` in builds by AppVeyor (these builds are installed using the MWSE-Update). Equal to `UINT_MAX` in regular builds. This number is used for [mod metadata](https://mwse.github.io/MWSE/guides/metadata/#dependencies-section) files, when a mod depends on MWSE being installed.
 --- @field gameTimers mwseTimerController The mwseTimerController responsible for game-type timers.
+--- @field Logger mwseLogger Provides access to the [`mwseLogger`](../types/mwseLogger.md) API 
 --- @field realTimers mwseTimerController The mwseTimerController responsible for real-type timers.
 --- @field simulateTimers mwseTimerController The mwseTimerController responsible for simulate-type timers.
 --- @field version integer A numerical representation of the release version of MWSE currently being used.
