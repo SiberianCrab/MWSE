@@ -4,7 +4,7 @@
 -- More information: https://github.com/MWSE/MWSE/tree/master/docs
 
 --- Holds information about the context in which a logging message was created. This is currently only used when formatting log messages. This structure makes it easier to specify custom formatters.
---- @class mwseLogger.Record
+--- @class mwseLoggerRecord
 --- @field level mwseLogger.logLevel The logging level of this message. (e.g, if `Logger:info` was called, then this will be `mwseLogger.logLevel.info`.)
 --- @field lineNumber integer|false The linenumber that triggered this record to be created.
 --- Will be `false` if the "Enable Log Line Numbers" MWSE setting is disabled.

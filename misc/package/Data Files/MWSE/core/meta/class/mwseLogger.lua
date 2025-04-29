@@ -25,7 +25,7 @@
 --- @field filepath string The path to the file this `mwseLogger` was created in. This will be relative to the `modDir`.
 --- 
 --- For example, if this `mwseLogger` was constructed in `mods/My Mod/main.lua`, then the `filepath` will be `main.lua`.
---- @field formatter fun(self: mwseLogger, record: mwseLogger.Record, ...: string|any|fun(...): ...): string This is an advanced option and should be used with care. 
+--- @field formatter fun(self: mwseLogger, record: mwseLoggerRecord, ...: string|any|fun(...): ...): string This is an advanced option and should be used with care.
 --- It allows specifying a custom formatter, allowing for more fine-tuned control over how log messages are printed.
 --- If supplying a formatter, you are responsible for also including the "header" portion of the log.
 --- These can be created by calling the `protected` `makeHeader` method.
@@ -83,7 +83,7 @@ function mwseLogger.getLoggers(modDir) end
 --- 
 --- `abbreviateHeader`: boolean? — *Default*: `false`. Should the headers be abbreviated?
 --- 
---- `formatter`: nil|fun(self: Logger, record: mwseLogger.Record, ...: string|any|fun(...): ...): string — *Optional*. A custom formatter. This lets you customize how your logging messages are formatted. If not provided, the default formatter will be used.
+--- `formatter`: nil|fun(self: Logger, record: mwseLoggerRecord, ...: string|any|fun(...): ...): string — *Optional*. A custom formatter. This lets you customize how your logging messages are formatted. If not provided, the default formatter will be used.
 --- @return mwseLogger log The newly created logger.
 function mwseLogger.new(params) end
 
@@ -96,7 +96,7 @@ function mwseLogger.new(params) end
 --- @field outputFile boolean|string|nil *Default*: `false`. The path of the output file to write log messages in. This path is taken relative to `Data Files/MWSE/logs/`. If not provided, log messages will be written to `MWSE.log`. If `true`, then the `modDir` will be used as the output path.
 --- @field includeTimestamp boolean? *Default*: `true`. Should timestamps be included in logging messages? The timestamps are relative to the time that the game was launched.
 --- @field abbreviateHeader boolean? *Default*: `false`. Should the headers be abbreviated?
---- @field formatter nil|fun(self: Logger, record: mwseLogger.Record, ...: string|any|fun(...): ...): string *Optional*. A custom formatter. This lets you customize how your logging messages are formatted. If not provided, the default formatter will be used.
+--- @field formatter nil|fun(self: Logger, record: mwseLoggerRecord, ...: string|any|fun(...): ...): string *Optional*. A custom formatter. This lets you customize how your logging messages are formatted. If not provided, the default formatter will be used.
 
 --- Assert a condition and log an error if it fails.
 --- @param condition boolean No description yet available.
@@ -179,11 +179,11 @@ function mwseLogger:info(message, ...) end
 function mwseLogger:setAbbreviateHeader(newAbbreviateHeader) end
 
 --- Changes the `formatter` field of this logger.
---- 	
---- This function does exactly the same thing as writing `log.formatter = newFormatter`. 
+--- 
+--- This function does exactly the same thing as writing `log.formatter = newFormatter`.
 --- Use whichever one you prefer.
 --- 
---- @param newFormatter fun(self: mwseLogger, record: mwseLogger.Record, ...: string|any|fun(...): ...): string No description yet available.
+--- @param newFormatter fun(self: mwseLogger, record: mwseLoggerRecord, ...: string|any|fun(...): ...): string No description yet available.
 function mwseLogger:setFormatter(newFormatter) end
 
 --- Changes the `includeTimestamp` field of this logger.

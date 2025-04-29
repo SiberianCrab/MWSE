@@ -1,5 +1,5 @@
 ---@diagnostic disable: duplicate-set-field
---[[ # Logger 
+--[[ # Logger
 
 Based on the `mwseLogger` made by Merlord.
 
@@ -34,7 +34,7 @@ end
 
 -- Note: \x1B is the escape character.
 
--- Tiny optimization: store the terminal escape sequences for each log level, so they don't 
+-- Tiny optimization: store the terminal escape sequences for each log level, so they don't
 -- have to be recomputed every log message.
 ---@type table<mwseLogger.logLevel, string>
 local LOG_LEVEL_COLOR_STRINGS = {
@@ -75,9 +75,9 @@ do
 	--- The record holds information about the logging level and line number, and the rest of the parameters are the ones passed
 	--- as arguments to the `Logger:debug` methods.
 	--- This function should return a string, which will then be printed to the appropriate file.
-	--- This function should also include the header of the log message. The default header can be accessed by 
+	--- This function should also include the header of the log message. The default header can be accessed by
 	--- using the `makeHeader` method.
-	---@alias mwseLogger.formatter fun(self: mwseLogger, record: mwseLogger.Record, ...: string|any|fun(...): ...): string
+	---@alias mwseLogger.formatter fun(self: mwseLogger, record: mwseLoggerRecord, ...: string|any|fun(...): ...): string
 
 	---@alias mwseLogger.logLevel
 	---|`mwse.logLevel.none`	Nothing will be printed
@@ -86,7 +86,7 @@ do
 	---|`mwse.logLevel.info`	Crucial information will be printed
 	---|`mwse.logLevel.debug`	Debug messages will be printed
 	---|`mwse.logLevel.trace`	Many debug messages will be printed
-	
+
 	---@alias mwseLogger.logLevelString
 	---|`"NONE"`	 			Nothing will be printed
 	---|`"ERROR"`				Error messages will be printed
@@ -95,7 +95,7 @@ do
 	---|`"DEBUG"`				Debug messages will be printed
 	---|`"TRACE"`				Many debug messages will be printed
 
-	--- Stores all the mod-level information for a logger. 
+	--- Stores all the mod-level information for a logger.
 	--- This allows a mod to have several different loggers that are all sychronized with each other.
 	---@class mwseLogger.SharedData
 	---@field level mwseLogger.logLevel The logging level for this logger
@@ -117,7 +117,7 @@ local BAD_FILEPATHS = {
 	[string.lower("=[C]")] = true,
 }
 
----Returns the `modName`, `modDir`, and `filepath` of the currently executing file. 
+---Returns the `modName`, `modDir`, and `filepath` of the currently executing file.
 ---@param offset integer? The stack offset to use when calling `debug.getinfo`. DEFAULT: `0`.
 ---@return string? modName
 ---@return string? modDir
@@ -131,8 +131,8 @@ local function getModNameAndDirAndFilepath(offset)
 	-- 	with increasing `stackLevel`s, until we hit a "bad filepath".
 	--	(i.e., until we hit the core functionality that's responsible for executing the mods.)
 	-- The desired filepath will be the highest `stackLevel` that is not a "bad filepath".
-	-- We don't pick the first valid filepath because we want to play nicely with 
-	-- "Logger factories" that exist in some mods. (For example, Seph's library and 
+	-- We don't pick the first valid filepath because we want to play nicely with
+	-- "Logger factories" that exist in some mods. (For example, Seph's library and
 	-- the "Skills Module" by Merlord.)
 
 	---@type string
@@ -233,14 +233,14 @@ local function getModNameAndDirAndFilepath(offset)
 	end
 	-- This is path of the filepath that does not include the `modDir`.
 	-- NOTE: `modDir` could be either `pathParts[1]` or `pathParts[1] .. "." .. pathParts[2]`.
-	-- Thus, `modDir` is NOT a substring of `table.concat(pathParts, "/")`, 
+	-- Thus, `modDir` is NOT a substring of `table.concat(pathParts, "/")`,
 	-- as the directory delimters may differ.
 	local relativeFilePath = table.concat(pathParts, "/"):sub(modDir:len() + 2)
 
 	return modName, modDir, relativeFilePath
 end
 
---- A table containing all the provided logging formatters. 
+--- A table containing all the provided logging formatters.
 --- But of course, it is also possible to define your own custom formatter.
 local FORMATTERS = require("logger.formatters")
 
@@ -262,7 +262,7 @@ local COMMUNAL_KEYS = {
 	level = true,
 	--- Backwards compatibility: this was the old name of the `level` field.
 	--- This field will always be redirected to `SharedData.level`.
-	--- Note: This field should, from the users perspective, always be the string 
+	--- Note: This field should, from the users perspective, always be the string
 	--- representation of the current logging level.
 	logLevel = true,
 	formatter = true,
@@ -309,12 +309,12 @@ local SharedDataMeta = {
 	--- We also convert the older versions of field names to ensure backwards compatibility.
 	--- The general control flow structure is as follows:
 	--- 1) The user tries to index, for example, `logger.formatter`.
-	--- 2) `LoggerMeta.__index(logger, "formatter")` is called. 
+	--- 2) `LoggerMeta.__index(logger, "formatter")` is called.
 	--- 	- This metamethod realizes that `formatter` is a communal key, so it executes the following code:
 	--- 		```lua
 	--- 		logger.sharedData["formatter"]
 	--- 		```
-	--- 3) If no custom formatter was found (i.e., `logger.sharedData["formatter"] == nil)`, 
+	--- 3) If no custom formatter was found (i.e., `logger.sharedData["formatter"] == nil)`,
 	--- 	then this metamethod is called, and it returns the default formatter.
 	---@param self mwseLogger.SharedData
 	---@param k string
@@ -355,7 +355,7 @@ local function setOutputFile(sharedData, outputFile)
 
 	if outputFile == true then
 		outputFile = fmt("%s/%s.log", LOG_FILE_PARENT_DIR, sharedData.modDir:gsub("[./\\]", "/"))
-		-- sanitize the input string, 
+		-- sanitize the input string,
 	elseif type(outputFile) == "string" then
 		-- If we're passed a string, we should ensure it's of the form `Data Files/MWSE/logs/%s.log`
 		-- And we should also make sure it's not equal to Data Files/MWSE/logs/MWSE.log
@@ -395,14 +395,14 @@ end
 
 --[[ Metatable used by all Loggers.
 There are currently three supported metamethods:
-1) `__index`: Used to look up `SharedData` and `Logger` methods. 
+1) `__index`: Used to look up `SharedData` and `Logger` methods.
 	- When `logger` is indexed by a key `k`, this method will first check if `k` is a communal key.
-	- If `k` IS a communal key: 
+	- If `k` IS a communal key:
 		- This method returns `logger.sharedData[k]`.
 		- Note: `SharedData` implements its own `__index` metamethod, which is used to fetch default values.
 	- If `k` IS NOT a communal key:
 		- This method returns `Logger[k]`.
-		- This happens, for example, whenever `log:debug` is called. 
+		- This happens, for example, whenever `log:debug` is called.
 		- (And also happens whenever any Logger method is called.)
 
 2) `__newindex`: Used to ensure communal keys are properly updated.
@@ -465,10 +465,10 @@ local LoggerMeta = {
 			sharedData.modName = v
 
 			-- Make it harder for the `modDir` to be changed after loggers are initialized.
-			-- Note: This only affects the behavior when writing `log.modDir = "foo"`. It does not 
+			-- Note: This only affects the behavior when writing `log.modDir = "foo"`. It does not
 			-- 	change change what happens when writing `log.sharedData.modDir = "foo"`.
 			-- But this is about the best we can do in Lua.
-			-- The reason we are doing this is that some weird bugs can happen if users decide to 
+			-- The reason we are doing this is that some weird bugs can happen if users decide to
 			-- change the `modDir` after initializing a logger, as it could potentially
 			-- result in loggers from different mods having the same `sharedData`.
 		elseif k == "modDir" then
@@ -503,15 +503,15 @@ function Logger.new(params)
 	---@cast params -nil
 	---@cast params -string
 
-	-- We will temporarily store separate copies locally. 
-	-- This is so that, for example, an autogenerated `modName` does not replace 
+	-- We will temporarily store separate copies locally.
+	-- This is so that, for example, an autogenerated `modName` does not replace
 	-- a `modName` that was manually set in a sibling logger.
 	-- We will only set the `modName` and `modDir` to be the autogenerated values
 	-- 	if they could not be obtained from a sibling.
 	-- However, if `params.modName` is not nil, then we will update all the siblings using that value.
 
 	-- Note that we have to do this in a bit of a convulated order because we need to have
-	-- 	a `modDir` (either from `params` or from `getModNameAndDirAndFilepath`) in order to 
+	-- 	a `modDir` (either from `params` or from `getModNameAndDirAndFilepath`) in order to
 	-- retrieve the table of sibling loggers.
 
 	-- This is `params.modName`, or the autogenerated `modName`.
@@ -590,7 +590,7 @@ function Logger.new(params)
 
 	-- Update the values from the passed parameters.
 	-- This is where we get the payoff of storing the autogenerated `modName` and `modDir` locally,
-	-- as this loop will not overwrite the `modName` or `modDir` of existing loggers with the 
+	-- as this loop will not overwrite the `modName` or `modDir` of existing loggers with the
 	-- autogenerated values.
 	for k in pairs(COMMUNAL_KEYS) do
 
@@ -635,7 +635,7 @@ function Logger.get(modDir, filepath)
 	end
 end
 
----@deprecated 
+---@deprecated
 function Logger.getLogger(modName)
 	for _, arr in pairs(registeredLoggers) do
 		if arr[1] and arr[1].sharedData.modName == modName then
@@ -675,7 +675,7 @@ end
 ---@protected
 ---@param level mwseLogger.logLevel
 ---@param offset integer? for the line number to be accurate, this method assumes it's getting called 2 levels deep (i.e.). the offset adjusts this
----@return mwseLogger.Record record
+---@return mwseLoggerRecord record
 function Logger:makeRecord(level, offset)
 	return {
 		level = level,
@@ -686,7 +686,7 @@ function Logger:makeRecord(level, offset)
 end
 
 ---@protected
----@param record mwseLogger.Record
+---@param record mwseLoggerRecord
 ---@return string
 function Logger:makeHeader(record)
 	-- We're going to shove various things into here, and then call `table.concat`.
@@ -772,7 +772,7 @@ end
 
 -- calls format on the record and writes it to the appropriate location
 ---@protected
----@param record mwseLogger.Record
+---@param record mwseLoggerRecord
 ---@param ... any
 function Logger:writeRecord(record, ...)
 	self:write(self.sharedData.formatter(self, record, ...))
@@ -796,7 +796,7 @@ end
 
 Logger.none = nil
 
--- Update `call` to be the same as `debug`. 
+-- Update `call` to be the same as `debug`.
 -- This is so that the line numbers are pulled correctly when using the metamethod.
 LoggerMeta.__call = Logger.debug
 

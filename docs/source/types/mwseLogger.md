@@ -53,7 +53,7 @@ For example, if this `mwseLogger` was constructed in `mods/My Mod/main.lua`, the
 ### `formatter`
 <div class="search_terms" style="display: none">formatter</div>
 
-This is an advanced option and should be used with care. 
+This is an advanced option and should be used with care.
 It allows specifying a custom formatter, allowing for more fine-tuned control over how log messages are printed.
 If supplying a formatter, you are responsible for also including the "header" portion of the log.
 These can be created by calling the `protected` `makeHeader` method.
@@ -63,7 +63,7 @@ Some examples can be found in the `logger/formatters.lua` folder of the core lib
 
 **Returns**:
 
-* `result` (fun(self: [mwseLogger](../types/mwseLogger.md), record: [mwseLogger.Record](../types/mwseLogger.Record.md), ...: string|any|fun(...)): string)
+* `result` (fun(self: [mwseLogger](../types/mwseLogger.md), record: [mwseLoggerRecord](../types/mwseLoggerRecord.md), ...: string|any|fun(...)): string)
 
 ***
 
@@ -288,8 +288,8 @@ myObject:setAbbreviateHeader(newAbbreviateHeader)
 <div class="search_terms" style="display: none">setformatter, formatter</div>
 
 Changes the `formatter` field of this logger.
-	
-This function does exactly the same thing as writing `log.formatter = newFormatter`. 
+
+This function does exactly the same thing as writing `log.formatter = newFormatter`.
 Use whichever one you prefer.
 
 
@@ -299,7 +299,7 @@ myObject:setFormatter(newFormatter)
 
 **Parameters**:
 
-* `newFormatter` (fun(self: [mwseLogger](../types/mwseLogger.md), record: [mwseLogger.Record](../types/mwseLogger.Record.md), ...: string|any|fun(...)): string)
+* `newFormatter` (fun(self: [mwseLogger](../types/mwseLogger.md), record: [mwseLoggerRecord](../types/mwseLoggerRecord.md), ...: string|any|fun(...)): string)
 
 ***
 
@@ -528,7 +528,7 @@ local log = mwseLogger.new({ modName = ..., moduleName = ..., level = ..., logTo
 	* `outputFile` (boolean, string): *Default*: `false`. The path of the output file to write log messages in. This path is taken relative to `Data Files/MWSE/logs/`. If not provided, log messages will be written to `MWSE.log`. If `true`, then the `modDir` will be used as the output path.
 	* `includeTimestamp` (boolean): *Default*: `true`. Should timestamps be included in logging messages? The timestamps are relative to the time that the game was launched.
 	* `abbreviateHeader` (boolean): *Default*: `false`. Should the headers be abbreviated?
-	* `formatter` (fun(self: Logger, record: [mwseLogger.Record](../types/mwseLogger.Record.md), ...: string|any|fun(...)): string): *Optional*. A custom formatter. This lets you customize how your logging messages are formatted. If not provided, the default formatter will be used.
+	* `formatter` (fun(self: Logger, record: [mwseLoggerRecord](../types/mwseLoggerRecord.md), ...: string|any|fun(...)): string): *Optional*. A custom formatter. This lets you customize how your logging messages are formatted. If not provided, the default formatter will be used.
 
 **Returns**:
 

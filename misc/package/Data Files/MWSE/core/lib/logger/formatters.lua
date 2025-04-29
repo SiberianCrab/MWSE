@@ -18,8 +18,8 @@ local INSPECT_PARAMS = {
 			-- ignore metatables
 			return
 		end
-		
-		
+
+
 		local ty, subtype = type(item)
 
 		-- Check if it's a `table` or `userdata` with a `__tostring` metamethod
@@ -77,7 +77,7 @@ end
 
 do -- Define the DEFAULT formatter
 
-	
+
 
 	--- Expands the parameters, and calls `string.format` if more than one argument was given.
 	--- If `string.format` triggered an error (because invalid formatting parameters were passed),
@@ -89,17 +89,17 @@ do -- Define the DEFAULT formatter
 		end
 		--Otherwise, we will try to format the string and intercept the error message on failure.
 		--This is so that we can replace the error message with a more helpful one.
-		--Note that `pcall(fmt, prettyProcess(...))` is basically the same thing as 
+		--Note that `pcall(fmt, prettyProcess(...))` is basically the same thing as
 		--```lua
-		--pcall(function() 
-		--	return fmt(prettyProcess(...)) 
+		--pcall(function()
+		--	return fmt(prettyProcess(...))
 		--end)
 		--```
 		local statusCode, msg = pcall(fmt, prettyProcess(...))
 		if statusCode then
 			return msg
 		end
-		
+
 		-- From this point onwards, we know that an error was triggered, and our job is to
 		-- display a more helpful error message.
 
@@ -116,7 +116,7 @@ do -- Define the DEFAULT formatter
 				5 -- Make the error message point to the code that caused the error.
 			)
 		end
-		
+
 		-- We can find out exactly which argument caused the error.
 
 		-- Number of arguments that were provided, after evaluating functions.
@@ -139,7 +139,7 @@ do -- Define the DEFAULT formatter
 
 		for i = 1, numProvided do
 			local val = select(i, ...)
-			-- `inspect` will wrap strings in quotes and convert `nil` to the 
+			-- `inspect` will wrap strings in quotes and convert `nil` to the
 			-- proper string representation.
 			-- This results in some wasted computation, but this is only done
 			-- in the unlikely scenario where a logging message was improperly formatted.
@@ -165,14 +165,14 @@ do -- Define the DEFAULT formatter
 
 		---@diagnostic disable-next-line: invisible
 		local header = self:makeHeader(record)
-		
+
 		local first, second = ...
 
 		if type(first) == "function" then
 			-- If the first argument is a function, call it and pass in the remaining parameters
 			return header .. expandAndFormat(first(select(2, ...)))
 		elseif type(second) == "function" then
-			-- If the second argument is a function, then assume that the first parameter is the 
+			-- If the second argument is a function, then assume that the first parameter is the
 			-- string that should be formatted.
 			return header .. expandAndFormat(first, second(select(3, ...)))
 		else
@@ -186,7 +186,7 @@ end
 do -- Define the `expandAllFunctions` formatter
 
 	-- This is necessary because `{...}` will flatten out any `nil`s,
-	-- which would lead to very confusing errors if it caused 
+	-- which would lead to very confusing errors if it caused
 	-- `string.format` to get fewer arguments than it was expecting.
 	local function addArgs(fmtArgs, ...)
 		for i = 1, select("#", ...) do
@@ -200,15 +200,15 @@ do -- Define the `expandAllFunctions` formatter
 			end
 		end
 	end
-	
+
 	---@param self mwseLogger
-	---@param record mwseLogger.Record
+	---@param record mwseLoggerRecord
 	formatters.expandAllFunctions = function (self, record, ...)
 		local fmtArgs = {}
 
-		
 
-		
+
+
 		local i, n = 1, select("#", ...)
 		--[[Format each of the arguments.
 			- Functions: will be called using the appropriate number of arguments.
@@ -248,7 +248,7 @@ do -- Define the `expandAllFunctions` formatter
 		local str
 		-- Only call `string.format` if there's more than one argument.
 		-- This helps to avoid errors caused by users writing strings that they don't
-		-- expect will be formatted. 
+		-- expect will be formatted.
 		-- e.g., `log:debug("progress: 50%")`
 		if #fmtArgs > 1 then
 			str = fmt(table.unpack(fmtArgs))
