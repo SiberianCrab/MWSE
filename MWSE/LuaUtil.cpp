@@ -486,21 +486,25 @@ namespace mwse::lua {
 	}
 
 	void logStackTrace(const char* message) {
-		if (message != nullptr) {
-			log::getLog() << message << std::endl;
-		}
-
 		auto stateHandle = LuaManager::getInstance().getThreadSafeStateHandle();
 		auto& state = stateHandle.state;
 		static sol::protected_function luaDebugTraceback = state["debug"]["traceback"];
 
 		sol::protected_function_result result = luaDebugTraceback();
-		if (result.valid()) {
-			sol::optional<std::string> asString = result;
-			if (asString) {
-				log::getLog() << asString.value() << std::endl;
-			}
+		if (!result.valid()) {
+			return;
 		}
+
+		sol::optional<std::string> asString = result;
+		if (!asString) {
+			return;
+		}
+
+		if (message != nullptr) {
+			log::getLog() << message << std::endl;
+		}
+
+		log::getLog() << asString.value() << std::endl;
 	}
 
 	void reportErrorInGame(const char* sourceName, const sol::error& error) {
