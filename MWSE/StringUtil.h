@@ -76,6 +76,12 @@ namespace mwse::string {
 	// Other string utility functions.
 	//
 
+	static inline std::string from_wstring(const std::wstring& wstr) {
+		std::vector<char> buf(wstr.size());
+		std::use_facet<std::ctype<wchar_t>>(std::locale{}).narrow(wstr.data(), wstr.data() + wstr.size(), '?', buf.data());
+		return std::string(buf.data(), buf.size());
+	}
+
 	static inline void ltrim(std::string& s) {
 		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) { return !std::isspace(ch); }));
 	}
