@@ -511,10 +511,10 @@ namespace mwse::lua {
 
 		std::string stackTrace = result;
 		if (removePrefix) {
-			stackTrace.erase(stackTrace.begin(), stackTrace.begin() + sizeof("stack traceback:"));
+			stackTrace.erase(0, sizeof("stack traceback:"));
 		}
 
-		return result;
+		return stackTrace;
 	}
 
 	void reportErrorInGame(const char* sourceName, const sol::error& error) {

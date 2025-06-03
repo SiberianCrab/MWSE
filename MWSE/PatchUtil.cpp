@@ -48,6 +48,7 @@
 #include "BitUtil.h"
 #include "ScriptUtil.h"
 #include "TES3Util.h"
+#include "WindowsUtil.h"
 
 #include "LuaManager.h"
 #include "LuaUtil.h"
@@ -1969,8 +1970,8 @@ namespace mwse::patch {
 		// Patch: Give threads descriptions.
 		const auto dataHandler = TES3::DataHandler::get();
 		if (dataHandler) {
-			SetThreadDescription(dataHandler->mainThread, L"GameMainThread");
-			SetThreadDescription(dataHandler->backgroundThread, L"GameBackgroundThread");
+			windows::SetThreadDescription(dataHandler->mainThread, L"GameMainThread");
+			windows::SetThreadDescription(dataHandler->backgroundThread, L"GameBackgroundThread");
 		}
 	}
 

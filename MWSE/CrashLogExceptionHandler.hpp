@@ -4,6 +4,8 @@
 
 #include "TES3Defines.h"
 
+#include "StringUtil.h"
+
 #define SYMOPT_EX_WINE_NATIVE_MODULES 1000
 
 constexpr UINT32 ce_printStackCount = 256;
@@ -75,14 +77,9 @@ namespace CrashLogger::PDB {
 	inline std::string GetClassNameFromPDB(void* object) {
 		std::string name;
 		GetClassNameFromPDBSEH(object, name);
-		std::string delimiter = "vtbl_";
-		if (name.find(delimiter) != std::string::npos) {
-			name.erase(0, name.find(delimiter) + delimiter.length());
-		}
-		delimiter = "sg_";
-		if (name.find(delimiter) != std::string::npos) {
-			name.erase(0, name.find(delimiter) + delimiter.length());
-		}
+		mwse::string::strip_start(name, "vtbl_");
+		mwse::string::strip_start(name, "sg_");
+		mwse::string::strip_end(name, "+0x0");
 		return name;
 	}
 

@@ -2,6 +2,9 @@
 #include "TES3Object.h"
 #include "NINode.h"
 #include "NIObjectNET.h"
+#include "NIRTTI.h"
+
+#include "TES3Land.h"
 
 // If class is described by a single line, no need to name the variable
 // If there is a member class, if it's one-line, leave it as one-line, if there are several, prepend the name and add offset
@@ -163,7 +166,7 @@ inline std::string GetObjectType(TES3::ObjectType::ObjectType type) {
 }
 
 inline auto Offset(std::vector<std::string> vector) {
-	for (auto i : vector) i.insert(0, "    ");
+	for (auto& i : vector) i.insert(0, "    ");
 	return vector;
 }
 
@@ -179,9 +182,7 @@ template<class Member> auto LogMember(const std::string& name, Member& member) {
 template<class Member> std::string LogClassLineByLine(Member& member) {
 	std::string output;
 	std::vector<std::string> vec = LogClass(member);
-	for (const auto& i : vec)
-		output += i + '\n';
-	return output;
+	return fmt::format("{}", fmt::join(vec, "\n                                  "));
 }
 
 inline auto LogClass(TES3::BaseObject& obj) {
@@ -225,7 +226,7 @@ inline auto LogClass(TES3::Object& obj) {
 		vec.push_back(fmt::format("ID: {} ({}) : (Plugin: \"{}\")", objectID, GetObjectType(obj.objectType), modName));
 	}
 	if (const auto baseObject = obj.getBaseObject()) {
-			std::vector<std::string> baseVector = LogMember("\t \t \t \t \t BaseObject:", *baseObject);
+			std::vector<std::string> baseVector = LogMember("BaseObject:", *baseObject);
 		vec.insert(vec.end(), baseVector.begin(), baseVector.end());
 	}
 	return vec;
@@ -239,20 +240,20 @@ inline auto LogClass(TES3::Reference& obj) {
 	TES3::GameFile* sourceMod = obj.sourceMod;
 	if (!sourceMod) {
 		if (!&obj) {
-			objectName = fmt::format("No Source Mod: {} ({})", GetObjectType(obj.objectType), "NULL");
+			objectName = fmt::format("No Source Mod: {} ({})", "NULL");
 		}
 		else {
-			objectName = fmt::format("No Source Mod: {}", GetObjectType(obj.objectType));
+			objectName = fmt::format("No Source Mod.");
 		}
 		vec.push_back(fmt::format("ID: {} ({})", objectID, objectName));
 	}
 	else {
 		std::string modName = sourceMod->filename;
 
-		vec.push_back(fmt::format("ID: ({}) ({}) : (Plugin: \"{}\")", objectID, GetObjectType(obj.objectType), modName));
+		vec.push_back(fmt::format("ID: ({}) : (Plugin: \"{}\")", objectID, modName));
 	}
 	if (const auto baseObject = obj.getBaseObject()) {
-		std::vector<std::string> baseVector = LogMember("\t \t \t \t \t BaseObject:", *baseObject);
+		std::vector<std::string> baseVector = LogMember("BaseObject:", *baseObject);
 		vec.insert(vec.end(), baseVector.begin(), baseVector.end());
 	}
 	return vec;
@@ -269,6 +270,49 @@ inline auto LogClass(TES3::PathGrid& obj) {
 		std::vector<std::string> baseVector = LogMember("Cell:", static_cast<TES3::BaseObject&>(*obj.parentCell));
 		vec.insert(vec.end(), baseVector.begin(), baseVector.end());
 	}
+	return vec;
+}
+
+inline auto LogClass(TES3::Cell& obj) {
+	std::vector<std::string> vec;
+	const std::string objectID = obj.getEditorName();
+	const std::string sourceMod = obj.sourceMod ? obj.sourceMod->getFilename() : "N/A";
+	vec.push_back(fmt::format("ID: {} : (Plugin: \"{}\")", objectID, sourceMod));
+	return vec;
+}
+
+inline auto LogClass(TES3::Land& obj) {
+	std::vector<std::string> vec;
+	const std::string objectID = fmt::format("({}, {})", obj.gridX, obj.gridY);
+	const std::string sourceMod = obj.sourceMod ? obj.sourceMod->getFilename() : "N/A";
+	vec.push_back(fmt::format("ID: {} : (Plugin: \"{}\")", objectID, sourceMod));
+	return vec;
+}
+
+inline auto LogClass(TES3::Weather& obj) {
+	std::vector<std::string> vec;
+	std::string name = obj.getName();
+	vec.push_back(fmt::format("ID: {}", name));
+	return vec;
+}
+
+inline auto LogClass(NI::Object& obj) {
+	std::vector<std::string> vec;
+
+	const auto rtti = obj.getRunTimeTypeInformation();
+	if (!rtti) {
+		vec.push_back("No RTTI available");
+		return vec;
+	}
+
+	std::optional<std::string> name;
+	if (obj.isInstanceOfType(NI::RTTIStaticPtr::NiObjectNET)) {
+		const auto n = static_cast<NI::ObjectNET&>(obj).getName();
+		if (n) {
+			vec.push_back(fmt::format("Name: {}", n));
+		}
+	}
+
 	return vec;
 }
 

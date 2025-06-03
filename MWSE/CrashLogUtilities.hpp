@@ -3,17 +3,21 @@ inline int ExceptionFilter(unsigned int code) {
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
+// Erases a string if it does not have a null-terminator or is longer than MAX_PATH.
 inline std::string& SanitizeStringBySize(std::string& str) {
-	for (UINT32 i = 0; i < MAX_PATH; i++) if (str[i] == 0)
-		return str;
-	str = "";
+	if (str.length() >= MAX_PATH) {
+		str.clear();
+	}
 	return str;
 }
 
 inline std::string& SanitizeStringFromBadData(std::string& str) {
-	str.erase(std::remove_if(str.begin(), str.end(), [](char c) { return !(c >= 0 && c <= 0x128); }), str.end());
+	// Remove the first non-printable character, then anything after it.
+	const auto first_nonprintable = std::remove_if(str.begin(), str.end(), [](char c) { return !std::isprint(c); });
+	str.erase(first_nonprintable, str.end());
 
-	std::replace_if(str.begin(), str.end(), [](char c) { return c == '\n' || c == '\r' || c == '\0' || c == '\v'; }, ' ');
+	// Replace any newlines/tabs with spaces.
+	std::replace_if(str.begin(), str.end(), [](char c) { return std::isspace(c); }, ' ');
 
 	return str;
 }
@@ -81,7 +85,7 @@ inline std::string FormatSize(const UINT64 size) {
 }
 
 inline std::string GetMemoryUsageString(const UINT64 used, const UINT64 total) {
-	float usedPercent = (float)used / total * 100.0f;
+	const auto usedPercent = (float)used / total * 100.0f;
 	return fmt::format("{:10} / {:10} ({:.2f}%)", FormatSize(used), FormatSize(total), usedPercent);
 }
 

@@ -2,6 +2,7 @@
 #include "CrashLogExceptionHandler.hpp"
 
 #include "StringUtil.h"
+#include "WindowsUtil.h"
 
 namespace CrashLogger::Version {
 	std::stringstream output;
@@ -80,19 +81,16 @@ namespace CrashLogger::Exception {
 namespace CrashLogger::Thread {
 	std::stringstream output;
 
-	static std::wstring GetCurrentThreadDescription() {
-		wchar_t* pThreadName = nullptr;
-		const auto hr = GetThreadDescription(GetCurrentThread(), &pThreadName);
-		if (!SUCCEEDED(hr)) {
-			return L"<unknown thread>";
-		}
-		const std::wstring name = pThreadName;
-		LocalFree(pThreadName);
-		return name;
-	}
-
 	static std::string GetThreadName() {
-		return mwse::string::from_wstring(GetCurrentThreadDescription());
+		auto name = mwse::windows::GetThreadDescription(GetCurrentThread());
+		if (!name.has_value()) {
+			name = L"<unsupported>";
+		}
+		else if (name.value().empty()) {
+			name = L"<unknown>";
+		}
+
+		return mwse::string::from_wstring(name.value());
 	}
 
 	extern void Process(EXCEPTION_POINTERS* info) {
@@ -135,34 +133,36 @@ namespace CrashLogger::Install {
 namespace CrashLogger::Calltrace {
 	std::stringstream output;
 
-	std::string GetCalltraceFunction(UINT32 eip, UINT32 ebp, HANDLE process) {
-		/*if (GetModuleFileName((HMODULE)frame.AddrPC.Offset, path, MAX_PATH)) {  //Do this work on non base addresses even on  Windows? Cal directly the LDR function?
-		if (!SymLoadModule(process, NULL, path, NULL, 0, 0)) Log() << FormatString("Porcoddio %0X", GetLastError());
-		}*/
+	struct StackEntry {
+		UINT32 ebp;
+		std::string address;
+		std::string name;
+		std::string source;
 
-		const auto moduleBase = PDB::GetModuleBase(eip, process);
+		StackEntry(UINT32 eip, UINT32 _ebp, HANDLE process) {
+			ebp = _ebp;
+			const auto moduleBase = PDB::GetModuleBase(eip, process);
 
-		std::string begin = fmt::format("0x{:08X} | ", ebp);
+			const auto moduleOffset = (moduleBase != 0x00400000) ? eip - moduleBase + 0x10000000 : eip;
 
-		std::string middle;
+			if (const auto module = PDB::GetModule(eip, process); module.empty()) {
+				address = fmt::format("??? (0x{:08X})", moduleOffset);
+				name = "(Corrupt stack or heap?)";
+			}
+			else if (const auto symbol = PDB::GetSymbol(eip, process); symbol.empty()) {
+				address = fmt::format("{} (0x{:08X})", module, moduleOffset);
+				name = "";
+			}
+			else {
+				address = fmt::format("{} (0x{:08X})", module, moduleOffset);
+				name = symbol;
+			}
 
-		const auto moduleOffset = (moduleBase != 0x00400000) ? eip - moduleBase + 0x10000000 : eip;
-
-		if (const auto module = PDB::GetModule(eip, process); module.empty())
-			middle = fmt::format("{:>28s} (0x{:08X}) | {:<40s} |", "???", moduleOffset, "(Corrupt stack or heap?)");
-		else if (const auto symbol = PDB::GetSymbol(eip, process); symbol.empty())
-			middle = fmt::format("{:>28s} (0x{:08X}) | {:<40s} |", module, moduleOffset, "");
-		else
-			middle = fmt::format("{:>28s} (0x{:08X}) | {:<40s} |", module, moduleOffset, symbol);
-
-		std::string end;
-
-		if (const auto line = PDB::GetLine(eip, process); !line.empty()) {
-			end = " " + line;
+			if (const auto line = PDB::GetLine(eip, process); !line.empty()) {
+				source = line;
+			}
 		}
-
-		return begin + middle + end;
-	}
+	};
 
 	extern void Process(EXCEPTION_POINTERS* info) {
 		try {
@@ -199,9 +199,8 @@ namespace CrashLogger::Calltrace {
 			frame.AddrStack.Mode = AddrModeFlat;
 			DWORD eip = 0;
 
-			// crutch to try to copy dbghelp before.
-			output << fmt::format("{:^10} |  {:^40} | {:^40} | Source", "ebp", "Function Address", "Function Name") << '\n';
-
+			// Get a list of our stack entries.
+			std::vector<StackEntry> entries;
 			while (StackWalk(machine, process, thread, &frame, &context, NULL, SymFunctionTableAccess, SymGetModuleBase, NULL)) {
 				/*
 				Using  a PDB for OBSE from VS2019 is causing the frame to repeat, but apparently only if WINEDEBUG=+dbghelp isn't setted. Is this a wine issue?
@@ -209,7 +208,22 @@ namespace CrashLogger::Calltrace {
 				*/
 				if (frame.AddrPC.Offset == eip) break;
 				eip = frame.AddrPC.Offset;
-				output << GetCalltraceFunction(frame.AddrPC.Offset, frame.AddrFrame.Offset, process) << '\n';
+
+				entries.push_back(StackEntry(frame.AddrPC.Offset, frame.AddrFrame.Offset, process));
+			}
+
+			// Calculate our column widths.
+			const auto addressLength = std::max_element(entries.begin(), entries.end(), [](const auto& a, const auto& b) {
+				return a.address.length() < b.address.length();
+			})->address.length();
+			const auto nameLength = std::max_element(entries.begin(), entries.end(), [](const auto& a, const auto& b) {
+				return a.name.length() < b.name.length();
+			})->name.length();
+
+			// We can finally print our table.
+			output << fmt::format("{:^10} | {:>{}} | {:<{}} | {}", "EBP", "Function Address", addressLength, "Function Name", nameLength, "Source") << '\n';
+			for (const auto& e : entries) {
+				output << fmt::format("0x{:08X} | {:>{}} | {:<{}} | {}", e.ebp, e.address, addressLength, e.name, nameLength, e.source) << '\n';
 			}
 		}
 		catch (...) {
@@ -225,7 +239,11 @@ namespace CrashLogger::LuaTraceback {
 
 	extern void Process(EXCEPTION_POINTERS* info) {
 		try {
-			output << mwse::lua::getStackTrace(true) << '\n';
+			const auto stackTrace = mwse::lua::getStackTrace(true);
+			if (stackTrace.empty()) {
+				return;
+			}
+			output << stackTrace << '\n';
 		}
 		catch (...) {
 			output << "Failed to process lua traceback." << '\n';
@@ -252,7 +270,7 @@ namespace CrashLogger::Mods {
 				return std::strlen(a->getFilename()) < std::strlen(b->getFilename());
 			});
 			const auto gameFileWithLongestAuthor = *std::max_element(activeMods.begin(), activeMods.end(), [](const auto& a, const auto& b) {
-				return std::strlen(a->getFilename()) < std::strlen(b->getFilename());
+				return std::strlen(a->getAuthor()) < std::strlen(b->getAuthor());
 			});
 			const auto filenameLength = std::strlen(gameFileWithLongestFilename->getFilename());
 			const auto authorLength = std::strlen(gameFileWithLongestAuthor->getAuthor());

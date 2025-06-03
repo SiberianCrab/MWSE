@@ -31,6 +31,7 @@
 #include "TES3UIMenuController.h"
 #include "TES3VFXManager.h"
 #include "TES3Weapon.h"
+#include "TES3Weather.h"
 #include "TES3WorldController.h"
 
 #include "NICollisionSwitch.h"

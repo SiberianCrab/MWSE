@@ -69,6 +69,9 @@ namespace mwse::string {
 
 	bool starts_with(const std::string_view& string, const std::string_view& substring);
 	bool ends_with(const std::string_view& string, const std::string_view& substring);
+	
+	void strip_start(std::string& string, const std::string_view& substring);
+	void strip_end(std::string& string, const std::string_view& substring);
 
 	bool replace(std::string& str, const std::string_view from, const std::string_view to);
 
