@@ -79,6 +79,10 @@ namespace mwse::string {
 	// Other string utility functions.
 	//
 
+	static inline bool is_printable(const char c) {
+		return std::isprint(c) || std::isspace(c);
+	}
+
 	static inline std::string from_wstring(const std::wstring& wstr) {
 		std::vector<char> buf(wstr.size());
 		std::use_facet<std::ctype<wchar_t>>(std::locale{}).narrow(wstr.data(), wstr.data() + wstr.size(), '?', buf.data());

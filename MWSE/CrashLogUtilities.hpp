@@ -6,7 +6,7 @@ inline int ExceptionFilter(unsigned int code) {
 // Erases a string if it does not have a null-terminator or is longer than MAX_PATH.
 inline std::string& SanitizeStringBySize(std::string& str) {
 	if (str.length() >= MAX_PATH) {
-		str.clear();
+		str.resize(MAX_PATH);
 	}
 	return str;
 }
@@ -47,12 +47,17 @@ inline std::string& SanitizeStringFromUserInfo(std::string& str) {
 	return str;
 }
 
-inline const std::string& SanitizeString(std::string&& str) {
+inline const std::string& SanitizeString(std::string& str) {
 	SanitizeStringBySize(str);
 	SanitizeStringFromBadData(str);
 	SanitizeStringFromUserInfo(str);
-
 	return str;
+}
+
+inline const std::string SanitizeString(const std::string& str) {
+	std::string r = str;
+	SanitizeString(r);
+	return r;
 }
 
 inline float ConvertToKiB(const UINT64 size) {

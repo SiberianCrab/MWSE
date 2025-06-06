@@ -102,268 +102,268 @@ namespace CrashLogger::PDB {
 			RTTILocator* rtti = vtbl[-1];
 
 			switch ((UINT32)vtbl) {
-			case TES3::VirtualTableAddress::VirtualTableAddress::Activator:
+			case TES3::VirtualTableAddress::Activator:
 				result = "Activator";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::ActorAnimController:
+			case TES3::VirtualTableAddress::ActorAnimController:
 				result = "ActorAnimController";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::ActorWearsObjects:
+			case TES3::VirtualTableAddress::ActorWearsObjects:
 				result = "ActorWearsObjects";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AIPackageActivate:
+			case TES3::VirtualTableAddress::AIPackageActivate:
 				result = "AIPackageActivate";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AIPackageBase:
+			case TES3::VirtualTableAddress::AIPackageBase:
 				result = "AIPackageBase";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AIPackageEscort:
+			case TES3::VirtualTableAddress::AIPackageEscort:
 				result = "AIPackageEscort";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AIPackageFollow:
+			case TES3::VirtualTableAddress::AIPackageFollow:
 				result = "AIPackageFollow";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AIPackageTravel:
+			case TES3::VirtualTableAddress::AIPackageTravel:
 				result = "AIPackageTravel";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AIPackageWander:
+			case TES3::VirtualTableAddress::AIPackageWander:
 				result = "AIPackageWander";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Alchemy:
+			case TES3::VirtualTableAddress::Alchemy:
 				result = "Alchemy";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AnimatedObject:
+			case TES3::VirtualTableAddress::AnimatedObject:
 				result = "AnimatedObject";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AnimationGroup:
+			case TES3::VirtualTableAddress::AnimationGroup:
 				result = "AnimationGroup";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Apparatus:
+			case TES3::VirtualTableAddress::Apparatus:
 				result = "Apparatus";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::ArchiveFile:
+			case TES3::VirtualTableAddress::ArchiveFile:
 				result = "ArchiveFile";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Armor:
+			case TES3::VirtualTableAddress::Armor:
 				result = "Armor";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Attribute:
+			case TES3::VirtualTableAddress::Attribute:
 				result = "Attribute";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AttributeFatigue:
+			case TES3::VirtualTableAddress::AttributeFatigue:
 				result = "AttributeFatigue";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::AttributeSkill:
+			case TES3::VirtualTableAddress::AttributeSkill:
 				result = "AttributeSkill";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::BaseObject:
+			case TES3::VirtualTableAddress::BaseObject:
 				result = "BaseObject";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Birthsign:
+			case TES3::VirtualTableAddress::Birthsign:
 				result = "Birthsign";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::BodyPart:
+			case TES3::VirtualTableAddress::BodyPart:
 				result = "BodyPart";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Book:
+			case TES3::VirtualTableAddress::Book:
 				result = "Book";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Cell:
+			case TES3::VirtualTableAddress::Cell:
 				result = "Cell";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Class:
+			case TES3::VirtualTableAddress::Class:
 				result = "Class";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Clothing:
+			case TES3::VirtualTableAddress::Clothing:
 				result = "Clothing";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::ContainerBase:
+			case TES3::VirtualTableAddress::ContainerBase:
 				result = "ContainerBase";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::ContainerInstance:
+			case TES3::VirtualTableAddress::ContainerInstance:
 				result = "ContainerInstance";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::CreatureBase:
+			case TES3::VirtualTableAddress::CreatureBase:
 				result = "CreatureBase";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::CreatureInstance:
+			case TES3::VirtualTableAddress::CreatureInstance:
 				result = "CreatureInstance";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::CutscenePlayer:
+			case TES3::VirtualTableAddress::CutscenePlayer:
 				result = "CutscenePlayer";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Dialogue:
+			case TES3::VirtualTableAddress::Dialogue:
 				result = "Dialogue";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::DialogueInfo:
+			case TES3::VirtualTableAddress::DialogueInfo:
 				result = "DialogueInfo";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Door:
+			case TES3::VirtualTableAddress::Door:
 				result = "Door";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Enchantment:
+			case TES3::VirtualTableAddress::Enchantment:
 				result = "Enchantment";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Faction:
+			case TES3::VirtualTableAddress::Faction:
 				result = "Faction";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Game:
+			case TES3::VirtualTableAddress::Game:
 				result = "Game";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::GameBase:
+			case TES3::VirtualTableAddress::GameBase:
 				result = "GameBase";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::GameSetting:
+			case TES3::VirtualTableAddress::GameSetting:
 				result = "GameSetting";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::GlobalVariable:
+			case TES3::VirtualTableAddress::GlobalVariable:
 				result = "GlobalVariable";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Ingredient:
+			case TES3::VirtualTableAddress::Ingredient:
 				result = "Ingredient";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Land:
+			case TES3::VirtualTableAddress::Land:
 				result = "Land";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::LandTexture:
+			case TES3::VirtualTableAddress::LandTexture:
 				result = "LandTexture";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::LeveledCreature:
+			case TES3::VirtualTableAddress::LeveledCreature:
 				result = "LeveledCreature";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::LeveledItem:
+			case TES3::VirtualTableAddress::LeveledItem:
 				result = "LeveledItem";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Light:
+			case TES3::VirtualTableAddress::Light:
 				result = "Light";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Lockpick:
+			case TES3::VirtualTableAddress::Lockpick:
 				result = "Lockpick";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MagicEffect:
+			case TES3::VirtualTableAddress::MagicEffect:
 				result = "MagicEffect";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MagicSourceInstance:
+			case TES3::VirtualTableAddress::MagicSourceInstance:
 				result = "MagicSourceInstance";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Miscellaneous:
+			case TES3::VirtualTableAddress::Miscellaneous:
 				result = "Miscellaneous";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MobileActor:
+			case TES3::VirtualTableAddress::MobileActor:
 				result = "MobileActor";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MobileCreature:
+			case TES3::VirtualTableAddress::MobileCreature:
 				result = "MobileCreature";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MobileNPC:
+			case TES3::VirtualTableAddress::MobileNPC:
 				result = "MobileNPC";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MobileObject:
+			case TES3::VirtualTableAddress::MobileObject:
 				result = "MobileObject";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MobilePlayer:
+			case TES3::VirtualTableAddress::MobilePlayer:
 				result = "MobilePlayer";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::MobileProjectile:
+			case TES3::VirtualTableAddress::MobileProjectile:
 				result = "MobileProjectile";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::NPCBase:
+			case TES3::VirtualTableAddress::NPCBase:
 				result = "NPCBase";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::NPCInstance:
+			case TES3::VirtualTableAddress::NPCInstance:
 				result = "NPCInstance";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Object:
+			case TES3::VirtualTableAddress::Object:
 				result = "Object";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::PathGrid:
+			case TES3::VirtualTableAddress::PathGrid:
 				result = "PathGrid";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::PhysicalObject:
+			case TES3::VirtualTableAddress::PhysicalObject:
 				result = "PhysicalObject";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::PlayerAnimController:
+			case TES3::VirtualTableAddress::PlayerAnimController:
 				result = "PlayerAnimController";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Probe:
+			case TES3::VirtualTableAddress::Probe:
 				result = "Probe";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Quest:
+			case TES3::VirtualTableAddress::Quest:
 				result = "Quest";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Race:
+			case TES3::VirtualTableAddress::Race:
 				result = "Race";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Reference:
+			case TES3::VirtualTableAddress::Reference:
 				result = "Reference";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Region:
+			case TES3::VirtualTableAddress::Region:
 				result = "Region";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::RepairTool:
+			case TES3::VirtualTableAddress::RepairTool:
 				result = "RepairTool";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Script:
+			case TES3::VirtualTableAddress::Script:
 				result = "Script";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Skill:
+			case TES3::VirtualTableAddress::Skill:
 				result = "Skill";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Sound:
+			case TES3::VirtualTableAddress::Sound:
 				result = "Sound";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::SoundGenerator:
+			case TES3::VirtualTableAddress::SoundGenerator:
 				result = "SoundGenerator";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Spell:
+			case TES3::VirtualTableAddress::Spell:
 				result = "Spell";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::SpellProjectile:
+			case TES3::VirtualTableAddress::SpellProjectile:
 				result = "SpellProjectile";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Static:
+			case TES3::VirtualTableAddress::Static:
 				result = "Static";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::TArray:
+			case TES3::VirtualTableAddress::TArray:
 				result = "TArray";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::TES3Archive:
+			case TES3::VirtualTableAddress::TES3Archive:
 				result = "TES3Archive";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::Weapon:
+			case TES3::VirtualTableAddress::Weapon:
 				result = "Weapon";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherAshstorm:
+			case TES3::VirtualTableAddress::WeatherAshstorm:
 				result = "WeatherAshstorm";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherBase:
+			case TES3::VirtualTableAddress::WeatherBase:
 				result = "WeatherBase";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherBlight:
+			case TES3::VirtualTableAddress::WeatherBlight:
 				result = "WeatherBlight";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherBlizzard:
+			case TES3::VirtualTableAddress::WeatherBlizzard:
 				result = "WeatherBlizzard";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherClear:
+			case TES3::VirtualTableAddress::WeatherClear:
 				result = "WeatherClear";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherCloudy:
+			case TES3::VirtualTableAddress::WeatherCloudy:
 				result = "WeatherCloudy";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherFog:
+			case TES3::VirtualTableAddress::WeatherFog:
 				result = "WeatherFog";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherOvercast:
+			case TES3::VirtualTableAddress::WeatherOvercast:
 				result = "WeatherOvercast";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherRain:
+			case TES3::VirtualTableAddress::WeatherRain:
 				result = "WeatherRain";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherSnow:
+			case TES3::VirtualTableAddress::WeatherSnow:
 				result = "WeatherSnow";
 				break;
-			case TES3::VirtualTableAddress::VirtualTableAddress::WeatherStorm:
+			case TES3::VirtualTableAddress::WeatherStorm:
 				result = "WeatherStorm";
 				break;
 			default:
