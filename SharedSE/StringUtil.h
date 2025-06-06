@@ -1,5 +1,8 @@
 #pragma once
 
+#include <locale>
+#include <algorithm>
+
 #include "CSObject.h"
 
 namespace se::string {
@@ -64,7 +67,7 @@ namespace se::string {
 	}
 
 	inline void to_lower(std::string& s) {
-		thread_local const std::locale loc("en_US.UTF-8");
-		std::transform(s.begin(), s.end(), s.begin(), [&](unsigned char c) { return std::tolower(c, loc); });
+		std::locale loc("");
+		std::transform(s.begin(), s.end(), s.begin(), [&loc](char c) { return std::tolower(c, loc); });
 	}
 }
