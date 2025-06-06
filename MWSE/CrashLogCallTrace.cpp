@@ -279,7 +279,7 @@ namespace CrashLogger::Mods {
 			for (const auto gameFile : activeMods) {
 				if (!gameFile) break;
 				const auto filename = gameFile->getFilename();
-				const auto author = gameFile->getAuthor();
+				const auto author = mwse::string::trim_copy(gameFile->getAuthor());
 				const auto size = gameFile->getFileSize();
 				output << fmt::format("{:<{}} | {:<{}} | {} bytes\n", filename, filenameLength, author, authorLength, size);
 			}

@@ -1,5 +1,7 @@
 #include "CrashLogger.hpp"
 
+#include "StringUtil.h"
+
 namespace CrashLogger {
 	inline bool GetStringForClassLabel(void* object, std::string& labelName, std::string& objectName, std::string& description) {
 		try {
@@ -16,6 +18,7 @@ namespace CrashLogger {
 				description = iter->GetDescription(object);
 				return true;
 			}
+
 			return false;
 		}
 		catch (...) {
@@ -24,46 +27,28 @@ namespace CrashLogger {
 	}
 
 	bool GetAsString(const void* object, std::string& labelName, std::string& string) {
-		try {
-			const auto printable = [](const char a_ch) noexcept {
-				if (' ' <= a_ch && a_ch <= '~') return true;
+		if (object == nullptr) return false;
 
-				switch (a_ch) {
-				case '\t':
-				case '\n':
-					return true;
-				default:
-					return false;
-				}
-			};
+		try {
 			const auto cstr = static_cast<const char*>(object);
-			if (object == NULL || cstr == NULL) return false;
-			constexpr std::size_t max = MAX_PATH;
 			std::size_t len = 0;
-			for (; len < max && cstr && cstr[len] != '\0'; ++len) {
-				if (!printable(cstr[len])) {
+			for (auto itt = cstr; *itt != '\0'; ++itt) {
+				if (!mwse::string::is_printable(*itt)) {
 					return false;
 				}
+				len++;
 			}
-			if (len == 0 || len >= max || len < 3) return false;
-			const auto& str = SanitizeString(cstr);
-			// Check if string is equal to a predefined prefix and print out the file name if true
-			// TODO: This surely is still not needed, or at least needs updating.
-			if (const auto pos = str.find("D:\\_Fallout3\\"); pos == std::string::npos) {
-				labelName = "String";
-				string = str;
-			}
-			else {
-				const std::filesystem::path path = str.substr(pos);
-				labelName = "Source";
-				string = path.filename().string();
-			}
+
+			// Ignore small strings.
+			if (len < 3) return false;
+
+			labelName = "String";
+			string = SanitizeString(cstr);
 			return true;
 		}
 		catch (...) {
 			return false;
 		}
-
 	}
 }
 
