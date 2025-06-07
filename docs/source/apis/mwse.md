@@ -125,6 +125,44 @@ local success = mwse.clearScriptOverride(scriptId)
 
 ***
 
+### `mwse.color.hexToRgb`
+<div class="search_terms" style="display: none">color.hextorgb</div>
+
+Converts given hex code in (AA)RRGGBB format to RGB(A).
+
+```lua
+local rgb = mwse.color.hexToRgb(rgb)
+```
+
+**Parameters**:
+
+* `rgb` (string)
+
+**Returns**:
+
+* `rgb` ([mwseColorTable](../types/mwseColorTable.md), [mwseColorATable](../types/mwseColorATable.md))
+
+***
+
+### `mwse.color.rgbToHex`
+<div class="search_terms" style="display: none">color.rgbtohex</div>
+
+Converts given RGB(A) color to an HTML hex code in (AA)RRGGBB format. Given color channels must be in [0, 1] range.
+
+```lua
+local hex = mwse.color.rgbToHex(rgb)
+```
+
+**Parameters**:
+
+* `rgb` ([mwseColorTable](../types/mwseColorTable.md), [mwseColorATable](../types/mwseColorATable.md), [niColor](../types/niColor.md), [niColorA](../types/niColorA.md), ffiImagePixel)
+
+**Returns**:
+
+* `hex` (string)
+
+***
+
 ### `mwse.getCurrentMorrowindScriptState`
 <div class="search_terms" style="display: none">getcurrentmorrowindscriptstate, currentmorrowindscriptstate</div>
 
@@ -1600,7 +1638,7 @@ local success = mwse.overrideScript(scriptId, callback)
 This is the main function to register a mod's configuration. Only registered configurations appear in the Mod Config menu.
 
 ```lua
-mwse.registerModConfig(name, { onCreate = ..., onSearch = ..., onClose = ... })
+mwse.registerModConfig(name, { onCreate = ..., onSearch = ..., onClose = ..., template = ... })
 ```
 
 **Parameters**:
@@ -1610,6 +1648,7 @@ mwse.registerModConfig(name, { onCreate = ..., onSearch = ..., onClose = ... })
 	* `onCreate` (fun(modConfigContainer: [tes3uiElement](../types/tes3uiElement.md))): The function that creates the mod's configuration menu inside given `modConfigContainer`.
 	* `onSearch` (fun(searchText: string): boolean): *Optional*. A custom search handler function. This function should return true if this mod should show up in search results for given `searchText`.
 	* `onClose` (fun(modConfigContainer: [tes3uiElement](../types/tes3uiElement.md))): *Optional*. This function is called when the mod's configuration menu is closed. Typically, it's used to save the current config table.
+	* `template` ([mwseMCMTemplate](../types/mwseMCMTemplate.md)): *Optional*. Used internally by `Template:register()`.
 
 ***
 
