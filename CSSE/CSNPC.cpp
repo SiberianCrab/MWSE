@@ -53,11 +53,16 @@ namespace se::cs {
 	}
 
 	bool NPC::search(const std::string_view& needle, const BaseObject::SearchSettings& settings, std::regex* regex) const {
+		if (Object::search(needle, settings, regex)) {
+			return true;
+		}
+
 		if (settings.training) {
 			char buffer[256];
 			getTraining(buffer, sizeof(buffer));
 			return string::complex_contains(buffer, needle, settings, regex);
 		}
+
 		return false;
 	}
 }

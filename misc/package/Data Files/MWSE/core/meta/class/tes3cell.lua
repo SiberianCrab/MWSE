@@ -43,8 +43,8 @@ function tes3cell:isPointInCell(x, y) end
 --- !!! note
 --- 	This iterator will also yield disabled references by default.
 --- 
---- @param filter integer|integer[]|nil *Optional*. The TES3 object type to filter results by. If you need multiple filters, just pass them as a table, e.g. `{ tes3.objectType.npc, tes3.objectType.creature }`. Those are stored in [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) namespace.
---- @param yieldDisabled boolean? *Default*: `true`. If true, disabled references will be yielded.
+--- @param filter? integer|integer[] *Optional*. The TES3 object type to filter results by. If you need multiple filters, just pass them as a table, e.g. `{ tes3.objectType.npc, tes3.objectType.creature }`. Those are stored in [`tes3.objectType`](https://mwse.github.io/MWSE/references/object-types/) namespace.
+--- @param yieldDisabled? boolean *Default*: `true`. If true, disabled references will be yielded.
 --- @return fun(): tes3reference iterator No description yet available.
 function tes3cell:iterateReferences(filter, yieldDisabled) end
 

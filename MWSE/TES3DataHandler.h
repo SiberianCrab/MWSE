@@ -399,6 +399,8 @@ namespace TES3 {
 
 		bool isCellInMemory(const Cell* cell, bool unknown) const;
 
+		std::tuple<int, int> getCellBufferSize() const;
+
 		//
 		// Custom functions.
 		//
