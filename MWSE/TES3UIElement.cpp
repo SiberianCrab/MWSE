@@ -354,6 +354,10 @@ namespace TES3::UI {
 		TES3_ui_updateSceneGraph(this);
 	}
 
+	bool Element::isValid() const {
+		return this && (tag == 'x' || tag == 'X');
+	}
+
 	const char* Element::getName() const {
 		return name.cString;
 	}

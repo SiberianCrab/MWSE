@@ -1436,6 +1436,20 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Fix MenuEnchant menu pointer on failed enchant
+	//
+
+	static TES3::UI::Element* __cdecl PatchEnchantingMenuPointer(TES3::UI::UI_ID id) {
+		const auto menuInputController = TES3::WorldController::get()->menuController->menuInputController;
+		if (!menuInputController->textInputFocus->isValid()) {
+			menuInputController->textInputFocus = nullptr;
+		}
+
+		// Call original code.
+		return TES3::UI::findMenu(id);
+	}
+
+	//
 	// Install all the patches.
 	//
 
@@ -1921,6 +1935,9 @@ namespace mwse::patch {
 		genNOPUnprotected(0x4968E1, 0x4968FB - 0x4968E1);
 		writePatchCodeUnprotected(0x4968E1, (BYTE*)&PatchUnequipIndexedProjectileSetup, PatchUnequipIndexedProjectileSetup_size);
 		genCallUnprotected(0x4968E1 + 0x2, reinterpret_cast<DWORD>(PatchUnequipIndexedProjectile));
+
+		// Patch: Fix invalid UI memory pointer.
+		genCallEnforced(0x5C48DB, 0x595370, reinterpret_cast<DWORD>(PatchEnchantingMenuPointer));
 
 #if false
 		// Patch: Update dynamic lights to implement custom light sorting.
