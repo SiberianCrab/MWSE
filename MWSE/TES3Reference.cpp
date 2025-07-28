@@ -1021,7 +1021,7 @@ namespace TES3 {
 		return this == TES3_Inventory_temporaryReference;
 	}
 
-	Inventory * Reference::getInventory() {
+	Inventory* Reference::getInventory() const {
 		// Only actors have inventories.
 		if (!baseObject->isActor()) {
 			return nullptr;

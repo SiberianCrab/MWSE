@@ -456,6 +456,7 @@ namespace mwse::lua {
 		const auto mobilePlayer = worldController->getMobilePlayer();
 		const auto defaultSituation = mobilePlayer && mobilePlayer->getFlagInCombat() ? TES3::MusicSituation::Combat : TES3::MusicSituation::Explore;
 		const auto situation = (TES3::MusicSituation)getOptionalParam<int>(params, "situation", (int)defaultSituation);
+		mwse::lua::event::MusicChangeTrackEvent::ms_Context = "lua";
 
 		if (!worldController->selectNextMusicTrack(situation)) {
 			return false;

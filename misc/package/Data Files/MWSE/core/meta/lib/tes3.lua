@@ -2806,7 +2806,7 @@ function tes3.skipAnimationFrame(params) end
 --- @field reference tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|tes3reference|string The reference whose animation frame will be skipped.
 
 --- This function interrupts the current music to play a random new combat or explore track, as appropriate. The selected music track can be read from the audio controller's `.nextMusicFilePath` field.
---- @param params tes3.skipToNextMusicTrack.params This table accepts the following values:
+--- @param params? tes3.skipToNextMusicTrack.params This table accepts the following values:
 --- 
 --- `situation?`: tes3.musicSituation — *Optional*. Determines what kind of gameplay situation the music should activate for. By default, the function will determine the right solution based on the player's combat state. This value maps to [`tes3.musicSituation`](https://mwse.github.io/MWSE/references/music-situations/) constants.
 --- 
