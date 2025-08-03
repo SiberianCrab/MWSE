@@ -802,6 +802,10 @@ namespace TES3 {
 
 	BoundingBox* PhysicalObject::getOrCreateBoundingBox() {
 		if (!boundingBox) {
+			if (sceneNode == nullptr && !loadMesh()) {
+				return nullptr;
+			}
+
 			createBoundingBox();
 		}
 		return boundingBox;
