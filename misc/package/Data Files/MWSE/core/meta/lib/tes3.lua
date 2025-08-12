@@ -994,14 +994,14 @@ function tes3.getActiveCells() end
 --- 
 --- `reference`: tes3reference|tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string — A reference to the which actor whose animations will be checked.
 --- 
---- `group?`: tes3.animationGroup|integer — *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- `group`: tes3.animationGroup|integer — The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 --- @return table<string, number>|nil result No description yet available.
 function tes3.getAnimationActionTiming(params) end
 
 ---Table parameter definitions for `tes3.getAnimationActionTiming`.
 --- @class tes3.getAnimationActionTiming.params
 --- @field reference tes3reference|tes3mobileActor|tes3mobileCreature|tes3mobileNPC|tes3mobilePlayer|string A reference to the which actor whose animations will be checked.
---- @field group? tes3.animationGroup|integer *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+--- @field group tes3.animationGroup|integer The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 
 --- This function fetches a reference's attached animation groups. The animation groups match the values from [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) table.
 ---

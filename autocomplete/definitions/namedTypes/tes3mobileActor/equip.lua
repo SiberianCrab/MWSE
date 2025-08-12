@@ -5,7 +5,11 @@ return {
 Equip may fail for the following reasons:
 - The item cannot be found in the inventory.
 - The exact match cannot be found when itemData is provided.
-- When a weapon is being used to attack, it cannot be replaced.]],
+- When a weapon is being used to attack, it cannot be replaced.
+
+!!! warning
+	This method doesn't trigger [equip](https://mwse.github.io/MWSE/events/equip/) or [equipped](https://mwse.github.io/MWSE/events/equipped/) events.
+]],
 	arguments = {{
 		name = "params",
 		type = "table",
@@ -18,6 +22,5 @@ Equip may fail for the following reasons:
 			{ name = "playSound", type = "boolean", optional = true, default = true, description = "If `true`, the default item sound will be played for the item." },
 		}
 	}},
-	returns = "itemEquipped",
-	valuetype = "boolean",
+	returns = {{ name = "itemEquipped", type = "boolean" }},
 }

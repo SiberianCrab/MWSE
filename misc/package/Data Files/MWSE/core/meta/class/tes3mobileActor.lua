@@ -246,6 +246,10 @@ function tes3mobileActor:doJump(params) end
 --- - The item cannot be found in the inventory.
 --- - The exact match cannot be found when itemData is provided.
 --- - When a weapon is being used to attack, it cannot be replaced.
+--- 
+--- !!! warning
+--- 	This method doesn't trigger [equip](https://mwse.github.io/MWSE/events/equip/) or [equipped](https://mwse.github.io/MWSE/events/equipped/) events.
+--- 
 --- @param params tes3mobileActor.equip.params This table accepts the following values:
 --- 
 --- `item`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string — The item to equip.
@@ -451,6 +455,9 @@ function tes3mobileActor:startDialogue() end
 function tes3mobileActor:stopCombat(force) end
 
 --- Unequips one or more items from the actor.
+--- 
+--- !!! note
+--- 	This method triggers the [unequipped](https://mwse.github.io/MWSE/events/unequipped/) event, unlike the `equip` method.
 --- @param params tes3mobileActor.unequip.params This table accepts the following values:
 --- 
 --- `item?`: tes3alchemy|tes3apparatus|tes3armor|tes3book|tes3clothing|tes3ingredient|tes3item|tes3light|tes3lockpick|tes3misc|tes3probe|tes3repairTool|tes3weapon|string — *Optional*. The item to unequip.

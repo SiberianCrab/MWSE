@@ -1727,7 +1727,7 @@ local result = tes3.getAnimationActionTiming({ reference = ..., group = ... })
 
 * `params` (table)
 	* `reference` ([tes3reference](../types/tes3reference.md), [tes3mobileActor](../types/tes3mobileActor.md), string): A reference to the which actor whose animations will be checked.
-	* `group` ([tes3.animationGroup](../references/animation-groups.md), integer): *Optional*. The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
+	* `group` ([tes3.animationGroup](../references/animation-groups.md), integer): The animation group id to get the action timings for. Maps to [`tes3.animationGroup`](https://mwse.github.io/MWSE/references/animation-groups/) constants.
 
 **Returns**:
 
