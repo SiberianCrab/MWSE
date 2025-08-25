@@ -51,7 +51,7 @@ namespace se::cs::dialog::script_editor_window {
 		format.cbSize = sizeof(CHARFORMATA);
 		format.dwMask = CFM_EFFECTS | CFM_FACE | CFM_SIZE;
 		format.dwEffects = 0;
-		format.yHeight = DialogScriptEditorWindow_FONT_SIZE * settings.script_editor.font_size;
+		format.yHeight = RR_DialogScriptEditorWindow_FONT_SIZE * settings.script_editor.font_size;
 
 		SendMessageA(hWnd, EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&format);
 	}

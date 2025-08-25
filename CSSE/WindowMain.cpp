@@ -5,6 +5,7 @@
 #include "WinUIUtil.h"
 
 #include "Settings.h"
+#include "RR_Settings.h"
 
 #include "CSArchive.h"
 #include "CSBaseObject.h"
@@ -476,11 +477,77 @@ namespace se::cs::window::main {
 	// Patch: Use CSSE.dll's toolbar bitmap.
 	//
 
-	HWND __stdcall PatchReplaceToolbarBitmap(HWND hWnd, DWORD ws, UINT wID, int nBitmaps, HINSTANCE hBMInst, UINT_PTR wBMID, LPCTBBUTTON lpButtons, int iNumButtons, int dxButton, int dyButton, int dxBitmap, int dyBitmap, UINT uStructSize) {
+	// Script to scale the bitmap
+	HBITMAP ScaleBitmapToButtonSize(HBITMAP hOriginal, int dxButton, int dyButton, int nBitmaps)
+	{
+		HDC hdc = GetDC(NULL);
+		HDC hdcSrc = CreateCompatibleDC(hdc);
+		HDC hdcDest = CreateCompatibleDC(hdc);
+
+		// Get the dimensions of the original bitmap
+		BITMAP bm;
+		GetObject(hOriginal, sizeof(BITMAP), &bm);
+		int origWidth = bm.bmWidth / nBitmaps; // width of one icon
+		int origHeight = bm.bmHeight;
+
+		// Add support for different color depths
+		BITMAPINFO bmi = { 0 };
+		bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		GetDIBits(hdc, hOriginal, 0, 0, NULL, &bmi, DIB_RGB_COLORS);
+
+		// Create the new bitmap
+		HBITMAP hScaled = CreateCompatibleBitmap(hdc, dxButton * nBitmaps, dyButton);
+		HBITMAP hOldDest = (HBITMAP)SelectObject(hdcDest, hScaled);
+		HBITMAP hOldSrc = (HBITMAP)SelectObject(hdcSrc, hOriginal);
+
+		// Scale each icon
+		for (int i = 0; i < nBitmaps; i++) {
+			StretchBlt(hdcDest, i * dxButton, 0, dxButton, dyButton,
+				hdcSrc, i * origWidth, 0, origWidth, origHeight,
+				SRCCOPY);
+		}
+
+		// Cleanup
+		SelectObject(hdcDest, hOldDest);
+		SelectObject(hdcSrc, hOldSrc);
+		DeleteDC(hdcDest);
+		DeleteDC(hdcSrc);
+		ReleaseDC(NULL, hdc);
+
+		return hScaled;
+	}
+
+	// Patch the original bitmap
+	HWND __stdcall PatchReplaceToolbarBitmap(HWND hWnd, DWORD ws, UINT wID, int nBitmaps,
+		HINSTANCE hBMInst, UINT_PTR wBMID,
+		LPCTBBUTTON lpButtons, int iNumButtons,
+		int dxButton, int dyButton,
+		int dxBitmap, int dyBitmap, UINT uStructSize) {
+
 		hBMInst = application.m_hInstance;
 		wBMID = IDB_MAIN_TOOLBAR;
+		dxButton = RR_Toolbar_Button;
+		dyButton = dxButton;
+		nBitmaps = RR_Toolbar_Button_Count;
 
-		return CreateToolbarEx(hWnd, ws, wID, nBitmaps, hBMInst, wBMID, lpButtons, iNumButtons, dxButton, dyButton, dxBitmap, dyBitmap, uStructSize);
+		// Load the original bitmap
+		HBITMAP hOriginalBitmap = LoadBitmap(application.m_hInstance, MAKEINTRESOURCE(IDB_MAIN_TOOLBAR));
+
+		// Create a scaled version
+		HBITMAP hScaledBitmap = ScaleBitmapToButtonSize(hOriginalBitmap, dxButton, dyButton, nBitmaps);
+
+		// Free the original bitmap after use
+		DeleteObject(hOriginalBitmap);
+
+		// Create the toolbar with the scaled bitmap
+		HWND hToolbar = CreateToolbarEx(hWnd, ws, wID, nBitmaps,
+			NULL, (UINT_PTR)hScaledBitmap,
+			lpButtons, iNumButtons,
+			dxButton, dyButton,
+			dxButton, dyButton,
+			uStructSize);
+
+		return hToolbar;
 	}
 
 	//

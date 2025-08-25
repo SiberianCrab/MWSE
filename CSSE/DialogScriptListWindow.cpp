@@ -115,7 +115,7 @@ namespace se::cs::dialog::script_list_window {
 
 	namespace ResizeConstants {
 
-		constexpr auto STATIC_HEIGHT = Window_08_10_STATIC_HEIGHT;
+		constexpr auto STATIC_HEIGHT = RR_Window_08_10_STATIC_HEIGHT;
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
@@ -123,10 +123,10 @@ namespace se::cs::dialog::script_list_window {
 		constexpr auto WINDOW_EDGE_PADDING = 10;
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
-		constexpr auto BUTTON_WIDTH = 130;
-		constexpr auto CLEAR_BUTTON_WIDTH = 20;
-		constexpr auto STATIC_WIDTH = 50;
-		constexpr auto SEARCH_WIDTH = 140;
+		constexpr auto BUTTON_WIDTH = 130 * RR_WIN_GUI_Scale;
+		constexpr auto CLEAR_BUTTON_WIDTH = 20 * RR_WIN_GUI_Scale;
+		constexpr auto STATIC_WIDTH = 50 * RR_WIN_GUI_Scale;
+		constexpr auto SEARCH_WIDTH = 140 * RR_WIN_GUI_Scale;
 
 		constexpr auto BOTTOM_SECTION_HEIGHT = COMBO_HEIGHT + BIG_PADDING * 2 + WINDOW_EDGE_PADDING;
 
@@ -209,8 +209,8 @@ namespace se::cs::dialog::script_list_window {
 	}
 
 	// Set min/max window size for scaling.
-	constexpr auto MIN_WIDTH = 380u;
-	constexpr auto MIN_HEIGHT = 500u;
+	constexpr int MIN_WIDTH = 380 * RR_WIN_GUI_Scale;
+	constexpr int MIN_HEIGHT = 400 * RR_WIN_GUI_Scale;
 
 	// Force min/max window size for scaling.
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {

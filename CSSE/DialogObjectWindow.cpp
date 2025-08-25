@@ -204,15 +204,15 @@ namespace se::cs::dialog::object_window {
 
 	namespace ResizeConstants {
 
-		constexpr auto STATIC_HEIGHT = Window_08_12_STATIC_HEIGHT;
+		constexpr auto STATIC_HEIGHT = RR_Window_08_12_STATIC_HEIGHT;
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
-		constexpr auto BUTTON_WIDTH = 160;
-		constexpr auto CLEAR_BUTTON_WIDTH = 50;
-		constexpr auto STATIC_WIDTH = 100;
+		constexpr auto BUTTON_WIDTH = 160 * RR_WIN_GUI_Scale;
+		constexpr auto CLEAR_BUTTON_WIDTH = 50 * RR_WIN_GUI_Scale;
+		constexpr auto STATIC_WIDTH = 80 * RR_WIN_GUI_Scale;
 
 	}
 
@@ -315,8 +315,8 @@ namespace se::cs::dialog::object_window {
 	}
 
 	// Set min/max window size for scaling.
-	constexpr auto MIN_WIDTH = 660u;
-	constexpr auto MIN_HEIGHT = 0u;
+	constexpr int MIN_WIDTH = 660 * RR_WIN_GUI_Scale;
+	constexpr int MIN_HEIGHT = 0;
 
 	// Force min/max window size for scaling.
 	void PatchDialogProc_GetMinMaxInfo(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {

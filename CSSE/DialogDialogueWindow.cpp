@@ -627,8 +627,8 @@ namespace se::cs::dialog::dialogue_window {
 		saveInfoColumnWidths(context.getWindowHandle());
 	}
 
-	constexpr auto MIN_WIDTH = DialogDialogueWindow_MIN_WIDTH;
-	constexpr auto MIN_HEIGHT = DialogDialogueWindow_MIN_HEIGHT;
+	constexpr auto MIN_WIDTH = RR_DialogDialogueWindow_MIN_WIDTH;
+	constexpr auto MIN_HEIGHT = RR_DialogDialogueWindow_MIN_HEIGHT;
 
 	void PatchDialogProc_GetMinMaxInfo(DialogProcContext& context) {
 		const auto info = context.getMinMaxInfo();
@@ -816,33 +816,33 @@ namespace se::cs::dialog::dialogue_window {
 
 	namespace ResizeConstants {
 
-		constexpr auto STATIC_HEIGHT = Window_08_10_STATIC_HEIGHT;
-		constexpr auto LEFT_SECTION_WIDTH = DialogDialogueWindow_LEFT_SECTION_WIDTH; //Ширина секции с топиками и фильтрами
-		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = DialogDialogueWindow_BOTTOM_RIGHT_SECTION_WIDTH; //ширина нижней правой секции 'Shared By' и ниже
-		constexpr auto CONDITION_STATIC_WIDTH = DialogDialogueWindow_CONDITION_STATIC_WIDTH;
-		constexpr auto BOTTOM_SECTION_HEIGHT = DialogDialogueWindow_BOTTOM_SECTION_HEIGHT;
-		constexpr auto TEXT_COUNTER_WIDTH = DialogDialogueWindow_TEXT_COUNTER_WIDTH;
+		constexpr auto STATIC_HEIGHT = RR_Window_08_10_STATIC_HEIGHT;
+		constexpr auto LEFT_SECTION_WIDTH = RR_DialogDialogueWindow_LEFT_SECTION_WIDTH;
+		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = RR_DialogDialogueWindow_BOTTOM_RIGHT_SECTION_WIDTH;
+		constexpr auto CONDITION_STATIC_WIDTH = RR_DialogDialogueWindow_CONDITION_STATIC_WIDTH;
+		constexpr auto BOTTOM_SECTION_HEIGHT = RR_DialogDialogueWindow_BOTTOM_SECTION_HEIGHT;
+		constexpr auto TEXT_COUNTER_WIDTH = RR_DialogDialogueWindow_TEXT_COUNTER_WIDTH;
 
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
 		constexpr auto BASIC_PADDING = 2;
 		constexpr auto BIG_PADDING = 6;
 		constexpr auto WINDOW_EDGE_PADDING = 10;
-		constexpr auto BIG_BUTTON_HEIGHT = 26;
-		constexpr auto JOURNAL_CHECKBUTTON_WIDTH = 100;
+		constexpr auto BIG_BUTTON_HEIGHT = 26 * RR_WIN_GUI_Scale;
+		constexpr auto JOURNAL_CHECKBUTTON_WIDTH = 100 * RR_WIN_GUI_Scale;
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
-		constexpr auto SPEAKER_CONDITION_PADDING_TOP = 17;
-		constexpr auto SPEAKER_CONDITION_PADDING_BOTTOM = 4;
+		constexpr auto SPEAKER_CONDITION_PADDING_TOP = 20 * RR_WIN_GUI_Scale;
+		constexpr auto SPEAKER_CONDITION_PADDING_BOTTOM = 6 * RR_WIN_GUI_Scale;
 		constexpr auto SPEAKER_CONDITION_HEIGHT = COMBO_HEIGHT * 9 + BASIC_PADDING * 8 + SPEAKER_CONDITION_PADDING_TOP + SPEAKER_CONDITION_PADDING_BOTTOM;
 		constexpr auto TOP_INFO_TEXT_HEIGHT = (BOTTOM_SECTION_HEIGHT - SPEAKER_CONDITION_HEIGHT) / 2 - BASIC_PADDING;
 		constexpr auto BOTTOM_RESULT_HEIGHT = BOTTOM_SECTION_HEIGHT - TOP_INFO_TEXT_HEIGHT - SPEAKER_CONDITION_HEIGHT - BASIC_PADDING * 2;
 
-		constexpr auto CONDITION_COMBO_WIDTH = 200;
+		constexpr auto CONDITION_COMBO_WIDTH = 200 * RR_WIN_GUI_Scale;
 
-		constexpr auto FUNCTION_TYPE_WIDTH = 100;
-		constexpr auto FUNCTION_CONDITION_WIDTH = 200;
-		constexpr auto FUNCTION_COMPARISON_WIDTH = 40;
-		constexpr auto FUNCTION_VALUE_WIDTH = 50;
+		constexpr auto FUNCTION_TYPE_WIDTH = 100 * RR_WIN_GUI_Scale;
+		constexpr auto FUNCTION_CONDITION_WIDTH = 200 * RR_WIN_GUI_Scale;
+		constexpr auto FUNCTION_COMPARISON_WIDTH = 40 * RR_WIN_GUI_Scale;
+		constexpr auto FUNCTION_VALUE_WIDTH = 50 * RR_WIN_GUI_Scale;
 		constexpr auto FUNCTION_TOTAL_WIDTH = FUNCTION_TYPE_WIDTH + FUNCTION_CONDITION_WIDTH + FUNCTION_COMPARISON_WIDTH + FUNCTION_VALUE_WIDTH + BASIC_PADDING * 3;
 
 		constexpr auto DISPOSITION_INDEX_WIDTH = FUNCTION_VALUE_WIDTH;
@@ -983,6 +983,7 @@ namespace se::cs::dialog::dialogue_window {
 			// Individual conditions.
 			const auto leftOfConditions = currentX;
 			const auto topOfConditions = currentY;
+
 			{
 				currentX += BASIC_PADDING;
 				currentY += SPEAKER_CONDITION_PADDING_TOP;
@@ -1048,6 +1049,7 @@ namespace se::cs::dialog::dialogue_window {
 				auto hDlgJournalQuestRestartCheckButton = GetDlgItem(hWnd, CONTROL_ID_CONDITION_JOURNAL_RESTART_CHECKBOX);
 				MoveWindow(hDlgJournalQuestRestartCheckButton, currentX - STATIC_COMBO_OFFSET, currentY, JOURNAL_CHECKBUTTON_WIDTH, STATIC_HEIGHT, FALSE);
 			}
+
 			currentX = leftOfConditions;
 			currentY = topOfConditions + SPEAKER_CONDITION_HEIGHT + BASIC_PADDING;
 
