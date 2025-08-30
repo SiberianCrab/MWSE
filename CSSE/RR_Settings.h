@@ -3,7 +3,7 @@
 namespace se::cs {
 
 	// Windows GUI scale modifier
-	constexpr double RR_WIN_GUI_Scale = 1.2;
+	constexpr double RR_WIN_GUI_Scale = 1.33;
 
 	// Font 08 = 16 | Font 10 = 24 (doest't look good) | Font 12 = 32
 	constexpr int RR_Toolbar_Button = 32;
