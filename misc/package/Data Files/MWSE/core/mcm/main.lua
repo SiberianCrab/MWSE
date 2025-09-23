@@ -672,6 +672,7 @@ local function onClickModConfigButton()
 
 
 		-- Cause the menu to refresh itself.
+		menu:loadMenuPosition()
 		menu:updateLayout()
 		modList.widget:contentsChanged()
 		-- Mods with a certain title length can add an unnecessary newline, which goes away when the layout is refreshed.

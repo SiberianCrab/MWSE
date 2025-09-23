@@ -1192,6 +1192,11 @@ namespace TES3 {
 	bool MobileActor::equipItem(Object * item, ItemData * itemData, bool addItem, bool selectBestCondition, bool selectWorstCondition, bool useEvents) {
 		Actor* actor = static_cast<Actor*>(reference->baseObject);
 
+		// Equipping lights while in werewolf form causes crashes.
+		if (item->objectType == ObjectType::Light && getIsWerewolf()) {
+			return false;
+		}
+
 		// Equipping weapons while they are in use breaks animations and AI.
 		if (item->objectType == ObjectType::Weapon && isAttackingOrCasting()) {
 			return false;
@@ -1541,7 +1546,7 @@ namespace TES3 {
 		if (!isNotKnockedDownOrOut() || (animGroup >= Hit1 && animGroup <= SwimHit3)) {
 			return false;
 		}
-			
+
 		if (knockDown) {
 			// Knockdown, heavy stun. When the character falls to their knees and takes seconds to recover.
 			WorldController::get()->magicInstanceController->interruptCasting(reference);
