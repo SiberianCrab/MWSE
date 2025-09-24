@@ -401,6 +401,9 @@ namespace TES3 {
 
 		std::tuple<int, int> getCellBufferSize() const;
 
+		void incrementLoadedRecords(int count);
+		float getTotalLoadedRecordsFraction() const;
+
 		//
 		// Custom functions.
 		//
