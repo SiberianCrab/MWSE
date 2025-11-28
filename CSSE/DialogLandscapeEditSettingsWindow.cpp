@@ -387,11 +387,12 @@ namespace se::cs::dialog::landscape_edit_settings_window {
 	namespace ResizeConstants {
 
 		constexpr auto STATIC_HEIGHT = RR_Window_08_10_STATIC_HEIGHT;
-
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
-		constexpr auto BASIC_PADDING = 2;
-		constexpr auto BIG_PADDING = 6;
-		constexpr auto WINDOW_EDGE_PADDING = 10;
+
+		constexpr auto BASIC_PADDING = RR_BASIC_PADDING;
+		constexpr auto BIG_PADDING = BASIC_PADDING * 3;
+		constexpr auto WINDOW_EDGE_PADDING = BASIC_PADDING * 5;
+
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto CUSTOM_COLOR_WIDTH = (MIN_WIDTH - WINDOW_EDGE_PADDING * 4 - BIG_PADDING * 8) / 8;

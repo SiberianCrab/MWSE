@@ -195,10 +195,10 @@ namespace se::cs::dialog::cell_window {
 
 	namespace ResizeConstants {
 		constexpr auto STATIC_HEIGHT = RR_Window_08_12_STATIC_HEIGHT;
-
 		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
-		constexpr auto BASIC_PADDING = 2;
-		constexpr auto WINDOW_EDGE_PADDING = 10;
+
+		constexpr auto BASIC_PADDING = RR_BASIC_PADDING;
+		constexpr auto WINDOW_EDGE_PADDING = BASIC_PADDING * 5;
 		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
 
 		constexpr auto BUTTON_WIDTH = 160 * RR_WIN_GUI_Scale;

@@ -817,28 +817,28 @@ namespace se::cs::dialog::dialogue_window {
 	namespace ResizeConstants {
 
 		constexpr auto STATIC_HEIGHT = RR_Window_08_10_STATIC_HEIGHT;
+		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
+
+		constexpr auto BASIC_PADDING = RR_BASIC_PADDING;
+		constexpr auto BIG_PADDING = RR_BASIC_PADDING * 3;
+		constexpr auto WINDOW_EDGE_PADDING = RR_BASIC_PADDING * 5;
+		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
+
 		constexpr auto LEFT_SECTION_WIDTH = RR_DialogDialogueWindow_LEFT_SECTION_WIDTH;
 		constexpr auto BOTTOM_RIGHT_SECTION_WIDTH = RR_DialogDialogueWindow_BOTTOM_RIGHT_SECTION_WIDTH;
 		constexpr auto CONDITION_STATIC_WIDTH = RR_DialogDialogueWindow_CONDITION_STATIC_WIDTH;
 		constexpr auto BOTTOM_SECTION_HEIGHT = RR_DialogDialogueWindow_BOTTOM_SECTION_HEIGHT;
 		constexpr auto TEXT_COUNTER_WIDTH = RR_DialogDialogueWindow_TEXT_COUNTER_WIDTH;
 
-		constexpr auto COMBO_HEIGHT = STATIC_HEIGHT + 8;
-		constexpr auto BASIC_PADDING = 2;
-		constexpr auto BIG_PADDING = 6;
-		constexpr auto WINDOW_EDGE_PADDING = 10;
-		constexpr auto BIG_BUTTON_HEIGHT = 26 * RR_WIN_GUI_Scale;
-		constexpr auto JOURNAL_CHECKBUTTON_WIDTH = 100 * RR_WIN_GUI_Scale;
-		constexpr auto STATIC_COMBO_OFFSET = (COMBO_HEIGHT - STATIC_HEIGHT) / 2;
-
-		constexpr auto SPEAKER_CONDITION_PADDING_TOP = 20 * RR_WIN_GUI_Scale;
-		constexpr auto SPEAKER_CONDITION_PADDING_BOTTOM = 6 * RR_WIN_GUI_Scale;
+		constexpr auto SPEAKER_CONDITION_PADDING_TOP = WINDOW_EDGE_PADDING * 2 * RR_WIN_GUI_Scale;
+		constexpr auto SPEAKER_CONDITION_PADDING_BOTTOM = BIG_PADDING * RR_WIN_GUI_Scale;
 		constexpr auto SPEAKER_CONDITION_HEIGHT = COMBO_HEIGHT * 9 + BASIC_PADDING * 8 + SPEAKER_CONDITION_PADDING_TOP + SPEAKER_CONDITION_PADDING_BOTTOM;
 		constexpr auto TOP_INFO_TEXT_HEIGHT = (BOTTOM_SECTION_HEIGHT - SPEAKER_CONDITION_HEIGHT) / 2 - BASIC_PADDING;
 		constexpr auto BOTTOM_RESULT_HEIGHT = BOTTOM_SECTION_HEIGHT - TOP_INFO_TEXT_HEIGHT - SPEAKER_CONDITION_HEIGHT - BASIC_PADDING * 2;
 
 		constexpr auto CONDITION_COMBO_WIDTH = 200 * RR_WIN_GUI_Scale;
-
+		constexpr auto BIG_BUTTON_HEIGHT = 26 * RR_WIN_GUI_Scale;
+		constexpr auto JOURNAL_CHECKBUTTON_WIDTH = 100 * RR_WIN_GUI_Scale;
 		constexpr auto FUNCTION_TYPE_WIDTH = 100 * RR_WIN_GUI_Scale;
 		constexpr auto FUNCTION_CONDITION_WIDTH = 200 * RR_WIN_GUI_Scale;
 		constexpr auto FUNCTION_COMPARISON_WIDTH = 40 * RR_WIN_GUI_Scale;

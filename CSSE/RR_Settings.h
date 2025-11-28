@@ -2,6 +2,8 @@
 
 namespace se::cs {
 
+	constexpr int RR_BASIC_PADDING = 2;
+
 	// Windows GUI scale modifier
 	constexpr double RR_WIN_GUI_Scale = 1.33;
 
