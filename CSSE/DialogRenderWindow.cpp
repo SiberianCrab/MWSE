@@ -40,6 +40,10 @@ namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
 
+	// Track nodes hidden by the "hide selection" action so they can be re-shown and re-hidden.
+	static std::vector<NI::Node*> g_hiddenReferences;
+	static bool g_hiddenReferencesShown = false;
+
 	std::default_random_engine generator;
 	std::uniform_real_distribution<float> rotationDistribution(0.0, 360.0);
 	std::uniform_real_distribution<float> scaleDistribution(0.5, 2.0);
@@ -944,8 +948,51 @@ namespace se::cs::dialog::render_window {
 		return 0;
 	}
 
+	bool __stdcall CheckNodeHasHiddenFlag(NI::Node* node) {
+		if (!node) return false;
+		return node->getStringDataWithValue("xHID") != nullptr;
+	}
+
+	// Hook: Block selection of soft-hidden objects.
+	__declspec(naked) void Patch_SelectionBoxCheck_Hook() {
+		__asm {
+
+			mov eax, [esp + 4]  
+			push eax            
+
+			// Call original "Is Point In Box?".
+			mov eax, 0x4681F0
+			call eax
+
+			// Check Result (AL) If 0 (Outside), we are done.
+			test al, al
+			jz _done            
+
+			// --- Extra Check: Is Hidden? ---
+			push ecx
+			push edx
+
+			// Check the Node (EDI)
+			push edi
+			call CheckNodeHasHiddenFlag 
+
+			// CheckNodeHasHiddenFlag returns 1 if Hidden, 0 if Visible.
+			// We want to return 0 if Hidden (Block), 1 if Visible (Allow).
+			xor al, 1
+
+			// Restore registers
+			pop edx
+			pop ecx
+
+			_done :
+
+			// The original function was a "RET 4" function, mimic that.
+			ret 4
+		}
+	}
+
 	//
-	// Patch: Make clicking things near skinned objects not painful.
+	// Patch: Make clicking things near skinned objects not painful + block selection of soft-hidden objects.
 	//
 
 	Reference* __cdecl Patch_FixPickAgainstSkinnedObjects(SceneGraphController* sgController, RenderController* renderController, int screenX, int screenY) {
@@ -961,10 +1008,20 @@ namespace se::cs::dialog::render_window {
 
 		Reference* closestRef = nullptr;
 		auto closestDistance = std::numeric_limits<float>::max();
-		
+
 		for (auto& result : sgController->objectPick->results) {
-			if (result == nullptr) {
+			if (result == nullptr || result->object == nullptr) {
 				continue;
+			}
+
+			// Skip soft-hidden objects.
+			if (g_hiddenReferencesShown) {
+				auto parentNode = result->object->parentNode;
+				if (parentNode) {
+					if (parentNode->getStringDataWithValue("xHID")) {
+						continue;
+					}
+				}
 			}
 
 			if (result->distance < closestDistance) {
@@ -1357,17 +1414,52 @@ namespace se::cs::dialog::render_window {
 
 	void hideSelectedReferences() {
 		auto selectionData = SelectionData::get();
-		
+
 		for (auto target = selectionData->firstTarget; target; target = target->next) {
 			auto node = target->reference->sceneNode;
 			if (node) {
-				node->addExtraData(new NI::StringExtraData("xHID"));
+				if (!node->getStringDataWithValue("xHID")) {
+					node->addExtraData(new NI::StringExtraData("xHID"));
+				}
+
 				node->setAppCulled(true);
 				node->update();
+
+				// Track this node so we can toggle visibility later.
+				if (std::find(g_hiddenReferences.begin(), g_hiddenReferences.end(), node) == g_hiddenReferences.end()) {
+					g_hiddenReferences.push_back(node);
+				}
 			}
 		}
 
+		g_hiddenReferencesShown = false;
+
 		selectionData->clear();
+
+		renderNextFrame();
+	}
+
+	static void showTrackedHiddenReferences(bool show) {
+		if (g_hiddenReferences.empty()) {
+			return;
+		}
+
+		for (auto node : g_hiddenReferences) {
+			if (!node) {
+				continue;
+			}
+			// Do not remove the "xHID" extra data here; keep it so unhideAllReferences can fully restore.
+			node->setAppCulled(!show);
+			node->update();
+		}
+
+		g_hiddenReferencesShown = show;
+		renderNextFrame();
+	}
+
+	static void clearTrackedHiddenReferences() {
+		g_hiddenReferences.clear();
+		g_hiddenReferencesShown = false;
 	}
 
 	void unhideNode(NI::Node* node) {
@@ -1387,6 +1479,21 @@ namespace se::cs::dialog::render_window {
 
 	void unhideAllReferences() {
 		unhideNode(SceneGraphController::get()->objectRoot);
+
+		// If we're doing a full restore from the menu/action, forget the tracked list so subsequent toggle
+		// doesn't attempt to re-hide already-restored nodes.
+		clearTrackedHiddenReferences();
+
+		renderNextFrame();
+	}
+
+	static void toggleHiddenReferences() {
+
+		if (g_hiddenReferences.empty()) {
+			return;
+		}
+
+		showTrackedHiddenReferences(!g_hiddenReferencesShown);
 	}
 
 	void saveRenderStateToQuickStart() {
@@ -2370,6 +2477,13 @@ namespace se::cs::dialog::render_window {
 			}
 			// H otherwise opens the terrain window.
 			break;
+		case 'R':
+			// Toggle showing/hiding the references that were soft-hidden by hideSelectedReferences.
+			if (!context.getKeyWasDown()) {
+				toggleHiddenReferences();
+			}
+			context.setResult(TRUE);
+			break;
 		case 'S':
 			if (landscapeEditWindow) {
 				if (!context.getKeyWasDown()) {
@@ -2622,6 +2736,12 @@ namespace se::cs::dialog::render_window {
 
 		// Patch: Extend the selection widget to a full NiNode on references.
 		genJumpEnforced(0x40235B, 0x540D50, &Reference::createSelectionWidget);
+
+		// Patch: Prevent selecting objects that have the "xHID" flag (Hidden by Editor) during box selection.
+		// We replace the "isInsideRectangle" (0x4681F0) call with our wrapper.
+
+		genCallUnprotected(0x4682C5, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck_Hook), 0x5);
+		genCallUnprotected(0x468332, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck_Hook), 0x5);
 
 	}
 }
