@@ -41,19 +41,22 @@ namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
 
+	struct ColorOverlayData {
+		NI::Pointer<NI::MaterialProperty> originalMaterial = nullptr;
+		NI::Pointer<NI::AlphaProperty> originalAlphaProperty = nullptr;
+		NI::Pointer<NI::VertexColorProperty> originalVColorProperty = nullptr;
+
+		inline static NI::Color hiddenOverlayColor = NI::Color{ 0.0f, 1.0f, 0.4f }; //rbg for some reason
+		inline static NI::Pointer<NI::MaterialProperty> hiddenOverlayMaterial = nullptr;
+
+		static void setHiddenOverlayColor(const NI::Color& c) { hiddenOverlayColor = c; }
+		static NI::Color getHiddenOverlayColor() { return hiddenOverlayColor; }
+	};
+
 	// Track nodes hidden by the "hide selection" action so they can be re-shown and re-hidden.
 	static std::unordered_set<NI::Node*> g_hiddenReferences;
 	static bool g_hiddenReferencesShown = false;
-
 	// Track active color overlays so they can be removed later.
-	struct ColorOverlayData {
-		NI::Color originalEmissive = NI::Color{ 1.f, 1.f, 1.f };
-		NI::Color originalAmbient = NI::Color{ 1.f, 1.f, 1.f };
-		float originalAlpha = 1;
-		NI::Pointer<NI::VertexColorProperty> vertexColorProperty = nullptr;
-		NI::Pointer<NI::VertexColorProperty> overlayVertexColorProperty = nullptr;
-	};
-
 	static std::unordered_map<NI::TriShape*, ColorOverlayData*> hiddenObjOverlays;
 
 	std::default_random_engine generator;
@@ -1462,21 +1465,39 @@ namespace se::cs::dialog::render_window {
 
 		if (materialProp) {
 
+			auto overlayData = new ColorOverlayData();
+			auto overlayColor = ColorOverlayData::getHiddenOverlayColor();
+
+			overlayData->originalMaterial = materialProp;
+
+			// Cache the overlay material.
+			if (!ColorOverlayData::hiddenOverlayMaterial)
+			{
+				auto clonedMaterial = static_cast<NI::MaterialProperty*>(materialProp->createClone());
+				clonedMaterial->setEmissive(overlayColor);
+				clonedMaterial->setDiffuse(overlayColor);
+				clonedMaterial->setAmbient(overlayColor);
+				clonedMaterial->alpha = 0.5f;
+				ColorOverlayData::hiddenOverlayMaterial = clonedMaterial;
+			}
+
+			node->setMaterialProperty(ColorOverlayData::hiddenOverlayMaterial);
+
+			/*auto alphaProperty = node->getAlphaProperty();
+			overlayData->originalAlphaProperty = alphaProperty;
+
+			// Ensure alpha property exists.
+			if (!alphaProperty) {
+				alphaProperty = NI::AlphaProperty::create();
+				node->attachProperty(alphaProperty);
+				alphaProperty->update(0.f);
+			}*/
+
+			/*// Check if NiTriShapeData has vertex colors.
+			// Crashes the app for some reason
 			auto triShapeData = node->modelData;
 			NI::Pointer<NI::VertexColorProperty> vertexProp = node->getVertexColorProperty();
-			auto overlayData = new ColorOverlayData();
-			auto overlayColor = NI::Color{ 0.0f, 0.8f, 0.1f }; // TODO : Make configurable.
-			
-			overlayData->originalEmissive = materialProp->emissive;
-			overlayData->originalAmbient = materialProp->ambient;
-			overlayData->originalAlpha = materialProp->alpha;
-			materialProp->setEmissive(overlayColor);
-			materialProp->setAmbient(overlayColor);
-			materialProp->alpha = 0.8f;
-
-			// Check if NiTriShapeData has vertex colors.
-			// Crashes the app for some reason
-			/*if (triShapeData
+			if (triShapeData
 				&& (triShapeData->color != nullptr)
 				&& (triShapeData->getActiveVertexCount() > 0)) {
 
@@ -1495,7 +1516,7 @@ namespace se::cs::dialog::render_window {
 
 			hiddenObjOverlays[node] = overlayData;
 
-			materialProp->update(0.f);
+			ColorOverlayData::hiddenOverlayMaterial->update(0.f);
 			node->updateProperties();
 			node->update();
 		}
@@ -1503,30 +1524,31 @@ namespace se::cs::dialog::render_window {
 		return;
 	}
 
-	// Doesn't work for some objects for some reason
 	static void removeColorOverlayHidden(NI::TriShape* node) {
+
 		auto it = hiddenObjOverlays.find(node);
+
 		if (it != hiddenObjOverlays.end()) {
 			auto overlayData = it->second;
-			auto materialProp = node->getMaterialProperty();
+			auto materialProp = overlayData->originalMaterial;
 			if (materialProp) {
-				materialProp->setEmissive(overlayData->originalEmissive);
-				materialProp->setAmbient(overlayData->originalAmbient);
-				materialProp->alpha = overlayData->originalAlpha;
+				node->setMaterialProperty(materialProp);
 				materialProp->update(0.f);
 			}
-			// Remove overlay vertex color property if it exists.
-			//if (overlayData->overlayVertexColorProperty) {
-			//	node->detachPropertyByType(NI::PropertyType::VertexColor);
-			//	// Restore original vertex color property if it existed.
-			//	if (overlayData->vertexColorProperty) {
-			//		node->attachProperty(overlayData->vertexColorProperty);
-			//	}
-			//}
+
+			/*// Remove overlay vertex color property if it exists.
+			if (overlayData->overlayVertexColorProperty) {
+				node->detachPropertyByType(NI::PropertyType::VertexColor);
+				// Restore original vertex color property if it existed.
+				if (overlayData->vertexColorProperty) {
+					node->attachProperty(overlayData->vertexColorProperty);
+				}
+			}*/
+
 			node->updateProperties();
 			node->update();
-			delete overlayData;
 			hiddenObjOverlays.erase(it);
+			delete overlayData;
 		}
 	}
 
@@ -1536,37 +1558,41 @@ namespace se::cs::dialog::render_window {
 		}
 
 		for (auto node : g_hiddenReferences) {
+
 			if (!node) {
 				continue;
 			}
 
-			// Apply overlay color if we're showing and it's not already applied.
 			for (auto& child : node->children) {
 				if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
 					auto triShape = static_cast<NI::TriShape*>(child.get());
 					if (show)
 						applyColorOverlayHidden(triShape);
-					else
-						removeColorOverlayHidden(triShape);
 				}
 			}
-			// Do not remove the "xHID" extra data here; keep it so unhideAllReferences can fully restore.
+			// keep "xHID" so unhideAllReferences can fully restore.
 			node->setAppCulled(!show);
 			node->update();
 		}
-
-		// Show in a MessageBox how many overlays were applied.
-		char buffer[256];
-		sprintf_s(buffer, "Applied color overlay to %zu object. Skipped %zu overlays",
-			hiddenObjOverlays.size(), skippedHiddenOverlays);
-		MessageBoxA(nullptr, buffer, "Info", MB_OK | MB_ICONINFORMATION);
-		skippedHiddenOverlays = 0;
 
 		g_hiddenReferencesShown = show;
 		renderNextFrame();
 	}
 
 	static void clearTrackedHiddenReferences() {
+		for (auto node : g_hiddenReferences) {
+			if (!node) {
+				continue;
+			}
+
+			for (auto& child : node->children) {
+				if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
+					auto triShape = static_cast<NI::TriShape*>(child.get());
+					removeColorOverlayHidden(triShape);
+				}
+			}
+		}
+
 		g_hiddenReferences.clear();
 		g_hiddenReferencesShown = false;
 	}
@@ -1587,11 +1613,10 @@ namespace se::cs::dialog::render_window {
 	}
 
 	void unhideAllReferences() {
-		unhideNode(SceneGraphController::get()->objectRoot);
-
-		// If we're doing a full restore from the menu/action, forget the tracked list so subsequent toggle
-		// doesn't attempt to re-hide already-restored nodes.
+		// If we're doing a full restore from the menu/action, forget the tracked list and clean the overlays
 		clearTrackedHiddenReferences();
+
+		unhideNode(SceneGraphController::get()->objectRoot);
 
 		renderNextFrame();
 	}
@@ -2846,9 +2871,8 @@ namespace se::cs::dialog::render_window {
 		// Patch: Extend the selection widget to a full NiNode on references.
 		genJumpEnforced(0x40235B, 0x540D50, &Reference::createSelectionWidget);
 
-		// Patch: Prevent selecting objects that have the "xHID" flag (Hidden by Editor) during box selection.
-		// We replace the "isInsideRectangle" (0x4681F0) call with our wrapper.
-
+		// Patch: Prevent selecting objects that have the "xHID" flag during box selection.
+		// This replaces the "isInsideRectangle" (0x4681F0) call with our wrapper.
 		genCallUnprotected(0x4682C5, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck_Hook), 0x5);
 		genCallUnprotected(0x468332, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck_Hook), 0x5);
 
