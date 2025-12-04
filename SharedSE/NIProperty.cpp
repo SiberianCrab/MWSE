@@ -57,12 +57,13 @@ namespace NI {
 
 	AlphaProperty::AlphaProperty() {
 		vTable.asProperty = (Property_vTable*)SE_NI_ALPHAPROPERTY_VTBL;
-		setFlag(false, 0);
+		/*setFlag(false, 0);
 		setFlagBitField(6, 0xF, 1);
 		setFlagBitField(7, 0xF, 5);
 		setFlag(false, 9);
-		setFlagBitField(0, 0x7, 10);
-		alphaTestRef = 0;
+		setFlagBitField(0, 0x7, 10);*/
+		alphaTestRef = 128; // Default to 50% alpha threshold
+		flags = 4844; // Default flags for alpha property from NifSkope
 	}
 
 	AlphaProperty::~AlphaProperty() {
