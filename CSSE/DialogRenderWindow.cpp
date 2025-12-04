@@ -1483,36 +1483,32 @@ namespace se::cs::dialog::render_window {
 
 			node->setMaterialProperty(ColorOverlayData::hiddenOverlayMaterial);
 
-			/*auto alphaProperty = node->getAlphaProperty();
+			NI::Pointer<NI::AlphaProperty> alphaProperty = node->getAlphaProperty();
 			overlayData->originalAlphaProperty = alphaProperty;
 
-			// Ensure alpha property exists.
+			//Alpha property for transparency
 			if (!alphaProperty) {
-				alphaProperty = NI::AlphaProperty::create();
-				node->attachProperty(alphaProperty);
+				alphaProperty = new NI::AlphaProperty();
+				node->setAlphaProperty(alphaProperty);
+				alphaProperty->flags = 3821;
+				alphaProperty->alphaTestRef = 129;
 				alphaProperty->update(0.f);
-			}*/
+			}
 
-			/*// Check if NiTriShapeData has vertex colors.
-			// Crashes the app for some reason
+			// Check if NiTriShapeData has vertex colors and if so, override them.
 			auto triShapeData = node->modelData;
-			NI::Pointer<NI::VertexColorProperty> vertexProp = node->getVertexColorProperty();
 			if (triShapeData
 				&& (triShapeData->color != nullptr)
 				&& (triShapeData->getActiveVertexCount() > 0)) {
 
-				if (vertexProp) {
-					overlayData->vertexColorProperty = vertexProp;
-					node->detachPropertyByType(NI::PropertyType::VertexColor);
-				}
+				NI::Pointer<NI::VertexColorProperty> vertexProp = node->getVertexColorProperty();
+				overlayData->originalVColorProperty = vertexProp;
 
 				NI::Pointer<NI::VertexColorProperty> overlayVertexProp = new NI::VertexColorProperty();
-				node->attachProperty(overlayVertexProp);
-				overlayData->overlayVertexColorProperty = overlayVertexProp;
-				overlayVertexProp->source = 0;
-				overlayVertexProp->lighting = 0;
+				node->setVertexColorProperty(overlayVertexProp);
+
 				overlayVertexProp->update(0.f);
-			}*/
+			}
 
 			hiddenObjOverlays[node] = overlayData;
 
@@ -1535,15 +1531,26 @@ namespace se::cs::dialog::render_window {
 				node->setMaterialProperty(materialProp);
 				materialProp->update(0.f);
 			}
+			else
+				node->detachPropertyByType(NI::PropertyType::Material);
 
-			/*// Remove overlay vertex color property if it exists.
-			if (overlayData->overlayVertexColorProperty) {
+			auto vertexProp = overlayData->originalVColorProperty;
+			if (vertexProp)
+			{
+				node->setVertexColorProperty(vertexProp);
+				vertexProp->update(0.f);
+			}
+			else
 				node->detachPropertyByType(NI::PropertyType::VertexColor);
-				// Restore original vertex color property if it existed.
-				if (overlayData->vertexColorProperty) {
-					node->attachProperty(overlayData->vertexColorProperty);
-				}
-			}*/
+
+			auto alphaProp = overlayData->originalAlphaProperty;
+			if (alphaProp)
+			{
+				node->setAlphaProperty(alphaProp);
+				alphaProp->update(0.f);
+			}
+			else
+				node->detachPropertyByType(NI::PropertyType::Alpha);
 
 			node->updateProperties();
 			node->update();
