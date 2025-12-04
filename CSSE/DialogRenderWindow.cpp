@@ -1427,34 +1427,6 @@ namespace se::cs::dialog::render_window {
 		UndoManager::get()->storeCheckpoint(UndoManager::Action::Moved);
 	}
 
-	void hideSelectedReferences() {
-		auto selectionData = SelectionData::get();
-
-		for (auto target = selectionData->firstTarget; target; target = target->next) {
-			auto node = target->reference->sceneNode;
-			if (node) {
-				if (!node->getStringDataWithValue("xHID")) {
-					node->addExtraData(new NI::StringExtraData("xHID"));
-				}
-
-				node->setAppCulled(true);
-				node->update();
-
-				// Track this node so we can toggle visibility later.
-				if (std::find(g_hiddenReferences.begin(), g_hiddenReferences.end(), node) == g_hiddenReferences.end()) {
-					g_hiddenReferences.insert(node);
-				}
-			}
-		}
-
-		g_hiddenReferencesShown = false;
-
-		selectionData->clear();
-
-		renderNextFrame();
-	}
-
-
 	static void applyColorOverlayHidden(NI::TriShape* node) {
 
 		if (hiddenObjOverlays.find(node) != hiddenObjOverlays.end()) {
@@ -1602,6 +1574,32 @@ namespace se::cs::dialog::render_window {
 
 		g_hiddenReferences.clear();
 		g_hiddenReferencesShown = false;
+	}
+
+	void hideSelectedReferences() {
+		auto selectionData = SelectionData::get();
+
+		for (auto target = selectionData->firstTarget; target; target = target->next) {
+			auto node = target->reference->sceneNode;
+			if (node) {
+				if (!node->getStringDataWithValue("xHID")) {
+					node->addExtraData(new NI::StringExtraData("xHID"));
+				}
+
+				node->setAppCulled(true);
+				node->update();
+
+				// Track this node so we can toggle visibility later.
+				if (std::find(g_hiddenReferences.begin(), g_hiddenReferences.end(), node) == g_hiddenReferences.end()) {
+					g_hiddenReferences.insert(node);
+				}
+			}
+		}
+
+		selectionData->clear();
+
+		showTrackedHiddenReferences(false);
+		//renderNextFrame(); method above already calls this.
 	}
 
 	void unhideNode(NI::Node* node) {
