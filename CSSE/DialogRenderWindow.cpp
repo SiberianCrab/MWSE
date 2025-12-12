@@ -41,6 +41,26 @@ namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
 
+	//struct NodeColorData {
+	//	NI::Pointer<NI::MaterialProperty> originalMaterial = nullptr;
+	//	NI::Pointer<NI::AlphaProperty> originalAlphaProperty = nullptr;
+	//	NI::Pointer<NI::VertexColorProperty> originalVColorProperty = nullptr;
+
+	//};
+
+	//struct LayerData {
+
+	//	static std::unordered_set<Reference*> layerObjectRefs;
+	//	bool isOverlayActive = false;
+	//	bool isLayerHidden = false;
+
+	//	inline static NI::Color layerOverlayColor = NI::Color{ 0.0f, 1.0f, 0.4f }; //rbg for some reason
+	//	inline static NI::Pointer<NI::MaterialProperty> layerOverlayMaterial = nullptr;
+
+	//	static void setLayerColor(const NI::Color& c) { layerOverlayColor = c; }
+	//	static NI::Color getLayerColor() { return layerOverlayColor; }
+	//};
+
 	struct ColorOverlayData {
 		NI::Pointer<NI::MaterialProperty> originalMaterial = nullptr;
 		NI::Pointer<NI::AlphaProperty> originalAlphaProperty = nullptr;
@@ -54,7 +74,7 @@ namespace se::cs::dialog::render_window {
 	};
 
 	// Track nodes hidden by the "hide selection" action so they can be re-shown and re-hidden.
-	static std::unordered_set<NI::Node*> g_hiddenReferences;
+	static std::unordered_set<Reference*> g_hiddenReferences;
 	static bool g_hiddenReferencesShown = false;
 	// Track active color overlays so they can be removed later.
 	static std::unordered_map<NI::TriShape*, ColorOverlayData*> hiddenObjOverlays;
@@ -1536,22 +1556,28 @@ namespace se::cs::dialog::render_window {
 			return;
 		}
 
-		for (auto node : g_hiddenReferences) {
-
-			if (!node) {
-				continue;
-			}
-
-			for (auto& child : node->children) {
-				if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
-					auto triShape = static_cast<NI::TriShape*>(child.get());
-					if (show)
-						applyColorOverlayHidden(triShape);
+		for (auto objRef : g_hiddenReferences) {
+			auto node = objRef ? objRef->sceneNode : nullptr;
+			if (node) {
+				for (auto& child : node->children) {
+					if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
+						auto triShape = static_cast<NI::TriShape*>(child.get());
+						if (show)
+							applyColorOverlayHidden(triShape);
+					}
 				}
+				// In case cell was reloaded and "xHID" flag got lost.
+				if (!node->getStringDataWithValue("xHID")) {
+					node->addExtraData(new NI::StringExtraData("xHID"));
+				}
+				// keep "xHID" so unhideAllReferences can fully restore.
+				node->setAppCulled(!show);
+				node->update();
 			}
-			// keep "xHID" so unhideAllReferences can fully restore.
-			node->setAppCulled(!show);
-			node->update();
+			else {
+				// Remove from tracked list if node is gone.
+				g_hiddenReferences.erase(objRef);
+			}
 		}
 
 		g_hiddenReferencesShown = show;
@@ -1559,15 +1585,14 @@ namespace se::cs::dialog::render_window {
 	}
 
 	static void clearTrackedHiddenReferences() {
-		for (auto node : g_hiddenReferences) {
-			if (!node) {
-				continue;
-			}
-
-			for (auto& child : node->children) {
-				if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
-					auto triShape = static_cast<NI::TriShape*>(child.get());
-					removeColorOverlayHidden(triShape);
+		for (auto objRef : g_hiddenReferences) {
+			auto node = objRef ? objRef->sceneNode : nullptr;
+			if (node) {
+				for (auto& child : node->children) {
+					if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
+						auto triShape = static_cast<NI::TriShape*>(child.get());
+						removeColorOverlayHidden(triShape);
+					}
 				}
 			}
 		}
@@ -1580,7 +1605,8 @@ namespace se::cs::dialog::render_window {
 		auto selectionData = SelectionData::get();
 
 		for (auto target = selectionData->firstTarget; target; target = target->next) {
-			auto node = target->reference->sceneNode;
+			auto objRef = target->reference;
+			auto node = objRef->sceneNode;
 			if (node) {
 				if (!node->getStringDataWithValue("xHID")) {
 					node->addExtraData(new NI::StringExtraData("xHID"));
@@ -1590,8 +1616,9 @@ namespace se::cs::dialog::render_window {
 				node->update();
 
 				// Track this node so we can toggle visibility later.
-				if (std::find(g_hiddenReferences.begin(), g_hiddenReferences.end(), node) == g_hiddenReferences.end()) {
-					g_hiddenReferences.insert(node);
+
+				if (std::find(g_hiddenReferences.begin(), g_hiddenReferences.end(), objRef) == g_hiddenReferences.end()) {
+					g_hiddenReferences.insert(objRef);
 				}
 			}
 		}
