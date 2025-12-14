@@ -41,26 +41,6 @@ namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
 
-	//struct NodeColorData {
-	//	NI::Pointer<NI::MaterialProperty> originalMaterial = nullptr;
-	//	NI::Pointer<NI::AlphaProperty> originalAlphaProperty = nullptr;
-	//	NI::Pointer<NI::VertexColorProperty> originalVColorProperty = nullptr;
-
-	//};
-
-	//struct LayerData {
-
-	//	static std::unordered_set<Reference*> layerObjectRefs;
-	//	bool isOverlayActive = false;
-	//	bool isLayerHidden = false;
-
-	//	inline static NI::Color layerOverlayColor = NI::Color{ 0.0f, 1.0f, 0.4f }; //rbg for some reason
-	//	inline static NI::Pointer<NI::MaterialProperty> layerOverlayMaterial = nullptr;
-
-	//	static void setLayerColor(const NI::Color& c) { layerOverlayColor = c; }
-	//	static NI::Color getLayerColor() { return layerOverlayColor; }
-	//};
-
 	struct ColorOverlayData {
 		NI::Pointer<NI::MaterialProperty> originalMaterial = nullptr;
 		NI::Pointer<NI::AlphaProperty> originalAlphaProperty = nullptr;
