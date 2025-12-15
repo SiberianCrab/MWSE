@@ -150,6 +150,9 @@
     <ClCompile Include="CSGlobalVariable.cpp">
       <Filter>Source Files\CS</Filter>
     </ClCompile>
+    <ClCompile Include="DialogLayerWindow.cpp">
+      <Filter>Source Files\UI\DialogClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CSSE.def">
@@ -471,6 +474,9 @@
     </ClInclude>
     <ClInclude Include="CSFile.h">
       <Filter>Header Files\CS</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogLayersWindow.h">
+      <Filter>Header Files\UI\DialogClasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

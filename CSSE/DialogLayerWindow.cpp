@@ -1,11 +1,14 @@
 #include "DialogLayersWindow.h"
+#include "DialogRenderWindow.h"
+#include "RenderWindowSelectionData.h"
 #include "WindowMain.h"
 
 #include <commctrl.h>
-#include <string>
 
 #define IDC_LAYERS_LIST 2001
 #define IDC_ADD_LAYER_BTN 2002
+#define IDM_LAYER_MOVE 3001
+#define IDM_LAYER_CLEAR 3002
 #define MAX_LAYERS 32
 
 namespace se::cs::dialog::layer_window {
@@ -13,7 +16,13 @@ namespace se::cs::dialog::layer_window {
 	HWND hLayersWnd = NULL;
 	bool isLayerWndForceHidden = false;
 
-	std::vector<LayerData> g_Layers;
+	std::vector<LayerData*> g_Layers;
+	std::unordered_map<size_t, LayerData*> g_LayersIdMap;
+
+	// All layer tags have format xLayerID_{int}
+	constexpr auto layerTag = "xLayerID_";
+	constexpr auto layerTagParse = "xLayerID_%zu";
+
 	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
 
 	// NI::Color uses rbg order, while COLORREF uses rgb order.
@@ -33,6 +42,175 @@ namespace se::cs::dialog::layer_window {
 		};
 	}
 
+	void LayerData::removeObject(Reference* objRef) {
+		if (!objRef) return;
+
+		updateObject(objRef, true);
+
+		if (perCellReferences.find(objRef) != perCellReferences.end()) {
+			perCellReferences.erase(objRef);
+		}
+	}
+
+	void LayerData::addObject(Reference* objRef) {
+		if (!objRef) return;
+		perCellReferences.insert(objRef);
+		updateObject(objRef);
+	}
+
+	void LayerData::updateObject(Reference* objRef, bool forceRestore) {
+
+		if (perCellReferences.find(objRef) == perCellReferences.end()) return;
+
+		auto node = objRef ? objRef->sceneNode : nullptr;
+		if (!node) return;
+
+		for (auto& child : node->children) {
+			if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
+
+				auto triShape = static_cast<NI::TriShape*>(child.get());
+
+				auto currMaterialProp = triShape->getMaterialProperty();
+
+				if (currMaterialProp) {
+
+					auto nodeColorData = getNodeColorData(triShape);
+
+					auto layerColor = getLayerColor();
+					auto layerMaterial = getLayerOverlayMaterial(currMaterialProp);
+					auto layerVertexProp = getLayerVertexColorProperty();
+					auto layerAlphaProp = getLayerAlphaProperty();
+
+					auto currVertexProp = triShape->getVertexColorProperty();
+					auto currAlphaProperty = triShape->getAlphaProperty();
+
+					if (isOverlayActive && !forceRestore) {
+						// Apply overlay material
+						if (!nodeColorData->originalMaterial) {
+							nodeColorData->originalMaterial = currMaterialProp;
+						}
+						triShape->setMaterialProperty(layerMaterial);
+
+						// Apply vertex color prop
+						if (!nodeColorData->originalVColorProperty) {
+							nodeColorData->originalVColorProperty = currVertexProp;
+						}
+						triShape->setVertexColorProperty(layerVertexProp);
+					}
+					else {
+						// Restore original material
+						auto originalMaterial = nodeColorData->originalMaterial;
+						if (originalMaterial) {
+							triShape->setMaterialProperty(originalMaterial);
+						}
+						else if (layerMaterial == currMaterialProp) {
+							triShape->detachPropertyByType(NI::PropertyType::Material);
+						}
+
+						// Restore original vertex color prop
+						auto originalVertexProp = nodeColorData->originalVColorProperty;
+						if (originalVertexProp) {
+							triShape->setVertexColorProperty(originalVertexProp);
+						}
+						else if (layerVertexProp == currVertexProp) {
+							triShape->detachPropertyByType(NI::PropertyType::VertexColor);
+						}
+					}
+
+					if (isOverlayActive && isLayerHidden && !forceRestore) {
+						// Apply transparency 
+						if (!nodeColorData->originalAlphaProperty) {
+							nodeColorData->originalAlphaProperty = currAlphaProperty;
+						}
+
+						triShape->setAlphaProperty(layerAlphaProp);
+
+						layerMaterial->setAlpha(0.5f);
+					}
+					else {
+						// Restore original alpha prop
+						auto originalAlphaProp = nodeColorData->originalAlphaProperty;
+
+						layerMaterial->setAlpha(1.0f);
+						if (originalAlphaProp) {
+							triShape->setAlphaProperty(originalAlphaProp);
+						}
+						else if (layerAlphaProp == currAlphaProperty) {
+							triShape->detachPropertyByType(NI::PropertyType::Alpha);
+						}
+					}
+
+					triShape->updateProperties();
+
+					if (forceRestore) {
+						// Clean up stored data
+						removeNodeColorData(triShape);
+					}
+				}
+			}
+		}
+
+		// Cull object if layer is hidden and overlay is not active
+		bool isObjectCulled = isLayerHidden && !isOverlayActive && !forceRestore;
+		node->setAppCulled(isObjectCulled);
+
+		// Updates all children as well
+		node->update();
+	}
+
+	void LayerData::refreshObjects() {
+		for (auto objRef : perCellReferences) {
+			updateObject(objRef);
+		}
+
+		se::cs::dialog::render_window::renderNextFrame();
+	}
+
+	void LayerData::moveObjectToLayer(Reference* objRef, LayerData* currentLayerInput) {
+		auto node = objRef ? objRef->sceneNode : nullptr;
+		if (!node) return;
+
+		auto stringData = getLayerTag(node);
+
+		auto currentLayer = currentLayerInput ? currentLayerInput : getLayerByData(stringData);
+
+		if (currentLayer) {
+			currentLayer->removeObject(objRef);
+		}
+
+		if (stringData) {
+			node->removeExtraData(stringData);
+		}
+
+		setLayerTag(node, id);
+
+		addObject(objRef);
+	}
+
+	void LayerData::moveSelectionToLayer() {
+		auto selectionData = se::cs::dialog::render_window::SelectionData::get();
+		for (auto target = selectionData->firstTarget; target; target = target->next) {
+			auto objRef = target->reference;
+			if (!objRef) {
+				continue;
+			}
+			moveObjectToLayer(objRef);
+		}
+		selectionData->clear();
+		se::cs::dialog::render_window::renderNextFrame();
+	}
+
+	void LayerData::clearLayer() {
+		auto defaultLayer = getLayerById(0);
+
+		auto objectsToMove = perCellReferences;
+		for (auto objRef : objectsToMove) {
+			defaultLayer->moveObjectToLayer(objRef, this);
+		}
+
+		se::cs::dialog::render_window::renderNextFrame();
+	}
+
 	// Hacky way to check if the render window is visible by reading the View menu's Render Window item.
 	// We can use IsIconic(hRender), but animations window hides the render window without triggering that, so this is more reliable.
 	bool IsRenderWindowVisible(HMENU viewMenu) {
@@ -46,9 +224,55 @@ namespace se::cs::dialog::layer_window {
 		return FALSE;
 	}
 
+	std::unordered_map<size_t, LayerData*> GetLayers() {
+		return g_LayersIdMap;
+	}
 
-	std::vector<LayerData>& GetLayers() {
-		return g_Layers;
+	LayerData* getLayerById(size_t id) {
+		if (id >= MAX_LAYERS) return nullptr;
+		auto it = g_LayersIdMap.find(id);
+		if (it != g_LayersIdMap.end()) {
+			return it->second;
+		}
+		return nullptr;
+	}
+
+	LayerData* getLayerByNode(NI::Node* node)
+	{
+		auto stringData = getLayerTag(node);
+		return getLayerByData(stringData);
+	}
+
+	LayerData* getLayerByData(NI::Pointer<NI::StringExtraData> stringData) {
+		if (!stringData) return nullptr;
+		size_t layerId = MAX_LAYERS + 1;
+		auto fullLayerTag = stringData->getString();
+		sscanf_s(fullLayerTag, layerTagParse, &layerId);
+		return getLayerById(layerId);
+	}
+
+	NI::Pointer<NI::StringExtraData> getLayerTag(NI::Node* node)
+	{
+		if (!node) return nullptr;
+		auto extraData = node->getStringDataStartingWithValue(layerTag);
+		return extraData;
+	}
+
+	// TODO: optimize to avoid string allocation
+	void setLayerTag(NI::Node* node, size_t id)
+	{	
+		std::string newTag = std::string(layerTag) + std::to_string(id);
+		auto newStringData = new NI::StringExtraData(newTag.c_str());
+		node->addExtraData(newStringData);
+	}
+
+	size_t getNextLayerId() {
+		size_t nextId = 0;
+		while (g_LayersIdMap.find(nextId) != g_LayersIdMap.end()) {
+			++nextId;
+		}
+
+		return nextId >= MAX_LAYERS ? MAX_LAYERS + 1 : nextId;
 	}
 
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -86,7 +310,16 @@ namespace se::cs::dialog::layer_window {
 			lvc.pszText = (LPSTR)"Ovrl";
 			ListView_InsertColumn(hListView, 3, &lvc);
 
-			hBtnAdd = CreateWindowExA(0, "BUTTON", "+",
+			// insert default layers
+			for (int i = 0; i < (int)g_Layers.size(); ++i) {
+				LVITEMA lvI = { 0 };
+				lvI.mask = LVIF_TEXT;
+				lvI.iItem = i;
+				lvI.pszText = LPSTR_TEXTCALLBACK;
+				ListView_InsertItem(hListView, &lvI);
+			}
+
+			hBtnAdd = CreateWindowExA(0, "BUTTON", "New Layer",
 				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_FLAT,
 				0, 0, 0, 0,
 				hWnd, (HMENU)IDC_ADD_LAYER_BTN, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
@@ -113,7 +346,7 @@ namespace se::cs::dialog::layer_window {
 			if (pDIS->CtlID == IDC_LAYERS_LIST) {
 				if (pDIS->itemID >= (int)g_Layers.size()) break;
 
-				LayerData& layer = g_Layers[pDIS->itemID];
+				LayerData* layer = g_Layers[pDIS->itemID];
 
 				if (pDIS->itemState & ODS_SELECTED) {
 					FillRect(pDIS->hDC, &pDIS->rcItem, GetSysColorBrush(COLOR_HIGHLIGHT));
@@ -132,18 +365,18 @@ namespace se::cs::dialog::layer_window {
 				ListView_GetSubItemRect(hListView, pDIS->itemID, 3, LVIR_BOUNDS, &rcOver);
 
 				rcLabel.left += 4; // some padding
-				DrawTextA(pDIS->hDC, layer.layerName.c_str(), -1, &rcLabel, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+				DrawTextA(pDIS->hDC, layer->layerName->c_str(), -1, &rcLabel, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 
 				InflateRect(&rcColor, -4, -4);
-				HBRUSH hBrush = CreateSolidBrush(NIColorToRef(layer.getLayerColor()));
+				HBRUSH hBrush = CreateSolidBrush(NIColorToRef(layer->getLayerColor()));
 				FillRect(pDIS->hDC, &rcColor, hBrush);
 				FrameRect(pDIS->hDC, &rcColor, (HBRUSH)GetStockObject(BLACK_BRUSH)); // Border
 				DeleteObject(hBrush);
 
-				UINT stateVis = DFCS_BUTTONCHECK | (!layer.isLayerHidden ? DFCS_CHECKED : 0);
+				UINT stateVis = DFCS_BUTTONCHECK | (!layer->isLayerHidden ? DFCS_CHECKED : 0);
 				DrawFrameControl(pDIS->hDC, &rcVis, DFC_BUTTON, stateVis);
 
-				UINT stateOver = DFCS_BUTTONCHECK | (layer.isOverlayActive ? DFCS_CHECKED : 0);
+				UINT stateOver = DFCS_BUTTONCHECK | (layer->isOverlayActive ? DFCS_CHECKED : 0);
 				DrawFrameControl(pDIS->hDC, &rcOver, DFC_BUTTON, stateOver);
 
 				return TRUE;
@@ -153,10 +386,19 @@ namespace se::cs::dialog::layer_window {
 
 		case WM_COMMAND: {
 			if (LOWORD(wParam) == IDC_ADD_LAYER_BTN) {
-				if (g_Layers.size() < MAX_LAYERS) {
-					LayerData newLayer;
-					newLayer.layerName = "Layer " + std::to_string(g_Layers.size() + 1);
+				auto nextId = getNextLayerId();
+				if (g_Layers.size() < MAX_LAYERS && nextId < MAX_LAYERS) {
+					LayerData* newLayer = new LayerData();
+					newLayer->id = nextId;
+					newLayer->layerName = new std::string(("Layer " + std::to_string(nextId)));
+					auto randomColor = NI::Color{
+						static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+						static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+						static_cast<float>(rand()) / static_cast<float>(RAND_MAX)
+					};
+					newLayer->setLayerColor(randomColor);
 					g_Layers.push_back(newLayer);
+					g_LayersIdMap[newLayer->id] = newLayer;
 
 					LVITEMA lvI = { 0 };
 					lvI.mask = LVIF_TEXT;
@@ -181,11 +423,64 @@ namespace se::cs::dialog::layer_window {
 			if (lpnm == NULL)
 				break;
 
+			// If clicked on column 1, 2, or 3 (Color, Vis, Overlay), cancel edit.
+			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == LVN_BEGINLABELEDIT) {
+				POINT pt;
+				GetCursorPos(&pt);
+				ScreenToClient(hListView, &pt);
+
+				LVHITTESTINFO hitInfo = { 0 };
+				hitInfo.pt = pt;
+				ListView_SubItemHitTest(hListView, &hitInfo);
+
+				if (hitInfo.iSubItem != 0) {
+					return TRUE; 
+				}
+				return FALSE; 
+			}
+
+			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == NM_RCLICK) {
+				LPNMITEMACTIVATE lpnmitem = (LPNMITEMACTIVATE)lParam;
+
+				POINT pt;
+				GetCursorPos(&pt);
+				POINT ptClient = pt;
+				ScreenToClient(hListView, &ptClient);
+
+				LVHITTESTINFO hitInfo = { 0 };
+				hitInfo.pt = ptClient;
+				ListView_SubItemHitTest(hListView, &hitInfo);
+
+				if (hitInfo.iItem != -1 && hitInfo.iItem < (int)g_Layers.size()) {
+					// Select the item being right-clicked
+					ListView_SetItemState(hListView, hitInfo.iItem, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+
+					LayerData* layer = g_Layers[hitInfo.iItem];
+
+					HMENU hPopup = CreatePopupMenu();
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_MOVE, "Move to layer");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_CLEAR, "Clear layer");
+
+					// Show menu
+					int selected = TrackPopupMenu(hPopup, TPM_RETURNCMD | TPM_NONOTIFY | TPM_RIGHTBUTTON, pt.x, pt.y, 0, hWnd, NULL);
+					DestroyMenu(hPopup);
+
+					if (selected == IDM_LAYER_MOVE) {
+						layer->moveSelectionToLayer();
+					}
+					else if (selected == IDM_LAYER_CLEAR) {
+						if (MessageBoxA(hWnd, "Are you sure you want to clear this layer? All objects will be moved to Default.", "Clear Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
+							layer->clearLayer();
+						}
+					}
+				}
+			}
+
 			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == NM_CLICK) {
 				LPNMITEMACTIVATE lpnmitem = (LPNMITEMACTIVATE)lParam;
 
 				if (lpnmitem->iItem != -1 && lpnmitem->iItem < (int)g_Layers.size()) {
-					LayerData& layer = g_Layers[lpnmitem->iItem];
+					LayerData* layer = g_Layers[lpnmitem->iItem];
 
 					//color picker
 					if (lpnmitem->iSubItem == 1) {
@@ -193,29 +488,28 @@ namespace se::cs::dialog::layer_window {
 						cc.lStructSize = sizeof(cc);
 						cc.hwndOwner = hWnd;
 						cc.lpCustColors = g_CustomColors;
-						cc.rgbResult = NIColorToRef(layer.getLayerColor());
+						cc.rgbResult = NIColorToRef(layer->getLayerColor());
 						cc.Flags = CC_FULLOPEN | CC_RGBINIT;
 
 						if (ChooseColorA(&cc)) {
-							layer.setLayerColor(RefToNIColor(cc.rgbResult));
+							layer->setLayerColor(RefToNIColor(cc.rgbResult));
 							InvalidateRect(hListView, NULL, FALSE);
-							// TODO: Trigger scene graph update here??? Might be unnecessary since material is shared
 						}
 					}
 
 					// visibility toggle
 					else if (lpnmitem->iSubItem == 2) {
-						layer.isLayerHidden = !layer.isLayerHidden;
+						layer->isLayerHidden = !layer->isLayerHidden;
 						InvalidateRect(hListView, NULL, FALSE);
-						// TODO: Trigger scene graph update here
 					}
 
 					// color overlay toggle
 					else if (lpnmitem->iSubItem == 3) {
-						layer.isOverlayActive = !layer.isOverlayActive;
+						layer->isOverlayActive = !layer->isOverlayActive;
 						InvalidateRect(hListView, NULL, FALSE);
-						// TODO: Trigger overlay render update here
 					}
+
+					layer->refreshObjects();
 				}
 			}
 
@@ -234,29 +528,36 @@ namespace se::cs::dialog::layer_window {
 			if (lpnm->idFrom == IDC_LAYERS_LIST && (lpnm->code == LVN_ENDLABELEDIT)) {
 				LPNMLVDISPINFOA pDisp = (LPNMLVDISPINFOA)lParam;
 				if (pDisp && pDisp->item.iItem >= 0 && pDisp->item.iItem < (int)g_Layers.size()) {
-
 					if (pDisp->item.pszText) {
-
-						g_Layers[pDisp->item.iItem].layerName = std::string(pDisp->item.pszText);
-
+						// Update name
+						delete g_Layers[pDisp->item.iItem]->layerName;
+						g_Layers[pDisp->item.iItem]->layerName = new std::string(pDisp->item.pszText);
 						InvalidateRect(hListView, NULL, FALSE);
+						return TRUE; 
 					}
 				}
 			}
 
 			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == LVN_KEYDOWN) {
 				LPNMLVKEYDOWN pnkd = (LPNMLVKEYDOWN)lParam;
-
 				if (pnkd->wVKey == VK_DELETE) {
-
 					int iItem = ListView_GetNextItem(hListView, -1, LVNI_SELECTED);
-
 					if (iItem != -1 && iItem < (int)g_Layers.size()) {
-						// TODO: Trigger scene graph update here
-						// 
-						g_Layers.erase(g_Layers.begin() + iItem);
+						LayerData* l = g_Layers[iItem];
+						// Prevent deleting default layers
+						if (l->id == 0 || l->id == 1) {
+							MessageBoxA(hWnd, "Cannot delete Default or Hidden layer.", "Error", MB_OK);
+						}
+						else {
+							// Move objects to default before deleting
+							l->clearLayer();
 
-						ListView_DeleteItem(hListView, iItem);
+							delete g_Layers[iItem];
+							g_Layers.erase(g_Layers.begin() + iItem);
+							g_LayersIdMap.erase(l->id);
+
+							ListView_DeleteItem(hListView, iItem);
+						}
 					}
 				}
 			}
@@ -281,6 +582,27 @@ namespace se::cs::dialog::layer_window {
 			if (IsIconic(hLayersWnd)) OpenIcon(hLayersWnd);
 			SetForegroundWindow(hLayersWnd);
 			return;
+		}
+
+		if (g_Layers.empty()) {
+			// Default Layer
+			auto defaultLayer = new LayerData();
+			defaultLayer->id = 0;
+			defaultLayer->layerName = new std::string("Default");
+			defaultLayer->setLayerColor({ 1.0f, 1.0f, 1.0f });
+			defaultLayer->isLayerHidden = false;
+			defaultLayer->isOverlayActive = false;
+			g_Layers.push_back(defaultLayer);
+			g_LayersIdMap[defaultLayer->id] = defaultLayer;
+
+			// Hidden Layer
+			auto hiddenLayer = new LayerData();
+			hiddenLayer->id = 1;
+			hiddenLayer->layerName = new std::string("Hidden");
+			hiddenLayer->isLayerHidden = true;
+			hiddenLayer->isOverlayActive = false;
+			g_Layers.push_back(hiddenLayer);
+			g_LayersIdMap[hiddenLayer->id] = hiddenLayer;
 		}
 
 		WNDCLASSEXA wc = {};

@@ -33,6 +33,7 @@
 #include "Settings.h"
 
 #include "DialogLandscapeEditSettingsWindow.h"
+#include "DialogLayersWindow.h"
 #include "WindowMain.h"
 
 #include "DialogProcContext.h"
@@ -40,24 +41,6 @@
 namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
-
-	struct ColorOverlayData {
-		NI::Pointer<NI::MaterialProperty> originalMaterial = nullptr;
-		NI::Pointer<NI::AlphaProperty> originalAlphaProperty = nullptr;
-		NI::Pointer<NI::VertexColorProperty> originalVColorProperty = nullptr;
-
-		inline static NI::Color hiddenOverlayColor = NI::Color{ 0.0f, 1.0f, 0.4f }; //rbg for some reason
-		inline static NI::Pointer<NI::MaterialProperty> hiddenOverlayMaterial = nullptr;
-
-		static void setHiddenOverlayColor(const NI::Color& c) { hiddenOverlayColor = c; }
-		static NI::Color getHiddenOverlayColor() { return hiddenOverlayColor; }
-	};
-
-	// Track nodes hidden by the "hide selection" action so they can be re-shown and re-hidden.
-	static std::unordered_set<Reference*> g_hiddenReferences;
-	static bool g_hiddenReferencesShown = false;
-	// Track active color overlays so they can be removed later.
-	static std::unordered_map<NI::TriShape*, ColorOverlayData*> hiddenObjOverlays;
 
 	std::default_random_engine generator;
 	std::uniform_real_distribution<float> rotationDistribution(0.0, 360.0);
@@ -965,7 +948,8 @@ namespace se::cs::dialog::render_window {
 
 	bool __stdcall CheckNodeHasHiddenFlag(NI::Node* node) {
 		if (!node) return false;
-		return node->getStringDataWithValue("xHID") != nullptr;
+		auto nodeLayer = se::cs::dialog::layer_window::getLayerByNode(node);
+		return nodeLayer ? nodeLayer->isLayerHidden : false;
 	}
 
 	// Hook: Block selection of soft-hidden objects.
@@ -1030,12 +1014,10 @@ namespace se::cs::dialog::render_window {
 			}
 
 			// Skip soft-hidden objects.
-			if (g_hiddenReferencesShown) {
-				auto parentNode = result->object->parentNode;
-				if (parentNode) {
-					if (parentNode->getStringDataWithValue("xHID")) {
-						continue;
-					}
+			auto parentNode = result->object->parentNode;
+			if (parentNode) {
+				if (CheckNodeHasHiddenFlag(parentNode)) {
+					continue;
 				}
 			}
 
@@ -1427,219 +1409,26 @@ namespace se::cs::dialog::render_window {
 		UndoManager::get()->storeCheckpoint(UndoManager::Action::Moved);
 	}
 
-	static void applyColorOverlayHidden(NI::TriShape* node) {
-
-		if (hiddenObjOverlays.find(node) != hiddenObjOverlays.end()) {
-			return;
-		}
-
-		auto materialProp = node->getMaterialProperty();
-
-		if (materialProp) {
-
-			auto overlayData = new ColorOverlayData();
-			auto overlayColor = ColorOverlayData::getHiddenOverlayColor();
-
-			overlayData->originalMaterial = materialProp;
-
-			// Cache the overlay material.
-			if (!ColorOverlayData::hiddenOverlayMaterial)
-			{
-				auto clonedMaterial = static_cast<NI::MaterialProperty*>(materialProp->createClone());
-				clonedMaterial->setEmissive(overlayColor);
-				clonedMaterial->setDiffuse(overlayColor);
-				clonedMaterial->setAmbient(overlayColor);
-				clonedMaterial->alpha = 0.5f;
-				ColorOverlayData::hiddenOverlayMaterial = clonedMaterial;
-			}
-
-			node->setMaterialProperty(ColorOverlayData::hiddenOverlayMaterial);
-
-			NI::Pointer<NI::AlphaProperty> alphaProperty = node->getAlphaProperty();
-			overlayData->originalAlphaProperty = alphaProperty;
-
-			//Alpha property for transparency
-			if (!alphaProperty) {
-				alphaProperty = new NI::AlphaProperty();
-				node->setAlphaProperty(alphaProperty);
-				alphaProperty->flags = 3821;
-				alphaProperty->alphaTestRef = 129;
-				alphaProperty->update(0.f);
-			}
-
-			// Check if NiTriShapeData has vertex colors and if so, override them.
-			auto triShapeData = node->modelData;
-			if (triShapeData
-				&& (triShapeData->color != nullptr)
-				&& (triShapeData->getActiveVertexCount() > 0)) {
-
-				NI::Pointer<NI::VertexColorProperty> vertexProp = node->getVertexColorProperty();
-				overlayData->originalVColorProperty = vertexProp;
-
-				NI::Pointer<NI::VertexColorProperty> overlayVertexProp = new NI::VertexColorProperty();
-				node->setVertexColorProperty(overlayVertexProp);
-
-				overlayVertexProp->update(0.f);
-			}
-
-			hiddenObjOverlays[node] = overlayData;
-
-			ColorOverlayData::hiddenOverlayMaterial->update(0.f);
-			node->updateProperties();
-			node->update();
-		}
-
-		return;
-	}
-
-	static void removeColorOverlayHidden(NI::TriShape* node) {
-
-		auto it = hiddenObjOverlays.find(node);
-
-		if (it != hiddenObjOverlays.end()) {
-			auto overlayData = it->second;
-			auto materialProp = overlayData->originalMaterial;
-			if (materialProp) {
-				node->setMaterialProperty(materialProp);
-				materialProp->update(0.f);
-			}
-			else
-				node->detachPropertyByType(NI::PropertyType::Material);
-
-			auto vertexProp = overlayData->originalVColorProperty;
-			if (vertexProp)
-			{
-				node->setVertexColorProperty(vertexProp);
-				vertexProp->update(0.f);
-			}
-			else
-				node->detachPropertyByType(NI::PropertyType::VertexColor);
-
-			auto alphaProp = overlayData->originalAlphaProperty;
-			if (alphaProp)
-			{
-				node->setAlphaProperty(alphaProp);
-				alphaProp->update(0.f);
-			}
-			else
-				node->detachPropertyByType(NI::PropertyType::Alpha);
-
-			node->updateProperties();
-			node->update();
-			hiddenObjOverlays.erase(it);
-			delete overlayData;
-		}
-	}
-
-	static void showTrackedHiddenReferences(bool show) {
-		if (g_hiddenReferences.empty()) {
-			return;
-		}
-
-		for (auto objRef : g_hiddenReferences) {
-			auto node = objRef ? objRef->sceneNode : nullptr;
-			if (node) {
-				for (auto& child : node->children) {
-					if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
-						auto triShape = static_cast<NI::TriShape*>(child.get());
-						if (show)
-							applyColorOverlayHidden(triShape);
-					}
-				}
-				// In case cell was reloaded and "xHID" flag got lost.
-				if (!node->getStringDataWithValue("xHID")) {
-					node->addExtraData(new NI::StringExtraData("xHID"));
-				}
-				// keep "xHID" so unhideAllReferences can fully restore.
-				node->setAppCulled(!show);
-				node->update();
-			}
-			else {
-				// Remove from tracked list if node is gone.
-				g_hiddenReferences.erase(objRef);
-			}
-		}
-
-		g_hiddenReferencesShown = show;
-		renderNextFrame();
-	}
-
-	static void clearTrackedHiddenReferences() {
-		for (auto objRef : g_hiddenReferences) {
-			auto node = objRef ? objRef->sceneNode : nullptr;
-			if (node) {
-				for (auto& child : node->children) {
-					if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiTriShape)) {
-						auto triShape = static_cast<NI::TriShape*>(child.get());
-						removeColorOverlayHidden(triShape);
-					}
-				}
-			}
-		}
-
-		g_hiddenReferences.clear();
-		g_hiddenReferencesShown = false;
-	}
-
 	void hideSelectedReferences() {
 		auto selectionData = SelectionData::get();
 
 		for (auto target = selectionData->firstTarget; target; target = target->next) {
 			auto objRef = target->reference;
-			auto node = objRef->sceneNode;
-			if (node) {
-				if (!node->getStringDataWithValue("xHID")) {
-					node->addExtraData(new NI::StringExtraData("xHID"));
-				}
-
-				node->setAppCulled(true);
-				node->update();
-
-				// Track this node so we can toggle visibility later.
-
-				if (std::find(g_hiddenReferences.begin(), g_hiddenReferences.end(), objRef) == g_hiddenReferences.end()) {
-					g_hiddenReferences.insert(objRef);
-				}
+			if (!objRef) {
+				continue;
 			}
+			auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(1);
+			hiddenLayer->moveObjectToLayer(objRef);
 		}
 
 		selectionData->clear();
 
-		showTrackedHiddenReferences(false);
-		//renderNextFrame(); method above already calls this.
-	}
-
-	void unhideNode(NI::Node* node) {
-		auto hideFlag = node->getStringDataWithValue("xHID");
-		if (hideFlag) {
-			node->removeExtraData(hideFlag);
-			node->setAppCulled(false);
-			node->update();
-		}
-
-		for (auto& child : node->children) {
-			if (child && child->isInstanceOfType(NI::RTTIStaticPtr::NiNode)) {
-				unhideNode(static_cast<NI::Node*>(child.get()));
-			}
-		}
-	}
-
-	void unhideAllReferences() {
-		// If we're doing a full restore from the menu/action, forget the tracked list and clean the overlays
-		clearTrackedHiddenReferences();
-
-		unhideNode(SceneGraphController::get()->objectRoot);
-
 		renderNextFrame();
 	}
 
-	static void toggleHiddenReferences() {
-
-		if (g_hiddenReferences.empty()) {
-			return;
-		}
-
-		showTrackedHiddenReferences(!g_hiddenReferencesShown);
+	void unhideAllReferences() {
+		auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(1);
+		hiddenLayer->clearLayer();
 	}
 
 	void saveRenderStateToQuickStart() {
@@ -2622,13 +2411,6 @@ namespace se::cs::dialog::render_window {
 				context.setResult(TRUE);
 			}
 			// H otherwise opens the terrain window.
-			break;
-		case 'R':
-			// Toggle showing/hiding the references that were soft-hidden by hideSelectedReferences.
-			if (!context.getKeyWasDown()) {
-				toggleHiddenReferences();
-			}
-			context.setResult(TRUE);
 			break;
 		case 'S':
 			if (landscapeEditWindow) {
