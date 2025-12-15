@@ -18,6 +18,7 @@ namespace se::cs::dialog::layer_window {
 
 	std::vector<LayerData*> g_Layers;
 	std::unordered_map<size_t, LayerData*> g_LayersIdMap;
+	std::unordered_map<Reference*, LayerData*> g_ObjectLayerMap;
 
 	// All layer tags have format xLayerID_{int}
 	constexpr auto layerTag = "xLayerID_";
@@ -49,12 +50,14 @@ namespace se::cs::dialog::layer_window {
 
 		if (perCellReferences.find(objRef) != perCellReferences.end()) {
 			perCellReferences.erase(objRef);
+			g_ObjectLayerMap.erase(objRef);
 		}
 	}
 
 	void LayerData::addObject(Reference* objRef) {
 		if (!objRef) return;
 		perCellReferences.insert(objRef);
+		g_ObjectLayerMap[objRef] = this;
 		updateObject(objRef);
 	}
 
@@ -167,22 +170,13 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	void LayerData::moveObjectToLayer(Reference* objRef, LayerData* currentLayerInput) {
-		auto node = objRef ? objRef->sceneNode : nullptr;
-		if (!node) return;
+		if (!objRef) return;
 
-		auto stringData = getLayerTag(node);
-
-		auto currentLayer = currentLayerInput ? currentLayerInput : getLayerByData(stringData);
+		auto currentLayer = currentLayerInput ? currentLayerInput : getLayerByObject(objRef);
 
 		if (currentLayer) {
 			currentLayer->removeObject(objRef);
 		}
-
-		if (stringData) {
-			node->removeExtraData(stringData);
-		}
-
-		setLayerTag(node, id);
 
 		addObject(objRef);
 	}
@@ -202,8 +196,9 @@ namespace se::cs::dialog::layer_window {
 
 	void LayerData::clearLayer() {
 		auto defaultLayer = getLayerById(0);
-
-		auto objectsToMove = perCellReferences;
+		
+		// copy to avoid problems with modification during iteration
+		auto objectsToMove = perCellReferences; 
 		for (auto objRef : objectsToMove) {
 			defaultLayer->moveObjectToLayer(objRef, this);
 		}
@@ -237,33 +232,14 @@ namespace se::cs::dialog::layer_window {
 		return nullptr;
 	}
 
-	LayerData* getLayerByNode(NI::Node* node)
+	LayerData* getLayerByObject(Reference* obj)
 	{
-		auto stringData = getLayerTag(node);
-		return getLayerByData(stringData);
-	}
-
-	LayerData* getLayerByData(NI::Pointer<NI::StringExtraData> stringData) {
-		if (!stringData) return nullptr;
-		size_t layerId = MAX_LAYERS + 1;
-		auto fullLayerTag = stringData->getString();
-		sscanf_s(fullLayerTag, layerTagParse, &layerId);
-		return getLayerById(layerId);
-	}
-
-	NI::Pointer<NI::StringExtraData> getLayerTag(NI::Node* node)
-	{
-		if (!node) return nullptr;
-		auto extraData = node->getStringDataStartingWithValue(layerTag);
-		return extraData;
-	}
-
-	// TODO: optimize to avoid string allocation
-	void setLayerTag(NI::Node* node, size_t id)
-	{	
-		std::string newTag = std::string(layerTag) + std::to_string(id);
-		auto newStringData = new NI::StringExtraData(newTag.c_str());
-		node->addExtraData(newStringData);
+		if (!obj) return nullptr;
+		auto it = g_ObjectLayerMap.find(obj);
+		if (it != g_ObjectLayerMap.end()) {
+			return it->second;
+		}
+		return nullptr;
 	}
 
 	size_t getNextLayerId() {

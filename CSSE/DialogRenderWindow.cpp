@@ -948,7 +948,8 @@ namespace se::cs::dialog::render_window {
 
 	bool __stdcall CheckNodeHasHiddenFlag(NI::Node* node) {
 		if (!node) return false;
-		auto nodeLayer = se::cs::dialog::layer_window::getLayerByNode(node);
+		Reference* reference = node->getTes3Reference(false);
+		auto nodeLayer = se::cs::dialog::layer_window::getLayerByObject(reference);
 		return nodeLayer ? nodeLayer->isLayerHidden : false;
 	}
 

@@ -139,10 +139,7 @@ namespace se::cs::dialog::layer_window {
 
 	std::unordered_map<size_t, LayerData*> GetLayers();
 	LayerData* getLayerById(size_t id);
-	LayerData* getLayerByData(NI::Pointer<NI::StringExtraData> stringData);
-	LayerData* getLayerByNode(NI::Node* node);
-	NI::Pointer<NI::StringExtraData> getLayerTag(NI::Node* node);
-	void setLayerTag(NI::Node* node, size_t id);
+	LayerData* getLayerByObject(Reference* obj);
 
 	extern HWND hLayersWnd;
 }
