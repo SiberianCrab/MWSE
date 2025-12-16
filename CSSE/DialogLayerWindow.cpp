@@ -20,10 +20,6 @@ namespace se::cs::dialog::layer_window {
 	std::unordered_map<size_t, LayerData*> g_LayersIdMap;
 	std::unordered_map<Reference*, LayerData*> g_ObjectLayerMap;
 
-	// All layer tags have format xLayerID_{int}
-	constexpr auto layerTag = "xLayerID_";
-	constexpr auto layerTagParse = "xLayerID_%zu";
-
 	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
 
 	// NI::Color uses rbg order, while COLORREF uses rgb order.
@@ -224,7 +220,7 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	LayerData* getLayerById(size_t id) {
-		if (id >= MAX_LAYERS) return nullptr;
+		if (id >= MAX_LAYERS || id < 0) return nullptr;
 		auto it = g_LayersIdMap.find(id);
 		if (it != g_LayersIdMap.end()) {
 			return it->second;
