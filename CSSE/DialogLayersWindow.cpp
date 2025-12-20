@@ -2,7 +2,6 @@
 #include "DialogRenderWindow.h"
 #include "RenderWindowSelectionData.h"
 #include "WindowMain.h"
-#include <commctrl.h>
 
 #define IDC_LAYERS_LIST 2001
 
@@ -292,26 +291,16 @@ namespace se::cs::dialog::layer_window {
 			hBtnDel = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_DEL, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
 
-			HBITMAP hBmp = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_TOOLBAR_STRIP));
+			HMODULE hCurrentModule = NULL;
+			GetModuleHandleExA(
+				GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+				(LPCSTR)&LayersWindowProc,
+				&hCurrentModule
+			);
 
-			if (hBmp == NULL) {
-				DWORD err = GetLastError();
-				char buf[256];
-
-				// Error 1813 = Resource Type Not Found (It's not in the BITMAP folder)
-				// Error 1814 = Resource Name Not Found (The ID number is wrong)
-				wsprintfA(buf, "Failed to load. Error Code: %d", err);
-
-				MessageBoxA(hWnd, buf, "Debug Info", MB_OK | MB_ICONERROR);
-				return 0;
-			}
+			HBITMAP hBmp = LoadBitmap(hCurrentModule, MAKEINTRESOURCE(IDB_TOOLBAR_STRIP));
 
 			HIMAGELIST hImageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK, 3, 0);
-
-			if (hImageList == NULL) {
-				MessageBoxA(hWnd, "ImageList creation failed! Did you call InitCommonControlsEx?", "Error", MB_OK);
-				return -1;
-			}
 
 			ImageList_AddMasked(hImageList, hBmp, RGB(255, 0, 255));
 			DeleteObject(hBmp); 
