@@ -2,13 +2,21 @@
 #include "DialogRenderWindow.h"
 #include "RenderWindowSelectionData.h"
 #include "WindowMain.h"
-
 #include <commctrl.h>
 
 #define IDC_LAYERS_LIST 2001
-#define IDC_ADD_LAYER_BTN 2002
+
+#define IDC_BTN_SAVE 2002
+#define IDC_BTN_ADD 2003
+#define IDC_BTN_DEL 2004
+#define IDC_STATUS_LABEL 2005
+
 #define IDM_LAYER_MOVE 3001
 #define IDM_LAYER_CLEAR 3002
+#define IDM_LAYER_RENAME 3003
+#define IDM_LAYER_DELETE 3004
+#define IDM_LAYER_SELECT 3005
+
 #define MAX_LAYERS 32
 
 namespace se::cs::dialog::layer_window {
@@ -40,26 +48,39 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	void LayerData::removeObject(Reference* objRef) {
-		if (!objRef) return;
+		auto objCell = objRef ? objRef->getCell() : nullptr;
+		if (!objCell) return;
 
 		updateObject(objRef, true);
 
-		if (perCellReferences.find(objRef) != perCellReferences.end()) {
-			perCellReferences.erase(objRef);
+		if (perCellReferences.find(objCell) != perCellReferences.end()) {
+			auto cellRefs = &perCellReferences[objCell];
+			if (cellRefs->find(objRef) != cellRefs->end()) {
+				cellRefs->erase(objRef);
+				if (cellRefs->empty()) {
+					perCellReferences.erase(objCell);
+				}
+			}
 			g_ObjectLayerMap.erase(objRef);
 		}
 	}
 
 	void LayerData::addObject(Reference* objRef) {
-		if (!objRef) return;
-		perCellReferences.insert(objRef);
+		auto objCell = objRef ? objRef->getCell() : nullptr;
+		if (!objCell) return;
+		perCellReferences[objCell].insert(objRef);
 		g_ObjectLayerMap[objRef] = this;
 		updateObject(objRef);
 	}
 
 	void LayerData::updateObject(Reference* objRef, bool forceRestore) {
+		auto objCell = objRef ? objRef->getCell() : nullptr;
+		if (!objCell) return;
 
-		if (perCellReferences.find(objRef) == perCellReferences.end()) return;
+		if (perCellReferences.find(objCell) == perCellReferences.end()) return;
+
+		auto& cellRefs = perCellReferences[objCell];
+		if (cellRefs.find(objRef) == cellRefs.end()) return;
 
 		auto node = objRef ? objRef->sceneNode : nullptr;
 		if (!node) return;
@@ -98,7 +119,7 @@ namespace se::cs::dialog::layer_window {
 					}
 					else {
 						// Restore original material
-						auto originalMaterial = nodeColorData->originalMaterial;
+						auto& originalMaterial = nodeColorData->originalMaterial;
 						if (originalMaterial) {
 							triShape->setMaterialProperty(originalMaterial);
 						}
@@ -107,7 +128,7 @@ namespace se::cs::dialog::layer_window {
 						}
 
 						// Restore original vertex color prop
-						auto originalVertexProp = nodeColorData->originalVColorProperty;
+						auto& originalVertexProp = nodeColorData->originalVColorProperty;
 						if (originalVertexProp) {
 							triShape->setVertexColorProperty(originalVertexProp);
 						}
@@ -128,7 +149,7 @@ namespace se::cs::dialog::layer_window {
 					}
 					else {
 						// Restore original alpha prop
-						auto originalAlphaProp = nodeColorData->originalAlphaProperty;
+						auto& originalAlphaProp = nodeColorData->originalAlphaProperty;
 
 						layerMaterial->setAlpha(1.0f);
 						if (originalAlphaProp) {
@@ -157,9 +178,12 @@ namespace se::cs::dialog::layer_window {
 		node->update();
 	}
 
+	// TODO: Refresh only active cell objects
 	void LayerData::refreshObjects() {
-		for (auto objRef : perCellReferences) {
-			updateObject(objRef);
+		for (auto& cell_data : perCellReferences) {
+			for (auto objRef : cell_data.second) {
+				updateObject(objRef);
+			}
 		}
 
 		se::cs::dialog::render_window::renderNextFrame();
@@ -194,9 +218,11 @@ namespace se::cs::dialog::layer_window {
 		auto defaultLayer = getLayerById(0);
 		
 		// copy to avoid problems with modification during iteration
-		auto objectsToMove = perCellReferences; 
-		for (auto objRef : objectsToMove) {
-			defaultLayer->moveObjectToLayer(objRef, this);
+		auto c_perCellReferences = this->perCellReferences;
+		for (auto& cell_data : c_perCellReferences) {
+			for (auto objRef : cell_data.second) {
+				defaultLayer->moveObjectToLayer(objRef, this);
+			}
 		}
 
 		se::cs::dialog::render_window::renderNextFrame();
@@ -247,12 +273,58 @@ namespace se::cs::dialog::layer_window {
 		return nextId >= MAX_LAYERS ? MAX_LAYERS + 1 : nextId;
 	}
 
+	static bool isContextRename = false;
+
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		static HWND hListView;
-		static HWND hBtnAdd;
+		static HWND hBtnSave, hBtnAdd, hBtnDel;
+		static HWND hStatus;
 
 		switch (msg) {
 		case WM_CREATE: {
+
+			hBtnSave = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
+				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_SAVE, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+
+			hBtnAdd = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
+				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_ADD, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+
+			hBtnDel = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
+				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_DEL, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+
+			HBITMAP hBmp = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_TOOLBAR_STRIP));
+
+			if (hBmp == NULL) {
+				DWORD err = GetLastError();
+				char buf[256];
+
+				// Error 1813 = Resource Type Not Found (It's not in the BITMAP folder)
+				// Error 1814 = Resource Name Not Found (The ID number is wrong)
+				wsprintfA(buf, "Failed to load. Error Code: %d", err);
+
+				MessageBoxA(hWnd, buf, "Debug Info", MB_OK | MB_ICONERROR);
+				return 0;
+			}
+
+			HIMAGELIST hImageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK, 3, 0);
+
+			if (hImageList == NULL) {
+				MessageBoxA(hWnd, "ImageList creation failed! Did you call InitCommonControlsEx?", "Error", MB_OK);
+				return -1;
+			}
+
+			ImageList_AddMasked(hImageList, hBmp, RGB(255, 0, 255));
+			DeleteObject(hBmp); 
+
+			HICON hIconSave = ImageList_GetIcon(hImageList, 0, ILD_TRANSPARENT);
+			HICON hIconAdd = ImageList_GetIcon(hImageList, 1, ILD_TRANSPARENT);
+			HICON hIconDel = ImageList_GetIcon(hImageList, 2, ILD_TRANSPARENT);
+
+			SendMessage(hBtnSave, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)hIconSave);
+			SendMessage(hBtnAdd, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)hIconAdd);
+			SendMessage(hBtnDel, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)hIconDel);
+
+			ImageList_Destroy(hImageList);
 
 			hListView = CreateWindowExA(0, WC_LISTVIEW, "",
 				WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_OWNERDRAWFIXED | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_EDITLABELS,
@@ -265,24 +337,24 @@ namespace se::cs::dialog::layer_window {
 			lvc.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT;
 
 			lvc.fmt = LVCFMT_LEFT;
-			lvc.cx = 110;
+			lvc.cx = 135;
 			lvc.pszText = (LPSTR)"Name";
 			ListView_InsertColumn(hListView, 0, &lvc);
 
 			lvc.fmt = LVCFMT_CENTER;
-			lvc.cx = 45;
+			lvc.cx = 40;
 			lvc.pszText = (LPSTR)"Color";
 			ListView_InsertColumn(hListView, 1, &lvc);
 
 			lvc.cx = 45;
-			lvc.pszText = (LPSTR)"Vis";
+			lvc.pszText = (LPSTR)"Visible";
 			ListView_InsertColumn(hListView, 2, &lvc);
 
 			lvc.cx = 50;
-			lvc.pszText = (LPSTR)"Ovrl";
+			lvc.pszText = (LPSTR)"Overlay";
 			ListView_InsertColumn(hListView, 3, &lvc);
 
-			// insert default layers
+			// Insert default layers
 			for (int i = 0; i < (int)g_Layers.size(); ++i) {
 				LVITEMA lvI = { 0 };
 				lvI.mask = LVIF_TEXT;
@@ -291,25 +363,50 @@ namespace se::cs::dialog::layer_window {
 				ListView_InsertItem(hListView, &lvI);
 			}
 
-			hBtnAdd = CreateWindowExA(0, "BUTTON", "New Layer",
-				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_FLAT,
-				0, 0, 0, 0,
-				hWnd, (HMENU)IDC_ADD_LAYER_BTN, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+			hStatus = CreateWindowExA(0, "STATIC", "Objects: 0",
+				WS_CHILD | WS_VISIBLE | SS_LEFT | SS_CENTERIMAGE,
+				0, 0, 0, 0, hWnd, (HMENU)IDC_STATUS_LABEL, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
 
 			HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 			SendMessage(hListView, WM_SETFONT, (WPARAM)hFont, 0);
+			SendMessage(hBtnSave, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hBtnAdd, WM_SETFONT, (WPARAM)hFont, 0);
+			SendMessage(hBtnDel, WM_SETFONT, (WPARAM)hFont, 0);
+			SendMessage(hStatus, WM_SETFONT, (WPARAM)hFont, 0);
 			break;
 		}
 
 		case WM_SIZE: {
 			int width = LOWORD(lParam);
 			int height = HIWORD(lParam);
-			int btnHeight = 30;
 
-			MoveWindow(hListView, 0, 0, width, height - btnHeight, TRUE);
+			int padding = 4;
+			int topBarHeight = 24;
+			int btnSize = 24;
+			int currentY = padding;
 
-			MoveWindow(hBtnAdd, 0, height - btnHeight, width, btnHeight, TRUE);
+			MoveWindow(hBtnSave, padding, currentY, btnSize, topBarHeight, TRUE);
+			MoveWindow(hBtnAdd, padding + btnSize + 2, currentY, btnSize, topBarHeight, TRUE);
+			MoveWindow(hBtnDel, padding + (btnSize * 2) + 4, currentY, btnSize, topBarHeight, TRUE);
+
+			currentY += topBarHeight + padding;
+
+			int listHeight = height - currentY - topBarHeight;
+			if (listHeight < 0) listHeight = 0;
+
+			MoveWindow(hListView, 0, currentY, width, listHeight, TRUE);
+
+			MoveWindow(hStatus, padding, height - topBarHeight, width - padding, topBarHeight, TRUE);
+
+			// Resize "Name" Column to fill width
+			RECT rcList;
+			GetClientRect(hListView, &rcList); 
+			int fixedColumnsWidth = 40 + 45 + 50;
+			int newNameWidth = rcList.right - fixedColumnsWidth;
+
+			if (newNameWidth < 50) newNameWidth = 50;
+
+			ListView_SetColumnWidth(hListView, 0, newNameWidth);
 			break;
 		}
 
@@ -320,6 +417,7 @@ namespace se::cs::dialog::layer_window {
 
 				LayerData* layer = g_Layers[pDIS->itemID];
 
+				// Background
 				if (pDIS->itemState & ODS_SELECTED) {
 					FillRect(pDIS->hDC, &pDIS->rcItem, GetSysColorBrush(COLOR_HIGHLIGHT));
 					SetTextColor(pDIS->hDC, GetSysColor(COLOR_HIGHLIGHTTEXT));
@@ -336,18 +434,22 @@ namespace se::cs::dialog::layer_window {
 				ListView_GetSubItemRect(hListView, pDIS->itemID, 2, LVIR_BOUNDS, &rcVis);
 				ListView_GetSubItemRect(hListView, pDIS->itemID, 3, LVIR_BOUNDS, &rcOver);
 
-				rcLabel.left += 4; // some padding
+				// Name
+				rcLabel.left += 4;
 				DrawTextA(pDIS->hDC, layer->layerName->c_str(), -1, &rcLabel, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 
+				// Color Swatch
 				InflateRect(&rcColor, -4, -4);
 				HBRUSH hBrush = CreateSolidBrush(NIColorToRef(layer->getLayerColor()));
 				FillRect(pDIS->hDC, &rcColor, hBrush);
-				FrameRect(pDIS->hDC, &rcColor, (HBRUSH)GetStockObject(BLACK_BRUSH)); // Border
+				FrameRect(pDIS->hDC, &rcColor, (HBRUSH)GetStockObject(BLACK_BRUSH));
 				DeleteObject(hBrush);
 
+				// Visible Checkbox
 				UINT stateVis = DFCS_BUTTONCHECK | (!layer->isLayerHidden ? DFCS_CHECKED : 0);
 				DrawFrameControl(pDIS->hDC, &rcVis, DFC_BUTTON, stateVis);
 
+				// Overlay Checkbox
 				UINT stateOver = DFCS_BUTTONCHECK | (layer->isOverlayActive ? DFCS_CHECKED : 0);
 				DrawFrameControl(pDIS->hDC, &rcOver, DFC_BUTTON, stateOver);
 
@@ -357,7 +459,14 @@ namespace se::cs::dialog::layer_window {
 		}
 
 		case WM_COMMAND: {
-			if (LOWORD(wParam) == IDC_ADD_LAYER_BTN) {
+			int id = LOWORD(wParam);
+
+			if (id == IDC_BTN_SAVE) {
+				// Call save method here
+				MessageBoxA(hWnd, "Layer configuration saved (Dummy).", "Info", MB_OK);
+			}
+
+			else if (id == IDC_BTN_ADD) {
 				auto nextId = getNextLayerId();
 				if (g_Layers.size() < MAX_LAYERS && nextId < MAX_LAYERS) {
 					LayerData* newLayer = new LayerData();
@@ -374,16 +483,21 @@ namespace se::cs::dialog::layer_window {
 
 					LVITEMA lvI = { 0 };
 					lvI.mask = LVIF_TEXT;
-
 					lvI.iItem = (int)g_Layers.size() - 1;
 					lvI.pszText = LPSTR_TEXTCALLBACK;
 					ListView_InsertItem(hListView, &lvI);
-
-					// maybe start editing the new item's name:
-					// ListView_EditLabel(hListView, lvI.iItem);
 				}
 				else {
 					MessageBoxA(hWnd, "Maximum of 32 layers reached.", "Limit Reached", MB_OK | MB_ICONINFORMATION);
+				}
+			}
+
+			else if (id == IDC_BTN_DEL) {
+				int iItem = ListView_GetNextItem(hListView, -1, LVNI_SELECTED);
+				if (iItem != -1) {
+					NMHDR nm = { hListView, IDC_LAYERS_LIST, LVN_KEYDOWN };
+					NMLVKEYDOWN nkd = { nm, VK_DELETE, 0 };
+					SendMessage(hWnd, WM_NOTIFY, IDC_LAYERS_LIST, (LPARAM)&nkd);
 				}
 			}
 			break;
@@ -395,21 +509,35 @@ namespace se::cs::dialog::layer_window {
 			if (lpnm == NULL)
 				break;
 
-			// If clicked on column 1, 2, or 3 (Color, Vis, Overlay), cancel edit.
+			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == LVN_ITEMCHANGED) {
+				LPNMLISTVIEW pnmv = (LPNMLISTVIEW)lParam;
+				if ((pnmv->uNewState & LVIS_SELECTED)) {
+					if (pnmv->iItem >= 0 && pnmv->iItem < (int)g_Layers.size()) {
+						auto layer = g_Layers[pnmv->iItem];
+						std::string statusText = "Objects: " + std::to_string(layer->get_counts());
+						SetWindowTextA(hStatus, statusText.c_str());
+					}
+				}
+			}
+
+			// Cancel edit if clicked outside the Name column
 			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == LVN_BEGINLABELEDIT) {
+				if (isContextRename) {
+					isContextRename = false;
+					return FALSE;
+				}
+
 				POINT pt;
 				GetCursorPos(&pt);
 				ScreenToClient(hListView, &pt);
-
 				LVHITTESTINFO hitInfo = { 0 };
 				hitInfo.pt = pt;
 				ListView_SubItemHitTest(hListView, &hitInfo);
 
-				if (hitInfo.iSubItem != 0) {
-					return TRUE; 
-				}
-				return FALSE; 
+				if (hitInfo.iSubItem != 0) return TRUE; 
+				return FALSE;
 			}
+
 
 			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == NM_RCLICK) {
 				LPNMITEMACTIVATE lpnmitem = (LPNMITEMACTIVATE)lParam;
@@ -424,24 +552,35 @@ namespace se::cs::dialog::layer_window {
 				ListView_SubItemHitTest(hListView, &hitInfo);
 
 				if (hitInfo.iItem != -1 && hitInfo.iItem < (int)g_Layers.size()) {
-					// Select the item being right-clicked
 					ListView_SetItemState(hListView, hitInfo.iItem, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
-
 					LayerData* layer = g_Layers[hitInfo.iItem];
 
 					HMENU hPopup = CreatePopupMenu();
-					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_MOVE, "Move to layer");
-					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_CLEAR, "Clear layer");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_RENAME, "Rename");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_DELETE, "Delete Layer");
+					AppendMenuA(hPopup, MF_SEPARATOR, 0, NULL);
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_SELECT, "Select Objects");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_MOVE, "Move Selection Here");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_CLEAR, "Clear Layer");
 
-					// Show menu
 					int selected = TrackPopupMenu(hPopup, TPM_RETURNCMD | TPM_NONOTIFY | TPM_RIGHTBUTTON, pt.x, pt.y, 0, hWnd, NULL);
 					DestroyMenu(hPopup);
 
-					if (selected == IDM_LAYER_MOVE) {
+					if (selected == IDM_LAYER_RENAME) {
+						isContextRename = true;
+						ListView_EditLabel(hListView, hitInfo.iItem);
+					}
+					else if (selected == IDM_LAYER_DELETE) {
+						SendMessage(hWnd, WM_COMMAND, IDC_BTN_DEL, 0);
+					}
+					else if (selected == IDM_LAYER_SELECT) {
+						layer->selectObjects();
+					}
+					else if (selected == IDM_LAYER_MOVE) {
 						layer->moveSelectionToLayer();
 					}
 					else if (selected == IDM_LAYER_CLEAR) {
-						if (MessageBoxA(hWnd, "Are you sure you want to clear this layer? All objects will be moved to Default.", "Clear Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
+						if (MessageBoxA(hWnd, "Are you sure? Objects will be moved to Default.", "Clear Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
 							layer->clearLayer();
 						}
 					}
@@ -516,24 +655,31 @@ namespace se::cs::dialog::layer_window {
 					int iItem = ListView_GetNextItem(hListView, -1, LVNI_SELECTED);
 					if (iItem != -1 && iItem < (int)g_Layers.size()) {
 						LayerData* l = g_Layers[iItem];
+
 						// Prevent deleting default layers
 						if (l->id == 0 || l->id == 1) {
-							MessageBoxA(hWnd, "Cannot delete Default or Hidden layer.", "Error", MB_OK);
+							MessageBoxA(hWnd, "Cannot delete Default or Hidden layer.", "Error", MB_OK | MB_ICONERROR);
 						}
 						else {
-							// Move objects to default before deleting
-							l->clearLayer();
 
-							delete g_Layers[iItem];
-							g_Layers.erase(g_Layers.begin() + iItem);
-							g_LayersIdMap.erase(l->id);
+							std::string msg = "Are you sure you want to delete layer '" + *l->layerName + "'?\nAll objects in this layer will be moved to Default.";
+							if (MessageBoxA(hWnd, msg.c_str(), "Delete Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
 
-							ListView_DeleteItem(hListView, iItem);
+								// Move objects to default before deleting
+								l->clearLayer();
+
+								delete g_Layers[iItem];
+								g_Layers.erase(g_Layers.begin() + iItem);
+								g_LayersIdMap.erase(l->id);
+
+								ListView_DeleteItem(hListView, iItem);
+
+								SetWindowTextA(hStatus, "Objects: -");
+							}
 						}
 					}
 				}
 			}
-
 			break;
 		}
 
@@ -583,7 +729,7 @@ namespace se::cs::dialog::layer_window {
 		wc.lpfnWndProc = LayersWindowProc;
 		wc.hInstance = se::cs::window::main::hInstance::get();
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
 		wc.lpszClassName = "CSSE_LayersWindow";
 		RegisterClassExA(&wc);
 
@@ -592,7 +738,7 @@ namespace se::cs::dialog::layer_window {
 			"CSSE_LayersWindow",
 			"Layers",
 			WS_VISIBLE | WS_CAPTION | WS_THICKFRAME,
-			100, 100, 270, 400,
+			100, 100, 250, 400,
 			se::cs::window::main::ghWnd::get(),
 			NULL,
 			se::cs::window::main::hInstance::get(),

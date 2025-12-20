@@ -150,7 +150,7 @@
     <ClCompile Include="CSGlobalVariable.cpp">
       <Filter>Source Files\CS</Filter>
     </ClCompile>
-    <ClCompile Include="DialogLayerWindow.cpp">
+    <ClCompile Include="DialogLayersWindow.cpp">
       <Filter>Source Files\UI\DialogClasses</Filter>
     </ClCompile>
   </ItemGroup>
@@ -647,6 +647,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="main_toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="layer_toolbar.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

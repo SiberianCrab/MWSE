@@ -5,6 +5,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "CSCell.h"
+#include "CSRecordHandler.h"
+#include "CSDataHandler.h"
 #include "CSReference.h"
 #include "NITriShape.h"
 #include "NIProperty.h"
@@ -18,8 +21,7 @@ namespace se::cs::dialog::layer_window {
 	};
 
 	struct LayerData {
-		//std::unordered_map<Cell*, std::unordered_set<Reference*>> perCellReferences;
-		std::unordered_set<Reference*> perCellReferences; // for now without cell tracking
+		std::unordered_map<Cell*, std::unordered_set<Reference*>> perCellReferences;
 		std::unordered_map<NI::TriShape*, NodeColorData*> nodeMaterialData;
 
 		size_t id = 0;
@@ -127,6 +129,23 @@ namespace se::cs::dialog::layer_window {
 		void moveSelectionToLayer();
 
 		void clearLayer();
+
+		int get_counts() { return 0; } // Dummy count
+
+		void selectObjects() {}       // Dummy selection
+
+		// Use toml11 for serialization like the quick settings
+		void serialize() {
+			//Use cell->getObjectID() and objRef->getObjectID() to serialize references as strings
+		}
+
+		void deserialize() {
+			////Use DataHandler to lookup cells and references by their object IDs
+			//auto recordHandler = DataHandler::get()->recordHandler;
+			//auto cell = recordHandler->getCellByID("cellID");
+			//auto refList = cell ? cell->unknown_0x30 : cell->unknown_0x40;
+			//// find reference by ID in refList and add to cellReferences
+		}
 	};
 
 
