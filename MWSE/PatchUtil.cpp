@@ -2207,6 +2207,9 @@ namespace mwse::patch {
 			writeAddFlagEnforced(0x40240E + 0x3, DS_FLAGS_DEFAULT | DSBCAPS_CTRLPAN, DSBCAPS_GLOBALFOCUS);
 			writeAddFlagEnforced(0x402405 + 0x3, DS_FLAGS_3D, DSBCAPS_GLOBALFOCUS);
 		}
+
+		// Patch: Fix NiSwitchNode::UpdateWorldBound malfunctioning when using UpdateOnlyActive and a switchIndex of 0.
+		writeValueEnforced<BYTE>(0x6D85B6, 0x7E, 0x7C);
 	}
 
 	void installPostInitializationPatches() {
