@@ -1144,6 +1144,18 @@ namespace se::cs::dialog::render_window {
 	}
 
 	//
+	// Patch: Prevent selecting hidden references.
+	//
+
+	const auto TES3CS_AddSelectedRef = reinterpret_cast<void(__thiscall*)(SelectionData*, Reference*, bool)>(0x546750);
+	static void __fastcall PatchPreventSelection(SelectionData* self, DWORD _EDX, Reference* reference, bool flag) {
+		if (reference->sceneNode && reference->getHidden()) {
+			return;
+		}
+		TES3CS_AddSelectedRef(self, reference, flag);
+	}
+
+	//
 	// Patch: Extend reference status data
 	//
 
@@ -1410,7 +1422,7 @@ namespace se::cs::dialog::render_window {
 		UndoManager::get()->storeCheckpoint(UndoManager::Action::Moved);
 	}
 
-	void hideSelectedReferences() {
+	static void hideSelectedReferences() {
 		auto selectionData = SelectionData::get();
 
 		for (auto target = selectionData->firstTarget; target; target = target->next) {
@@ -2652,6 +2664,9 @@ namespace se::cs::dialog::render_window {
 		writeDoubleWordEnforced(0x45F719 + 0x2, 0x12C, 0x134);
 		genCallEnforced(0x45F4ED, 0x4015A0, reinterpret_cast<DWORD>(PatchFixMaterialPropertyColors));
 		genCallEnforced(0x45F626, 0x4015A0, reinterpret_cast<DWORD>(PatchAddBlankTexturingProperty));
+
+		// Prevent selecting hidden objects.
+		genJumpEnforced(0x403C92, 0x546750, reinterpret_cast<DWORD>(PatchPreventSelection));
 
 		// Patch: Add scale information to status window.
 		genCallEnforced(0x45C962, 0x404881, reinterpret_cast<DWORD>(Patch_ExtendReferenceStatusData));
