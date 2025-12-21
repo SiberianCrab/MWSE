@@ -1418,7 +1418,7 @@ namespace se::cs::dialog::render_window {
 			if (!objRef) {
 				continue;
 			}
-			auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(1);
+			auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(HIDDEN_LAYER_ID);
 			hiddenLayer->moveObjectToLayer(objRef);
 		}
 
@@ -1428,7 +1428,7 @@ namespace se::cs::dialog::render_window {
 	}
 
 	void unhideAllReferences() {
-		auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(1);
+		auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(HIDDEN_LAYER_ID);
 		hiddenLayer->clearLayer();
 	}
 

@@ -13,6 +13,8 @@
 #include "NITriShape.h"
 #include "NIProperty.h"
 
+constexpr size_t HIDDEN_LAYER_ID = 0;
+
 namespace se::cs::dialog::layer_window {
 
 	struct NodeColorData {
@@ -157,7 +159,7 @@ namespace se::cs::dialog::layer_window {
 
 	extern HWND hLayersWnd;
 
-	const std::string LAYER_CONFIG_PATH = "layers.toml";
+	const std::string LAYER_CONFIG_PATH = "csse_layers.toml";
 
 	void saveLayersToToml();
 	void loadLayersFromToml();

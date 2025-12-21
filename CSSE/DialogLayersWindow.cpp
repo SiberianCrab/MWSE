@@ -8,7 +8,7 @@
 #define IDC_BTN_SAVE 2002
 #define IDC_BTN_ADD 2003
 #define IDC_BTN_DEL 2004
-#define IDC_BTN_RES 2010
+#define IDC_BTN_RES 2005
 #define IDC_STATUS_LABEL 2005
 
 #define IDM_LAYER_MOVE 3001
@@ -199,17 +199,24 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	void LayerData::clearLayer() {
-		auto defaultLayer = getLayerById(0);
-		
 		// copy to avoid problems with modification during iteration
 		auto c_perCellReferences = this->perCellReferences;
 		for (auto& cell_data : c_perCellReferences) {
 			for (auto objRef : cell_data.second) {
-				defaultLayer->moveObjectToLayer(objRef, this);
+				this->removeObject(objRef);
 			}
 		}
 
 		se::cs::dialog::render_window::renderNextFrame();
+	}
+
+	size_t getNextLayerId() {
+		size_t nextId = 0;
+		while (g_LayersIdMap.find(nextId) != g_LayersIdMap.end()) {
+			++nextId;
+		}
+
+		return nextId >= MAX_LAYERS ? MAX_LAYERS + 1 : nextId;
 	}
 
 	void saveLayersToToml() {
@@ -279,7 +286,7 @@ namespace se::cs::dialog::layer_window {
 		// Clean up old state?
 		// clearAllLayers(); 
 
-		// This allows O(1) lookup per object when iterating the world database
+		// This allows fast lookup per object when iterating the world database
 		// Map<CellIDString, Map<ObjIDString, LayerData*>>
 		std::unordered_map<std::string, std::unordered_map<std::string, LayerData*>> restorationMap;
 
@@ -291,7 +298,7 @@ namespace se::cs::dialog::layer_window {
 
 			// Restore basic properties
 			newLayer->layerName = new std::string(layerNameStr);
-			newLayer->id = toml::find_or<size_t>(layerVal, "layer_id", 0);
+			newLayer->id = toml::find_or<size_t>(layerVal, "layer_id", getNextLayerId());
 			newLayer->isLayerHidden = toml::find_or<bool>(layerVal, "hidden", false);
 			newLayer->isOverlayActive = toml::find_or<bool>(layerVal, "overlay", false);
 
@@ -413,15 +420,6 @@ namespace se::cs::dialog::layer_window {
 			return it->second;
 		}
 		return nullptr;
-	}
-
-	size_t getNextLayerId() {
-		size_t nextId = 0;
-		while (g_LayersIdMap.find(nextId) != g_LayersIdMap.end()) {
-			++nextId;
-		}
-
-		return nextId >= MAX_LAYERS ? MAX_LAYERS + 1 : nextId;
 	}
 
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -815,8 +813,8 @@ namespace se::cs::dialog::layer_window {
 						LayerData* l = g_Layers[iItem];
 
 						// Prevent deleting default layers
-						if (l->id == 0 || l->id == 1) {
-							MessageBoxA(hWnd, "Cannot delete Default or Hidden layer.", "Error", MB_OK | MB_ICONERROR);
+						if (l->id == 0) {
+							MessageBoxA(hWnd, "Cannot delete Hidden layer.", "Error", MB_OK | MB_ICONERROR);
 						}
 						else {
 
@@ -863,20 +861,10 @@ namespace se::cs::dialog::layer_window {
 			loadLayersFromToml();
 		}
 
-		// if layer ids 0 or 1 are missing, recreate default layers
+		// if layer id 0 is missing, recreate default layer
 		if (g_LayersIdMap.find(0) == g_LayersIdMap.end()) {
-			auto defaultLayer = new LayerData();
-			defaultLayer->id = 0;
-			defaultLayer->layerName = new std::string("Default");
-			defaultLayer->setLayerColor({ 1.0f, 1.0f, 1.0f });
-			defaultLayer->isLayerHidden = false;
-			defaultLayer->isOverlayActive = false;
-			g_Layers.push_back(defaultLayer);
-			g_LayersIdMap[defaultLayer->id] = defaultLayer;
-		}
-		if (g_LayersIdMap.find(1) == g_LayersIdMap.end()) {
 			auto hiddenLayer = new LayerData();
-			hiddenLayer->id = 1;
+			hiddenLayer->id = HIDDEN_LAYER_ID;
 			hiddenLayer->layerName = new std::string("Hidden");
 			hiddenLayer->isLayerHidden = true;
 			hiddenLayer->isOverlayActive = false;
