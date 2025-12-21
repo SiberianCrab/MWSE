@@ -8,6 +8,7 @@
 #define IDC_BTN_SAVE 2002
 #define IDC_BTN_ADD 2003
 #define IDC_BTN_DEL 2004
+#define IDC_BTN_RES 2010
 #define IDC_STATUS_LABEL 2005
 
 #define IDM_LAYER_MOVE 3001
@@ -15,6 +16,7 @@
 #define IDM_LAYER_RENAME 3003
 #define IDM_LAYER_DELETE 3004
 #define IDM_LAYER_SELECT 3005
+#define IDM_LAYER_RESTORE 3006
 
 #define MAX_LAYERS 32
 
@@ -28,23 +30,7 @@ namespace se::cs::dialog::layer_window {
 	std::unordered_map<Reference*, LayerData*> g_ObjectLayerMap;
 
 	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
-
-	// NI::Color uses rbg order, while COLORREF uses rgb order.
-	COLORREF NIColorToRef(const NI::Color& c) {
-		return RGB(
-			(int)(c.r * 255.0f),
-			(int)(c.b * 255.0f),
-			(int)(c.g * 255.0f)
-		);
-	}
-
-	NI::Color RefToNIColor(COLORREF c) {
-		return NI::Color{
-			GetRValue(c) / 255.0f,
-			GetBValue(c) / 255.0f,
-			GetGValue(c) / 255.0f
-		};
-	}
+	static bool isContextRename = false;
 
 	void LayerData::removeObject(Reference* objRef) {
 		auto objCell = objRef ? objRef->getCell() : nullptr;
@@ -162,7 +148,6 @@ namespace se::cs::dialog::layer_window {
 					triShape->updateProperties();
 
 					if (forceRestore) {
-						// Clean up stored data
 						removeNodeColorData(triShape);
 					}
 				}
@@ -227,6 +212,173 @@ namespace se::cs::dialog::layer_window {
 		se::cs::dialog::render_window::renderNextFrame();
 	}
 
+	void saveLayersToToml() {
+		toml::value root = toml::table{};
+
+		for (const auto& [id, layer] : g_ObjectLayerMap) {
+			if (!layer || !layer->layerName) continue;
+
+			toml::value layerTable = toml::table{};
+
+			// Basic properties
+			layerTable["layer_id"] = layer->id;
+			layerTable["hidden"] = layer->isLayerHidden;
+			layerTable["overlay"] = layer->isOverlayActive;
+
+			layerTable["layer_rgb"] = toml::array{
+				layer->layerOverlayColor.r,
+				layer->layerOverlayColor.g,
+				layer->layerOverlayColor.b
+			};
+
+			// Cell references
+			toml::value cellRefTable = toml::table{};
+
+			for (const auto& [cell, refs] : layer->perCellReferences) {
+				if (!cell) continue;
+
+				std::string cellId = cell->getEditorId();
+
+				// Collect object IDs for this cell
+				toml::array objIds;
+				for (const auto* ref : refs) {
+					if (ref) {
+						objIds.push_back(ref->getUniqueID());
+					}
+				}
+
+				if (!objIds.empty()) {
+					cellRefTable[cellId] = objIds;
+				}
+			}
+
+			layerTable["cellRefs"] = cellRefTable;
+
+			root[*layer->layerName] = layerTable;
+		}
+
+		std::ofstream out(LAYER_CONFIG_PATH);
+		if (out.is_open()) {
+			out << root;
+			out.close();
+		}
+	}
+
+	void loadLayersFromToml() {
+		if (!std::filesystem::exists(LAYER_CONFIG_PATH)) return;
+
+		toml::value data;
+		try {
+			data = toml::parse(LAYER_CONFIG_PATH);
+		}
+		catch (std::exception& e) {
+			// TODO: Handle parse error
+			return;
+		}
+
+		// Clean up old state?
+		// clearAllLayers(); 
+
+		// This allows O(1) lookup per object when iterating the world database
+		// Map<CellIDString, Map<ObjIDString, LayerData*>>
+		std::unordered_map<std::string, std::unordered_map<std::string, LayerData*>> restorationMap;
+
+		const auto& layerTable = data.as_table();
+
+		// Parse TOML and create layers
+		for (const auto& [layerNameStr, layerVal] : layerTable) {
+			LayerData* newLayer = new LayerData();
+
+			// Restore basic properties
+			newLayer->layerName = new std::string(layerNameStr);
+			newLayer->id = toml::find_or<size_t>(layerVal, "layer_id", 0);
+			newLayer->isLayerHidden = toml::find_or<bool>(layerVal, "hidden", false);
+			newLayer->isOverlayActive = toml::find_or<bool>(layerVal, "overlay", false);
+
+			auto rgb = toml::find<std::vector<float>>(layerVal, "layer_rgb");
+			if (rgb.size() >= 3) {
+				newLayer->setLayerColor(NI::Color{ rgb[0], rgb[1], rgb[2] });
+			}
+
+			// Register this layer
+			g_Layers.push_back(newLayer);
+			g_LayersIdMap[newLayer->id] = newLayer;
+
+			// Build the restoration Map
+			if (layerVal.contains("cellRefs")) {
+				const auto& cells = toml::find(layerVal, "cellRefs").as_table();
+
+				for (const auto& [cellId, objIdArray] : cells) {
+					const auto& ids = objIdArray.as_array();
+					for (const auto& idVal : ids) {
+						std::string uniqueId = idVal.as_string();
+						restorationMap[cellId][uniqueId] = newLayer;
+					}
+				}
+			}
+		}
+
+		auto recordHandler = DataHandler::get()->recordHandler;
+		auto cellList = recordHandler->cells;
+
+		// Populate layer data with actual object references
+		for (auto cellIt = cellList->begin(); cellIt != cellList->end(); ++cellIt) {
+			Cell* cell = *cellIt;
+			if (!cell) continue;
+
+			std::string currentCellId = cell->getEditorId(); // will fail to be restored if cell was renamed
+
+			auto mapIt = restorationMap.find(currentCellId);
+			if (mapIt == restorationMap.end()) {
+				continue;
+			}
+
+			auto& objIDToLayerMap = mapIt->second;
+
+			// Iterate objects in the cell
+			auto refList = &cell->cellObjRefs;
+			auto npcList = &cell->cellNpcRefs;
+			for (auto refListPtr : { &cell->cellObjRefs, &cell->cellNpcRefs }) {
+				for (auto refIt = refListPtr->begin(); refIt != refListPtr->end(); ++refIt) {
+					Reference* ref = *refIt;
+					if (!ref) continue;
+
+					auto refId = ref->getUniqueID();
+
+					auto targetLayerIt = objIDToLayerMap.find(refId);
+					if (targetLayerIt != objIDToLayerMap.end()) {
+						LayerData* targetLayer = targetLayerIt->second;
+						targetLayer->addObject(ref);
+					}
+				}
+			}
+		}
+
+		// Refresh all layers to apply their properties
+		for (const auto& [id, layer] : g_LayersIdMap) {
+			if (layer) {
+				layer->refreshObjects();
+			}
+		}
+	}
+
+	// NI::Color uses rbg order, while COLORREF uses rgb order.
+	COLORREF NIColorToRef(const NI::Color& c) {
+		return RGB(
+			(int)(c.r * 255.0f),
+			(int)(c.b * 255.0f),
+			(int)(c.g * 255.0f)
+		);
+	}
+
+	NI::Color RefToNIColor(COLORREF c) {
+		return NI::Color{
+			GetRValue(c) / 255.0f,
+			GetBValue(c) / 255.0f,
+			GetGValue(c) / 255.0f
+		};
+	}
+
 	// Hacky way to check if the render window is visible by reading the View menu's Render Window item.
 	// We can use IsIconic(hRender), but animations window hides the render window without triggering that, so this is more reliable.
 	bool IsRenderWindowVisible(HMENU viewMenu) {
@@ -272,11 +424,9 @@ namespace se::cs::dialog::layer_window {
 		return nextId >= MAX_LAYERS ? MAX_LAYERS + 1 : nextId;
 	}
 
-	static bool isContextRename = false;
-
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		static HWND hListView;
-		static HWND hBtnSave, hBtnAdd, hBtnDel;
+		static HWND hBtnSave, hBtnAdd, hBtnDel, hBtnRes;
 		static HWND hStatus;
 
 		switch (msg) {
@@ -291,6 +441,9 @@ namespace se::cs::dialog::layer_window {
 			hBtnDel = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_DEL, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
 
+			hBtnRes = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
+				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_RES, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+
 			HMODULE hCurrentModule = NULL;
 			GetModuleHandleExA(
 				GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
@@ -302,7 +455,7 @@ namespace se::cs::dialog::layer_window {
 
 			HIMAGELIST hImageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK, 3, 0);
 
-			ImageList_AddMasked(hImageList, hBmp, RGB(255, 0, 255));
+			ImageList_AddMasked(hImageList, hBmp, CLR_DEFAULT);
 			DeleteObject(hBmp); 
 
 			HICON hIconSave = ImageList_GetIcon(hImageList, 0, ILD_TRANSPARENT);
@@ -361,6 +514,7 @@ namespace se::cs::dialog::layer_window {
 			SendMessage(hBtnSave, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hBtnAdd, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hBtnDel, WM_SETFONT, (WPARAM)hFont, 0);
+			SendMessage(hBtnRes, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hStatus, WM_SETFONT, (WPARAM)hFont, 0);
 			break;
 		}
@@ -377,6 +531,7 @@ namespace se::cs::dialog::layer_window {
 			MoveWindow(hBtnSave, padding, currentY, btnSize, topBarHeight, TRUE);
 			MoveWindow(hBtnAdd, padding + btnSize + 2, currentY, btnSize, topBarHeight, TRUE);
 			MoveWindow(hBtnDel, padding + (btnSize * 2) + 4, currentY, btnSize, topBarHeight, TRUE);
+			MoveWindow(hBtnRes, padding + (btnSize * 3) + 6, currentY, btnSize, topBarHeight, TRUE);
 
 			currentY += topBarHeight + padding;
 
@@ -390,8 +545,11 @@ namespace se::cs::dialog::layer_window {
 			// Resize "Name" Column to fill width
 			RECT rcList;
 			GetClientRect(hListView, &rcList); 
-			int fixedColumnsWidth = 40 + 45 + 50;
-			int newNameWidth = rcList.right - fixedColumnsWidth;
+			int w1 = ListView_GetColumnWidth(hListView, 1);
+			int w2 = ListView_GetColumnWidth(hListView, 2);
+			int w3 = ListView_GetColumnWidth(hListView, 3);
+
+			int newNameWidth = rcList.right - (w1 + w2 + w3);
 
 			if (newNameWidth < 50) newNameWidth = 50;
 
@@ -427,18 +585,18 @@ namespace se::cs::dialog::layer_window {
 				rcLabel.left += 4;
 				DrawTextA(pDIS->hDC, layer->layerName->c_str(), -1, &rcLabel, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 
-				// Color Swatch
+				// Color swatch
 				InflateRect(&rcColor, -4, -4);
 				HBRUSH hBrush = CreateSolidBrush(NIColorToRef(layer->getLayerColor()));
 				FillRect(pDIS->hDC, &rcColor, hBrush);
 				FrameRect(pDIS->hDC, &rcColor, (HBRUSH)GetStockObject(BLACK_BRUSH));
 				DeleteObject(hBrush);
 
-				// Visible Checkbox
+				// Visible checkbox
 				UINT stateVis = DFCS_BUTTONCHECK | (!layer->isLayerHidden ? DFCS_CHECKED : 0);
 				DrawFrameControl(pDIS->hDC, &rcVis, DFC_BUTTON, stateVis);
 
-				// Overlay Checkbox
+				// Overlay checkbox
 				UINT stateOver = DFCS_BUTTONCHECK | (layer->isOverlayActive ? DFCS_CHECKED : 0);
 				DrawFrameControl(pDIS->hDC, &rcOver, DFC_BUTTON, stateOver);
 
@@ -451,8 +609,7 @@ namespace se::cs::dialog::layer_window {
 			int id = LOWORD(wParam);
 
 			if (id == IDC_BTN_SAVE) {
-				// Call save method here
-				MessageBoxA(hWnd, "Layer configuration saved (Dummy).", "Info", MB_OK);
+				saveLayersToToml();
 			}
 
 			else if (id == IDC_BTN_ADD) {
@@ -487,6 +644,18 @@ namespace se::cs::dialog::layer_window {
 					NMHDR nm = { hListView, IDC_LAYERS_LIST, LVN_KEYDOWN };
 					NMLVKEYDOWN nkd = { nm, VK_DELETE, 0 };
 					SendMessage(hWnd, WM_NOTIFY, IDC_LAYERS_LIST, (LPARAM)&nkd);
+				}
+			}
+
+			else if (id == IDC_BTN_RES) {
+				loadLayersFromToml();
+
+				for (int i = 0; i < (int)g_Layers.size(); ++i) {
+					LVITEMA lvI = { 0 };
+					lvI.mask = LVIF_TEXT;
+					lvI.iItem = i;
+					lvI.pszText = LPSTR_TEXTCALLBACK;
+					ListView_InsertItem(hListView, &lvI);
 				}
 			}
 			break;
@@ -681,6 +850,41 @@ namespace se::cs::dialog::layer_window {
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
+	void loadOrCreateLayers() {
+
+		// Clear any existing layers
+		g_Layers.clear();
+		g_LayersIdMap.clear();
+		for (auto& layer : g_Layers) {
+			delete layer;
+		}
+
+		if (std::filesystem::exists(LAYER_CONFIG_PATH)) {
+			loadLayersFromToml();
+		}
+
+		// if layer ids 0 or 1 are missing, recreate default layers
+		if (g_LayersIdMap.find(0) == g_LayersIdMap.end()) {
+			auto defaultLayer = new LayerData();
+			defaultLayer->id = 0;
+			defaultLayer->layerName = new std::string("Default");
+			defaultLayer->setLayerColor({ 1.0f, 1.0f, 1.0f });
+			defaultLayer->isLayerHidden = false;
+			defaultLayer->isOverlayActive = false;
+			g_Layers.push_back(defaultLayer);
+			g_LayersIdMap[defaultLayer->id] = defaultLayer;
+		}
+		if (g_LayersIdMap.find(1) == g_LayersIdMap.end()) {
+			auto hiddenLayer = new LayerData();
+			hiddenLayer->id = 1;
+			hiddenLayer->layerName = new std::string("Hidden");
+			hiddenLayer->isLayerHidden = true;
+			hiddenLayer->isOverlayActive = false;
+			g_Layers.push_back(hiddenLayer);
+			g_LayersIdMap[hiddenLayer->id] = hiddenLayer;
+		}
+	}
+
 
 	void createLayersWindow() {
 
@@ -691,26 +895,7 @@ namespace se::cs::dialog::layer_window {
 			return;
 		}
 
-		if (g_Layers.empty()) {
-			// Default Layer
-			auto defaultLayer = new LayerData();
-			defaultLayer->id = 0;
-			defaultLayer->layerName = new std::string("Default");
-			defaultLayer->setLayerColor({ 1.0f, 1.0f, 1.0f });
-			defaultLayer->isLayerHidden = false;
-			defaultLayer->isOverlayActive = false;
-			g_Layers.push_back(defaultLayer);
-			g_LayersIdMap[defaultLayer->id] = defaultLayer;
-
-			// Hidden Layer
-			auto hiddenLayer = new LayerData();
-			hiddenLayer->id = 1;
-			hiddenLayer->layerName = new std::string("Hidden");
-			hiddenLayer->isLayerHidden = true;
-			hiddenLayer->isOverlayActive = false;
-			g_Layers.push_back(hiddenLayer);
-			g_LayersIdMap[hiddenLayer->id] = hiddenLayer;
-		}
+		loadOrCreateLayers();
 
 		WNDCLASSEXA wc = {};
 		wc.cbSize = sizeof(WNDCLASSEXA);

@@ -97,6 +97,8 @@ namespace se::cs {
 		bool hasActiveSelectionWidget() const;
 
 		Cell* getCell() const;
+
+		std::string getUniqueID() const;
 	};
 	static_assert(sizeof(Reference) == 0x78, "TES3::Reference failed size validation");
 }

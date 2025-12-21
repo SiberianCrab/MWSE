@@ -8,6 +8,7 @@
 #include "CSCell.h"
 #include "CSRecordHandler.h"
 #include "CSDataHandler.h"
+#include "NIIteratedList.h"
 #include "CSReference.h"
 #include "NITriShape.h"
 #include "NIProperty.h"
@@ -130,24 +131,18 @@ namespace se::cs::dialog::layer_window {
 
 		void clearLayer();
 
-		int get_counts() { return 0; } // Dummy count
+		size_t get_counts() {
+			size_t total = 0;
+			for (auto& cell_data : perCellReferences) {
+				total += cell_data.second.size();
+			}
+			return total;
+		}
 
 		void selectObjects() {}       // Dummy selection
 
-		// Use toml11 for serialization like the quick settings
-		void serialize() {
-			//Use cell->getObjectID() and objRef->getObjectID() to serialize references as strings
-		}
-
-		void deserialize() {
-			////Use DataHandler to lookup cells and references by their object IDs
-			//auto recordHandler = DataHandler::get()->recordHandler;
-			//auto cell = recordHandler->getCellByID("cellID");
-			//auto refList = cell ? cell->unknown_0x30 : cell->unknown_0x40;
-			//// find reference by ID in refList and add to cellReferences
-		}
+		void debugPrint();
 	};
-
 
 	void createLayersWindow();
 	void toggleLayersWindow(bool show);
@@ -161,4 +156,9 @@ namespace se::cs::dialog::layer_window {
 	LayerData* getLayerByObject(Reference* obj);
 
 	extern HWND hLayersWnd;
+
+	const std::string LAYER_CONFIG_PATH = "layers.toml";
+
+	void saveLayersToToml();
+	void loadLayersFromToml();
 }
