@@ -4,7 +4,6 @@
 #include "WindowMain.h"
 
 #define IDC_LAYERS_LIST 2001
-
 #define IDC_BTN_SAVE 2002
 #define IDC_BTN_ADD 2003
 #define IDC_BTN_DEL 2004
@@ -18,19 +17,9 @@
 #define IDM_LAYER_SELECT 3005
 #define IDM_LAYER_RESTORE 3006
 
-#define MAX_LAYERS 32
-
 namespace se::cs::dialog::layer_window {
 
-	HWND hLayersWnd = NULL;
-	bool isLayerWndForceHidden = false;
-
-	std::vector<LayerData*> g_Layers;
-	std::unordered_map<size_t, LayerData*> g_LayersIdMap;
-	std::unordered_map<Reference*, LayerData*> g_ObjectLayerMap;
-
-	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
-	static bool isContextRename = false;
+	namespace rw = se::cs::dialog::render_window;
 
 	void LayerData::removeObject(Reference* objRef) {
 		auto objCell = objRef ? objRef->getCell() : nullptr;
@@ -157,20 +146,26 @@ namespace se::cs::dialog::layer_window {
 		// Cull object if layer is hidden and overlay is not active
 		bool isObjectCulled = isLayerHidden && !isOverlayActive && !forceRestore;
 		node->setAppCulled(isObjectCulled);
-
+		
 		// Updates all children as well
 		node->update();
 	}
 
 	// TODO: Refresh only active cell objects
 	void LayerData::refreshObjects() {
+		auto selectionData = rw::SelectionData::get();
 		for (auto& cell_data : perCellReferences) {
 			for (auto objRef : cell_data.second) {
 				updateObject(objRef);
+
+				// Deselect object if layer is hidden
+				if (isLayerHidden && objRef->hasActiveSelectionWidget()) {
+					selectionData->removeReference(objRef, true);
+				}
 			}
 		}
-
-		se::cs::dialog::render_window::renderNextFrame();
+		selectionData->recalculateBound();
+		rw::renderNextFrame();
 	}
 
 	void LayerData::moveObjectToLayer(Reference* objRef, LayerData* currentLayerInput) {
@@ -186,16 +181,26 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	void LayerData::moveSelectionToLayer() {
-		auto selectionData = se::cs::dialog::render_window::SelectionData::get();
+		auto selectionData = rw::SelectionData::get();
+
+		std::vector<Reference*> selectedRefs; // copy to avoid modification during iteration
 		for (auto target = selectionData->firstTarget; target; target = target->next) {
-			auto objRef = target->reference;
-			if (!objRef) {
-				continue;
+			if (target->reference) {
+				selectedRefs.push_back(target->reference);
 			}
-			moveObjectToLayer(objRef);
 		}
-		selectionData->clear();
-		se::cs::dialog::render_window::renderNextFrame();
+
+		for (auto objRef : selectedRefs) {
+			if (!objRef) continue;
+			moveObjectToLayer(objRef);
+
+			if (isLayerHidden && objRef->hasActiveSelectionWidget()) {
+				selectionData->removeReference(objRef, true);
+			}
+		}
+
+		selectionData->recalculateBound();
+		rw::renderNextFrame();
 	}
 
 	void LayerData::clearLayer() {
@@ -207,7 +212,22 @@ namespace se::cs::dialog::layer_window {
 			}
 		}
 
-		se::cs::dialog::render_window::renderNextFrame();
+		rw::renderNextFrame();
+	}
+
+	void LayerData::selectObjects() {
+		if (isLayerHidden) {
+			return;
+		}
+		auto selectionData = rw::SelectionData::get();
+		selectionData->clear();
+		for (auto& cell_data : perCellReferences) {
+			for (auto objRef : cell_data.second) {
+				selectionData->addReference(objRef, true);
+			}
+		}
+		selectionData->recalculateBound();
+		rw::renderNextFrame();
 	}
 
 	size_t getNextLayerId() {
@@ -350,7 +370,7 @@ namespace se::cs::dialog::layer_window {
 					Reference* ref = *refIt;
 					if (!ref) continue;
 
-					auto refId = ref->getUniqueID();
+					auto refId = ref->getUniqueID(); // will fail to be restored if object's position or its object ID changed
 
 					auto targetLayerIt = objIDToLayerMap.find(refId);
 					if (targetLayerIt != objIDToLayerMap.end()) {
@@ -422,10 +442,14 @@ namespace se::cs::dialog::layer_window {
 		return nullptr;
 	}
 
+	bool isLayerWndForceHidden = false;
+	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
+
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		static HWND hListView;
 		static HWND hBtnSave, hBtnAdd, hBtnDel, hBtnRes;
 		static HWND hStatus;
+		static bool allowLabelEdit = false; 
 
 		switch (msg) {
 		case WM_CREATE: {
@@ -665,6 +689,13 @@ namespace se::cs::dialog::layer_window {
 			if (lpnm == NULL)
 				break;
 
+			if (lpnm->idFrom == IDC_LAYERS_LIST && (lpnm->code == LVN_BEGINLABELEDITA)) {
+				if (!allowLabelEdit) {
+					return TRUE;
+				}
+				allowLabelEdit = false;
+			}
+
 			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == LVN_ITEMCHANGED) {
 				LPNMLISTVIEW pnmv = (LPNMLISTVIEW)lParam;
 				if ((pnmv->uNewState & LVIS_SELECTED)) {
@@ -675,25 +706,6 @@ namespace se::cs::dialog::layer_window {
 					}
 				}
 			}
-
-			// Cancel edit if clicked outside the Name column
-			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == LVN_BEGINLABELEDIT) {
-				if (isContextRename) {
-					isContextRename = false;
-					return FALSE;
-				}
-
-				POINT pt;
-				GetCursorPos(&pt);
-				ScreenToClient(hListView, &pt);
-				LVHITTESTINFO hitInfo = { 0 };
-				hitInfo.pt = pt;
-				ListView_SubItemHitTest(hListView, &hitInfo);
-
-				if (hitInfo.iSubItem != 0) return TRUE; 
-				return FALSE;
-			}
-
 
 			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == NM_RCLICK) {
 				LPNMITEMACTIVATE lpnmitem = (LPNMITEMACTIVATE)lParam;
@@ -723,7 +735,7 @@ namespace se::cs::dialog::layer_window {
 					DestroyMenu(hPopup);
 
 					if (selected == IDM_LAYER_RENAME) {
-						isContextRename = true;
+						allowLabelEdit = true;
 						ListView_EditLabel(hListView, hitInfo.iItem);
 					}
 					else if (selected == IDM_LAYER_DELETE) {
@@ -785,9 +797,9 @@ namespace se::cs::dialog::layer_window {
 				LPNMITEMACTIVATE lpnmitem = (LPNMITEMACTIVATE)lParam;
 				if (lpnmitem->iItem != -1 && lpnmitem->iItem < (int)g_Layers.size()) {
 
-					if (lpnmitem->iSubItem == 0) {
-						ListView_EditLabel(hListView, lpnmitem->iItem);
-					}
+					LayerData* layer = g_Layers[lpnmitem->iItem];
+
+					layer->selectObjects();
 				}
 			}
 
@@ -918,7 +930,7 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	// If render window became minimized, minimize our layers window too.
-	// BUG: won't trigger if the render window is brought back up via closing the animation window with a close button.
+	// TODO BUG: won't trigger if the render window is brought back up via closing the animation window with a close button.
 	void forceToggleLayersWindow(HMENU viewMenu) {
 		if (hLayersWnd) {
 			if (IsRenderWindowVisible(viewMenu))

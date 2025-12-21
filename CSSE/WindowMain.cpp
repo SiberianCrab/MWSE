@@ -38,7 +38,7 @@
 
 namespace se::cs::window::main {
 
-	namespace layer_wnd = se::cs::dialog::layer_window;
+	namespace lw = se::cs::dialog::layer_window;
 
 	struct ObjectEditLParam {
 		ObjectType::ObjectType objectType; // 0x0
@@ -592,7 +592,7 @@ namespace se::cs::window::main {
 			showAboutDialog(hWnd);
 			break;
 		case MENU_ID_VIEW_LAYERS_WINDOW:
-			layer_wnd::toggleLayersWindow(IsIconic(layer_wnd::hLayersWnd));
+			lw::toggleLayersWindow(IsIconic(lw::hLayersWnd));
 			break;
 		}
 	}
@@ -994,9 +994,9 @@ namespace se::cs::window::main {
 			break;
 		}
 
-		if (layer_wnd::hLayersWnd) {
+		if (lw::hLayersWnd) {
 			auto viewMenu = GetSubMenu(GetMenu(context.getWindowHandle()), 2);
-			layer_wnd::forceToggleLayersWindow(viewMenu);
+			lw::forceToggleLayersWindow(viewMenu);
 		}
 	}
 
@@ -1028,7 +1028,7 @@ namespace se::cs::window::main {
 
 	void PatchDialogProc_BeforeInitMenuPopup(DialogProcContext& context) {
 		auto viewMenu = GetSubMenu(GetMenu(context.getWindowHandle()), 2);
-		layer_wnd::refreshLayersMenuItem(viewMenu);
+		lw::refreshLayersMenuItem(viewMenu);
 	}
 
 	LRESULT CALLBACK PatchDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {

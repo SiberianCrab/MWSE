@@ -96,9 +96,6 @@ namespace se::cs {
 		void setSelectionWidgetEnabled(int flag);
 		bool hasActiveSelectionWidget() const;
 
-		bool getHidden() const;
-		void setHidden(bool hide);
-
 		Cell* getCell() const;
 
 		std::string getUniqueID() const;

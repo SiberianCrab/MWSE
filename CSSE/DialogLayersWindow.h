@@ -14,6 +14,8 @@
 #include "NIProperty.h"
 
 constexpr size_t HIDDEN_LAYER_ID = 0;
+constexpr auto MAX_LAYERS = 32;
+constexpr auto LAYER_CONFIG_PATH = "csse_layers.toml";
 
 namespace se::cs::dialog::layer_window {
 
@@ -141,7 +143,7 @@ namespace se::cs::dialog::layer_window {
 			return total;
 		}
 
-		void selectObjects() {}       // Dummy selection
+		void selectObjects();
 
 		void debugPrint();
 	};
@@ -157,9 +159,10 @@ namespace se::cs::dialog::layer_window {
 	LayerData* getLayerById(size_t id);
 	LayerData* getLayerByObject(Reference* obj);
 
-	extern HWND hLayersWnd;
-
-	const std::string LAYER_CONFIG_PATH = "csse_layers.toml";
+	inline HWND hLayersWnd = NULL;
+	inline std::vector<LayerData*> g_Layers;
+	inline std::unordered_map<size_t, LayerData*> g_LayersIdMap;
+	inline std::unordered_map<Reference*, LayerData*> g_ObjectLayerMap;
 
 	void saveLayersToToml();
 	void loadLayersFromToml();

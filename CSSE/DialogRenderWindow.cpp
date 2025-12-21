@@ -42,6 +42,8 @@ namespace se::cs::dialog::render_window {
 	__int16 lastCursorPosX = 0;
 	__int16 lastCursorPosY = 0;
 
+	namespace lw = se::cs::dialog::layer_window;
+
 	std::default_random_engine generator;
 	std::uniform_real_distribution<float> rotationDistribution(0.0, 360.0);
 	std::uniform_real_distribution<float> scaleDistribution(0.5, 2.0);
@@ -949,7 +951,7 @@ namespace se::cs::dialog::render_window {
 	bool __stdcall CheckNodeHasHiddenFlag(NI::Node* node) {
 		if (!node) return false;
 		Reference* reference = node->getTes3Reference(false);
-		auto nodeLayer = se::cs::dialog::layer_window::getLayerByObject(reference);
+		auto nodeLayer = lw::getLayerByObject(reference);
 		return nodeLayer ? nodeLayer->isLayerHidden : false;
 	}
 
@@ -992,7 +994,7 @@ namespace se::cs::dialog::render_window {
 	}
 
 	//
-	// Patch: Make clicking things near skinned objects not painful + block selection of soft-hidden objects.
+	// Patch: Make clicking things near skinned objects not painful
 	//
 
 	Reference* __cdecl Patch_FixPickAgainstSkinnedObjects(SceneGraphController* sgController, RenderController* renderController, int screenX, int screenY) {
@@ -1012,14 +1014,6 @@ namespace se::cs::dialog::render_window {
 		for (auto& result : sgController->objectPick->results) {
 			if (result == nullptr || result->object == nullptr) {
 				continue;
-			}
-
-			// Skip soft-hidden objects.
-			auto parentNode = result->object->parentNode;
-			if (parentNode) {
-				if (CheckNodeHasHiddenFlag(parentNode)) {
-					continue;
-				}
 			}
 
 			if (result->distance < closestDistance) {
@@ -1147,12 +1141,14 @@ namespace se::cs::dialog::render_window {
 	// Patch: Prevent selecting hidden references.
 	//
 
-	const auto TES3CS_AddSelectedRef = reinterpret_cast<void(__thiscall*)(SelectionData*, Reference*, bool)>(0x546750);
 	static void __fastcall PatchPreventSelection(SelectionData* self, DWORD _EDX, Reference* reference, bool flag) {
-		if (reference->sceneNode && reference->getHidden()) {
+
+		// Skip soft-hidden objects.
+		auto nodeLayer = lw::getLayerByObject(reference);
+		if (nodeLayer ? nodeLayer->isLayerHidden : false) {
 			return;
 		}
-		TES3CS_AddSelectedRef(self, reference, flag);
+		self->addReference(reference, flag);
 	}
 
 	//
@@ -1425,14 +1421,9 @@ namespace se::cs::dialog::render_window {
 	static void hideSelectedReferences() {
 		auto selectionData = SelectionData::get();
 
-		for (auto target = selectionData->firstTarget; target; target = target->next) {
-			auto objRef = target->reference;
-			if (!objRef) {
-				continue;
-			}
-			auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(HIDDEN_LAYER_ID);
-			hiddenLayer->moveObjectToLayer(objRef);
-		}
+		auto hiddenLayer = lw::getLayerById(HIDDEN_LAYER_ID);
+		
+		hiddenLayer->moveSelectionToLayer();
 
 		selectionData->clear();
 
@@ -1440,7 +1431,7 @@ namespace se::cs::dialog::render_window {
 	}
 
 	void unhideAllReferences() {
-		auto hiddenLayer = se::cs::dialog::layer_window::getLayerById(HIDDEN_LAYER_ID);
+		auto hiddenLayer = lw::getLayerById(HIDDEN_LAYER_ID);
 		hiddenLayer->clearLayer();
 	}
 

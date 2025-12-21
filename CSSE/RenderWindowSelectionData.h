@@ -29,6 +29,10 @@ namespace se::cs::dialog::render_window {
 
 		void clear(bool unknownFlag = true);
 
+		void addReference(Reference*, bool);
+		bool removeReference(Reference*, bool);
+		bool isSelected(Reference*);
+
 		static inline auto get() {
 			return memory::ExternalGlobal<SelectionData*, 0x6CE968>::get();
 		}
