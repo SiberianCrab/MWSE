@@ -21,6 +21,94 @@ namespace se::cs::dialog::layer_window {
 
 	namespace rw = se::cs::dialog::render_window;
 
+	static HWND hListView = NULL;
+	static HWND hStatus = NULL;
+
+	bool isLayerWndForceHidden = false;
+	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
+
+	LayerData::~LayerData() noexcept {
+		for (auto& kv : nodeMaterialData) {
+			NodeColorData* p = kv.second;
+			if (p) {
+				delete p;
+			}
+		}
+		nodeMaterialData.clear();
+
+		if (layerName) {
+			delete layerName;
+			layerName = nullptr;
+		}
+
+		perCellReferences.clear();
+
+		layerOverlayMaterial = nullptr;
+		layerAlphaProperty = nullptr;
+		layerVertexColorProperty = nullptr;
+	}
+
+	NI::Color LayerData::getLayerColor() const { return layerOverlayColor; }
+
+	void LayerData::setLayerColor(const NI::Color& c) {
+		layerOverlayColor = c;
+		if (layerOverlayMaterial) {
+			layerOverlayMaterial->setEmissive(layerOverlayColor);
+			layerOverlayMaterial->setDiffuse(layerOverlayColor);
+			layerOverlayMaterial->setAmbient(layerOverlayColor);
+		}
+	}
+
+	NI::Pointer<NI::MaterialProperty> LayerData::getLayerOverlayMaterial(NI::Pointer<NI::MaterialProperty> material) {
+		if (!layerOverlayMaterial && material) {
+			layerOverlayMaterial = static_cast<NI::MaterialProperty*>(material->createClone());
+			layerOverlayMaterial->setEmissive(layerOverlayColor);
+			layerOverlayMaterial->setDiffuse(layerOverlayColor);
+			layerOverlayMaterial->setAmbient(layerOverlayColor);
+			layerOverlayMaterial->setAlpha(1.0f);
+		}
+		return layerOverlayMaterial;
+	}
+
+	NI::Pointer<NI::AlphaProperty> LayerData::getLayerAlphaProperty() {
+		if (!layerAlphaProperty) {
+			layerAlphaProperty = new NI::AlphaProperty();
+			layerAlphaProperty->flags = 3821;
+			layerAlphaProperty->alphaTestRef = 255;
+		}
+		return layerAlphaProperty;
+	}
+
+	NI::Pointer<NI::VertexColorProperty> LayerData::getLayerVertexColorProperty() {
+		if (!layerVertexColorProperty) {
+			layerVertexColorProperty = new NI::VertexColorProperty();
+		}
+		return layerVertexColorProperty;
+	}
+
+	NodeColorData* LayerData::getNodeColorData(NI::TriShape* node) {
+		auto it = nodeMaterialData.find(node);
+		if (it != nodeMaterialData.end()) {
+			return it->second;
+		}
+		else {
+			auto newData = new NodeColorData();
+			nodeMaterialData[node] = newData;
+			return newData;
+		}
+	}
+
+	// TODO: Stale references might accumulate if we reload the cell
+	// and CS actually creates new TriShape instances,
+	// however they will never be accessed, so no crashing should occur
+	void LayerData::removeNodeColorData(NI::TriShape* node) {
+		auto it = nodeMaterialData.find(node);
+		if (it != nodeMaterialData.end()) {
+			delete it->second;
+			nodeMaterialData.erase(it);
+		}
+	}
+
 	void LayerData::removeObject(Reference* objRef) {
 		auto objCell = objRef ? objRef->getCell() : nullptr;
 		if (!objCell) return;
@@ -200,6 +288,7 @@ namespace se::cs::dialog::layer_window {
 		}
 
 		selectionData->recalculateBound();
+		updateStatusLabel();
 		rw::renderNextFrame();
 	}
 
@@ -212,6 +301,7 @@ namespace se::cs::dialog::layer_window {
 			}
 		}
 
+		updateStatusLabel();
 		rw::renderNextFrame();
 	}
 
@@ -228,6 +318,14 @@ namespace se::cs::dialog::layer_window {
 		}
 		selectionData->recalculateBound();
 		rw::renderNextFrame();
+	}
+
+	size_t LayerData::get_counts() {
+		size_t total = 0;
+		for (auto& cell_data : perCellReferences) {
+			total += cell_data.second.size();
+		}
+		return total;
 	}
 
 	size_t getNextLayerId() {
@@ -345,6 +443,11 @@ namespace se::cs::dialog::layer_window {
 			}
 		}
 
+		// Sort g_Layers by their IDs (ascending) for consistent ordering in the UI
+		std::sort(g_Layers.begin(), g_Layers.end(), [](LayerData* a, LayerData* b) {
+			return a->id < b->id;
+			});
+
 		auto recordHandler = DataHandler::get()->recordHandler;
 		auto cellList = recordHandler->cells;
 
@@ -419,9 +522,7 @@ namespace se::cs::dialog::layer_window {
 		return FALSE;
 	}
 
-	std::unordered_map<size_t, LayerData*> GetLayers() {
-		return g_LayersIdMap;
-	}
+	std::unordered_map<size_t, LayerData*> GetLayers() { return g_LayersIdMap; }
 
 	LayerData* getLayerById(size_t id) {
 		if (id >= MAX_LAYERS || id < 0) return nullptr;
@@ -442,13 +543,57 @@ namespace se::cs::dialog::layer_window {
 		return nullptr;
 	}
 
-	bool isLayerWndForceHidden = false;
-	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
+	void updateStatusLabel() {
+		if (!hListView || !hStatus) return;
+
+		int iItem = ListView_GetNextItem(hListView, -1, LVNI_SELECTED);
+		if (iItem != -1 && iItem < (int)g_Layers.size()) {
+			auto layer = g_Layers[iItem];
+			std::string statusText = "Objects: " + std::to_string(layer->get_counts());
+			SetWindowTextA(hStatus, statusText.c_str());
+		}
+		else {
+			SetWindowTextA(hStatus, "Objects: -");
+		}
+	}
+
+	void updateLayerWindowUI() {
+		if (hListView) {
+			InvalidateRect(hListView, NULL, FALSE);
+			updateStatusLabel();
+		}
+	}
+
+	void toggleLayerVisibility(size_t layerIndex) {
+		if (layerIndex >= g_Layers.size()) return;
+
+		LayerData* l = g_Layers[layerIndex];
+		if (!l) return;
+
+		l->isLayerHidden = !l->isLayerHidden;
+		l->refreshObjects();
+
+		if (hListView) {
+			ListView_RedrawItems(hListView, layerIndex, layerIndex);
+		}
+	}
+
+	void toggleLayerOverlay(size_t layerIndex) {
+		if (layerIndex >= g_Layers.size()) return;
+
+		LayerData* l = g_Layers[layerIndex];
+		if (!l) return;
+
+		l->isOverlayActive = !l->isOverlayActive;
+		l->refreshObjects();
+
+		if (hListView) {
+			ListView_RedrawItems(hListView, layerIndex, layerIndex);
+		}
+	}
 
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		static HWND hListView;
 		static HWND hBtnSave, hBtnAdd, hBtnDel, hBtnRes;
-		static HWND hStatus;
 		static bool allowLabelEdit = false; 
 
 		switch (msg) {
@@ -699,11 +844,7 @@ namespace se::cs::dialog::layer_window {
 			if (lpnm->idFrom == IDC_LAYERS_LIST && lpnm->code == LVN_ITEMCHANGED) {
 				LPNMLISTVIEW pnmv = (LPNMLISTVIEW)lParam;
 				if ((pnmv->uNewState & LVIS_SELECTED)) {
-					if (pnmv->iItem >= 0 && pnmv->iItem < (int)g_Layers.size()) {
-						auto layer = g_Layers[pnmv->iItem];
-						std::string statusText = "Objects: " + std::to_string(layer->get_counts());
-						SetWindowTextA(hStatus, statusText.c_str());
-					}
+					updateStatusLabel();
 				}
 			}
 
@@ -884,7 +1025,6 @@ namespace se::cs::dialog::layer_window {
 			g_LayersIdMap[hiddenLayer->id] = hiddenLayer;
 		}
 	}
-
 
 	void createLayersWindow() {
 

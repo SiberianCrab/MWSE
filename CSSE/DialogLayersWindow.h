@@ -39,111 +39,29 @@ namespace se::cs::dialog::layer_window {
 		NI::Pointer<NI::AlphaProperty> layerAlphaProperty = nullptr;
 		NI::Pointer<NI::VertexColorProperty> layerVertexColorProperty = nullptr;
 
-		~LayerData() noexcept
-		{
-			for (auto& kv : nodeMaterialData) {
-				NodeColorData* p = kv.second;
-				if (p) {
-					delete p;
-				}
-			}
-			nodeMaterialData.clear();
+		~LayerData() noexcept;
 
-			if (layerName) {
-				delete layerName;
-				layerName = nullptr;
-			}
+		NI::Color getLayerColor() const;
+		void setLayerColor(const NI::Color& c);
 
-			perCellReferences.clear();
+		NI::Pointer<NI::MaterialProperty> getLayerOverlayMaterial(NI::Pointer<NI::MaterialProperty> material);
+		NI::Pointer<NI::AlphaProperty> getLayerAlphaProperty();
+		NI::Pointer<NI::VertexColorProperty> getLayerVertexColorProperty();
 
-			layerOverlayMaterial = nullptr;
-			layerAlphaProperty = nullptr;
-			layerVertexColorProperty = nullptr;
-		}
-
-		NI::Color getLayerColor() const { return layerOverlayColor; }
-		void setLayerColor(const NI::Color& c) { 
-			layerOverlayColor = c;
-			if (layerOverlayMaterial) {
-				layerOverlayMaterial->setEmissive(layerOverlayColor);
-				layerOverlayMaterial->setDiffuse(layerOverlayColor);
-				layerOverlayMaterial->setAmbient(layerOverlayColor);
-			}
-		}
-
-		NI::Pointer<NI::MaterialProperty> getLayerOverlayMaterial(NI::Pointer<NI::MaterialProperty> material) {
-			if (!layerOverlayMaterial && material) {
-				layerOverlayMaterial = static_cast<NI::MaterialProperty*>(material->createClone());
-				layerOverlayMaterial->setEmissive(layerOverlayColor);
-				layerOverlayMaterial->setDiffuse(layerOverlayColor);
-				layerOverlayMaterial->setAmbient(layerOverlayColor);
-				layerOverlayMaterial->setAlpha(1.0f);
-			}
-			return layerOverlayMaterial;
-		}
-
-		NI::Pointer<NI::AlphaProperty> getLayerAlphaProperty() {
-			if (!layerAlphaProperty) {
-				layerAlphaProperty = new NI::AlphaProperty();
-				layerAlphaProperty->flags = 3821;
-				layerAlphaProperty->alphaTestRef = 255;
-			}
-			return layerAlphaProperty;
-		}
-
-		NI::Pointer<NI::VertexColorProperty> getLayerVertexColorProperty() {
-			if (!layerVertexColorProperty) {
-				layerVertexColorProperty = new NI::VertexColorProperty();
-			}
-			return layerVertexColorProperty;
-		}
-
-		NodeColorData* getNodeColorData(NI::TriShape* node) {
-			auto it = nodeMaterialData.find(node);
-			if (it != nodeMaterialData.end()) {
-				return it->second;
-			}
-			else {
-				auto newData = new NodeColorData();
-				nodeMaterialData[node] = newData;
-				return newData;
-			}
-		}
-
-		// TODO: Stale references might accumulate if we reload the cell
-		// and CS actually creates new TriShape instances,
-		// however they will never be accessed, so no crashing should occur
-		void removeNodeColorData(NI::TriShape* node) {
-			auto it = nodeMaterialData.find(node);
-			if (it != nodeMaterialData.end()) {
-				delete it->second;
-				nodeMaterialData.erase(it);
-			}
-		}
+		NodeColorData* getNodeColorData(NI::TriShape* node);
+		void removeNodeColorData(NI::TriShape* node);
 
 		void removeObject(Reference* objRef);
-
 		void addObject(Reference* objRef);
-
 		void updateObject(Reference* objRef, bool forceRestore = false);
-
-		void refreshObjects();
-
 		void moveObjectToLayer(Reference* objRef, LayerData* currentLayerInput = nullptr);
-
+		
 		void moveSelectionToLayer();
-
+		void selectObjects();
+		void refreshObjects();
 		void clearLayer();
 
-		size_t get_counts() {
-			size_t total = 0;
-			for (auto& cell_data : perCellReferences) {
-				total += cell_data.second.size();
-			}
-			return total;
-		}
-
-		void selectObjects();
+		size_t get_counts();
 
 		void debugPrint();
 	};
@@ -155,14 +73,19 @@ namespace se::cs::dialog::layer_window {
 	void refreshLayersMenuItem(HMENU viewMenu);
 	bool IsRenderWindowVisible(HMENU viewMenu);
 
+	void toggleLayerVisibility(size_t layerIndex);
+	void toggleLayerOverlay(size_t layerIndex);
+	void updateLayerWindowUI();
+	void updateStatusLabel();
+
 	std::unordered_map<size_t, LayerData*> GetLayers();
 	LayerData* getLayerById(size_t id);
 	LayerData* getLayerByObject(Reference* obj);
 
 	inline HWND hLayersWnd = NULL;
-	inline std::vector<LayerData*> g_Layers;
-	inline std::unordered_map<size_t, LayerData*> g_LayersIdMap;
-	inline std::unordered_map<Reference*, LayerData*> g_ObjectLayerMap;
+	inline std::vector<LayerData*> g_Layers; // Array for the layer window UI, TODO: maybe enforce uniqueness?
+	inline std::unordered_map<size_t, LayerData*> g_LayersIdMap; // maps layer IDs to their data
+	inline std::unordered_map<Reference*, LayerData*> g_ObjectLayerMap; // maps objects to their layers (for faster lookup)
 
 	void saveLayersToToml();
 	void loadLayersFromToml();

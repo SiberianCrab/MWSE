@@ -2287,10 +2287,32 @@ namespace se::cs::dialog::render_window {
 		}
 	}
 
+	constexpr UINT layerHotkeyTimer = 0x418u;
+	static int g_LayerInputAccumulator = 0;
+	static bool g_LayerInputModeOverlay = false; // false = hidden, true = overlay
+
 	void PatchDialogProc_BeforeTimer(DialogProcContext& context) {
 		// Fixup window capture if we've lost it when panning.
 		if (gIsPanning::get() && GetCapture() != gRenderWindowHandle::get()) {
 			SetCapture(gRenderWindowHandle::get());
+		}
+
+		if (context.getWParam() == layerHotkeyTimer) {
+			KillTimer(context.getWindowHandle(), layerHotkeyTimer);
+
+			if (g_LayerInputAccumulator > 0) {
+				size_t layerIndex = static_cast<size_t>(g_LayerInputAccumulator) - 1;
+
+				if (g_LayerInputModeOverlay) {
+					lw::toggleLayerOverlay(layerIndex);
+				}
+				else {
+					lw::toggleLayerVisibility(layerIndex);
+				}
+			}
+
+			g_LayerInputAccumulator = 0;
+			context.setResult(TRUE);
 		}
 	}
 
@@ -2381,10 +2403,33 @@ namespace se::cs::dialog::render_window {
 
 	void PatchDialogProc_BeforeKeyDown(DialogProcContext& context) {
 		using windows::isControlDown;
+		using windows::isShiftDown;
 
 		const auto landscapeEditWindow = landscape_edit_settings_window::gWindowHandle::get();
+		const auto vkCode = context.getKeyVirtualCode();
 
-		switch (context.getKeyVirtualCode()) {
+		if (vkCode >= '0' && vkCode <= '9') {
+			bool ctrl = isControlDown();
+			bool shift = isShiftDown();
+
+			if (ctrl || shift) {
+				// Reset accumulator if switching modes or starting new sequence
+				if (g_LayerInputAccumulator == 0) {
+					g_LayerInputModeOverlay = shift;
+				}
+
+				int digit = vkCode - '0';
+				g_LayerInputAccumulator = (g_LayerInputAccumulator * 10) + digit;
+
+				// Reset the timer to wait for next digit
+				SetTimer(context.getWindowHandle(), layerHotkeyTimer, 400, NULL);
+
+				context.setResult(TRUE);
+				return;
+			}
+		}
+
+		switch (vkCode) {
 		case VK_F2:
 			PatchDialogProc_BeforeKeyDown_F2(context);
 			break;
