@@ -61,7 +61,7 @@ namespace se::cs::dialog::layer_window {
 
 	NI::Pointer<NI::MaterialProperty> LayerData::getLayerOverlayMaterial(NI::Pointer<NI::MaterialProperty> material) {
 		if (!layerOverlayMaterial && material) {
-			layerOverlayMaterial = static_cast<NI::MaterialProperty*>(material->createClone());
+			layerOverlayMaterial = static_cast<NI::MaterialProperty*>(material->createClone()); // Cloning instead of creating a new one, cause constructor causes crashing
 			layerOverlayMaterial->setEmissive(layerOverlayColor);
 			layerOverlayMaterial->setDiffuse(layerOverlayColor);
 			layerOverlayMaterial->setAmbient(layerOverlayColor);
@@ -110,14 +110,15 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	// Removes the object and returns true if it was on this layer
-	// Set undoable to true if we want to keep the object in the global obj<->layer map
+	// Set undoable to true if we want to keep the object in the global obj<->layer map for Undo support
 	bool LayerData::removeObject(Reference* objRef, bool undoable) {
 		auto objCell = objRef ? objRef->getCell() : nullptr;
 		if (!objCell) return false;
 
 		bool isRemoved = false;
-		if (perCellReferences.find(objCell) != perCellReferences.end()) {
-			auto cellRefs = &perCellReferences[objCell];
+		auto objIt = perCellReferences.find(objCell);
+		if (objIt != perCellReferences.end()) {
+			auto cellRefs = &objIt->second;
 			if (cellRefs->find(objRef) != cellRefs->end()) {
 				updateObject(objRef, true);
 				isRemoved = true;
@@ -536,13 +537,12 @@ namespace se::cs::dialog::layer_window {
 	void loadOrCreateLayers() {
 
 		// Clear any existing layers
-		g_Layers.clear();
-		g_LayersIdMap.clear();
-		g_ObjectLayerMap.clear();
-
 		for (auto& layer : g_Layers) {
 			delete layer;
 		}
+		g_Layers.clear();
+		g_LayersIdMap.clear();
+		g_ObjectLayerMap.clear();
 
 		if (std::filesystem::exists(LAYER_CONFIG_PATH)) {
 			loadLayersFromToml();
