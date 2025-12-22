@@ -7,7 +7,6 @@
 #define IDC_BTN_SAVE 2002
 #define IDC_BTN_ADD 2003
 #define IDC_BTN_DEL 2004
-#define IDC_BTN_RES 2005
 #define IDC_STATUS_LABEL 2005
 
 #define IDM_LAYER_MOVE 3001
@@ -15,7 +14,6 @@
 #define IDM_LAYER_RENAME 3003
 #define IDM_LAYER_DELETE 3004
 #define IDM_LAYER_SELECT 3005
-#define IDM_LAYER_RESTORE 3006
 
 namespace se::cs::dialog::layer_window {
 
@@ -28,6 +26,8 @@ namespace se::cs::dialog::layer_window {
 	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
 
 	LayerData::~LayerData() noexcept {
+		clearLayer();
+
 		for (auto& kv : nodeMaterialData) {
 			NodeColorData* p = kv.second;
 			if (p) {
@@ -109,22 +109,27 @@ namespace se::cs::dialog::layer_window {
 		}
 	}
 
-	void LayerData::removeObject(Reference* objRef) {
+	// Removes the object and returns true if it was on this layer
+	// Set undoable to true if we want to keep the object in the global obj<->layer map
+	bool LayerData::removeObject(Reference* objRef, bool undoable) {
 		auto objCell = objRef ? objRef->getCell() : nullptr;
-		if (!objCell) return;
+		if (!objCell) return false;
 
-		updateObject(objRef, true);
-
+		bool isRemoved = false;
 		if (perCellReferences.find(objCell) != perCellReferences.end()) {
 			auto cellRefs = &perCellReferences[objCell];
 			if (cellRefs->find(objRef) != cellRefs->end()) {
+				updateObject(objRef, true);
+				isRemoved = true;
 				cellRefs->erase(objRef);
 				if (cellRefs->empty()) {
 					perCellReferences.erase(objCell);
 				}
+				if (!undoable)
+					g_ObjectLayerMap.erase(objRef);
 			}
-			g_ObjectLayerMap.erase(objRef);
 		}
+		return isRemoved;
 	}
 
 	void LayerData::addObject(Reference* objRef) {
@@ -239,11 +244,43 @@ namespace se::cs::dialog::layer_window {
 		node->update();
 	}
 
+	static bool isCellLoaded(Cell* cell) {
+		auto dataHandler = DataHandler::get();
+		auto cellGridX = dataHandler ? dataHandler->currentGridX : 0;
+		auto cellGridY = dataHandler ? dataHandler->currentGridY : 0;
+		auto interiorCell = dataHandler ? dataHandler->currentInteriorCell : nullptr;
+		
+		if (!cell) {
+			return false;
+		}
+
+		// If interior cell, check if it's the current one
+		if (cell->getIsInterior()) {
+			if (cell == interiorCell) {
+				return true;
+			}
+			return false;
+		}
+
+		// Check if the cells coords are within -2 to +2 of the current grid
+		int gridX = cell->getGridX();
+		int gridY = cell->getGridY();
+		if (gridX >= cellGridX - 2 && gridX <= cellGridX + 2 &&
+			gridY >= cellGridY - 2 && gridY <= cellGridY + 2) {
+			return true;
+		}
+
+		return false;
+	}
+
 	// TODO: Refresh only active cell objects
 	void LayerData::refreshObjects() {
 		auto selectionData = rw::SelectionData::get();
-		for (auto& cell_data : perCellReferences) {
-			for (auto objRef : cell_data.second) {
+		for (auto& [cell, cell_refs] : perCellReferences) {
+			if (!isCellLoaded(cell)) {
+				continue;
+			}
+			for (auto objRef : cell_refs) {
 				updateObject(objRef);
 
 				// Deselect object if layer is hidden
@@ -301,6 +338,7 @@ namespace se::cs::dialog::layer_window {
 			}
 		}
 
+		deletedReferences.clear();
 		updateStatusLabel();
 		rw::renderNextFrame();
 	}
@@ -311,8 +349,11 @@ namespace se::cs::dialog::layer_window {
 		}
 		auto selectionData = rw::SelectionData::get();
 		selectionData->clear();
-		for (auto& cell_data : perCellReferences) {
-			for (auto objRef : cell_data.second) {
+		for (auto& [cell, cell_refs] : perCellReferences) {
+			if (!isCellLoaded(cell)) {
+				continue;
+			}
+			for (auto objRef : cell_refs) {
 				selectionData->addReference(objRef, true);
 			}
 		}
@@ -340,7 +381,7 @@ namespace se::cs::dialog::layer_window {
 	void saveLayersToToml() {
 		toml::value root = toml::table{};
 
-		for (const auto& [id, layer] : g_ObjectLayerMap) {
+		for (const auto& [layer_id, layer] : g_LayersIdMap) {
 			if (!layer || !layer->layerName) continue;
 
 			toml::value layerTable = toml::table{};
@@ -492,6 +533,47 @@ namespace se::cs::dialog::layer_window {
 		}
 	}
 
+	void loadOrCreateLayers() {
+
+		// Clear any existing layers
+		g_Layers.clear();
+		g_LayersIdMap.clear();
+		g_ObjectLayerMap.clear();
+
+		for (auto& layer : g_Layers) {
+			delete layer;
+		}
+
+		if (std::filesystem::exists(LAYER_CONFIG_PATH)) {
+			loadLayersFromToml();
+		}
+
+		// if layer id 0 is missing, recreate default layer
+		if (g_LayersIdMap.find(0) == g_LayersIdMap.end()) {
+			auto hiddenLayer = new LayerData();
+			hiddenLayer->id = HIDDEN_LAYER_ID;
+			hiddenLayer->layerName = new std::string("Hidden");
+			hiddenLayer->isLayerHidden = true;
+			hiddenLayer->isOverlayActive = false;
+			g_Layers.push_back(hiddenLayer);
+			g_LayersIdMap[hiddenLayer->id] = hiddenLayer;
+		}
+
+		if (hListView) {
+			ListView_DeleteAllItems(hListView);
+
+			for (int i = 0; i < (int)g_Layers.size(); ++i) {
+				LVITEMA lvI = { 0 };
+				lvI.mask = LVIF_TEXT;
+				lvI.iItem = i;
+				lvI.pszText = LPSTR_TEXTCALLBACK;
+				ListView_InsertItem(hListView, &lvI);
+			}
+
+			updateLayerWindowUI();
+		}
+	}
+
 	// NI::Color uses rbg order, while COLORREF uses rgb order.
 	COLORREF NIColorToRef(const NI::Color& c) {
 		return RGB(
@@ -543,6 +625,44 @@ namespace se::cs::dialog::layer_window {
 		return nullptr;
 	}
 
+	void toggleLayersWindow(bool show) {
+		if (hLayersWnd) {
+			ShowWindow(hLayersWnd, show ? SW_RESTORE : SW_MINIMIZE);
+		}
+		else {
+			createLayersWindow();
+		}
+	}
+
+	// If render window became minimized, minimize our layers window too.
+	// TODO BUG: won't trigger if the render window is brought back up via closing the animation window with a close button.
+	void forceToggleLayersWindow(HMENU viewMenu) {
+		if (hLayersWnd) {
+			if (IsRenderWindowVisible(viewMenu))
+			{
+				if (isLayerWndForceHidden) {
+					toggleLayersWindow(true);
+					isLayerWndForceHidden = false;
+				}
+			}
+			else {
+				isLayerWndForceHidden = !IsIconic(hLayersWnd);
+				toggleLayersWindow(false);
+			}
+		}
+	}
+
+	void refreshLayersMenuItem(HMENU viewMenu) {
+		if (viewMenu) {
+
+			UINT check = (hLayersWnd != NULL && !IsIconic(hLayersWnd)) ? MF_CHECKED : MF_UNCHECKED;
+			CheckMenuItem(viewMenu, se::cs::window::main::MENU_ID_VIEW_LAYERS_WINDOW, check);
+
+			UINT enable = IsRenderWindowVisible(viewMenu) ? MF_ENABLED : MF_GRAYED;
+			EnableMenuItem(viewMenu, se::cs::window::main::MENU_ID_VIEW_LAYERS_WINDOW, enable);
+		}
+	}
+
 	void updateStatusLabel() {
 		if (!hListView || !hStatus) return;
 
@@ -564,28 +684,18 @@ namespace se::cs::dialog::layer_window {
 		}
 	}
 
-	void toggleLayerVisibility(size_t layerIndex) {
+	void toggleLayerVisuals(size_t layerIndex, bool overlay) {
 		if (layerIndex >= g_Layers.size()) return;
 
-		LayerData* l = g_Layers[layerIndex];
-		if (!l) return;
+		LayerData* layer = g_Layers[layerIndex];
+		if (!layer) return;
 
-		l->isLayerHidden = !l->isLayerHidden;
-		l->refreshObjects();
+		if (overlay)
+			layer->isOverlayActive = !layer->isOverlayActive;
+		else
+			layer->isLayerHidden = !layer->isLayerHidden;
 
-		if (hListView) {
-			ListView_RedrawItems(hListView, layerIndex, layerIndex);
-		}
-	}
-
-	void toggleLayerOverlay(size_t layerIndex) {
-		if (layerIndex >= g_Layers.size()) return;
-
-		LayerData* l = g_Layers[layerIndex];
-		if (!l) return;
-
-		l->isOverlayActive = !l->isOverlayActive;
-		l->refreshObjects();
+		layer->refreshObjects();
 
 		if (hListView) {
 			ListView_RedrawItems(hListView, layerIndex, layerIndex);
@@ -593,7 +703,7 @@ namespace se::cs::dialog::layer_window {
 	}
 
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		static HWND hBtnSave, hBtnAdd, hBtnDel, hBtnRes;
+		static HWND hBtnSave, hBtnAdd, hBtnDel;
 		static bool allowLabelEdit = false; 
 
 		switch (msg) {
@@ -607,9 +717,6 @@ namespace se::cs::dialog::layer_window {
 
 			hBtnDel = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_DEL, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
-
-			hBtnRes = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
-				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_RES, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
 
 			HMODULE hCurrentModule = NULL;
 			GetModuleHandleExA(
@@ -681,7 +788,6 @@ namespace se::cs::dialog::layer_window {
 			SendMessage(hBtnSave, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hBtnAdd, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hBtnDel, WM_SETFONT, (WPARAM)hFont, 0);
-			SendMessage(hBtnRes, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hStatus, WM_SETFONT, (WPARAM)hFont, 0);
 			break;
 		}
@@ -698,7 +804,6 @@ namespace se::cs::dialog::layer_window {
 			MoveWindow(hBtnSave, padding, currentY, btnSize, topBarHeight, TRUE);
 			MoveWindow(hBtnAdd, padding + btnSize + 2, currentY, btnSize, topBarHeight, TRUE);
 			MoveWindow(hBtnDel, padding + (btnSize * 2) + 4, currentY, btnSize, topBarHeight, TRUE);
-			MoveWindow(hBtnRes, padding + (btnSize * 3) + 6, currentY, btnSize, topBarHeight, TRUE);
 
 			currentY += topBarHeight + padding;
 
@@ -750,7 +855,9 @@ namespace se::cs::dialog::layer_window {
 
 				// Name
 				rcLabel.left += 4;
-				DrawTextA(pDIS->hDC, layer->layerName->c_str(), -1, &rcLabel, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+				const char* name = layer->layerName ? layer->layerName->c_str() : "(unnamed)";
+				std::string label = std::to_string(static_cast<int>(pDIS->itemID) + 1) + ": " + name;
+				DrawTextA(pDIS->hDC, label.c_str(), -1, &rcLabel, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 
 				// Color swatch
 				InflateRect(&rcColor, -4, -4);
@@ -776,6 +883,10 @@ namespace se::cs::dialog::layer_window {
 			int id = LOWORD(wParam);
 
 			if (id == IDC_BTN_SAVE) {
+				if (std::filesystem::exists(LAYER_CONFIG_PATH) &&
+					MessageBoxA(hWnd, "Overwrite existing layers configuration?", "Save Layers", MB_YESNO | MB_ICONQUESTION) != IDYES) {
+						break;
+				}
 				saveLayersToToml();
 			}
 
@@ -814,17 +925,6 @@ namespace se::cs::dialog::layer_window {
 				}
 			}
 
-			else if (id == IDC_BTN_RES) {
-				loadLayersFromToml();
-
-				for (int i = 0; i < (int)g_Layers.size(); ++i) {
-					LVITEMA lvI = { 0 };
-					lvI.mask = LVIF_TEXT;
-					lvI.iItem = i;
-					lvI.pszText = LPSTR_TEXTCALLBACK;
-					ListView_InsertItem(hListView, &lvI);
-				}
-			}
 			break;
 		}
 
@@ -974,8 +1074,6 @@ namespace se::cs::dialog::layer_window {
 							std::string msg = "Are you sure you want to delete layer '" + *l->layerName + "'?\nAll objects in this layer will be moved to Default.";
 							if (MessageBoxA(hWnd, msg.c_str(), "Delete Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
 
-								// Move objects to default before deleting
-								l->clearLayer();
 
 								delete g_Layers[iItem];
 								g_Layers.erase(g_Layers.begin() + iItem);
@@ -1001,31 +1099,6 @@ namespace se::cs::dialog::layer_window {
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	void loadOrCreateLayers() {
-
-		// Clear any existing layers
-		g_Layers.clear();
-		g_LayersIdMap.clear();
-		for (auto& layer : g_Layers) {
-			delete layer;
-		}
-
-		if (std::filesystem::exists(LAYER_CONFIG_PATH)) {
-			loadLayersFromToml();
-		}
-
-		// if layer id 0 is missing, recreate default layer
-		if (g_LayersIdMap.find(0) == g_LayersIdMap.end()) {
-			auto hiddenLayer = new LayerData();
-			hiddenLayer->id = HIDDEN_LAYER_ID;
-			hiddenLayer->layerName = new std::string("Hidden");
-			hiddenLayer->isLayerHidden = true;
-			hiddenLayer->isOverlayActive = false;
-			g_Layers.push_back(hiddenLayer);
-			g_LayersIdMap[hiddenLayer->id] = hiddenLayer;
-		}
-	}
-
 	void createLayersWindow() {
 
 		if (hLayersWnd) {
@@ -1034,8 +1107,6 @@ namespace se::cs::dialog::layer_window {
 			SetForegroundWindow(hLayersWnd);
 			return;
 		}
-
-		loadOrCreateLayers();
 
 		WNDCLASSEXA wc = {};
 		wc.cbSize = sizeof(WNDCLASSEXA);
@@ -1060,41 +1131,119 @@ namespace se::cs::dialog::layer_window {
 		);
 	}
 
-	void toggleLayersWindow(bool show) {
-		if (hLayersWnd) {
-			ShowWindow(hLayersWnd, show ? SW_RESTORE : SW_MINIMIZE);
-		}
-		else {
-			createLayersWindow();
-		}
-	}
+	constexpr DWORD RenderScene_Func = 0x5DB090;
+	constexpr DWORD GridUpdateController_Func = 0x4A0090;
+	constexpr DWORD GridUpdateController_Thunk = 0x403A0D;
 
-	// If render window became minimized, minimize our layers window too.
-	// TODO BUG: won't trigger if the render window is brought back up via closing the animation window with a close button.
-	void forceToggleLayersWindow(HMENU viewMenu) {
-		if (hLayersWnd) {
-			if (IsRenderWindowVisible(viewMenu))
-			{
-				if (isLayerWndForceHidden) {
-					toggleLayersWindow(true);
-					isLayerWndForceHidden = false;
+	void __stdcall OnCellLoaded() {
+		
+		if (g_LayersIdMap.empty()) return;
+		else {
+			for (const auto& [id, layer] : g_LayersIdMap) {
+				if (layer) {
+					layer->refreshObjects();
 				}
 			}
-			else {
-				isLayerWndForceHidden = !IsIconic(hLayersWnd);
-				toggleLayersWindow(false);
-			}
 		}
 	}
 
-	void refreshLayersMenuItem(HMENU viewMenu) {
-		if (viewMenu) {
+	__declspec(naked) void Patch_CellLoad_Wrapper() {
+		__asm {
+			mov eax, RenderScene_Func
+			call eax
 
-			UINT check = (hLayersWnd != NULL && !IsIconic(hLayersWnd)) ? MF_CHECKED : MF_UNCHECKED;
-			CheckMenuItem(viewMenu, se::cs::window::main::MENU_ID_VIEW_LAYERS_WINDOW, check);
+			pushad
+			pushfd
 
-			UINT enable = IsRenderWindowVisible(viewMenu) ? MF_ENABLED : MF_GRAYED;
-			EnableMenuItem(viewMenu, se::cs::window::main::MENU_ID_VIEW_LAYERS_WINDOW, enable);
+			call OnCellLoaded
+
+			popfd
+			popad
+
+			ret
 		}
+	}
+
+	__declspec(naked) void Patch_CellGridLoad_Wrapper() {
+		__asm {
+			mov eax, [esp + 4]      
+			push eax     
+
+			mov eax, GridUpdateController_Func
+			call eax
+
+			pushad
+
+			call OnCellLoaded
+
+			popad
+
+			ret 4
+		}
+	}
+
+	// bIsDeleting (1 = Delete, 0 = Restore/Undo)
+	void __stdcall HandleObjectDeleteState(void* pObject, bool bIsDeleting) {
+
+		if (g_LayersIdMap.empty()) return;
+
+		Reference* objRef = reinterpret_cast<Reference*>(pObject);
+
+		auto layer = getLayerByObject(objRef);
+
+		if (!layer) return;
+
+		if (bIsDeleting && layer->removeObject(objRef, true)) {
+			layer->deletedReferences.insert(objRef);
+			updateStatusLabel();
+			return;
+		}
+
+		if (layer->deletedReferences.erase(objRef)) {
+			layer->addObject(objRef);
+			updateStatusLabel();
+			rw::renderNextFrame(); // TODO: figure out why sometimes randomly the visual state is not being applied 
+		}
+	}
+
+	constexpr DWORD setObjectDeletedJump = 0x547816;
+	void __declspec(naked) Patch_SetDeleted() {
+		__asm {
+			// store Registers
+			pushad
+			pushfd
+
+			// argument 2: boolean param_2. 
+			// since pushad/pushfd was added, the stack has grown by 0x24 bytes.
+			// original [ESP+4] is now at [ESP + 0x24 + 0x4].
+			xor eax, eax
+			mov al, byte ptr[esp + 0x28]
+			push eax        // restore/delete flag
+
+			push ecx        // this
+
+			call HandleObjectDeleteState
+
+			// restore registers
+			popfd
+			popad
+
+			// execute overwritten instructions
+			mov al, byte ptr[esp + 0x4] 
+			test al, al                   
+
+			jmp setObjectDeletedJump
+		}
+	}
+
+	void installPatches() {
+		using memory::genCallEnforced;
+		using memory::genJumpUnprotected;
+
+		// For rendering layer overlays on cell loading
+		genCallEnforced(0x45FE47, RenderScene_Func, reinterpret_cast<DWORD>(Patch_CellLoad_Wrapper));
+		genCallEnforced(0x49F0F9, GridUpdateController_Thunk, reinterpret_cast<DWORD>(Patch_CellGridLoad_Wrapper));
+		// For undo functionality and proper object removal from static maps
+		genJumpUnprotected(0x00547810, reinterpret_cast<DWORD>(Patch_SetDeleted), 6);
 	}
 }

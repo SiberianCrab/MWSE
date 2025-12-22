@@ -78,8 +78,8 @@ namespace se::cs {
 			};
 		};
 		Attachment* firstAttachment; // 0x68
-		int unknown_0x6C;
-		int unknown_0x70;
+		int sourceID;
+		int targetID; // Master index?
 		NI::Pointer<NI::AVObject> selectionWidget; // 0x74. NiLines
 
 		Attachment* getAttachment(Attachment::Type type) const;

@@ -955,46 +955,42 @@ namespace se::cs::dialog::render_window {
 		return nodeLayer ? nodeLayer->isLayerHidden : false;
 	}
 
-	// Hook: Block selection of soft-hidden objects.
-	__declspec(naked) void Patch_SelectionBoxCheck_Hook() {
+	__declspec(naked) void Patch_SelectionBoxCheck() {
 		__asm {
 
 			mov eax, [esp + 4]  
 			push eax            
 
-			// Call original "Is Point In Box?".
+			// call original "Is Point In Box?".
 			mov eax, 0x4681F0
 			call eax
 
-			// Check Result (AL) If 0 (Outside), we are done.
+			// check result (AL) If 0 (Outside), we are done.
 			test al, al
 			jz _done            
 
-			// --- Extra Check: Is Hidden? ---
 			push ecx
 			push edx
 
-			// Check the Node (EDI)
+			// check the Node
 			push edi
 			call CheckNodeHasHiddenFlag 
 
-			// CheckNodeHasHiddenFlag returns 1 if Hidden, 0 if Visible.
-			// We want to return 0 if Hidden (Block), 1 if Visible (Allow).
+			// invert CheckNodeHasHiddenFlag
 			xor al, 1
 
-			// Restore registers
+			// restore registers
 			pop edx
 			pop ecx
 
 			_done :
 
-			// The original function was a "RET 4" function, mimic that.
 			ret 4
 		}
 	}
 
 	//
-	// Patch: Make clicking things near skinned objects not painful
+	// Patch: Make clicking things near skinned objects not painful.
 	//
 
 	Reference* __cdecl Patch_FixPickAgainstSkinnedObjects(SceneGraphController* sgController, RenderController* renderController, int screenX, int screenY) {
@@ -2303,12 +2299,7 @@ namespace se::cs::dialog::render_window {
 			if (g_LayerInputAccumulator > 0) {
 				size_t layerIndex = static_cast<size_t>(g_LayerInputAccumulator) - 1;
 
-				if (g_LayerInputModeOverlay) {
-					lw::toggleLayerOverlay(layerIndex);
-				}
-				else {
-					lw::toggleLayerVisibility(layerIndex);
-				}
+				lw::toggleLayerVisuals(layerIndex, g_LayerInputModeOverlay);
 			}
 
 			g_LayerInputAccumulator = 0;
@@ -2717,10 +2708,10 @@ namespace se::cs::dialog::render_window {
 		// Patch: Extend the selection widget to a full NiNode on references.
 		genJumpEnforced(0x40235B, 0x540D50, &Reference::createSelectionWidget);
 
-		// Patch: Prevent selecting objects that have the "xHID" flag during box selection.
-		// This replaces the "isInsideRectangle" (0x4681F0) call with our wrapper.
-		genCallUnprotected(0x4682C5, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck_Hook), 0x5);
-		genCallUnprotected(0x468332, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck_Hook), 0x5);
+		// Patch: Prevent selecting soft hidden objects
+		// This replaces the "isInsideRectangle" (0x4681F0) call with a wrapper.
+		genCallUnprotected(0x4682C5, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck), 0x5);
+		genCallUnprotected(0x468332, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck), 0x5);
 
 	}
 }

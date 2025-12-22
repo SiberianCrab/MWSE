@@ -28,6 +28,7 @@ namespace se::cs::dialog::layer_window {
 	struct LayerData {
 		std::unordered_map<Cell*, std::unordered_set<Reference*>> perCellReferences;
 		std::unordered_map<NI::TriShape*, NodeColorData*> nodeMaterialData;
+		std::unordered_set<Reference*> deletedReferences; // For Undo support
 
 		size_t id = 0;
 		std::string* layerName = nullptr;
@@ -51,7 +52,7 @@ namespace se::cs::dialog::layer_window {
 		NodeColorData* getNodeColorData(NI::TriShape* node);
 		void removeNodeColorData(NI::TriShape* node);
 
-		void removeObject(Reference* objRef);
+		bool removeObject(Reference* objRef, bool undoable = false);
 		void addObject(Reference* objRef);
 		void updateObject(Reference* objRef, bool forceRestore = false);
 		void moveObjectToLayer(Reference* objRef, LayerData* currentLayerInput = nullptr);
@@ -62,19 +63,17 @@ namespace se::cs::dialog::layer_window {
 		void clearLayer();
 
 		size_t get_counts();
-
-		void debugPrint();
 	};
 
 	void createLayersWindow();
 	void toggleLayersWindow(bool show);
+	void loadOrCreateLayers();
 
 	void forceToggleLayersWindow(HMENU viewMenu);
 	void refreshLayersMenuItem(HMENU viewMenu);
 	bool IsRenderWindowVisible(HMENU viewMenu);
 
-	void toggleLayerVisibility(size_t layerIndex);
-	void toggleLayerOverlay(size_t layerIndex);
+	void toggleLayerVisuals(size_t layerIndex, bool overlay);
 	void updateLayerWindowUI();
 	void updateStatusLabel();
 
@@ -89,4 +88,6 @@ namespace se::cs::dialog::layer_window {
 
 	void saveLayersToToml();
 	void loadLayersFromToml();
+
+	void installPatches();
 }
