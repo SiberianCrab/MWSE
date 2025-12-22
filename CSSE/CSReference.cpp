@@ -77,6 +77,7 @@ namespace se::cs {
 		return Reference_getCell(this);
 	}
 
+	// Super cursed, but targetID is not set for newly created objects
 	std::string Reference::getUniqueID() const {
 		auto stringID = getObjectID() + position.toString() + orientationNonAttached.toString();
 		return stringID;
