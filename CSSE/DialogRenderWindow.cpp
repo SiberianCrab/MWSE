@@ -1435,12 +1435,14 @@ namespace se::cs::dialog::render_window {
 		auto selectionData = SelectionData::get();
 
 		auto hiddenLayer = lw::getLayerById(HIDDEN_LAYER_ID);
-		
-		hiddenLayer->isLayerHidden = true;
 
 		hiddenLayer->moveSelectionToLayer();
 
-		hiddenLayer->refreshObjects();
+		if (!hiddenLayer->isLayerHidden)
+		{
+			hiddenLayer->isLayerHidden = true;
+			hiddenLayer->refreshObjects();
+		}
 
 		selectionData->clear();
 
