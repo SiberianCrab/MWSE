@@ -955,37 +955,49 @@ namespace se::cs::dialog::render_window {
 		return nodeLayer ? nodeLayer->isLayerHidden : false;
 	}
 
+	// Patch: Make selection box ignore hidden objects.
+	const DWORD IsInsideRectangle_Resume = 0x4020B8;
 	__declspec(naked) void Patch_SelectionBoxCheck() {
 		__asm {
 
-			mov eax, [esp + 4]  
-			push eax            
+			// at this point:
+			// edi = ninode pointer 
+			// ecx = selection box pointer ?
+			// esp = ninode position vector3* argument
 
-			// call original "Is Point In Box?".
-			mov eax, 0x4681F0
-			call eax
+			// preserve ecx
+			push ecx; //0x1
 
-			// check result (AL) If 0 (Outside), we are done.
-			test al, al
-			jz _done            
+			// prepare ninode for CheckNodeHasHiddenFlag call
+			push edi; //0x2
 
-			push ecx
-			push edx
+			// nop padding for replacement area
+			nop;
+			nop;
+			nop;
+			nop;
+			nop;
 
-			// check the Node
-			push edi
-			call CheckNodeHasHiddenFlag 
+			// check al, 1 if hidden, 0 if visible.
+			test al, al;
 
-			// invert CheckNodeHasHiddenFlag
-			xor al, 1
+			// restore ECX
+			pop ecx;
 
-			// restore registers
-			pop edx
-			pop ecx
+			// branch
+			jnz IsHidden;
 
-			_done :
+			// if visible perform original function logic
+			mov eax, IsInsideRectangle_Resume;
+			jmp eax;
 
-			ret 4
+			
+		IsHidden:
+			// otherwise return false (not inside selection box)
+			xor eax, eax; // AL = 0
+
+			// cleanup the stack like original function
+			ret 4;
 		}
 	}
 
@@ -1009,6 +1021,11 @@ namespace se::cs::dialog::render_window {
 
 		for (auto& result : sgController->objectPick->results) {
 			if (result == nullptr || result->object == nullptr) {
+				continue;
+			}
+
+			// Raycast should ignore hidden objects.
+			if (CheckNodeHasHiddenFlag(result->object->parentNode)) {
 				continue;
 			}
 
@@ -1419,6 +1436,8 @@ namespace se::cs::dialog::render_window {
 
 		auto hiddenLayer = lw::getLayerById(HIDDEN_LAYER_ID);
 		
+		hiddenLayer->isLayerHidden = true;
+
 		hiddenLayer->moveSelectionToLayer();
 
 		selectionData->clear();
@@ -1636,6 +1655,7 @@ namespace se::cs::dialog::render_window {
 			RANDOMIZE_ROTATION_Z,
 			RANDOMIZE_SCALE,
 			RANDOMIZE_ROTATION_Z_AND_SCALE,
+			ASSIGN_TO_LAYER_BASE = 5000,
 		};
 
 		/*
@@ -1645,6 +1665,7 @@ namespace se::cs::dialog::render_window {
 		*   T: Hide/show water.
 		*	E: Change Reference Data
 		*	H: Hide Selection
+		*	L: Layer Management
 		*	R: Restore Hidden References
 		*	S: Set Snapping Axis
 		*	W: Toggle world axis rotation
@@ -1932,6 +1953,26 @@ namespace se::cs::dialog::render_window {
 		menuItem.dwTypeData = (LPSTR)"&Restore Hidden References";
 		InsertMenuItemA(menu, index++, TRUE, &menuItem);
 
+		MENUITEMINFO subMenuAssignLayer = {};
+		subMenuAssignLayer.cbSize = sizeof(MENUITEMINFO);
+		subMenuAssignLayer.hSubMenu = CreatePopupMenu();
+
+		for (size_t i = 0; i < lw::g_Layers.size(); ++i) {
+			auto layer = lw::g_Layers[i];
+			std::string name = (layer->layerName) ? *layer->layerName : "Unnamed";
+			std::string label = std::to_string(i + 1) + ": " + name;
+
+			AppendMenuA(subMenuAssignLayer.hSubMenu, MF_STRING, ASSIGN_TO_LAYER_BASE + layer->id, label.c_str());
+		}
+
+		menuItem.wID = RESERVED_NO_CALLBACK;
+		menuItem.fMask = MIIM_SUBMENU | MIIM_TYPE | MIIM_STATE;
+		menuItem.fType = MFT_STRING;
+		menuItem.fState = hasReferencesSelected ? MFS_ENABLED : MFS_DISABLED;
+		menuItem.hSubMenu = subMenuAssignLayer.hSubMenu;
+		menuItem.dwTypeData = (LPSTR)"Assign Selection to &Layer";
+		InsertMenuItemA(menu, index++, TRUE, &menuItem);
+
 		menuItem.wID = RESERVED_NO_CALLBACK;
 		menuItem.fMask = MIIM_FTYPE | MIIM_ID;
 		menuItem.fType = MFT_SEPARATOR;
@@ -2106,12 +2147,25 @@ namespace se::cs::dialog::render_window {
 			toggleWaterShown();
 			break;
 		default:
-			log::stream << "Unknown render window context menu ID " << result << " used!" << std::endl;
+			if (result >= ASSIGN_TO_LAYER_BASE && result < ASSIGN_TO_LAYER_BASE + MAX_LAYERS) {
+				size_t layerId = result - ASSIGN_TO_LAYER_BASE;
+				auto targetLayer = lw::getLayerById(layerId);
+				if (targetLayer) {
+					targetLayer->moveSelectionToLayer();
+				}
+			}
+			else {
+				log::stream << "Unknown render window context menu ID " << result << " used!" << std::endl;
+			}
+			break;
 		}
 
 		// Cleanup our menus.
-		DestroyMenu(menu);
+		DestroyMenu(subMenuAssignLayer.hSubMenu);
 		DestroyMenu(subMenuSnappingAxis.hSubMenu);
+		DestroyMenu(subMenuAlignReferences.hSubMenu);
+		DestroyMenu(subMenuReferenceData.hSubMenu);
+		DestroyMenu(menu);
 
 		// We also stole paint stuff, so repaint.
 		SendMessage(hWndRenderWindow, WM_PAINT, 0, 0);
@@ -2709,9 +2763,9 @@ namespace se::cs::dialog::render_window {
 		genJumpEnforced(0x40235B, 0x540D50, &Reference::createSelectionWidget);
 
 		// Patch: Prevent selecting soft hidden objects
-		// This replaces the "isInsideRectangle" (0x4681F0) call with a wrapper.
 		genCallUnprotected(0x4682C5, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck), 0x5);
-		genCallUnprotected(0x468332, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck), 0x5);
+		// replace nops after push ecx + edi 
+		genCallUnprotected(reinterpret_cast<DWORD>(Patch_SelectionBoxCheck) + 0x2, reinterpret_cast<DWORD>(CheckNodeHasHiddenFlag), 5);
 
 	}
 }

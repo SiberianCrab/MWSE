@@ -2,12 +2,14 @@
 #include "DialogRenderWindow.h"
 #include "RenderWindowSelectionData.h"
 #include "WindowMain.h"
+#include <shellapi.h>
 
 #define IDC_LAYERS_LIST 2001
 #define IDC_BTN_SAVE 2002
 #define IDC_BTN_ADD 2003
 #define IDC_BTN_DEL 2004
-#define IDC_STATUS_LABEL 2005
+#define IDC_BTN_HELP 2005
+#define IDC_STATUS_LABEL 2006
 
 #define IDM_LAYER_MOVE 3001
 #define IDM_LAYER_CLEAR 3002
@@ -21,6 +23,7 @@ namespace se::cs::dialog::layer_window {
 
 	static HWND hListView = NULL;
 	static HWND hStatus = NULL;
+	static HWND hTooltip = NULL;
 
 	bool isLayerWndForceHidden = false;
 	static COLORREF g_CustomColors[16] = { 0 }; // color picker history
@@ -574,6 +577,24 @@ namespace se::cs::dialog::layer_window {
 		}
 	}
 
+	void toggleLayerVisuals(size_t layerIndex, bool overlay) {
+		if (layerIndex >= g_Layers.size()) return;
+
+		LayerData* layer = g_Layers[layerIndex];
+		if (!layer) return;
+
+		if (overlay)
+			layer->isOverlayActive = !layer->isOverlayActive;
+		else
+			layer->isLayerHidden = !layer->isLayerHidden;
+
+		layer->refreshObjects();
+
+		if (hListView) {
+			ListView_RedrawItems(hListView, layerIndex, layerIndex);
+		}
+	}
+
 	// NI::Color uses rbg order, while COLORREF uses rgb order.
 	COLORREF NIColorToRef(const NI::Color& c) {
 		return RGB(
@@ -684,27 +705,30 @@ namespace se::cs::dialog::layer_window {
 		}
 	}
 
-	void toggleLayerVisuals(size_t layerIndex, bool overlay) {
-		if (layerIndex >= g_Layers.size()) return;
-
-		LayerData* layer = g_Layers[layerIndex];
-		if (!layer) return;
-
-		if (overlay)
-			layer->isOverlayActive = !layer->isOverlayActive;
-		else
-			layer->isLayerHidden = !layer->isLayerHidden;
-
-		layer->refreshObjects();
-
-		if (hListView) {
-			ListView_RedrawItems(hListView, layerIndex, layerIndex);
+	void AddTooltip(HWND hParent, HWND hControl, LPCSTR text) {
+		if (!hTooltip) {
+			hTooltip = CreateWindowExA(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL,
+				WS_POPUP | TTS_ALWAYSTIP | TTS_NOPREFIX,
+				CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+				hParent, NULL, (HINSTANCE)GetWindowLongPtr(hParent, GWLP_HINSTANCE), NULL);
 		}
+
+		TOOLINFOA ti = { 0 };
+		ti.cbSize = sizeof(ti);
+		ti.uFlags = TTF_SUBCLASS | TTF_IDISHWND;
+		ti.hwnd = hParent;
+		ti.uId = (UINT_PTR)hControl;
+		ti.lpszText = (LPSTR)text;
+		SendMessage(hTooltip, TTM_ADDTOOL, 0, (LPARAM)&ti);
 	}
 
 	LRESULT CALLBACK LayersWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		static HWND hBtnSave, hBtnAdd, hBtnDel;
+		static HWND hBtnSave, hBtnAdd, hBtnDel, hBtnHelp;
 		static bool allowLabelEdit = false; 
+
+		int padding = 4;
+		int btnSize = 24;
+		int topBarHeight = 24;
 
 		switch (msg) {
 		case WM_CREATE: {
@@ -717,6 +741,14 @@ namespace se::cs::dialog::layer_window {
 
 			hBtnDel = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_DEL, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+
+			hBtnHelp = CreateWindowExA(0, "BUTTON", "", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
+				0, 0, 0, 0, hWnd, (HMENU)IDC_BTN_HELP, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+
+			AddTooltip(hWnd, hBtnSave, "Save current layer configuration");
+			AddTooltip(hWnd, hBtnAdd, "Create a new layer");
+			AddTooltip(hWnd, hBtnDel, "Delete selected layer");
+			AddTooltip(hWnd, hBtnHelp, "Open Help and Documentation");
 
 			HMODULE hCurrentModule = NULL;
 			GetModuleHandleExA(
@@ -735,10 +767,12 @@ namespace se::cs::dialog::layer_window {
 			HICON hIconSave = ImageList_GetIcon(hImageList, 0, ILD_TRANSPARENT);
 			HICON hIconAdd = ImageList_GetIcon(hImageList, 1, ILD_TRANSPARENT);
 			HICON hIconDel = ImageList_GetIcon(hImageList, 2, ILD_TRANSPARENT);
+			HICON hIconHelp = ImageList_GetIcon(hImageList, 3, ILD_TRANSPARENT);
 
 			SendMessage(hBtnSave, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)hIconSave);
 			SendMessage(hBtnAdd, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)hIconAdd);
 			SendMessage(hBtnDel, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)hIconDel);
+			SendMessage(hBtnHelp, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)hIconHelp);
 
 			ImageList_Destroy(hImageList);
 
@@ -788,6 +822,7 @@ namespace se::cs::dialog::layer_window {
 			SendMessage(hBtnSave, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hBtnAdd, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hBtnDel, WM_SETFONT, (WPARAM)hFont, 0);
+			SendMessage(hBtnHelp, WM_SETFONT, (WPARAM)hFont, 0);
 			SendMessage(hStatus, WM_SETFONT, (WPARAM)hFont, 0);
 			break;
 		}
@@ -796,14 +831,12 @@ namespace se::cs::dialog::layer_window {
 			int width = LOWORD(lParam);
 			int height = HIWORD(lParam);
 
-			int padding = 4;
-			int topBarHeight = 24;
-			int btnSize = 24;
 			int currentY = padding;
 
 			MoveWindow(hBtnSave, padding, currentY, btnSize, topBarHeight, TRUE);
 			MoveWindow(hBtnAdd, padding + btnSize + 2, currentY, btnSize, topBarHeight, TRUE);
 			MoveWindow(hBtnDel, padding + (btnSize * 2) + 4, currentY, btnSize, topBarHeight, TRUE);
+			MoveWindow(hBtnHelp, width - padding - btnSize, currentY, btnSize, topBarHeight, TRUE);
 
 			currentY += topBarHeight + padding;
 
@@ -827,6 +860,14 @@ namespace se::cs::dialog::layer_window {
 
 			ListView_SetColumnWidth(hListView, 0, newNameWidth);
 			break;
+		}
+
+		case WM_GETMINMAXINFO: {
+			LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
+			// restrict window size to prevent UI overlap
+			lpMMI->ptMinTrackSize.x = 4 * btnSize + 7 * padding;
+			lpMMI->ptMinTrackSize.y = ((int)g_Layers.size() + 4) * topBarHeight;
+			return 0;
 		}
 
 		case WM_DRAWITEM: {
@@ -925,6 +966,36 @@ namespace se::cs::dialog::layer_window {
 				}
 			}
 
+			else if (id == IDC_BTN_HELP) {
+				std::string helpMsg =
+					"Layer Manager Help:\n\n"
+					"UI Actions:\n"
+					"- Use the buttons to save, add or delete layers, respectively.\n"
+					"- Click color swatch to change layer overlay color.\n"
+					"- Toggle visibility and overlay via checkboxes.\n"
+					"- Left-click a layer name to select it and view object count in status bar.\n"
+					"- Press 'DELETE' key to delete selected layer.\n"
+					"- Double-click a layer name to select all objects from this layer that are currently being rendered.\n\n"
+					"Right-Click Menu (on a layer entry):\n"
+					"- Rename/Delete: Manage the layer entry.\n"
+					"- Select objects: Selects all objects assigned to this layer.\n"
+					"- Assign selected objects: Assigns currently selected objects to this layer.\n"
+					"- Clear layer: Removes all objects from this layer. \n\n"
+					"Hotkeys (Render Window):\n"
+					"- Ctrl + [0-9]: Toggle visibility of layer N.\n"
+					"- Shift + [0-9]: Toggle color overlay of layer N.\n"
+					"- Ctrl + Shift + [0-9]: Assign selected objects to layer N.\n"
+					"- Q > L > [0-9]: Move selected objects to layer N via the Quick Menu.\n"
+					"(Note: Press two numbers quickly to access layers beyond 9)\n\n"
+					"Would you like to open the full documentation online?";
+
+				int result = MessageBoxA(hWnd, helpMsg.c_str(), "Layer Manager Help", MB_YESNO | MB_ICONINFORMATION);
+
+				if (result == IDYES) {
+					ShellExecuteA(NULL, "open", "https://mwse.github.io/MWSE/references/general/csse/", NULL, NULL, SW_SHOWNORMAL);
+				}
+			}
+
 			break;
 		}
 
@@ -966,11 +1037,11 @@ namespace se::cs::dialog::layer_window {
 
 					HMENU hPopup = CreatePopupMenu();
 					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_RENAME, "Rename");
-					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_DELETE, "Delete Layer");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_DELETE, "Delete");
 					AppendMenuA(hPopup, MF_SEPARATOR, 0, NULL);
-					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_SELECT, "Select Objects");
-					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_MOVE, "Move Selection Here");
-					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_CLEAR, "Clear Layer");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_SELECT, "Select objects");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_MOVE, "Assign selected objects");
+					AppendMenuA(hPopup, MF_STRING, IDM_LAYER_CLEAR, "Clear layer");
 
 					int selected = TrackPopupMenu(hPopup, TPM_RETURNCMD | TPM_NONOTIFY | TPM_RIGHTBUTTON, pt.x, pt.y, 0, hWnd, NULL);
 					DestroyMenu(hPopup);
@@ -989,7 +1060,7 @@ namespace se::cs::dialog::layer_window {
 						layer->moveSelectionToLayer();
 					}
 					else if (selected == IDM_LAYER_CLEAR) {
-						if (MessageBoxA(hWnd, "Are you sure? Objects will be moved to Default.", "Clear Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
+						if (MessageBoxA(hWnd, "Are you sure? Objects will be removed from this layer! This cannot be undone!", "Clear Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
 							layer->clearLayer();
 						}
 					}
@@ -1071,7 +1142,7 @@ namespace se::cs::dialog::layer_window {
 						}
 						else {
 
-							std::string msg = "Are you sure you want to delete layer '" + *l->layerName + "'?\nAll objects in this layer will be moved to Default.";
+							std::string msg = "Are you sure you want to delete layer '" + *l->layerName + "'?\nThis operation cannot be undone!";
 							if (MessageBoxA(hWnd, msg.c_str(), "Delete Layer", MB_YESNO | MB_ICONWARNING) == IDYES) {
 
 
@@ -1089,6 +1160,10 @@ namespace se::cs::dialog::layer_window {
 			}
 			break;
 		}
+
+		case WM_DESTROY:
+			hTooltip = NULL;
+			break;
 
 		case WM_CLOSE:
 			// just in case
@@ -1149,13 +1224,17 @@ namespace se::cs::dialog::layer_window {
 
 	__declspec(naked) void Patch_CellLoad_Wrapper() {
 		__asm {
-			mov eax, RenderScene_Func
-			call eax
+			mov eax, RenderScene_Func //0x5
+			call eax //0x7
 
-			pushad
-			pushfd
+			pushad //0x8
+			pushfd //0x9
 
-			call OnCellLoaded
+			nop
+			nop
+			nop
+			nop
+			nop
 
 			popfd
 			popad
@@ -1166,15 +1245,19 @@ namespace se::cs::dialog::layer_window {
 
 	__declspec(naked) void Patch_CellGridLoad_Wrapper() {
 		__asm {
-			mov eax, [esp + 4]      
-			push eax     
+			mov eax, [esp + 4]	// 0x4
+			push eax	// 0x5
 
-			mov eax, GridUpdateController_Func
-			call eax
+			mov eax, GridUpdateController_Func // 0xA
+			call eax // 0xC
 
-			pushad
+			pushad //0xD
 
-			call OnCellLoaded
+			nop
+			nop
+			nop
+			nop
+			nop
 
 			popad
 
@@ -1210,19 +1293,24 @@ namespace se::cs::dialog::layer_window {
 	void __declspec(naked) Patch_SetDeleted() {
 		__asm {
 			// store Registers
-			pushad
-			pushfd
+			pushad //0x1
+			pushfd //0x2
 
 			// argument 2: boolean param_2. 
 			// since pushad/pushfd was added, the stack has grown by 0x24 bytes.
 			// original [ESP+4] is now at [ESP + 0x24 + 0x4].
-			xor eax, eax
-			mov al, byte ptr[esp + 0x28]
-			push eax        // restore/delete flag
+			xor eax, eax // 0x4
+			mov al, byte ptr[esp + 0x28] // 0x8
+			push eax        // restore/delete flag 0x9
 
-			push ecx        // this
+			push ecx        // this 0xA
 
-			call HandleObjectDeleteState
+			// pad with nops for replacement with a call later
+			nop 
+			nop
+			nop
+			nop
+			nop
 
 			// restore registers
 			popfd
@@ -1238,12 +1326,16 @@ namespace se::cs::dialog::layer_window {
 
 	void installPatches() {
 		using memory::genCallEnforced;
+		using memory::genCallUnprotected;
 		using memory::genJumpUnprotected;
 
 		// For rendering layer overlays on cell loading
 		genCallEnforced(0x45FE47, RenderScene_Func, reinterpret_cast<DWORD>(Patch_CellLoad_Wrapper));
+		genCallUnprotected(reinterpret_cast<DWORD>(Patch_CellLoad_Wrapper) + 0x9, reinterpret_cast<DWORD>(OnCellLoaded), 0x5);
 		genCallEnforced(0x49F0F9, GridUpdateController_Thunk, reinterpret_cast<DWORD>(Patch_CellGridLoad_Wrapper));
+		genCallUnprotected(reinterpret_cast<DWORD>(Patch_CellGridLoad_Wrapper) + 0xD, reinterpret_cast<DWORD>(OnCellLoaded), 0x5);
 		// For undo functionality and proper object removal from static maps
 		genJumpUnprotected(0x00547810, reinterpret_cast<DWORD>(Patch_SetDeleted), 6);
+		genCallUnprotected(reinterpret_cast<DWORD>(Patch_SetDeleted) + 0xA, reinterpret_cast<DWORD>(HandleObjectDeleteState), 0x5);
 	}
 }
