@@ -1440,6 +1440,8 @@ namespace se::cs::dialog::render_window {
 
 		hiddenLayer->moveSelectionToLayer();
 
+		hiddenLayer->refreshObjects();
+
 		selectionData->clear();
 
 		renderNextFrame();

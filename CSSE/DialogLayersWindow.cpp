@@ -1162,7 +1162,45 @@ namespace se::cs::dialog::layer_window {
 		}
 
 		case WM_DESTROY:
-			hTooltip = NULL;
+			if (hTooltip) {
+				DestroyWindow(hTooltip);
+				hTooltip = NULL;
+			}
+
+			if (hBtnSave) {
+				HICON prev = (HICON)SendMessage(hBtnSave, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)NULL);
+				if (prev) DestroyIcon(prev);
+				DestroyWindow(hBtnSave);
+				hBtnSave = NULL;
+			}
+			if (hBtnAdd) {
+				HICON prev = (HICON)SendMessage(hBtnAdd, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)NULL);
+				if (prev) DestroyIcon(prev);
+				DestroyWindow(hBtnAdd);
+				hBtnAdd = NULL;
+			}
+			if (hBtnDel) {
+				HICON prev = (HICON)SendMessage(hBtnDel, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)NULL);
+				if (prev) DestroyIcon(prev);
+				DestroyWindow(hBtnDel);
+				hBtnDel = NULL;
+			}
+			if (hBtnHelp) {
+				HICON prev = (HICON)SendMessage(hBtnHelp, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)NULL);
+				if (prev) DestroyIcon(prev);
+				DestroyWindow(hBtnHelp);
+				hBtnHelp = NULL;
+			}
+
+			if (hListView) {
+				hListView = NULL;
+			}
+			if (hStatus) {
+				hStatus = NULL;
+			}
+
+			hLayersWnd = NULL;
+
 			break;
 
 		case WM_CLOSE:
