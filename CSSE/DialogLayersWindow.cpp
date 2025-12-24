@@ -2,7 +2,6 @@
 #include "DialogRenderWindow.h"
 #include "RenderWindowSelectionData.h"
 #include "WindowMain.h"
-#include <shellapi.h>
 
 #define IDC_LAYERS_LIST 2001
 #define IDC_BTN_SAVE 2002
@@ -1243,12 +1242,7 @@ namespace se::cs::dialog::layer_window {
 		);
 	}
 
-	constexpr DWORD RenderScene_Func = 0x5DB090;
-	constexpr DWORD GridUpdateController_Func = 0x4A0090;
-	constexpr DWORD GridUpdateController_Thunk = 0x403A0D;
-
-	void __stdcall OnCellLoaded() {
-		
+	static void OnCellLoaded() {
 		if (g_LayersIdMap.empty()) return;
 		else {
 			for (const auto& [id, layer] : g_LayersIdMap) {
@@ -1259,55 +1253,26 @@ namespace se::cs::dialog::layer_window {
 		}
 	}
 
-	__declspec(naked) void Patch_CellLoad_Wrapper() {
-		__asm {
-			mov eax, RenderScene_Func //0x5
-			call eax //0x7
+	static void __fastcall Patch_CellLoad_Wrapper(NI::AVObject* self) {
+		// Call overwritten code.
+		self->updateProperties();
 
-			pushad //0x8
-			pushfd //0x9
-
-			nop
-			nop
-			nop
-			nop
-			nop
-
-			popfd
-			popad
-
-			ret
-		}
+		OnCellLoaded();
 	}
 
-	__declspec(naked) void Patch_CellGridLoad_Wrapper() {
-		__asm {
-			mov eax, [esp + 4]	// 0x4
-			push eax	// 0x5
+	static bool __fastcall Patch_CellGridLoad_Wrapper(DataHandler* self, DWORD _EDX_, NI::Vector3* position) {
+		// Call overwritten code.
+		const auto TES3_CS_CellGridLoad = reinterpret_cast<bool(__thiscall*)(DataHandler*, NI::Vector3*)>(0x4A0090);
+		const auto returnValue = TES3_CS_CellGridLoad(self, position);
 
-			mov eax, GridUpdateController_Func // 0xA
-			call eax // 0xC
+		OnCellLoaded();
 
-			pushad //0xD
-
-			nop
-			nop
-			nop
-			nop
-			nop
-
-			popad
-
-			ret 4
-		}
+		return returnValue;
 	}
 
 	// bIsDeleting (1 = Delete, 0 = Restore/Undo)
-	void __stdcall HandleObjectDeleteState(void* pObject, bool bIsDeleting) {
-
+	void HandleObjectDeleteState(Reference* objRef, bool bIsDeleting) {
 		if (g_LayersIdMap.empty()) return;
-
-		Reference* objRef = reinterpret_cast<Reference*>(pObject);
 
 		auto layer = getLayerByObject(objRef);
 
@@ -1326,53 +1291,25 @@ namespace se::cs::dialog::layer_window {
 		}
 	}
 
-	constexpr DWORD setObjectDeletedJump = 0x547816;
-	void __declspec(naked) Patch_SetDeleted() {
-		__asm {
-			// store Registers
-			pushad //0x1
-			pushfd //0x2
-
-			// argument 2: boolean param_2. 
-			// since pushad/pushfd was added, the stack has grown by 0x24 bytes.
-			// original [ESP+4] is now at [ESP + 0x24 + 0x4].
-			xor eax, eax // 0x4
-			mov al, byte ptr[esp + 0x28] // 0x8
-			push eax        // restore/delete flag 0x9
-
-			push ecx        // this 0xA
-
-			// pad with nops for replacement with a call later
-			nop 
-			nop
-			nop
-			nop
-			nop
-
-			// restore registers
-			popfd
-			popad
-
-			// execute overwritten instructions
-			mov al, byte ptr[esp + 0x4] 
-			test al, al                   
-
-			jmp setObjectDeletedJump
+	void __fastcall Patch_SetDeleted(BaseObject* object, DWORD _EDX_, bool deleted) {
+		if (object->objectType == ObjectType::Reference) {
+			HandleObjectDeleteState(static_cast<Reference*>(object), deleted);
 		}
+
+		// Call overwritten code.
+		object->setDeleted(deleted);
 	}
 
 	void installPatches() {
 		using memory::genCallEnforced;
 		using memory::genCallUnprotected;
-		using memory::genJumpUnprotected;
+		using memory::genJumpEnforced;
 
 		// For rendering layer overlays on cell loading
-		genCallEnforced(0x45FE47, RenderScene_Func, reinterpret_cast<DWORD>(Patch_CellLoad_Wrapper));
-		genCallUnprotected(reinterpret_cast<DWORD>(Patch_CellLoad_Wrapper) + 0x9, reinterpret_cast<DWORD>(OnCellLoaded), 0x5);
-		genCallEnforced(0x49F0F9, GridUpdateController_Thunk, reinterpret_cast<DWORD>(Patch_CellGridLoad_Wrapper));
-		genCallUnprotected(reinterpret_cast<DWORD>(Patch_CellGridLoad_Wrapper) + 0xD, reinterpret_cast<DWORD>(OnCellLoaded), 0x5);
+		genCallEnforced(0x45FE47, 0x5DB090, reinterpret_cast<DWORD>(Patch_CellLoad_Wrapper));
+		genCallEnforced(0x49F0F9, 0x403A0D, reinterpret_cast<DWORD>(Patch_CellGridLoad_Wrapper));
+
 		// For undo functionality and proper object removal from static maps
-		genJumpUnprotected(0x00547810, reinterpret_cast<DWORD>(Patch_SetDeleted), 6);
-		genCallUnprotected(reinterpret_cast<DWORD>(Patch_SetDeleted) + 0xA, reinterpret_cast<DWORD>(HandleObjectDeleteState), 0x5);
+		genJumpEnforced(0x404719, 0x547810, reinterpret_cast<DWORD>(Patch_SetDeleted));
 	}
 }

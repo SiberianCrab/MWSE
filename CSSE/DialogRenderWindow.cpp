@@ -948,6 +948,11 @@ namespace se::cs::dialog::render_window {
 		return 0;
 	}
 
+	static bool IsReferenceHidden(Reference* reference) {
+		auto nodeLayer = lw::getLayerByObject(reference);
+		return nodeLayer ? nodeLayer->isLayerHidden : false;
+	}
+
 	bool __stdcall CheckNodeHasHiddenFlag(NI::Node* node) {
 		if (!node) return false;
 		Reference* reference = node->getTes3Reference(false);
@@ -955,50 +960,14 @@ namespace se::cs::dialog::render_window {
 		return nodeLayer ? nodeLayer->isLayerHidden : false;
 	}
 
-	// Patch: Make selection box ignore hidden objects.
-	const DWORD IsInsideRectangle_Resume = 0x4020B8;
-	__declspec(naked) void Patch_SelectionBoxCheck() {
-		__asm {
-
-			// at this point:
-			// edi = ninode pointer 
-			// ecx = selection box pointer ?
-			// esp = ninode position vector3* argument
-
-			// preserve ecx
-			push ecx; //0x1
-
-			// prepare ninode for CheckNodeHasHiddenFlag call
-			push edi; //0x2
-
-			// nop padding for replacement area
-			nop;
-			nop;
-			nop;
-			nop;
-			nop;
-
-			// check al, 1 if hidden, 0 if visible.
-			test al, al;
-
-			// restore ECX
-			pop ecx;
-
-			// branch
-			jnz IsHidden;
-
-			// if visible perform original function logic
-			mov eax, IsInsideRectangle_Resume;
-			jmp eax;
-
-			
-		IsHidden:
-			// otherwise return false (not inside selection box)
-			xor eax, eax; // AL = 0
-
-			// cleanup the stack like original function
-			ret 4;
+	void __fastcall Patch_SelectionBoxCheckReference(SelectionData* self, DWORD _EDX_, Reference* reference, bool updateVisuals) {
+		// Skip hidden references.
+		if (IsReferenceHidden(reference)) {
+			return;
 		}
+
+		// Call overwritten code.
+		self->addReference(reference, updateVisuals);
 	}
 
 	//
@@ -2767,9 +2736,7 @@ namespace se::cs::dialog::render_window {
 		genJumpEnforced(0x40235B, 0x540D50, &Reference::createSelectionWidget);
 
 		// Patch: Prevent selecting soft hidden objects
-		genCallUnprotected(0x4682C5, reinterpret_cast<DWORD>(Patch_SelectionBoxCheck), 0x5);
-		// replace nops after push ecx + edi 
-		genCallUnprotected(reinterpret_cast<DWORD>(Patch_SelectionBoxCheck) + 0x2, reinterpret_cast<DWORD>(CheckNodeHasHiddenFlag), 5);
-
+		genCallEnforced(0x4682D4, 0x403C92, reinterpret_cast<DWORD>(Patch_SelectionBoxCheckReference));
+		genCallEnforced(0x468341, 0x403C92, reinterpret_cast<DWORD>(Patch_SelectionBoxCheckReference));
 	}
 }
