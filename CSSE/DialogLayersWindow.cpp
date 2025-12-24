@@ -984,7 +984,6 @@ namespace se::cs::dialog::layer_window {
 					"Hotkeys (Render Window):\n"
 					"- Ctrl + [0-9]: Toggle visibility of layer N.\n"
 					"- Shift + [0-9]: Toggle color overlay of layer N.\n"
-					"- Ctrl + Shift + [0-9]: Assign selected objects to layer N.\n"
 					"- Q > L > [0-9]: Move selected objects to layer N via the Quick Menu.\n"
 					"(Note: Press two numbers quickly to access layers beyond 9)\n\n"
 					"Would you like to open the full documentation online?";
