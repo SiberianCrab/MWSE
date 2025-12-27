@@ -6,7 +6,7 @@
 	More information: https://github.com/MWSE/MWSE/tree/master/docs
 -->
 
-
+A struct used to store render target data for the map and inventory doll.
 
 This type inherits the following: [tes3worldControllerRenderCamera](../types/tes3worldControllerRenderCamera.md).
 ## Properties

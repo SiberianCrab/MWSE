@@ -3205,7 +3205,12 @@ local state = tes3.is3rdPerson()
 
 This function performs a check whether the provided reference is affected by a certain object or magic effect.
 
-Note `reference.object.spells:contains(spellID)` will give the same output as this function for abilities, diseases, and curses, because having them in your spell list also makes them affect you.
+!!! info
+	`reference.object.spells:contains(spellID)` will give the same output as this function for abilities, diseases, and curses, because having them in your spell list also makes them affect you.
+
+!!! tip
+	Soul trap effect is only active on the actor during the frame of the actor's death, if the player has a valid soul gem.
+
 
 ```lua
 local isAffectedBy = tes3.isAffectedBy({ reference = ..., effect = ..., object = ... })
