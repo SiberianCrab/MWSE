@@ -385,7 +385,14 @@ namespace NI {
 			const auto asNode = static_cast<const Node*>(object);
 			for (const auto& child : asNode->children) {
 				if (child) {
-					CalculateBounds(child, out_min, out_max, translation + child->localTranslate, rotation * *child->localRotation, scale * child->localScale);
+					CalculateBounds(
+						child, 
+						out_min, 
+						out_max, 
+						rotation * child->localTranslate * scale + translation, // translation
+						rotation * (*child->localRotation), // rotation
+						scale * child->localScale // scale
+					);
 				}
 			}
 			return;
@@ -397,7 +404,7 @@ namespace NI {
 		}
 
 		// Ignore particles.
-		if (object->isInstanceOfType(RTTIStaticPtr::NiParticlesData)) {
+		if (object->isInstanceOfType(RTTIStaticPtr::NiParticles)) {
 			return;
 		}
 
@@ -419,7 +426,7 @@ namespace NI {
 		// Ignore collision-disabled subgraphs.
 		if (object->isOfType(NI::RTTIStaticPtr::NiCollisionSwitch)) {
 			const auto asCollisionSwitch = static_cast<const NI::CollisionSwitch*>(object);
-			if (asCollisionSwitch->getCollisionActive()) {
+			if (!asCollisionSwitch->getCollisionActive()) {
 				return;
 			}
 		}
