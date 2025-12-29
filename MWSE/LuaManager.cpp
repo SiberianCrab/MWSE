@@ -478,7 +478,7 @@ namespace mwse::lua {
 		LuaExecutor::defineLuaBindings();
 
 		// Extend math library.
-		luaState["math"]["nfhuge"] = std::numeric_limits<float>::min();
+		luaState["math"]["nfhuge"] = std::numeric_limits<float>::lowest();
 		luaState["math"]["fhuge"] = std::numeric_limits<float>::max();
 		luaState["math"]["epsilon"] = std::numeric_limits<double>::epsilon();
 		luaState["math"]["fepsilon"] = std::numeric_limits<float>::epsilon();
@@ -4300,7 +4300,7 @@ namespace mwse::lua {
 
 	void __fastcall SetAnimSpeedOnCast(TES3::AnimationData* animData) {
 		// Ensure non-zero weaponSpeed to bypass the actor controller resetting the value on zero.
-		animData->weaponSpeed = animData->getCastSpeed() + FLT_MIN;
+		animData->weaponSpeed = animData->getCastSpeed() + std::numeric_limits<float>::min();
 	}
 
 	//
