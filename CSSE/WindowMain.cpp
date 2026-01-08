@@ -38,6 +38,9 @@
 
 namespace se::cs::window::main {
 
+	constexpr auto LOG_STARTUP_PERFORMANCE_RESULTS = false;
+	const auto initializationTimer = std::chrono::high_resolution_clock::now();
+
 	struct ObjectEditLParam {
 		ObjectType::ObjectType objectType; // 0x0
 		BaseObject* object; // 0x4
@@ -487,6 +490,12 @@ namespace se::cs::window::main {
 			rotationMatrix.fromEulerXYZ(qsRot[0], qsRot[1], qsRot[2]);
 			renderController->node->setLocalRotationMatrix(&rotationMatrix);
 			renderController->node->update();
+
+			// Finish measure of initialization time.
+			if constexpr (LOG_STARTUP_PERFORMANCE_RESULTS) {
+				auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
+				log::stream << "Total main window startup time: " << timeToInitialize.count() << "ms" << std::endl;
+			}
 		}
 
 		isQuickStarting = false;
@@ -1080,6 +1089,11 @@ namespace se::cs::window::main {
 		using memory::genJumpEnforced;
 		using memory::genCallEnforced;
 		using memory::genCallUnprotected;
+
+		// If we're profiling, suppress message windows.
+		if (LOG_STARTUP_PERFORMANCE_RESULTS) {
+			memory::ExternalGlobal<bool, 0x6D0B6D>::set(true);
+		}
 
 		// Patch: Throttle UI status updates.
 		genJumpEnforced(0x404881, 0x46E680, reinterpret_cast<DWORD>(PatchThrottleMessageUpdate));
