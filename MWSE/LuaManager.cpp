@@ -4900,6 +4900,14 @@ namespace mwse::lua {
 		return ThreadedStateHandle(this);
 	}
 
+	bool LuaManager::canLockLuaThread() {
+		if (stateThreadMutex.try_lock()) {
+			stateThreadMutex.unlock();
+			return true;
+		}
+		return false;
+	}
+
 	const sol::state_view& LuaManager::getReadOnlyStateView() {
 		return luaState;
 	}
