@@ -403,29 +403,42 @@ namespace se::cs::window::main {
 	// Patch: Throttle UI status updates.
 	//
 
-	const auto TES3CS_UpdateStatusMessage = reinterpret_cast<void(__cdecl*)(WPARAM, const char*)>(0x46E680);
 	constexpr auto STATUS_WINDOW_CELL_COUNT = 5u;
 	static std::array<std::string, STATUS_WINDOW_CELL_COUNT> cachedStatusWindowText;
-	static void __cdecl PatchThrottleMessageUpdate(WPARAM index, const char* text) {
+	static std::optional<std::string> bufferedIndex2Text;
+
+	const auto TES3CS_UpdateStatusMessage = reinterpret_cast<void(__cdecl*)(WPARAM, const char*)>(0x46E680);
+
+	static void UpdateStatusWindow(WPARAM index, const char* text, bool buffer2ndText) {
 		// Invalid array access. Also doesn't make any sense. Also also won't do anything anyway.
 		if (index >= STATUS_WINDOW_CELL_COUNT) {
 			return;
 		}
 
-		// First do a comparison to make sure the text is actually going to change.
+		// Only update the 2nd status text when another text has updated.
+		if (index == 2 && buffer2ndText) {
+			bufferedIndex2Text = text;
+			return;
+		}
+
+		// Make sure the text is actually going to change.
 		auto& previousText = cachedStatusWindowText[index];
 		if (se::string::equal(previousText, text)) {
 			return;
 		}
 		previousText = text;
 
-		// Only update the 2nd status text when another text has updated.
-		if (index == 2) {
-			return;
-		}
-
 		TES3CS_UpdateStatusMessage(index, text);
-		PatchThrottleMessageUpdate(2, cachedStatusWindowText[2].c_str());
+
+		// If we have any buffered 2nd-cell text, we can update it now.
+		if (bufferedIndex2Text) {
+			UpdateStatusWindow(2, bufferedIndex2Text.value().c_str(), false);
+			bufferedIndex2Text.reset();
+		}
+	}
+
+	static void __cdecl PatchThrottleMessageUpdate(WPARAM index, const char* text) {
+		UpdateStatusWindow(index, text, true);
 	}
 
 	//
