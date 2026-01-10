@@ -1,5 +1,6 @@
 #include "TES3UIManagerLua.h"
 
+#include "TES3Cell.h"
 #include "TES3GameSetting.h"
 #include "TES3Item.h"
 #include "TES3ItemData.h"
@@ -438,6 +439,7 @@ namespace mwse::lua {
 		tes3ui["getMenuOnTop"] = TES3::UI::getMenuOnTop;
 		tes3ui["getPalette"] = TES3::UI::getPalette_lua;
 		tes3ui["getServiceActor"] = TES3::UI::getServiceActor;
+		tes3ui["getCellHoveredOnMap"] = TES3::UI::getCellHoveredOnMap;
 		tes3ui["getViewportScale"] = TES3::UI::getViewportScale;
 		tes3ui["getViewportSize"] = TES3::UI::getViewportSize_lua;
 		tes3ui["leaveMenuMode"] = TES3::UI::leaveMenuMode;
