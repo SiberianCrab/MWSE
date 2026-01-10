@@ -493,7 +493,7 @@ namespace se::cs::window::main {
 
 			// Finish measure of initialization time.
 			if constexpr (LOG_STARTUP_PERFORMANCE_RESULTS) {
-				auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
+				const auto timeToInitialize = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initializationTimer);
 				log::stream << "Total main window startup time: " << timeToInitialize.count() << "ms" << std::endl;
 			}
 		}
