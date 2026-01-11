@@ -1331,6 +1331,29 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Ensure that losing Stunted Magicka doesn't remove the flag permanently.
+	//
+
+	static void __cdecl PatchMagicEffectStuntedMagicka(TES3::MagicSourceInstance* sourceInstance, float deltaTime, TES3::MagicEffectInstance* effectInstance, int effectIndex) {
+		auto mobile = effectInstance->target->getAttachedMobileActor();
+		if (mobile == nullptr) {
+			return;
+		}
+
+		const auto magicEffectController = TES3::DataHandler::get()->nonDynamicData->magicEffects;
+		const auto appliesOnce = TES3::MagicEffectController::getEffectFlag(TES3::EffectID::StuntedMagicka, TES3::EffectFlag::AppliedOnceBit);
+		unsigned int attributeVariant = 0;
+		TES3::MagicEffectController::spellEffectEvent(sourceInstance, deltaTime, effectInstance, effectIndex, true, appliesOnce, &attributeVariant, 0x7886F0, TES3::EffectAttribute::NonResistable, nullptr);
+		if (attributeVariant == 0) {
+			return;
+		}
+
+		// Re-flag stunted magicka bit based on any other effects.
+		const auto stillStunted = mobile->isAffectedByEffect(TES3::EffectID::StuntedMagicka);
+		mobile->setMobileActorFlag(TES3::MobileActorFlag::StuntedMagicka, stillStunted);
+	}
+
+	//
 	// Patch: Suppress sGeneralMastPlugMismatchMsg message.
 	//
 
@@ -2130,13 +2153,15 @@ namespace mwse::patch {
 		WritePatchMagicEffect_RequireMobile<0x464280>(TES3::EffectID::Vampirism);
 		WritePatchMagicEffect_RequireMobile<0x4640D0>(TES3::EffectID::SummonCenturionSphere);
 		WritePatchMagicEffect_RequireMobile<0x464BB0>(TES3::EffectID::SunDamage);
-		WritePatchMagicEffect_RequireMobile<0x464F20>(TES3::EffectID::StuntedMagicka);
 		WritePatchMagicEffect_RequireMobile<0x464100>(TES3::EffectID::SummonFabricant);
 		WritePatchMagicEffect_RequireMobile<0x464130>(TES3::EffectID::SummonWolf);
 		WritePatchMagicEffect_RequireMobile<0x464160>(TES3::EffectID::SummonBear);
 		WritePatchMagicEffect_RequireMobile<0x464190>(TES3::EffectID::SummonBoneWolf);
 		WritePatchMagicEffect_RequireMobile<0x4641C0>(TES3::EffectID::Summon04);
 		WritePatchMagicEffect_RequireMobile<0x4641F0>(TES3::EffectID::Summon05);
+
+		// Other magic effect patches.
+		writeDoubleWordEnforced(0x7884B0 + (TES3::EffectID::StuntedMagicka * 4), 0x464F20, reinterpret_cast<DWORD>(PatchMagicEffectStuntedMagicka));
 
 		// Patch: Suppress sGeneralMastPlugMismatchMsg message.
 		genCallUnprotected(0x477512, reinterpret_cast<DWORD>(GetCachedYesToAll), 0x477518 - 0x477512);
