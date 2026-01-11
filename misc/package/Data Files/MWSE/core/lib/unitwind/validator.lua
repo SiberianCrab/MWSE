@@ -62,7 +62,7 @@ Validator.validate = function(object, schema)
 
         if not matchesType then
             if type(object) ~= schema then
-                error(string.format('Validation failed: expected type "%s", got "%s"', schema, type(object))))
+                error(string.format('Validation failed: expected type "%s", got "%s"', schema, type(object)))
             end
         end
         return
