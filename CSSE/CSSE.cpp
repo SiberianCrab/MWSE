@@ -18,6 +18,7 @@
 
 #include "DialogActorAIWindow.h"
 #include "DialogCellWindow.h"
+#include "DialogLayersWindow.h"
 #include "DialogDialogueWindow.h"
 #include "DialogEditLeveledItemObjectWindow.h"
 #include "DialogEditLeveledCreatureObjectWindow.h"
@@ -513,6 +514,7 @@ namespace se::cs {
 		void __fastcall PatchOnLoadFiles(RecordHandler* recordHandler) {
 			CS_RecordHandler_LoadFiles(recordHandler);
 			metadata::reloadModMetadata();
+			se::cs::dialog::layer_window::loadOrCreateLayers();
 		}
 
 		//
@@ -717,6 +719,7 @@ namespace se::cs {
 		dialog::edit_class_window::installPatches();
 		dialog::edit_race_window::installPatches();
 		dialog::edit_faction_window::installPatches();
+		dialog::layer_window::installPatches();
 		TextureRenderer::installPatches();
 	}
 
