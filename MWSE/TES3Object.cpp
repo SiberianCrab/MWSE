@@ -827,7 +827,7 @@ namespace TES3 {
 		}
 
 		const Vector3 extent = (out_max - out_min) * 0.5f;
-		const Vector3 center = center + out_min;
+		const Vector3 center = extent + out_min;
 		auto newABV = NI::BoxBoundingVolume::create(extent, center, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z);
 		object->setModelSpaceABV(newABV);
 	}
