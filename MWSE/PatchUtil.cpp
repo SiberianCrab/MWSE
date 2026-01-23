@@ -2200,6 +2200,17 @@ namespace mwse::patch {
 		genCallEnforced(0x4D2F10, 0x4D2F40, reinterpret_cast<DWORD>(PatchDynamicLightingTest));
 		genCallEnforced(0x4D3350, 0x4D2F40, reinterpret_cast<DWORD>(PatchDynamicLightingTest));
 #endif
+
+		// Patch: Fix NiSwitchNode::UpdateWorldBound malfunctioning when using UpdateOnlyActive and a switchIndex of 0.
+		writeValueEnforced<BYTE>(0x6D85B6, 0x7E, 0x7C);
+
+		// Patch: Fix bound calculation.
+		auto PhysicalObject_createBoundingBox = &TES3::PhysicalObject::createBoundingBox;
+		genCallEnforced(0x49572E, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
+		genCallEnforced(0x495785, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
+		genCallEnforced(0x4D2324, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
+		genCallEnforced(0x4EF99F, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
+		genCallEnforced(0x4EFE70, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
 	}
 
 	void installPostLuaPatches() {
@@ -2233,14 +2244,6 @@ namespace mwse::patch {
 			writeAddFlagEnforced(0x40240E + 0x3, DS_FLAGS_DEFAULT | DSBCAPS_CTRLPAN, DSBCAPS_GLOBALFOCUS);
 			writeAddFlagEnforced(0x402405 + 0x3, DS_FLAGS_3D, DSBCAPS_GLOBALFOCUS);
 		}
-
-		// Patch: Fix NiSwitchNode::UpdateWorldBound malfunctioning when using UpdateOnlyActive and a switchIndex of 0.
-		writeValueEnforced<BYTE>(0x6D85B6, 0x7E, 0x7C);
-
-		// Patch: Fix bound calculation.
-		genCallEnforced(0x4EF118, 0x4EF410, reinterpret_cast<DWORD>(NI::PatchCalculateBounds));
-		genCallEnforced(0x4EF28E, 0x4EF410, reinterpret_cast<DWORD>(NI::PatchCalculateBounds));
-		genCallEnforced(0x4EF53B, 0x4EF410, reinterpret_cast<DWORD>(NI::PatchCalculateBounds));
 	}
 
 	void installPostInitializationPatches() {

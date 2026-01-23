@@ -6,7 +6,9 @@ namespace NI {
 	struct AmbientLight;
 	struct AVObject;
 	struct BinaryStream;
-	struct Bound;
+	struct BoundingVolume;
+	struct BoxBound;
+	struct BoxBoundingVolume;
 	struct Camera;
 	struct CollisionGroup;
 	struct CollisionSwitch;
@@ -56,6 +58,8 @@ namespace NI {
 	struct RTTI;
 	struct Sequence;
 	struct SourceTexture;
+	struct SphereBound;
+	struct SphereBoundingVolume;
 	struct SphericalCollider;
 	struct SpotLight;
 	struct StencilProperty;
