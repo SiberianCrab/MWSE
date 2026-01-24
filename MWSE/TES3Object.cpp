@@ -738,7 +738,7 @@ namespace TES3 {
 		return object;
 	}
 
-	ReferenceList* Object::getOwningCollection() {
+	ReferenceList* Object::getOwningCollection() const {
 		return owningCollection.asReferenceList;
 	}
 

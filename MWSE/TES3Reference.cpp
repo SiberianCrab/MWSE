@@ -172,7 +172,7 @@ namespace TES3 {
 		TES3_Reference_deleteDynamicLightAttachment(this);
 	}
 
-	LightAttachmentNode* Reference::getAttachedDynamicLight() {
+	LightAttachmentNode* Reference::getAttachedDynamicLight() const {
 		auto attachment = static_cast<TES3::LightAttachment*>(getAttachment(TES3::AttachmentType::Light));
 		return attachment ? attachment->data : nullptr;
 	}
@@ -218,7 +218,7 @@ namespace TES3 {
 		return attachment->data;
 	}
 
-	NI::Pointer<NI::Light> Reference::getAttachedNiLight() {
+	NI::Pointer<NI::Light> Reference::getAttachedNiLight() const {
 		auto dynamicLight = getAttachedDynamicLight();
 		if (dynamicLight) {
 			return dynamicLight->light;
@@ -909,7 +909,7 @@ namespace TES3 {
 		}
 	}
 
-	int Reference::getStackSize() {
+	int Reference::getStackSize() const {
 		TES3::ItemData* itemData = getAttachedItemData();
 		return itemData ? itemData->count : 1;
 	}
@@ -957,8 +957,8 @@ namespace TES3 {
 			return nullptr;
 		}
 
-		auto previousNode = sceneNode;
-		auto newNode = TES3_Reference_getSceneGraphNode(this);
+		const auto previousNode = sceneNode;
+		const auto newNode = TES3_Reference_getSceneGraphNode(this);
 		const auto wasCreated = (previousNode == nullptr && newNode != nullptr);
 
 		if (wasCreated && mwse::lua::event::ReferenceSceneNodeCreatedEvent::getEventEnabled() && hasValidBaseObject()) {
@@ -1310,7 +1310,7 @@ namespace TES3 {
 		return itemData;
 	}
 
-	LockAttachmentNode* Reference::getAttachedLockNode() {
+	LockAttachmentNode* Reference::getAttachedLockNode() const {
 		auto attachment = static_cast<TES3::LockAttachment*>(getAttachment(TES3::AttachmentType::Lock));
 		if (attachment) {
 			return attachment->data;
@@ -1326,7 +1326,7 @@ namespace TES3 {
 		return nullptr;
 	}
 
-	BodyPartManager* Reference::getAttachedBodyPartManager() {
+	BodyPartManager* Reference::getAttachedBodyPartManager() const {
 		auto attachment = static_cast<TES3::BodyPartManagerAttachment*>(getAttachment(TES3::AttachmentType::BodyPartManager));
 		if (attachment) {
 			return attachment->data;
@@ -1342,7 +1342,7 @@ namespace TES3 {
 		return nullptr;
 	}
 
-	sol::table Reference::getAttachments_lua(sol::this_state ts) {
+	sol::table Reference::getAttachments_lua(sol::this_state ts) const {
 		sol::state_view state = ts;
 
 		sol::table result = state.create_table();
