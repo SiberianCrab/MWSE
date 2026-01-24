@@ -399,6 +399,7 @@ namespace TES3 {
 		void setDynamicLightingForReference(Reference* reference);
 
 		void updateCollisionGroupsForActiveCells(bool force = true, bool isResettingData = false, bool resetCollisionGroups = true);
+		void updateCollisionGroupsForActiveCells_lua(sol::optional<bool> force, sol::optional<bool> isResettingData, sol::optional<bool> resetCollisionGroups);
 		void updateCollisionGroupsForActiveCells_raw(bool force = true);
 
 		void getClosestPrisonReferences(Reference** prisonMarker, Reference** stolenGoods);

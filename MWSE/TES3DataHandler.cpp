@@ -29,6 +29,7 @@
 #include "TES3Spell.h"
 #include "TES3UIManager.h"
 #include "TES3WorldController.h"
+#include "TES3MobManager.h"
 
 #include "MWSEConfig.h"
 
@@ -637,6 +638,10 @@ namespace TES3 {
 		TES3_COLLISION_DATA_RESETTING = isResettingData;
 		COLLISION_DATA_RESET_COLLISION_GROUPS = resetCollisionGroups;
 		updateCollisionGroupsForActiveCells_raw(force);
+	}
+
+	void DataHandler::updateCollisionGroupsForActiveCells_lua(sol::optional<bool> force, sol::optional<bool> isResettingData, sol::optional<bool> resetCollisionGroups) {
+		updateCollisionGroupsForActiveCells(force.value_or(true), isResettingData.value_or(false), resetCollisionGroups.value_or(true));
 	}
 
 	const auto TES3_DataHandler_updateCollisionGroupsForActiveCells = reinterpret_cast<void(__thiscall*)(DataHandler*, bool)>(0x488950);

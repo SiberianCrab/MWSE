@@ -91,6 +91,8 @@ namespace TES3 {
 		void setReferenceActive(bool skipDeleted = true);
 		void setReferenceInactive(bool skipDeleted = true);
 
+		void handleUpdate(bool updateCollisions = true);
+
 		Vector3* getPosition();
 		void setPosition(const Vector3 * newPosition);
 
