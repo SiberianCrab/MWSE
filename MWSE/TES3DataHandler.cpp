@@ -287,6 +287,12 @@ namespace TES3 {
 			TES3::UI::setSuppressingHelpMenu(false);
 		}
 
+		// Update compatibility globals.
+		const auto mwseBuildGlobal = TES3::DataHandler::get()->nonDynamicData->findGlobalVariable("MWSE_BUILD");
+		if (mwseBuildGlobal) {
+			mwseBuildGlobal->value = mwse::Configuration::BuildNumber;
+		}
+
 		return loaded ? LoadGameResult::Success : LoadGameResult::Failure;
 	}
 
