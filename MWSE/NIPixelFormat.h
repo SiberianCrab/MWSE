@@ -23,6 +23,8 @@ namespace NI {
 		unsigned int channelMasks[4];
 		unsigned int bitsPerPixel;
 		unsigned int compareBits[2];
+
+		PixelFormat(unsigned int maskR, unsigned int maskG, unsigned int maskB, unsigned int maskA, int bitsPerPixel);
 	};
 	static_assert(sizeof(PixelFormat) == 0x20, "NI::PixelFormat failed size validation");
 }
