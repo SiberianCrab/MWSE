@@ -41,24 +41,7 @@ namespace NI {
 		renderer->d3dDevice->CreateImageSurface(width, height, surfaceDesc.Format, &readbackSurface);
 
 		// Force matching pixel format.
-		switch (surfaceDesc.Format) {
-		case D3DFMT_R8G8B8:
-		case D3DFMT_X8R8G8B8:
-			pixelData->pixelFormat = PixelFormat(0xFF0000u, 0xFF00u, 0xFFu, 0, 32);
-			break;
-		case D3DFMT_R5G6B5:
-			pixelData->pixelFormat = PixelFormat(0xF800u, 0x7E0u, 0x1Fu, 0, 16);
-			break;
-		case D3DFMT_X1R5G5B5:
-			pixelData->pixelFormat = PixelFormat(0x7C00u, 0x3E0u, 0x1Fu, 0, 16);
-			break;
-		case D3DFMT_A1R5G5B5:
-			pixelData->pixelFormat = PixelFormat(0x7C00u, 0x3E0u, 0x1Fu, 0x8000u, 16);
-			break;
-		case D3DFMT_A4R4G4B4:
-			pixelData->pixelFormat = PixelFormat(0xF00u, 0xF0u, 0xFu, 0xF000u, 16);
-			break;
-		}
+		pixelData->pixelFormat = PixelFormat(surfaceDesc.Format);
 
 		if (renderer->d3dDevice->CopyRects(rtSurface, nullptr, 0, readbackSurface, nullptr) == D3D_OK) {
 			D3DLOCKED_RECT lock;

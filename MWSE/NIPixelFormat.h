@@ -25,6 +25,7 @@ namespace NI {
 		unsigned int compareBits[2];
 
 		PixelFormat(unsigned int maskR, unsigned int maskG, unsigned int maskB, unsigned int maskA, int bitsPerPixel);
+		PixelFormat(D3DFORMAT d3dFormat);
 	};
 	static_assert(sizeof(PixelFormat) == 0x20, "NI::PixelFormat failed size validation");
 }
