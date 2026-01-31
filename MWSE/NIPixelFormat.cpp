@@ -24,6 +24,8 @@ namespace NI {
 		case D3DFMT_A4R4G4B4:
 			NI_PixelFormat_ctor(this, 0xF00u, 0xF0u, 0xFu, 0xF000u, 16);
 			break;
+		default:
+			throw std::invalid_argument("No pixel format found for given D3DFORMAT.");
 		}
 	}
 }
