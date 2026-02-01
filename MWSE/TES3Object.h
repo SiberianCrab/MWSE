@@ -272,6 +272,8 @@ namespace TES3 {
 		bool getBlocked() const;
 		void setBlocked(bool value);
 
+		bool getUpdatesCollisionGroups() const;
+
 		bool getSupportsLuaData() const;
 
 		std::string toJson() const;
@@ -375,7 +377,7 @@ namespace TES3 {
 		static void finishCreateCopy_lua(Object* created, sol::optional<sol::table> params);
 
 		Object* skipDeletedObjects();
-		ReferenceList* getOwningCollection();
+		ReferenceList* getOwningCollection() const;
 
 		void setScale_lua(float scale);
 

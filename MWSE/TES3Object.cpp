@@ -254,6 +254,22 @@ namespace TES3 {
 		BIT_SET(objectFlags, TES3::ObjectFlag::BlockedBit, value);
 	}
 
+	bool BaseObject::getUpdatesCollisionGroups() const {
+		const auto baseObject = getBaseObject();
+
+		switch (baseObject->objectType) {
+		case ObjectType::Activator:
+		case ObjectType::Container:
+		case ObjectType::Door:
+		case ObjectType::Land:
+		case ObjectType::Static:
+			return true;
+		case ObjectType::Light:
+			return !static_cast<const Light*>(this)->getCanCarry();
+		}
+		return false;
+	}
+
 	bool BaseObject::getSupportsLuaData() const {
 		// Gold does all kinds of funky things. No ItemData creation on it is allowed.
 		if (objectType == ObjectType::Misc && static_cast<const Misc*>(this)->isGold()) {
@@ -738,7 +754,7 @@ namespace TES3 {
 		return object;
 	}
 
-	ReferenceList* Object::getOwningCollection() {
+	ReferenceList* Object::getOwningCollection() const {
 		return owningCollection.asReferenceList;
 	}
 

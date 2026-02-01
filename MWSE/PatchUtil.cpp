@@ -144,7 +144,7 @@ namespace mwse::patch {
 
 	void* __fastcall PatchScriptOpDisableCollision(TES3::Reference* reference) {
 		// Force update collision.
-		if (PatchScriptOpDisable_ForceCollisionUpdate) {
+		if (PatchScriptOpDisable_ForceCollisionUpdate && reference->getUpdatesCollisionGroups()) {
 			TES3::DataHandler::get()->updateCollisionGroupsForActiveCells();
 		}
 
