@@ -89,4 +89,9 @@ namespace NI {
 			throw std::invalid_argument("Unhandled D3D format.");
 		}
 	}
+
+	const auto NI_PixelFormat_getD3DFormat = reinterpret_cast<D3DFORMAT(__cdecl*)(const PixelFormat*)>(0x6B0E20);
+	D3DFORMAT PixelFormat::getD3DFormat() const {
+		return NI_PixelFormat_getD3DFormat(this);
+	}
 }

@@ -28,6 +28,8 @@ namespace NI {
 		PixelFormat(unsigned int maskR, unsigned int maskG, unsigned int maskB, unsigned int maskA, int bitsPerPixel);
 		PixelFormat(bool hasAlpha);
 		PixelFormat(D3DFORMAT d3dFormat);
+
+		D3DFORMAT getD3DFormat() const;
 	};
 	static_assert(sizeof(PixelFormat) == 0x20, "NI::PixelFormat failed size validation");
 }
