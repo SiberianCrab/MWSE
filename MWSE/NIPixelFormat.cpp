@@ -22,7 +22,7 @@ namespace NI {
 		switch (d3dFormat) {
 		case D3DFMT_R8G8B8:
 		case D3DFMT_X8R8G8B8:
-			NI_PixelFormat_ctor_fromRGBA(this, 0xFF0000u, 0xFF00u, 0xFFu, 0, 32);
+			NI_PixelFormat_ctor_fromRGBA(this, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000, 32);
 			break;
 		case D3DFMT_R5G6B5:
 			NI_PixelFormat_ctor_fromRGBA(this, 0xF800u, 0x7E0u, 0x1Fu, 0, 16);
