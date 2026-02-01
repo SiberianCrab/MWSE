@@ -13,6 +13,7 @@ niRenderedTexture = {}
 --- Creates an niRenderedTexture.
 --- @param width number The width of the rendered texture. Should be a power of 2.
 --- @param height number The height of the rendered texture. Should be a power of 2.
+--- @param prefs? niFormatPrefs *Optional*. Custom preferences to use. By default, the texture uses 32-bit true color, no mipmaps, and smooth alphas.
 --- @return niRenderedTexture texture No description yet available.
-function niRenderedTexture.create(width, height) end
+function niRenderedTexture.create(width, height, prefs) end
 

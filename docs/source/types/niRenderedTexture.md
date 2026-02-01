@@ -386,13 +386,14 @@ local success = myObject:saveBinary(path)
 Creates an niRenderedTexture.
 
 ```lua
-local texture = niRenderedTexture.create(width, height)
+local texture = niRenderedTexture.create(width, height, prefs)
 ```
 
 **Parameters**:
 
 * `width` (number): The width of the rendered texture. Should be a power of 2.
 * `height` (number): The height of the rendered texture. Should be a power of 2.
+* `prefs` ([niFormatPrefs](../types/niFormatPrefs.md)): *Optional*. Custom preferences to use. By default, the texture uses 32-bit true color, no mipmaps, and smooth alphas.
 
 **Returns**:
 
