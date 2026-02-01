@@ -7,7 +7,7 @@ namespace NI {
 		unsigned int width; // 0x2C
 		unsigned int height; // 0x30
 
-		static Pointer<RenderedTexture> create(unsigned int width, unsigned int height);
+		static Pointer<RenderedTexture> create(unsigned int width, unsigned int height, sol::optional<FormatPrefs*> prefs);
 
 		//
 		// Custom methods

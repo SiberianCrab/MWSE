@@ -7,16 +7,17 @@
 
 namespace NI {
 	const auto NI_RenderedTexture_create = reinterpret_cast<RenderedTexture* (__cdecl*)(unsigned int, unsigned int, Renderer*, Texture::FormatPrefs*)>(0x6DC090);
-	Pointer<RenderedTexture> RenderedTexture::create(unsigned int width, unsigned int height) {
+	Pointer<RenderedTexture> RenderedTexture::create(unsigned int width, unsigned int height, sol::optional<FormatPrefs*> prefs) {
 		auto renderer = TES3::WorldController::get()->renderer;
-		auto prefs = Texture::FormatPrefs::DEFAULT_PREFS;
-		auto texture = NI_RenderedTexture_create(width, height, renderer, prefs);
+		auto prefsVal = prefs.value_or(Texture::FormatPrefs::DEFAULT_PREFS);
+		auto texture = NI_RenderedTexture_create(width, height, renderer, prefsVal);
 		return texture;
 	}
 
 	//
 	// Copies the render target contents from the GPU into CPU accessible pixelData.
 	//
+
 	bool RenderedTexture::readback(NI::PixelData* pixelData) {
 		auto renderer = static_cast<NI::DX8Renderer*>(TES3::WorldController::get()->renderer);
 		bool success = false;
