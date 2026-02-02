@@ -30,7 +30,7 @@ namespace mwse::lua {
 			traverseChild(child);
 		}
 
-		return [&]() -> NI::Pointer<NI::AVObject> {
+		return [queue]() mutable -> NI::Pointer<NI::AVObject> {
 			if (queue.empty()) {
 				return nullptr;
 			}
