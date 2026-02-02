@@ -1,11 +1,38 @@
 #pragma once
 
+#include "LuaUtil.h"
+#include "StringUtil.h"
+
 #include "NIObjectLua.h"
 #include "NIDefines.h"
 #include "NIDynamicEffect.h"
 
 namespace mwse::lua {
-	auto traverse(const NI::Node* node) {
+	auto traverse(const NI::Node* self, sol::optional<sol::table> param) {
+		bool recursive = getOptionalParam(param, "recursive", true);
+		std::string prefix = getOptionalParam(param, "prefix", std::string(""));
+		std::unordered_set<unsigned int> filters;
+
+		if (param) {
+			sol::table paramTable = param.value().as<sol::table>();
+			sol::object maybeValue = paramTable["filter"];
+			if (maybeValue.valid()) {
+				if (maybeValue.is<unsigned int>()) {
+					filters.insert(maybeValue.as<unsigned int>());
+				}
+				else if (maybeValue.is<sol::table>()) {
+					sol::table filterTable = maybeValue.as<sol::table>();
+					for (auto [_, value] : filterTable) {
+						filters.insert(value.as<unsigned int>());
+					}
+				}
+				else {
+					throw std::invalid_argument("Iteration can only be filtered by a NI object type, or a table of object types.");
+				}
+			}
+		}
+
+		
 		std::queue<NI::Pointer<NI::AVObject>> queue;
 		std::function<void(const NI::AVObject*)> traverseChild = [&](const NI::AVObject* object) {
 			if (!object->isInstanceOfType(NI::RTTIStaticPtr::NiNode)) {
@@ -17,17 +44,51 @@ namespace mwse::lua {
 				if (!nodeChild) {
 					continue;
 				}
+				if (!filters.empty()) {
+					bool passedFilter = false;
+					for (const auto type : filters) {
+						if (nodeChild->isInstanceOfType((uintptr_t)type)) {
+							passedFilter = true;
+							break;
+						}
+					}
+					if (!passedFilter) {
+						continue;
+					}
+				}
+
+				if (!prefix.empty() && !mwse::string::starts_with(nodeChild->name, prefix)) {
+					continue;
+				}
+
 				queue.push(nodeChild);
 				traverseChild(nodeChild);
 			}
 		};
 
-		for (auto& child : node->children) {
+		for (auto& child : self->children) {
 			if (!child) {
 				continue;
 			}
+			if (!filters.empty()) {
+				bool passedFilter = false;
+				for (const auto type : filters) {
+					if (child->isInstanceOfType((uintptr_t)type)) {
+						passedFilter = true;
+						break;
+					}
+				}
+				if (!passedFilter) {
+					continue;
+				}
+			}
+			if (!prefix.empty() && !mwse::string::starts_with(child->name, prefix)) {
+				continue;
+			}
 			queue.push(child);
-			traverseChild(child);
+			if (recursive) {
+				traverseChild(child);
+			}
 		}
 
 		return [queue]() mutable -> NI::Pointer<NI::AVObject> {
