@@ -279,21 +279,6 @@ namespace mwse::patch {
 		inputController->readKeyState();
 	}
 
-	int __fastcall PatchGetMorrowindMainWindow_NoBufferReading(TES3::InputController* inputController, DWORD _EDX_, DWORD* key) {
-		if (GetActiveWindow() != TES3::WorldController::get()->Win32_hWndParent) {
-			// Read in the input so it doesn't get buffered when we alt-tab back in.
-			inputController->readButtonPressed(key);
-
-			// But pretend that nothing was found.
-			*key = 0;
-			return 0;
-		}
-
-		auto result = inputController->readButtonPressed(key);
-		TES3::UI::MenuInputController::lastKeyPressDIK = result ? *key : 0xFF;
-		return result;
-	}
-
 	//
 	// Patch: Optimize access to global variables. Access them in a hashmap instead of linear searching.
 	//
@@ -2211,6 +2196,11 @@ namespace mwse::patch {
 		genCallEnforced(0x4D2324, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
 		genCallEnforced(0x4EF99F, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
 		genCallEnforced(0x4EFE70, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
+
+		// Patch: Store last read key state.
+		auto InputController_readButtonPressed = &TES3::InputController::readButtonPressed;
+		genCallEnforced(0x58E8C6, 0x406950, *reinterpret_cast<DWORD*>(&InputController_readButtonPressed));
+		genCallEnforced(0x5BCA1D, 0x406950, *reinterpret_cast<DWORD*>(&InputController_readButtonPressed));
 	}
 
 	void installPostLuaPatches() {
@@ -2224,8 +2214,6 @@ namespace mwse::patch {
 			genCallEnforced(0x477E1E, 0x4065E0, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBackgroundInput));
 			genCallEnforced(0x5BC9E1, 0x4065E0, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBackgroundInput));
 			genCallEnforced(0x5BCA33, 0x4065E0, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBackgroundInput));
-			genCallEnforced(0x58E8C6, 0x406950, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBufferReading));
-			genCallEnforced(0x5BCA1D, 0x406950, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBufferReading));
 		}
 
 		// Patch: Fix NiFlipController losing its affectedMap on clone.
