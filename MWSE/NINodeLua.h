@@ -15,7 +15,7 @@ namespace mwse::lua {
 
 		if (param) {
 			sol::table paramTable = param.value().as<sol::table>();
-			sol::object maybeValue = paramTable["filter"];
+			sol::object maybeValue = paramTable["type"];
 			if (maybeValue.valid()) {
 				if (maybeValue.is<unsigned int>()) {
 					filters.insert(maybeValue.as<unsigned int>());
@@ -32,7 +32,7 @@ namespace mwse::lua {
 			}
 		}
 
-		
+
 		std::queue<NI::Pointer<NI::AVObject>> queue;
 		std::function<void(const NI::AVObject*)> traverseChild = [&](const NI::AVObject* object) {
 			if (!object->isInstanceOfType(NI::RTTIStaticPtr::NiNode)) {
