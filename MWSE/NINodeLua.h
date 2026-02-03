@@ -44,24 +44,20 @@ namespace mwse::lua {
 				if (!nodeChild) {
 					continue;
 				}
-				if (!filters.empty()) {
-					bool passedFilter = false;
+				bool passesFilter = filters.empty() ? true : false;
+				if (!passesFilter) {
 					for (const auto type : filters) {
 						if (nodeChild->isInstanceOfType((uintptr_t)type)) {
-							passedFilter = true;
+							passesFilter = true;
 							break;
 						}
 					}
-					if (!passedFilter) {
-						continue;
-					}
+				}
+				bool passesPrefix = prefix.empty() ? true : nodeChild->name && mwse::string::starts_with(nodeChild->name, prefix);
+				if (passesFilter && passesPrefix) {
+					queue.push(nodeChild);
 				}
 
-				if (!prefix.empty() && !mwse::string::starts_with(nodeChild->name, prefix)) {
-					continue;
-				}
-
-				queue.push(nodeChild);
 				traverseChild(nodeChild);
 			}
 		};
@@ -70,22 +66,19 @@ namespace mwse::lua {
 			if (!child) {
 				continue;
 			}
-			if (!filters.empty()) {
-				bool passedFilter = false;
+			bool passesFilter = filters.empty() ? true : false;
+			if (!passesFilter) {
 				for (const auto type : filters) {
 					if (child->isInstanceOfType((uintptr_t)type)) {
-						passedFilter = true;
+						passesFilter = true;
 						break;
 					}
 				}
-				if (!passedFilter) {
-					continue;
-				}
 			}
-			if (!prefix.empty() && !mwse::string::starts_with(child->name, prefix)) {
-				continue;
+			bool passesPrefix = prefix.empty() ? true : child->name && mwse::string::starts_with(child->name, prefix);
+			if (passesFilter && passesPrefix) {
+				queue.push(child);
 			}
-			queue.push(child);
 			if (recursive) {
 				traverseChild(child);
 			}
