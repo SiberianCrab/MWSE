@@ -1590,8 +1590,6 @@ namespace mwse::patch {
 				inputController->keyboard->Acquire();
 			}
 		}
-
-		log::getLog() << "Cursor shown: " << shown << std::endl;
 	}
 
 	static void PatchWindProc_CursorHitTest(windows::DialogProcContext& context) {
