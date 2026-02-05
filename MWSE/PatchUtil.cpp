@@ -1536,6 +1536,99 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Be better about showing/hiding the cursor.
+	//
+
+	static WNDPROC originalWindowProc = nullptr;
+	using gCursorShown = ExternalGlobal<bool, 0x776D0C>;
+	static bool showCursorFlag = true;
+
+	static void SetCursorShown(HWND hWnd, bool shown) {
+		if (gCursorShown::get() == shown) {
+			return;
+		}
+		gCursorShown::set(shown);
+
+		const auto worldController = TES3::WorldController::get();
+		if (!worldController) {
+			return;
+		}
+
+		const auto inputController = worldController->inputController;
+		if (!inputController) {
+			return;
+		}
+
+		// Only call ShowCursor if needed.
+		if (showCursorFlag != shown) {
+			ShowCursor(shown);
+			showCursorFlag = shown;
+		}
+
+		// Sync mouse state.
+		DIMOUSESTATE2 mouseState = {};
+		const auto mouseStateR = inputController->mouse->GetDeviceState(sizeof(mouseState), &mouseState);
+		const auto mouseAcquired = (mouseStateR == DIERR_INPUTLOST || mouseStateR == DIERR_NOTACQUIRED);
+		if (shown != mouseAcquired) {
+			if (shown) {
+				inputController->mouse->Unacquire();
+			}
+			else {
+				inputController->mouse->Acquire();
+			}
+		}
+
+		// Sync keyboard state.
+		BYTE keyboardState[256] = {};
+		const auto keyboardStateR = inputController->keyboard->GetDeviceState(sizeof(keyboardState), &keyboardState);
+		const auto keyboardAcquired = (keyboardStateR == DIERR_INPUTLOST || keyboardStateR == DIERR_NOTACQUIRED);
+		if (shown != keyboardAcquired) {
+			if (shown) {
+				inputController->keyboard->Unacquire();
+			}
+			else {
+				inputController->keyboard->Acquire();
+			}
+		}
+
+		log::getLog() << "Cursor shown: " << shown << std::endl;
+	}
+
+	static void PatchWindProc_CursorHitTest(windows::DialogProcContext& context) {
+		context.callOriginalFunction();
+		const auto hWnd = context.getWindowHandle();
+		const auto result = context.getResult();
+		auto shouldShow = result != HTCLIENT;
+
+		SetCursorShown(hWnd, shouldShow);
+	}
+
+	static LRESULT __stdcall PatchWindProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		windows::DialogProcContext context(hWnd, msg, wParam, lParam, (DWORD)originalWindowProc);
+
+		switch (msg) {
+		case WM_ACTIVATE:
+			SetCursorShown(hWnd, context.getLOWParam() != WA_INACTIVE);
+			break;
+		case WM_SETFOCUS:
+			SetCursorShown(hWnd, false);
+			break;
+		case WM_KILLFOCUS:
+			SetCursorShown(hWnd, true);
+			break;
+		case WM_NCHITTEST:
+			PatchWindProc_CursorHitTest(context);
+			break;
+		}
+
+		if (!context.hasResult()) {
+			context.callOriginalFunction();
+		}
+
+		return context.getResult();
+	}
+
+	//
 	// Install all the patches.
 	//
 
@@ -2204,6 +2297,9 @@ namespace mwse::patch {
 	}
 
 	void installPostLuaPatches() {
+		// Patch: Be better about showing/hiding the cursor.
+		originalWindowProc = (WNDPROC)SetWindowLongPtr(TES3::WorldController::get()->Win32_hWndParent, GWLP_WNDPROC, (LONG_PTR)PatchWindProc);
+
 		// Patch: The window is never out of focus.
 		if (Configuration::RunInBackground) {
 			writeByteUnprotected(0x416BC3 + 0x2 + 0x4, 1);
