@@ -912,12 +912,9 @@ namespace TES3 {
 			const auto mact = getAttachedMobileActor();
 			if (mact && mact->isActor()) {
 				if (deletion) {
-					// Remove the actor from simulation.
 					worldController->mobManager->removeMob(this);
 
-					// Cleanup related VFX and magic casted by this actor.
-					// This is normally done during actor death near 0x523D53 and is required when deleting actors.
-					worldController->vfxManager->removeForReference(this);
+					// This is normally done on death, but needs to be forced for deletion.
 					worldController->magicInstanceController->retireMagicCastedByActor(this);
 				}
 				else {
@@ -932,6 +929,11 @@ namespace TES3 {
 
 		if (updateCollisions && getUpdatesCollisionGroups()) {
 			dataHandler->updateCollisionGroupsForActiveCells();
+		}
+
+		// Retire any VFX attached to the reference.
+		if (deletion) {
+			worldController->vfxManager->removeForReference(this);
 		}
 
 		// Ensure the reference receives scene lighting.
