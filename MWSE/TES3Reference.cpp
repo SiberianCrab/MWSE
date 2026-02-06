@@ -461,7 +461,7 @@ namespace TES3 {
 			sceneNode->setAppCulled(false);
 		}
 
-		handleUpdate();
+		handleUpdate(false, true);
 
 		// Finally flag as modified.
 		setObjectModified(true);
@@ -483,7 +483,7 @@ namespace TES3 {
 			sceneNode->setAppCulled(true);
 		}
 
-		handleUpdate();
+		handleUpdate(true, true);
 
 		// Clean up any sounds.
 		auto sound = baseObject->getSound();
@@ -902,15 +902,27 @@ namespace TES3 {
 		}
 	}
 
-	void Reference::handleUpdate(bool updateCollisions) {
+	void Reference::handleUpdate(bool deletion, bool updateCollisions) {
 		const auto dataHandler = DataHandler::get();
+		const auto worldController = TES3::WorldController::get();
 
 		// Did we just make an actor? If so we need to add it to the mob manager.
 		if (baseObject->isMobileCapableActor()) {
-			TES3::WorldController::get()->mobManager->addMob(this);
+			worldController->mobManager->addMob(this);
 			const auto mact = getAttachedMobileActor();
 			if (mact && mact->isActor()) {
-				mact->enterLeaveSimulation(true);
+				if (deletion) {
+					// Remove the actor from simulation.
+					worldController->mobManager->removeMob(this);
+
+					// Cleanup related VFX and magic casted by this actor.
+					// This is normally done during actor death near 0x523D53 and is required when deleting actors.
+					worldController->vfxManager->removeForReference(this);
+					worldController->magicInstanceController->retireMagicCastedByActor(this);
+				}
+				else {
+					mact->enterLeaveSimulation(true);
+				}
 			}
 		}
 

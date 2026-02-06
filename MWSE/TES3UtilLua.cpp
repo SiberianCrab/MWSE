@@ -3024,7 +3024,7 @@ namespace mwse::lua {
 		}
 
 		const auto updateCollisions = getOptionalParam<bool>(params, "updateCollisionGroups", true);
-		reference->handleUpdate(updateCollisions);
+		reference->handleUpdate(false, updateCollisions);
 
 		// Make sure everything is set as modified.
 		reference->setObjectModified(true);
