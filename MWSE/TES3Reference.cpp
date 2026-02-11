@@ -461,7 +461,7 @@ namespace TES3 {
 			sceneNode->setAppCulled(false);
 		}
 
-		handleUpdate();
+		handleUpdate(false, true);
 
 		// Finally flag as modified.
 		setObjectModified(true);
@@ -483,7 +483,7 @@ namespace TES3 {
 			sceneNode->setAppCulled(true);
 		}
 
-		handleUpdate();
+		handleUpdate(true, true);
 
 		// Clean up any sounds.
 		auto sound = baseObject->getSound();
@@ -902,15 +902,24 @@ namespace TES3 {
 		}
 	}
 
-	void Reference::handleUpdate(bool updateCollisions) {
+	void Reference::handleUpdate(bool deletion, bool updateCollisions) {
 		const auto dataHandler = DataHandler::get();
+		const auto worldController = TES3::WorldController::get();
 
 		// Did we just make an actor? If so we need to add it to the mob manager.
 		if (baseObject->isMobileCapableActor()) {
-			TES3::WorldController::get()->mobManager->addMob(this);
+			worldController->mobManager->addMob(this);
 			const auto mact = getAttachedMobileActor();
 			if (mact && mact->isActor()) {
-				mact->enterLeaveSimulation(true);
+				if (deletion) {
+					worldController->mobManager->removeMob(this);
+
+					// This is normally done on death, but needs to be forced for deletion.
+					worldController->magicInstanceController->retireMagicCastedByActor(this);
+				}
+				else {
+					mact->enterLeaveSimulation(true);
+				}
 			}
 		}
 
@@ -920,6 +929,11 @@ namespace TES3 {
 
 		if (updateCollisions && getUpdatesCollisionGroups()) {
 			dataHandler->updateCollisionGroupsForActiveCells();
+		}
+
+		// Retire any VFX attached to the reference.
+		if (deletion) {
+			worldController->vfxManager->removeForReference(this);
 		}
 
 		// Ensure the reference receives scene lighting.

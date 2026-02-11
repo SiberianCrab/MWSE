@@ -46,7 +46,7 @@ namespace NI {
 	AVObject* AVObject::getParentByName(const char* name) const {
 		Node* result = parentNode;
 		while (result != nullptr) {
-			if (mwse::string::equal(name, result->name)) {
+			if (mwse::string::iequal(name, result->name)) {
 				return result;
 			}
 			result = result->parentNode;

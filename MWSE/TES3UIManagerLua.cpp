@@ -38,7 +38,7 @@ namespace mwse::lua {
 	static std::unordered_map<Element*, std::unordered_map<Property, EventCallback>> originalCallbackMap;
 	static std::unordered_map<Element*, void(__cdecl*)(Element*)> destroyMap;
 
-	static sol::table createKeyData(sol::state& state, int keyCode) {
+	static sol::table createKeyData(sol::state& state, DWORD keyCode) {
 		const auto inputController = TES3::WorldController::get()->inputController;
 		auto keyData = state.create_table();
 		keyData["keyCode"] = keyCode;
@@ -79,7 +79,7 @@ namespace mwse::lua {
 			// Note that this is a DirectInput key code, not a scan code.
 			const auto charMasked = data0 & 0x7FFFFFFF;
 			eventData["character"] = charMasked > 0 ? state["string"]["char"](charMasked) : sol::object(sol::nil);
-			eventData["keyData"] = createKeyData(state, TES3::UI::MenuInputController::lastKeyPressDIK);
+			eventData["keyData"] = createKeyData(state, TES3::InputController::lastReadKeyboardData.dwOfs);
 			break;
 		}
 

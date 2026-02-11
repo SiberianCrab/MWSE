@@ -111,9 +111,9 @@ namespace NI {
 		else if (pixelFormat.format == PixelFormat::Format::RGB) {
 			for (size_t y = 0; y < height; ++y) {
 				for (size_t x = 0; x < width; ++x) {
-					imageData.emplace_back(pixels[offset + 0]); // B
+					imageData.emplace_back(pixels[offset + 2]); // B
 					imageData.emplace_back(pixels[offset + 1]); // G
-					imageData.emplace_back(pixels[offset + 2]); // R
+					imageData.emplace_back(pixels[offset + 0]); // R
 					imageData.emplace_back(255);                // A
 					offset += bytesPerPixel;
 				}

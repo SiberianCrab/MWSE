@@ -279,21 +279,6 @@ namespace mwse::patch {
 		inputController->readKeyState();
 	}
 
-	int __fastcall PatchGetMorrowindMainWindow_NoBufferReading(TES3::InputController* inputController, DWORD _EDX_, DWORD* key) {
-		if (GetActiveWindow() != TES3::WorldController::get()->Win32_hWndParent) {
-			// Read in the input so it doesn't get buffered when we alt-tab back in.
-			inputController->readButtonPressed(key);
-
-			// But pretend that nothing was found.
-			*key = 0;
-			return 0;
-		}
-
-		auto result = inputController->readButtonPressed(key);
-		TES3::UI::MenuInputController::lastKeyPressDIK = result ? *key : 0xFF;
-		return result;
-	}
-
 	//
 	// Patch: Optimize access to global variables. Access them in a hashmap instead of linear searching.
 	//
@@ -1551,6 +1536,97 @@ namespace mwse::patch {
 	}
 
 	//
+	// Patch: Be better about showing/hiding the cursor.
+	//
+
+	static WNDPROC originalWindowProc = nullptr;
+	using gCursorShown = ExternalGlobal<bool, 0x776D0C>;
+	static bool showCursorFlag = true;
+
+	static void SetCursorShown(HWND hWnd, bool shown) {
+		if (gCursorShown::get() == shown) {
+			return;
+		}
+		gCursorShown::set(shown);
+
+		const auto worldController = TES3::WorldController::get();
+		if (!worldController) {
+			return;
+		}
+
+		const auto inputController = worldController->inputController;
+		if (!inputController) {
+			return;
+		}
+
+		// Only call ShowCursor if needed.
+		if (showCursorFlag != shown) {
+			ShowCursor(shown);
+			showCursorFlag = shown;
+		}
+
+		// Sync mouse state.
+		DIMOUSESTATE2 mouseState = {};
+		const auto mouseStateR = inputController->mouse->GetDeviceState(sizeof(mouseState), &mouseState);
+		const auto mouseAcquired = (mouseStateR == DIERR_INPUTLOST || mouseStateR == DIERR_NOTACQUIRED);
+		if (shown != mouseAcquired) {
+			if (shown) {
+				inputController->mouse->Unacquire();
+			}
+			else {
+				inputController->mouse->Acquire();
+			}
+		}
+
+		// Sync keyboard state.
+		BYTE keyboardState[256] = {};
+		const auto keyboardStateR = inputController->keyboard->GetDeviceState(sizeof(keyboardState), &keyboardState);
+		const auto keyboardAcquired = (keyboardStateR == DIERR_INPUTLOST || keyboardStateR == DIERR_NOTACQUIRED);
+		if (shown != keyboardAcquired) {
+			if (shown) {
+				inputController->keyboard->Unacquire();
+			}
+			else {
+				inputController->keyboard->Acquire();
+			}
+		}
+	}
+
+	static void PatchWindProc_CursorHitTest(windows::DialogProcContext& context) {
+		context.callOriginalFunction();
+		const auto hWnd = context.getWindowHandle();
+		const auto result = context.getResult();
+		auto shouldShow = result != HTCLIENT;
+
+		SetCursorShown(hWnd, shouldShow);
+	}
+
+	static LRESULT __stdcall PatchWindProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		windows::DialogProcContext context(hWnd, msg, wParam, lParam, (DWORD)originalWindowProc);
+
+		switch (msg) {
+		case WM_ACTIVATE:
+			SetCursorShown(hWnd, context.getLOWParam() != WA_INACTIVE);
+			break;
+		case WM_SETFOCUS:
+			SetCursorShown(hWnd, false);
+			break;
+		case WM_KILLFOCUS:
+			SetCursorShown(hWnd, true);
+			break;
+		case WM_NCHITTEST:
+			PatchWindProc_CursorHitTest(context);
+			break;
+		}
+
+		if (!context.hasResult()) {
+			context.callOriginalFunction();
+		}
+
+		return context.getResult();
+	}
+
+	//
 	// Install all the patches.
 	//
 
@@ -2211,9 +2287,17 @@ namespace mwse::patch {
 		genCallEnforced(0x4D2324, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
 		genCallEnforced(0x4EF99F, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
 		genCallEnforced(0x4EFE70, 0x4EEFC0, *reinterpret_cast<DWORD*>(&PhysicalObject_createBoundingBox));
+
+		// Patch: Store last read key state.
+		auto InputController_readButtonPressed = &TES3::InputController::readButtonPressed;
+		genCallEnforced(0x58E8C6, 0x406950, *reinterpret_cast<DWORD*>(&InputController_readButtonPressed));
+		genCallEnforced(0x5BCA1D, 0x406950, *reinterpret_cast<DWORD*>(&InputController_readButtonPressed));
 	}
 
 	void installPostLuaPatches() {
+		// Patch: Be better about showing/hiding the cursor.
+		originalWindowProc = (WNDPROC)SetWindowLongPtr(TES3::WorldController::get()->Win32_hWndParent, GWLP_WNDPROC, (LONG_PTR)PatchWindProc);
+
 		// Patch: The window is never out of focus.
 		if (Configuration::RunInBackground) {
 			writeByteUnprotected(0x416BC3 + 0x2 + 0x4, 1);
@@ -2224,8 +2308,6 @@ namespace mwse::patch {
 			genCallEnforced(0x477E1E, 0x4065E0, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBackgroundInput));
 			genCallEnforced(0x5BC9E1, 0x4065E0, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBackgroundInput));
 			genCallEnforced(0x5BCA33, 0x4065E0, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBackgroundInput));
-			genCallEnforced(0x58E8C6, 0x406950, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBufferReading));
-			genCallEnforced(0x5BCA1D, 0x406950, reinterpret_cast<DWORD>(PatchGetMorrowindMainWindow_NoBufferReading));
 		}
 
 		// Patch: Fix NiFlipController losing its affectedMap on clone.
