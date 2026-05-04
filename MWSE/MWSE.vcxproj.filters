@@ -1593,6 +1593,9 @@
     <ClInclude Include="LuaCalcBlockChanceEvent.h">
       <Filter>Header Files\Lua\Events</Filter>
     </ClInclude>
+    <ClInclude Include="LuaCalcEnchantingSpellPointCostEvent.h">
+      <Filter>Header Files\Lua\Events</Filter>
+    </ClInclude>
     <ClInclude Include="LuaCalcSpellmakingSpellPointCostEvent.h">
       <Filter>Header Files\Lua\Events</Filter>
     </ClInclude>
@@ -1757,6 +1760,9 @@
     </ClInclude>
     <ClInclude Include="yamlloader.hpp">
       <Filter>Header Files\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaMagicAbsorbEvent.h">
+      <Filter>Header Files\Lua\Events</Filter>
     </ClInclude>
     <ClInclude Include="LuaMagicReflectEvent.h">
       <Filter>Header Files\Lua\Events</Filter>
@@ -3683,6 +3689,9 @@
     <ClCompile Include="LuaCalcBlockChanceEvent.cpp">
       <Filter>Source Files\Lua\Events</Filter>
     </ClCompile>
+    <ClCompile Include="LuaCalcEnchantingSpellPointCostEvent.cpp">
+      <Filter>Source Files\Lua\Events</Filter>
+    </ClCompile>
     <ClCompile Include="LuaCalcSpellmakingSpellPointCostEvent.cpp">
       <Filter>Source Files\Lua\Events</Filter>
     </ClCompile>
@@ -3850,6 +3859,9 @@
     </ClCompile>
     <ClCompile Include="yamlloader.cpp">
       <Filter>Source Files\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaMagicAbsorbEvent.cpp">
+      <Filter>Source Files\Lua\Events</Filter>
     </ClCompile>
     <ClCompile Include="LuaMagicReflectEvent.cpp">
       <Filter>Source Files\Lua\Events</Filter>

@@ -4002,6 +4002,7 @@ tes3.event = require("tes3.event")
 ---| `tes3.event.calcBarterPrice`
 ---| `tes3.event.calcBlockChance`
 ---| `tes3.event.calcChargenStats`
+---| `tes3.event.calcEnchantingSpellPointCost`
 ---| `tes3.event.calcEnchantmentPrice`
 ---| `tes3.event.calcFlySpeed`
 ---| `tes3.event.calcHitChance`
@@ -4082,6 +4083,7 @@ tes3.event = require("tes3.event")
 ---| `tes3.event.load`
 ---| `tes3.event.loaded`
 ---| `tes3.event.lockPick`
+---| `tes3.event.magicAbsorb`
 ---| `tes3.event.magicCasted`
 ---| `tes3.event.magicEffectRemoved`
 ---| `tes3.event.magicEffectsResolved`

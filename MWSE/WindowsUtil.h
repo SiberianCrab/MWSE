@@ -3,6 +3,12 @@
 #include "LuaExecutor.h"
 
 namespace mwse::lua {
+	// These are only set once on initialized in LuaManager.
+	extern int64_t performanceFrequency;
+	extern int64_t startTimestamp;
+
+	double getHighPrecisionClock();
+
 	size_t getVirtualMemoryUsage();
 
 	std::optional<std::string> getClipboardText();
@@ -12,7 +18,7 @@ namespace mwse::lua {
 
 	sol::optional<std::shared_ptr<LuaExecutor>> createProcess(sol::table params);
 	
-	void openURL(const std::string& url);
+	void openURL(std::string_view url);
 
 	bool getIsVirtualKeyPressed(int VK_key);
 }

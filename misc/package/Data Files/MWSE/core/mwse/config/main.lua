@@ -179,6 +179,31 @@ local config = {
 					},
 					callback = resetLighting,
 				},
+				{
+					class = "OnOffButton",
+					label = i18n("createFullMinidumps.label"),
+					description = i18n("createFullMinidumps.description"),
+					variable = {
+						id = "CreateFullMinidumps",
+						class = "TableVariable",
+						table = mwseConfig,
+					},
+					callback = resetLighting,
+				},
+				{
+					class = "Slider",
+					label = i18n("backgroundLoadPollIntervalMs.label"),
+					description = i18n("backgroundLoadPollIntervalMs.description"),
+					min = 5,
+					max = 100,
+					step = 1,
+					jump = 5,
+					variable = {
+						id = "BackgroundLoadPollIntervalMs",
+						class = "TableVariable",
+						table = mwseConfig,
+					},
+				},
 			},
 			sidebarComponents = {
 				{
