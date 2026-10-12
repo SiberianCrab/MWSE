@@ -1035,11 +1035,13 @@ namespace mwse::lua {
 				// Adjust distance as if direction was not normalized.
 				r->distance *= distanceScale;
 
-				// Skinned nodes only have usable scaled distance data.
+				// Explicit bounds picks still have scaled distance data for skinned nodes.
 				if (r->object->isInstanceOfType(NI::RTTIStaticPtr::NiTriBasedGeom)) {
 					const auto geometry = static_cast<const NI::TriBasedGeometry*>(r->object.get());
 					if (geometry->skinInstance) {
-						r->distance *= skinnedCorrection;
+						if (rayTestCache->intersectType != NI::PickIntersectType::TRIANGLE_INTERSECT) {
+							r->distance *= skinnedCorrection;
+						}
 						r->intersection = position.value() + direction.value() * r->distance;
 						r->normal = (r->intersection - geometry->worldBoundOrigin).normalized();
 					}
